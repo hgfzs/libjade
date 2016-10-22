@@ -1378,6 +1378,7 @@ void DrawingWidget::defaultMouseMoveEvent(DrawingMouseEvent* event)
 				if (mMouseDownItem && mMouseDownItem->isSelected())
 				{
 					bool resizeItem = (mSelectedItems.size() == 1 &&
+									   mSelectedItems.first()->canResize() &&
 									   mSelectedItems.first()->selectedPoint() &&
 									   mSelectedItems.first()->selectedPoint()->isControlPoint());
 					mMouseState = (resizeItem) ? MouseResizeItem : MouseMoveItems;

@@ -31,6 +31,7 @@ DrawingItem::DrawingItem()
 
 	mRotation = 0;
 	mFlipped = false;
+	recalculateTransform();
 
 	mSelected = false;
 	mVisible = true;
@@ -38,8 +39,6 @@ DrawingItem::DrawingItem()
 	mSelectedPoint = nullptr;
 
 	mStyle = new DrawingItemStyle();
-
-	recalculateTransform();
 }
 
 DrawingItem::DrawingItem(const DrawingItem& item)
@@ -51,6 +50,7 @@ DrawingItem::DrawingItem(const DrawingItem& item)
 
 	mRotation = item.mRotation;
 	mFlipped = item.mFlipped;
+	recalculateTransform();
 
 	mSelected = false;
 	mVisible = true;
@@ -60,8 +60,6 @@ DrawingItem::DrawingItem(const DrawingItem& item)
 	mSelectedPoint = nullptr;
 
 	mStyle = new DrawingItemStyle(*item.mStyle);
-
-	recalculateTransform();
 }
 
 DrawingItem::~DrawingItem()
@@ -445,26 +443,59 @@ void DrawingItem::removeItemPoint(const QPointF& scenePos)
 
 //==================================================================================================
 
+void DrawingItem::createEvent()
+{
+
+}
+
+//==================================================================================================
+
 void DrawingItem::mousePressEvent(DrawingMouseEvent* event)
 {
-	mSelectedPoint = pointAt(mapFromScene(event->scenePos()));
-	if (mSelectedPoint && !mSelectedPoint->isControlPoint()) mSelectedPoint = nullptr;
+	if (mDrawing && mDrawing->mode() == DrawingWidget::PlaceMode)
+	{
+		setPos(mDrawing->roundToGrid(event->scenePos()));
+	}
+	else
+	{
+		mSelectedPoint = pointAt(mapFromScene(event->scenePos()));
+		if (mSelectedPoint && !mSelectedPoint->isControlPoint()) mSelectedPoint = nullptr;
+	}
 }
 
 void DrawingItem::mouseMoveEvent(DrawingMouseEvent* event)
 {
-	Q_UNUSED(event);
+	if (mDrawing && mDrawing->mode() == DrawingWidget::PlaceMode)
+	{
+		setPos(mDrawing->roundToGrid(event->scenePos()));
+	}
 }
 
 void DrawingItem::mouseReleaseEvent(DrawingMouseEvent* event)
 {
-	mSelectedPoint = nullptr;
+	if (mDrawing && mDrawing->mode() == DrawingWidget::PlaceMode)
+	{
+		setPos(mDrawing->roundToGrid(event->scenePos()));
+	}
+	else
+	{
+		mSelectedPoint = nullptr;
+	}
+
 	Q_UNUSED(event);
 }
 
 void DrawingItem::mouseDoubleClickEvent(DrawingMouseEvent* event)
 {
-	mSelectedPoint = nullptr;
+	if (mDrawing && mDrawing->mode() == DrawingWidget::PlaceMode)
+	{
+		setPos(mDrawing->roundToGrid(event->scenePos()));
+	}
+	else
+	{
+		mSelectedPoint = nullptr;
+	}
+
 	Q_UNUSED(event);
 }
 
@@ -478,46 +509,6 @@ void DrawingItem::keyPressEvent(QKeyEvent* event)
 void DrawingItem::keyReleaseEvent(QKeyEvent* event)
 {
 	Q_UNUSED(event);
-}
-
-//==================================================================================================
-
-void DrawingItem::newMousePressEvent(DrawingMouseEvent* event)
-{
-	if (mDrawing) setPos(mDrawing->roundToGrid(event->scenePos()));
-	else setPos(event->scenePos());
-}
-
-void DrawingItem::newMouseMoveEvent(DrawingMouseEvent* event)
-{
-	if (mDrawing) setPos(mDrawing->roundToGrid(event->scenePos()));
-	else setPos(event->scenePos());
-}
-
-bool DrawingItem::newMouseReleaseEvent(DrawingMouseEvent* event)
-{
-	if (mDrawing) setPos(mDrawing->roundToGrid(event->scenePos()));
-	else setPos(event->scenePos());
-
-	return true;
-}
-
-bool DrawingItem::newMouseDoubleClickEvent(DrawingMouseEvent* event)
-{
-	Q_UNUSED(event);
-	return false;
-}
-
-//==================================================================================================
-
-void DrawingItem::newItemCreateEvent()
-{
-
-}
-
-bool DrawingItem::newItemCopyEvent()
-{
-	return true;
 }
 
 //==================================================================================================

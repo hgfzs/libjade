@@ -174,7 +174,7 @@ public:
 
 	DrawingWidget* drawing() const;
 
-	// Selectors
+
 	void setPos(const QPointF& pos);
 	void setPos(qreal x, qreal y);
 	void setX(qreal x);
@@ -197,7 +197,7 @@ public:
 	bool isSelected() const;
 	bool isVisible() const;
 
-	// Points
+
 	void addPoint(DrawingItemPoint* itemPoint);
 	void insertPoint(int index, DrawingItemPoint* itemPoint);
 	void removePoint(DrawingItemPoint* itemPoint);
@@ -208,11 +208,11 @@ public:
 	DrawingItemPoint* pointAt(const QPointF& itemPos) const;
 	DrawingItemPoint* pointNearest(const QPointF& itemPos) const;
 
-	// Style
+
 	void setStyle(DrawingItemStyle* style);
 	DrawingItemStyle* style() const;
 
-	// Mapping
+
 	QPointF mapFromScene(const QPointF& point) const;
 	QRectF mapFromScene(const QRectF& rect) const;
 	QPolygonF mapFromScene(const QPolygonF& polygon) const;
@@ -222,7 +222,7 @@ public:
 	QPolygonF mapToScene(const QPolygonF& polygon) const;
 	QPainterPath mapToScene(const QPainterPath& path) const;
 
-	// Description
+
 	virtual QRectF boundingRect() const = 0;
 	virtual QPainterPath shape() const;
 	virtual QPointF centerPos() const;
@@ -230,7 +230,7 @@ public:
 
 	virtual void paint(QPainter* painter) = 0;
 
-	// Event
+
 	virtual void moveItem(const QPointF& scenePos);
 	virtual void resizeItem(DrawingItemPoint* itemPoint, const QPointF& scenePos);
 
@@ -238,12 +238,10 @@ public:
 	virtual void rotateBackItem(const QPointF& scenePos);
 	virtual void flipItem(const QPointF& scenePos);
 
-	// CanInsertRemovePoints not set by default, no implementation for insertItemPoint/removeItemPoint by default
 	virtual void insertItemPoint(const QPointF& scenePos);
 	virtual void removeItemPoint(const QPointF& scenePos);
 
 protected:
-	// Event
 	virtual void createEvent();
 
 	virtual void mousePressEvent(DrawingMouseEvent* event);
