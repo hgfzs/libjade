@@ -24,7 +24,9 @@
 #include <DrawingItem.h>
 
 //Todo: save item defaults with drawing, load item defaults from drawing
-
+//Todo (future): layers and/or pages
+//Todo (future): hierarchial items (parent/children)
+//Todo (future): units (inches, mm, etc)
 class DrawingWidget : public QAbstractScrollArea
 {
 	Q_OBJECT

@@ -27,7 +27,7 @@ class DrawingItemStyle;
 
 /*! \brief Base class for all graphical items in a DrawingWidget.
  *
- * DrawingItem provides a light-weight foundation for writing custom items. This includes
+ * DrawingItem provides a lightweight foundation for writing custom items. This includes
  * defining the item's geometry, painting implementation, and item interaction through event
  * handlers.
  *
@@ -80,6 +80,9 @@ class DrawingItemStyle;
  * All items are drawn in the order of when they were added to scene.  This order also dictates
  * which items will receive mouse input first when clicking within the scene.
  *
+ * DrawingItem has full support for item styles via DrawingItemStyle.  Item styles affect how an
+ * item is rendered within a DrawingWidget.  See DrawingItemStyle for more information.
+ *
  * \section itemEvents Events
  *
  * DrawingItem receives events from DrawingWidget through several event handlers:
@@ -104,12 +107,12 @@ class DrawingItemStyle;
  * \li insertItemPoint() and removeItemPoint() are called when adding/removing item points
  *
  * These slots are only called if their corresponding flag is set on the item.  For example, the
- * resizeItem() slot is only called if the CanResize flag is set. The default flags() set on a new
- * item are CanMove | CanResize | CanRotate | CanFlip.  Default implementations are provided for
+ * resizeItem() slot is only called if the #CanResize flag is set. The default flags() set on a new
+ * item are #CanMove | #CanResize | #CanRotate | #CanFlip.  Default implementations are provided for
  * moveItem(), resizeItem(), rotateItem(), rotateItemBack(), and flipItem().
  *
  * For items that support adding/removing item points, implementations should set the
- * CanInsertRemovePoints flag and provide an implementation for insertItemPoint() and removeItemPoint().
+ * #CanInsertRemovePoints flag and provide an implementation for insertItemPoint() and removeItemPoint().
  *
  * \section itemCustom Custom Items
  *
@@ -157,7 +160,6 @@ private:
 	bool mVisible;
 
 	QList<DrawingItemPoint*> mPoints;
-	DrawingItemPoint* mSelectedPoint;
 
 	DrawingItemStyle* mStyle;
 
@@ -166,60 +168,351 @@ private:
 	QTransform mTransformInverse;
 
 public:
+	/*! \brief Create a new DrawingItem with default settings.
+	 *
+	 * The new item is not associated with a DrawingWidget.
+	 */
 	DrawingItem();
+
+	/*! \brief Create a new DrawingItem as a copy of an existing item.
+	 *
+	 * Copies the position, flags, and transform from the existing item.  Also creates copies
+	 * of the existing item's points for the new item.  Also creates a new item style based upon
+	 * the existing item's style.
+	 *
+	 * The new item is not associated with a DrawingWidget.
+	 */
 	DrawingItem(const DrawingItem& item);
+
+	/*! \brief Delete an existing DrawingItem object.
+	 *
+	 * Removes the item from its parent DrawingWidget before deletion.
+	 */
 	virtual ~DrawingItem();
 
+
+	/*! \brief Creates a copy of the DrawingItem and return it.
+	 *
+	 * It is recommended that derived classes implement a copy constructor to ensure that copies are
+	 * handled as expected.  Then this function can simply create a new item by calling the
+	 * derived class copy constructor.
+	 */
 	virtual DrawingItem* copy() const = 0;
 
+
+	/*! \brief Returns the current drawing that this item is a member of, or nullptr if the item
+	 * is not associated with a drawing.
+	 *
+	 * To add an item to a drawing, call DrawingWidget::addItem() or DrawingWidget::insertItem(). To
+	 * remove an item from a drawing, call DrawingWidget::removeItem().
+	 */
 	DrawingWidget* drawing() const;
 
 
+	/*! \brief Sets the position of the item.
+	 *
+	 * The position of the item describes its origin (local coordinate (0,0)) in drawing
+	 * coordinates.
+	 *
+	 * To move an item around the drawing as if the user clicked on it, call
+	 * DrawingWidget::moveSelection().
+	 *
+	 * \sa pos()
+	 */
 	void setPos(const QPointF& pos);
+
+	/*! \brief Sets the position of the item.
+	 *
+	 * This convenience function is equivalent to calling setPos(QPointF(x,y)).
+	 *
+	 * \sa pos(), x(), y()
+	 */
 	void setPos(qreal x, qreal y);
+
+	/*! \brief Sets the x-coordinate of the item's position.
+	 *
+	 * This convenience function is equivalent to calling setPos(QPointF(x,y())).
+	 *
+	 * \sa setPos(), x()
+	 */
 	void setX(qreal x);
+
+	/*! \brief Sets the y-coordinate of the item's position.
+	 *
+	 * This convenience function is equivalent to calling setPos(QPointF(x(),y)).
+	 *
+	 * \sa setPos(), y()
+	 */
 	void setY(qreal y);
+
+	/*! \brief Returns the position of the item in the drawing.
+	 *
+	 * \sa setPos(), x(), y()
+	 */
 	QPointF pos() const;
+
+	/*! \brief Returns the x-coordinate of the item's position.
+	 *
+	 * \sa setX(), y()
+	 */
 	qreal x() const;
+
+	/*! \brief Returns the y-coordinate of the item's position.
+	 *
+	 * \sa setX(), y()
+	 */
 	qreal y() const;
 
+
+	/*! \brief Sets the type of item through a combination of flags.
+	 *
+	 * The type of item point is represented by a combination of flags.  Any combination of flags
+	 * is valid for DrawingItem objects.  By default, the (#CanMove | #CanResize | #CanRotate |
+	 * #CanFlip) flags are set.
+	 *
+	 * Items that set the #CanInsertRemovePoints flag should also provide an implementation for
+	 * insertItemPoint() and removeItemPoint().
+	 *
+	 * \sa flags()
+	 */
 	void setFlags(Flags flags);
+
+	/*! \brief Returns the type of the item as represented as a combination of flags.
+	 *
+	 * \sa setFlags()
+	 */
 	Flags flags() const;
 
+
+	/*! \brief Sets the rotation angle of the item.
+	 *
+	 * The rotation is counter-clockwise around the z-axis of the item through its origin point
+	 * (0,0).  By default, the rotation angle is set to 0 (the item is not rotated).
+	 *
+	 * Any value outside the range (0.0, 360.0) will be adjusted to fit within this range.
+	 *
+	 * \sa rotation(), setFlipped()
+	 */
 	void setRotation(qreal angle);
+
+	/*! \brief Sets whether the item is flipped horizontally or not.
+	 *
+	 * By default, the flipped status is set to false (this item is not flipped).
+	 *
+	 * \sa isFlipped(), setRotation()
+	 */
 	void setFlipped(bool flipped);
+
+	/*! \brief Returns the rotation angle if the item.
+	 *
+	 * \sa setRotation()
+	 */
 	qreal rotation() const;
+
+	/*! \brief Returns whether the item is flipped horizontally or not.
+	 *
+	 * \sa setFlipped()
+	 */
 	bool isFlipped() const;
+
+	/*! \brief Returns the complete item transformation matrix.
+	 *
+	 * The transform is calculated by first applying the rotation, then flipping the item if
+	 * necessary.  The transform does not include any translation due to the item's position within
+	 * the drawing.
+	 *
+	 * \sa rotation(), isFlipped()
+	 */
 	QTransform transform() const;
 
+
+	/*! \brief Sets whether the item is currently selected within the drawing or not.
+	 *
+	 * Items that are selected can be manipulated within the drawing (i.e. moved, resized, rotated,
+	 * flipped, etc).  By default, items are not selected (isSelected() returns false).
+	 *
+	 * \sa isSelected()
+	 */
 	void setSelected(bool select);
+
+	/*! \brief Sets whether the item is currently visible within the drawing or not.
+	 *
+	 * Items that are not visible are not drawn and do not receive events.  By default, items are
+	 * visible (isVisible() returns true).
+	 *
+	 * \sa isVisible()
+	 */
 	void setVisible(bool visible);
+
+	/*! \brief Returns whether the item is currently selected within the drawing or not.
+	 *
+	 * \sa setSelected()
+	 */
 	bool isSelected() const;
+
+	/*! \brief Returns whether the item is currently visible within the drawing or not.
+	 *
+	 * \sa setVisible()
+	 */
 	bool isVisible() const;
 
 
+	/*! \brief Adds an existing item point to the item.
+	 *
+	 *This convenience function is equivalent to calling #insertPoint(itemPoint, points().size()).
+	 *
+	 * \sa removePoint()
+	 */
 	void addPoint(DrawingItemPoint* itemPoint);
-	void insertPoint(int index, DrawingItemPoint* itemPoint);
-	void removePoint(DrawingItemPoint* itemPoint);
-	void clearPoints();
-	QList<DrawingItemPoint*> points() const;
-	DrawingItemPoint* selectedPoint() const;
 
+	/*! \brief Inserts an existing item point to the item at the specified index.
+	 *
+	 * If a valid item point is passed to this function, DrawingItem will insert it into its list of
+	 * points() at the specified index.  DrawingItem takes ownership of the itemPoint and will
+	 * delete it as necessary.
+	 *
+	 * It is safe to pass a nullptr to this function; if a nullptr is received, this function
+	 * does nothing.  This function also does nothing if the itemPoint is already one of the item's
+	 * points().
+	 *
+	 * \sa addPoint(), removePoint()
+	 */
+	void insertPoint(int index, DrawingItemPoint* itemPoint);
+
+	/*! \brief Removes an existing item point from the item.
+	 *
+	 * If a valid item point is passed to this function, DrawingItem will remove it from its list of
+	 * points().  DrawingItem relinquishes ownership of the itemPoint, but does not delete the
+	 * point from memory.
+	 *
+	 * It is safe to pass a nullptr to this function; if a nullptr is received, this function
+	 * does nothing.  This function also does nothing if the itemPoint is not one of the item's
+	 * points().
+	 *
+	 * \sa addPoint(), insertPoint(), clearPoints()
+	 */
+	void removePoint(DrawingItemPoint* itemPoint);
+
+	/*! \brief Removes and deletes all item points from the item.
+	 *
+	 * This function removes and deletes all of the item's points() from memory.
+	 *
+	 * \sa removePoint()
+	 */
+	void clearPoints();
+
+	/*! \brief Returns a list of all item points added to the item.
+	 *
+	 * \sa addPoint(), insertPoint(), removePoint()
+	 */
+	QList<DrawingItemPoint*> points() const;
+
+	/*! \brief Returns the item point located at the specified position, or nullptr if no match is
+	 * found.
+	 *
+	 * For each point, this function calculates the bounding rect of the point using
+	 * DrawingWidget::pointRect, then maps it to local item coordinates.  If the specified itemPos
+	 * is contained within the point's boundingRect, the point is returned immediately.  If no
+	 * match is found after searching through all of the item's points, nullptr is returned.
+	 * The itemPos is given in the local item coordinates.
+	 *
+	 * This function is used by DrawingWidget to determine if any of the item's points were
+	 * clicked on by the user.
+	 *
+	 * \sa pointNearest()
+	 */
 	DrawingItemPoint* pointAt(const QPointF& itemPos) const;
+
+	/*! \brief Returns the item point nearest to the specified position.
+	 *
+	 * This function calculates the distance between itemPos and each of the item's points.  It
+	 * selects the point that is closest to itemPos and returns it.  The itemPos is given in the
+	 * local item coordinates.
+	 *
+	 * This function may return nullptr if the item does not have any points().
+	 *
+	 * \sa pointAt()
+	 */
 	DrawingItemPoint* pointNearest(const QPointF& itemPos) const;
 
 
+	/*! \brief Sets the item's style.
+	 *
+	 * The item's style contains settings that affect how the item is rendered within a
+	 * DrawingWidget.  By default, the item is a assigned an empty style with no settings applied.
+	 *
+	 * If a valid item style is passed to this function, DrawingItem will delete the existing item
+	 * style from memory and replace it with the specified style.  DrawingItem takes ownership of
+	 * the new style and will delete it as necessary.
+	 *
+	 * It is safe to pass a nullptr to this function; if a nullptr is received, this function
+	 * does nothing.
+	 *
+	 * \sa style()
+	 */
 	void setStyle(DrawingItemStyle* style);
+
+	/*! \brief Returns the item's style.
+	 *
+	 * \sa setStyle()
+	 */
 	DrawingItemStyle* style() const;
 
 
+	/*! \brief Maps the point from the item's coordinate system to the coordinate system of the
+	 * DrawingWidget.
+	 *
+	 * \sa mapToScene(const QPointF& point) const
+	 */
 	QPointF mapFromScene(const QPointF& point) const;
+
+	/*! \brief Maps the rect from the item's coordinate system to the coordinate system of the
+	 * DrawingWidget.
+	 *
+	 * \sa mapToScene(const QRectF& rect) const
+	 */
 	QRectF mapFromScene(const QRectF& rect) const;
+
+	/*! \brief Maps the polygon from the item's coordinate system to the coordinate system of the
+	 * DrawingWidget.
+	 *
+	 * \sa mapToScene(const QPolygonF&) const
+	 */
 	QPolygonF mapFromScene(const QPolygonF& polygon) const;
+
+	/*! \brief Maps the path from the item's coordinate system to the coordinate system of the
+	 * DrawingWidget.
+	 *
+	 * \sa mapToScene(const QPainterPath& path) const
+	 */
 	QPainterPath mapFromScene(const QPainterPath& path) const;
+
+	/*! \brief Maps the point from the coordinate system of the DrawingWidget to the item's
+	 * coordinate system.
+	 *
+	 * \sa mapFromScene(const QPointF& point) const
+	 */
 	QPointF mapToScene(const QPointF& point) const;
+
+	/*! \brief Maps the rect from the coordinate system of the DrawingWidget to the item's
+	 * coordinate system.
+	 *
+	 * \sa mapFromScene(const QRectF& rect) const
+	 */
 	QRectF mapToScene(const QRectF& rect) const;
+
+	/*! \brief Maps the polygon from the coordinate system of the DrawingWidget to the item's
+	 * coordinate system.
+	 *
+	 * \sa mapFromScene(const QPolygonF& polygon) const
+	 */
 	QPolygonF mapToScene(const QPolygonF& polygon) const;
+
+	/*! \brief Maps the path from the coordinate system of the DrawingWidget to the item's
+	 * coordinate system.
+	 *
+	 * \sa mapFromScene(const QPainterPath& path) const
+	 */
 	QPainterPath mapToScene(const QPainterPath& path) const;
 
 

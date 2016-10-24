@@ -25,8 +25,6 @@
 #include "DrawingUndo.h"
 #include "DrawingShapeItems.h"
 #include "DrawingTwoPointItems.h"
-#include "DrawingWriter.h"
-#include "DrawingReader.h"
 
 DrawingWidget::DrawingWidget() : QAbstractScrollArea()
 {
@@ -754,7 +752,7 @@ void DrawingWidget::cut()
 
 void DrawingWidget::copy()
 {
-	QClipboard* clipboard = QApplication::clipboard();
+	/*QClipboard* clipboard = QApplication::clipboard();
 	if (clipboard && !mSelectedItems.isEmpty())
 	{
 		QString xmlItems;
@@ -763,12 +761,12 @@ void DrawingWidget::copy()
 		writer.writeItems(mSelectedItems);
 
 		clipboard->setText(xmlItems);
-	}
+	}*/
 }
 
 void DrawingWidget::paste()
 {
-	QClipboard* clipboard = QApplication::clipboard();
+	/*QClipboard* clipboard = QApplication::clipboard();
 	QList<DrawingItem*> newItems;
 
 	if (clipboard)
@@ -804,7 +802,7 @@ void DrawingWidget::paste()
 
 		mConsecutivePastes++;
 		viewport()->update();
-	}
+	}*/
 }
 
 void DrawingWidget::deleteSelection()
