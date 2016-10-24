@@ -1,4 +1,4 @@
-/* DrawingItemStyle.h
+/* Drawing
  *
  * Copyright (C) 2013-2016 Jason Allen
  *
@@ -18,20 +18,24 @@
  * along with jade.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef DRAWINGITEMSTYLE_H
-#define DRAWINGITEMSTYLE_H
-
-#include <DrawingTypes.h>
-
-class DrawingItemStyle
-{
-private:
+#ifndef __DRAWING__
+#define __DRAWING__
 
 
-public:
-	//DrawingItemStyle();
-	//DrawingItemStyle(const DrawingItemStyle& style);
-	//~DrawingItemStyle();
-};
+/*! \mainpage
+ *
+ *
+ * feature compare to Qt Graphics View
+ * - scene can only have one view, as these are combined to make DrawingWidget
+ * - undo/redo support
+ * -
+ *
+ * Todo:
+ * - save item defaults with drawing, load item defaults from drawing
+ * Todo (future):
+ * - layers and/or pages
+ * - hierarchial items (parent/children)
+ * - units (inches, mm, etc)
+ */
 
 #endif

@@ -1,4 +1,4 @@
-/* DrawingWidget.cpp
+/* DrawingWidget.h
  *
  * Copyright (C) 2013-2016 Jason Allen
  *
@@ -23,10 +23,81 @@
 
 #include <DrawingItem.h>
 
-//Todo: save item defaults with drawing, load item defaults from drawing
-//Todo (future): layers and/or pages
-//Todo (future): hierarchial items (parent/children)
-//Todo (future): units (inches, mm, etc)
+/*! \brief Widget for managing a large number of two-dimensional DrawingItem objects.
+ *
+ * DrawingWidget visualizes a scene in a scrollable viewport.  The scrollable area of the scene is
+ * determined by the sceneRect().
+ *
+ * Any position on the scene can be scrolled to by using the scroll bars or by calling centerOn().
+ * To ensure that a certain area is visible, but not necessarily centered, call ensureVisible()
+ * instead.
+ *
+ * visibleRect(), scrollBarDefinedRect()
+ *
+ * DrawingWidget visualizes the scene by calling render().  First, the background is drawn by
+ * calling drawBackground().  Then the items are drawn by calling drawItems().  Items are drawn in
+ * the order they were added to the widget, starting with the first item added and ending with the
+ * most recent item added.  Finally, the foreground is drawn by calling drawForeground().  Any of
+ * these functions can be overridden in a derived class to modify the default rendering behavior.
+ *
+ * \section widget_features Features
+ *
+ * modes
+ * grid
+ * undo/redo
+ * cut/copy/paste
+ * select all/none
+ * zoom in/out
+ * move, resize, rotate, flip items
+ * bring items forward and send items backward
+ * insert/remove item points
+ * group/ungroup items
+ * styles
+ *
+ * add/remove items
+ * select/unselect items
+ *
+ * \section widget_items Items
+ *
+ * DrawingWidget serves as a container for DrawingItem objects.  Items can be added to the widget
+ * using addItem() or insertItem() and removed using removeItem().
+ *
+ * DrawingWidget provides several ways to search for items within the scene.  The items() function
+ * returns a list of all the items contained within the widget in the order they were added.  The
+ * items(const QPointF&) const overload returns a list of all the items whose shape intersects with
+ * the given location.  The items(const QRectF&) const overload returns a list of all the items
+ * whose boundingRect is fully contained within the specified rect.  The itemAt() function is used
+ * to determine which item (if any) was clicked on by the user.
+ *
+ * DrawingWidget maintains selection information for items within the widget. To select items, call
+ * selectItems().  To clear the current selection, call clearSelection(). Call selectedItems() to
+ * get the list of all currently selected items.
+ *
+ * pointSizeHint(), pointRect()
+ *
+ * \section widget_modes Modes
+ *
+ *
+ *
+ * \section widget_events Event Handling and Propagation
+ *
+ * You can interact with the items on the scene by using the mouse and keyboard. QGraphicsView translates the mouse and key events into scene events, (events that inherit QGraphicsSceneEvent,), and forward them to the visualized scene. In the end, it's the individual item that handles the events and reacts to them. For example, if you click on a selectable item, the item will typically let the scene know that it has been selected, and it will also redraw itself to display a selection rectangle. Similiary, if you click and drag the mouse to move a movable item, it's the item that handles the mouse moves and moves itself. Item interaction is enabled by default, and you can toggle it by calling setInteractive().
+ *
+ * (default mode)
+ * Mouse events are delivered to the mouse down item... mouseDownItem()
+ * Key events are delivered to the focus item... focusItem()
+ *
+ * (place mode)
+ * Mouse and key events are delivered to the new item... newItem()
+ *
+ * You can also provide your own custom scene interaction, by creating a subclass of QGraphicsView, and reimplementing the mouse and key event handlers. To simplify how you programmatically interact with items in the view, QGraphicsView provides the mapping functions mapToScene() and mapFromScene(), and the item accessors items() and itemAt(). These functions allow you to map points, rectangles, polygons and paths between view coordinates and scene coordinates, and to find items on the scene using view coordinates.
+ */
+
+	QList<DrawingItem*> items() const;
+	QList<DrawingItem*> items(const QPointF& scenePos) const;
+	QList<DrawingItem*> items(const QRectF& sceneRect) const;
+	DrawingItem* itemAt(const QPointF& scenePos) const;
+
 class DrawingWidget : public QAbstractScrollArea
 {
 	Q_OBJECT

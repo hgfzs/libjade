@@ -39,5 +39,6 @@ HEADERS += \
     include/DrawingTextItem.h \
     include/DrawingTwoPointItems.h \
     include/DrawingTypes.h \
-    include/DrawingUndo.h \
-    include/DrawingWidget.h
+	include/DrawingUndo.h \
+	include/DrawingWidget.h \
+	include/Drawing

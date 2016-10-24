@@ -1,4 +1,4 @@
-/* DrawingTextItem.cpp
+/* DrawingTextItem.h
  *
  * Copyright (C) 2013-2016 Jason Allen
  *
