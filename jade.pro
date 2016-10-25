@@ -41,4 +41,4 @@ HEADERS += \
     include/DrawingTypes.h \
 	include/DrawingUndo.h \
 	include/DrawingWidget.h \
-	include/Drawing
+    include/Drawing.h
