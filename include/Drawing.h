@@ -23,7 +23,7 @@
 
 /*! \mainpage
  *
- * The jade library provides a widget for managing a large number of two-dimensional graphical
+ * The jade library provides a Qt widget for managing a large number of two-dimensional graphical
  * items within a scene: DrawingWidget.  DrawingWidget supports the following features:
  *
  * \li Add and remove large numbers of items to the scene

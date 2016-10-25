@@ -25,40 +25,6 @@
 
 /*! \brief Widget for managing a large number of two-dimensional DrawingItem objects.
  *
- * DrawingWidget visualizes a scene in a scrollable viewport.  The scrollable area of the scene is
- * determined by the sceneRect().
- *
- * Any position on the scene can be scrolled to by using the scroll bars or by calling centerOn().
- * To ensure that a certain area is visible, but not necessarily centered, call ensureVisible()
- * instead.
- *
- * visibleRect(), scrollBarDefinedRect()
- *
- * DrawingWidget visualizes the scene by calling render().  First, the background is drawn by
- * calling drawBackground().  Then the items are drawn by calling drawItems().  Items are drawn in
- * the order they were added to the widget, starting with the first item added and ending with the
- * most recent item added.  Finally, the foreground is drawn by calling drawForeground().  Any of
- * these functions can be overridden in a derived class to modify the default rendering behavior.
- *
- * \section widget_features Features
- *
- * modes
- * grid
- * undo/redo
- * cut/copy/paste
- * select all/none
- * zoom in/out
- * move, resize, rotate, flip items
- * bring items forward and send items backward
- * insert/remove item points
- * group/ungroup items
- * styles
- *
- * add/remove items
- * select/unselect items
- *
- * \section widget_items Items
- *
  * DrawingWidget serves as a container for DrawingItem objects.  Items can be added to the widget
  * using addItem() or insertItem() and removed using removeItem().
  *
@@ -73,31 +39,89 @@
  * selectItems().  To clear the current selection, call clearSelection(). Call selectedItems() to
  * get the list of all currently selected items.
  *
- * pointSizeHint(), pointRect()
+ * \section widget_viewport Viewport
  *
- * \section widget_modes Modes
+ * DrawingWidget visualizes a scene in a scrollable viewport.  The scrollable area of the scene is
+ * determined by the sceneRect().
  *
+ * Any position on the scene can be scrolled to by using the scroll bars or by calling centerOn().
+ * The area that is currently visible can be obtained by calling visibleRect().
  *
+ * The user can zoom in and out on the viewport through zoomIn() and zoomOut().  By default, these
+ * functions zoom in or out by a factor of sqrt(2).  The user can zoom out to fit the entire scene
+ * in the viewport by calling zoomFit().
  *
- * \section widget_events Event Handling and Propagation
+ * DrawingWidget visualizes the scene by calling render().  First, the background is drawn by
+ * calling drawBackground().  Then the items are drawn by calling drawItems().  Items are drawn in
+ * the order they were added to the widget, starting with the first item added and ending with the
+ * most recent item added.  Finally, the foreground is drawn by calling drawForeground().  Any of
+ * these functions can be overridden in a derived class to modify the default rendering behavior.
  *
- * You can interact with the items on the scene by using the mouse and keyboard. QGraphicsView translates the mouse and key events into scene events, (events that inherit QGraphicsSceneEvent,), and forward them to the visualized scene. In the end, it's the individual item that handles the events and reacts to them. For example, if you click on a selectable item, the item will typically let the scene know that it has been selected, and it will also redraw itself to display a selection rectangle. Similiary, if you click and drag the mouse to move a movable item, it's the item that handles the mouse moves and moves itself. Item interaction is enabled by default, and you can toggle it by calling setInteractive().
+ * \section widget_events Event Handling
  *
- * (default mode)
- * Mouse events are delivered to the mouse down item... mouseDownItem()
- * Key events are delivered to the focus item... focusItem()
+ * DrawingWidget supports several modes of operation.  The current mode() affects how DrawingWidget
+ * handles mouse and keyboard events.
  *
- * (place mode)
- * Mouse and key events are delivered to the new item... newItem()
+ * In #ScrollMode, the user can pan around the scene.  The cursor turns into a hand, which can
+ * grab the scene at any point and drag it around the viewport.  The user cannot interact with any
+ * items in this mode.  By default, right-clicking or double clicking will bring the widget back
+ * to #DefaultMode.
  *
- * You can also provide your own custom scene interaction, by creating a subclass of QGraphicsView, and reimplementing the mouse and key event handlers. To simplify how you programmatically interact with items in the view, QGraphicsView provides the mapping functions mapToScene() and mapFromScene(), and the item accessors items() and itemAt(). These functions allow you to map points, rectangles, polygons and paths between view coordinates and scene coordinates, and to find items on the scene using view coordinates.
+ * In #ZoomMode, the user can zoom in on an area of the scene.  The cursor turns into a crosshairs,
+ * which can be used to draw a rect over a portion of the scene.  The viewport will then zoom in to
+ * fit the entire rect into the new view.  Again, the user cannot interact with any
+ * items in this mode.  By default, right-clicking or double clicking will bring the widget back
+ * to #DefaulMode.
+ *
+ * #DefaultMode is the most common mode for using a DrawingWidget.  This mode allows full
+ * interaction with the items in the scene.  Users can click on items to select them or draw a
+ * rubber band over an area to select all items in that area.  Selected items can be moved around
+ * the scene.  A single selected item can be resized if the user clicks on a Control
+ * DrawingItemPoint.  Clicking on empty space will clear the current selection.
+ *
+ * On a mouse press event, DrawingWidget updates the current mouseDownItem() to whatever item was
+ * clicked.  At this time, DrawingWidget also updates the current focusItem() to match the new
+ * mouseDownItem().  After a mouse release event, DrawingWidget sets the current mouseDownItem() to
+ * nullptr since the mouse event is over.  Mouse events are forwarded to the mouseDownItem(), while
+ * keyboard events are forwarded to the focusItem().
+ *
+ * #PlaceMode is used to add new items to the widget.  By default, mouse move events move the
+ * new item around the scene.  The new item is added to the scene on a
+ * mouse release event.  Copies of the new item can continue to be placed until the user
+ * right-clicks or until the user enters a different mode.
+ *
+ * The default event handlers mousePressEvent(), mouseMoveEvent(), mouseReleaseEvent(),
+ * mouseDoubleClickEvent(), wheelEvent(), keyPressEvent(), and keyReleaseEvent() have an intelligent
+ * base implementation of the behavior described here.  These can be overloaded in a derived class
+ * to modify their behavior as needed for the application.
+ *
+ * \section widget_undo Undo Support
+ *
+ * DrawingWidget comes with full undo support.  The widget has an internal undo stack that is
+ * managed automatically.
+ *
+ * The following operations support undo through the specified function and associated undo
+ * command classes:
+ *
+ * \li Add a set of items to the widget: addItems(), DrawingAddItemsCommand
+ * \li Flip an item horizontally: flipItems(), DrawingFlipItemsCommand
+ * \li Insert an item point into an item: insertItemPoint(), DrawingItemInsertPointCommand
+ * \li Create a connection between two items: connectItemPoints(), DrawingItemPointConnectCommand
+ * \li Break a connection between two items: disconnectItemPoints(), DrawingItemPointDisconnectCommand
+ * \li Remove an item point from an item: removeItemPoint(), DrawingItemRemovePointCommand
+ * \li Move a set of items within the scene: moveItems(), DrawingMoveItemsCommand
+ * \li Remove a set of items from the widget: removeItems(), DrawingRemoveItemsCommand
+ * \li Bring items forward in the scene: bringForward(), DrawingReorderItemsCommand
+ * \li Send items backward in the scene: sendBackward(), DrawingReorderItemsCommand
+ * \li Bring items to the front of the scene: bringToFront(), DrawingReorderItemsCommand
+ * \li Send items the the back of the scene: sendToBack(), DrawingReorderItemsCommand
+ * \li Resize an item in the scene: resizeItem(), DrawingResizeItemCommand
+ * \li Rotate an item backward: rotateBackItems(), DrawingRotateBackItemsCommand
+ * \li Rotate an item forward: rotateItems(), DrawingRotateItemsCommand
+ *
+ * Call the setClean function to mark the undo stack as clean (i.e. if a document is saved).  Call
+ * isClean() to determine the current clean status.
  */
-
-	QList<DrawingItem*> items() const;
-	QList<DrawingItem*> items(const QPointF& scenePos) const;
-	QList<DrawingItem*> items(const QRectF& sceneRect) const;
-	DrawingItem* itemAt(const QPointF& scenePos) const;
-
 class DrawingWidget : public QAbstractScrollArea
 {
 	Q_OBJECT
@@ -105,12 +129,17 @@ class DrawingWidget : public QAbstractScrollArea
 	friend class DrawingReorderItemsCommand;
 
 public:
-	enum Mode { DefaultMode, ScrollMode, ZoomMode, PlaceMode, NumberOfModes };
-	enum ActionIndex { UndoAction, RedoAction, CutAction, CopyAction, PasteAction, DeleteAction,
-		SelectAllAction, SelectNoneAction, RotateAction, RotateBackAction, FlipAction,
-		BringForwardAction, SendBackwardAction, BringToFrontAction, SendToBackAction,
-		InsertPointAction, RemovePointAction, GroupAction, UngroupAction,
-		ZoomInAction, ZoomOutAction, ZoomFitAction, PropertiesAction, NumberOfActions };
+	/*! \brief Enum used to set the current mode of the DrawingWidget.  See the \ref widget_events
+	 * section above for more information.
+	 */
+	enum Mode
+	{
+		DefaultMode,	//!< The normal mode for interacting with items in a DrawingWidget.
+		ScrollMode,		//!< Mode for the user to pan around the scene.  No interaction with items.
+		ZoomMode		//!< Mode for the user to zoom in on an area of the scene.  No interaction
+						//!< with items.
+		PlaceMode,	//!< Mode for placing new items into a DrawingWidget.
+	};
 
 private:
 	enum MouseState { MouseReady, MouseSelect, MouseMoveItems, MouseResizeItem, MouseRubberBand };
@@ -119,22 +148,19 @@ private:
 	QRectF mSceneRect;
 	qreal mGrid;
 
-	QBrush mBackgroundBrush;
-	DrawingGridStyle mGridStyle;
-	QBrush mGridBrush;
-	int mGridSpacingMajor, mGridSpacingMinor;
-
 	qreal mScale;
 	Mode mMode;
 
 	QList<DrawingItem*> mItems;
+	DrawingItem* mNewItems;
+
+	Qt::ItemSelectionMode mItemSelectionMode;
 
 	// Internal variables
 	QTransform mViewportTransform;
 	QTransform mSceneTransform;
 
 	QList<DrawingItem*> mSelectedItems;
-	DrawingItem* mNewItem;
 	DrawingItem* mMouseDownItem;
 	DrawingItem* mFocusItem;
 
@@ -148,13 +174,7 @@ private:
 	QPoint mPanStartPos;
 	QPoint mPanCurrentPos;
 	QTimer mPanTimer;
-	int mConsecutivePastes;
 	QPointF mSelectionCenter;
-
-	QMenu mSingleItemContextMenu;
-	QMenu mSinglePolyItemContextMenu;
-	QMenu mMultipleItemContextMenu;
-	QMenu mDrawingContextMenu;
 
 public:
 	DrawingWidget();
@@ -171,17 +191,6 @@ public:
 	qreal grid() const;
 	qreal roundToGrid(qreal value) const;
 	QPointF roundToGrid(const QPointF& scenePos) const;
-
-	void setBackgroundBrush(const QBrush& brush);
-	QBrush backgroundBrush() const;
-
-	void setGridStyle(DrawingGridStyle style);
-	void setGridBrush(const QBrush& brush);
-	void setGridSpacing(int majorSpacing, int minorSpacing = 1);
-	DrawingGridStyle gridStyle() const;
-	QBrush gridBrush() const;
-	int gridSpacingMajor() const;
-	int gridSpacingMinor() const;
 
 	void setUndoLimit(int undoLimit);
 	void pushUndoCommand(QUndoCommand* command);
@@ -211,8 +220,8 @@ public:
 	void clearSelection();
 	QList<DrawingItem*> selectedItems() const;
 
-	void setNewItem(DrawingItem* item);
-	DrawingItem* newItem() const;
+	void setNewItems(QList<DrawingItem*> items);
+	QList<DrawingItem*> newItems() const;
 	DrawingItem* mouseDownItem() const;
 	DrawingItem* focusItem() const;
 
@@ -234,17 +243,17 @@ public:
 
 	// Rendering
 	virtual void render(QPainter* painter);
-	virtual void renderExport(QPainter* painter);
 
 public slots:
 	void zoomIn();
 	void zoomOut();
 	void zoomFit();
 
-	void setDefaultMode();
 	void setScrollMode();
 	void setZoomMode();
+	void setPlaceMode(const QList<DrawingItem*>& newItems);
 	void setPlaceMode(DrawingItem* newItem);
+	void setDefaultMode();
 
 	void undo();
 	void redo();
@@ -288,17 +297,11 @@ signals:
 	void canUndoChanged(bool canUndo);
 	void canRedoChanged(bool canRedo);
 
-	void propertiesTriggered();
-	void selectionChanged(const QList<DrawingItem*>& items);
-	void newItemChanged(DrawingItem* item);
+	void numberOfItemsChanged(int itemCount);
 	void itemsGeometryChanged(const QList<DrawingItem*>& items);
 	void itemGeometryChanged(DrawingItem* item);
-	void numberOfItemsChanged(int itemCount);
-
-	void mouseInfoChanged(const QString& infoText);
-
-	void propertiesChanged(const QRectF& sceneRect, qreal grid, const QBrush& backgroundBrush,
-		DrawingGridStyle gridStyle, const QBrush& gridBrush, int gridSpacingMajor, int gridSpacingMinor);
+	void selectionChanged(const QList<DrawingItem*>& items);
+	void newItemsChanged(const QList<DrawingItem*>& items);
 
 protected:
 	virtual void mousePressEvent(QMouseEvent* event);
