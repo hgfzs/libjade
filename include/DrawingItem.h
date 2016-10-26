@@ -87,10 +87,10 @@ class DrawingItemStyle;
  *
  * DrawingItem receives events from DrawingWidget through several event handlers:
  *
- * \li createEvent() is called when the item is first created by DrawingWidget in Place mode
  * \li mousePressEvent(), mouseMoveEvent(), mouseReleaseEvent(), and mouseDoubleClickEvent() handle
  * mouse events
  * \li keyPressEvent() and keyReleaseEvent() handle keyboard events
+ * \li newItemCopyEvent() is called when the item is first created by DrawingWidget in Place mode
  *
  * Custom items will likely want to handle these events differently when the DrawingWidget is
  * in Default mode versus when it is in Place mode.  The mode can be checked by calling
@@ -111,9 +111,10 @@ class DrawingItemStyle;
  * item are #CanMove | #CanResize | #CanRotate | #CanFlip.  Default implementations are provided for
  * moveItem(), resizeItem(), rotateItem(), rotateItemBack(), and flipItem().
  *
- * For items that support adding and/or removing item points, implementations should set the
- * #CanInsertPoints and/or #CanRemovePoints flags and provide an implementation for
- * insertItemPoint() and/or removeItemPoint().
+ * For items that support adding item points, implementations should set the #CanInsertPoints flag
+ * and provide an implementation for insertItemPoint().  For items that support adding item points,
+ * implementations should set the #CanRemovePoints flag and provide an implementation for
+ * removeItemPoint().
  *
  * \section itemCustom Custom Items
  *
@@ -142,9 +143,10 @@ public:
 										//!< scene.  See also rotateItem() and rotateBackItem().
 		CanFlip = 0x08,					//!< Indicates that the item can be flipped horizontally
 										//!< within the scene.  See also flipItem().
-		CanInsertRemovePoints = 0x10	//!< Indicates that item points can be added or removed
-										//!< from the item.  See also insertItemPoint() and
-										//!< removeItemPoint().
+		CanInsertPoints = 0x10,			//!< Indicates that item points can be added
+										//!< to the item.  See also insertItemPoint().
+		CanRemovePoints = 0x20			//!< Indicates that item points can be removed
+										//!< from the item.  See also removeItemPoint().
 	};
 	Q_DECLARE_FLAGS(Flags, Flag)
 
@@ -448,7 +450,7 @@ public:
 	 * found.
 	 *
 	 * For each point, this function calculates the bounding rect of the point using
-	 * DrawingWidget::pointRect, then maps it to local item coordinates.  If the specified itemPos
+	 * DrawingWidget::pointRect(), then maps it to local item coordinates.  If the specified itemPos
 	 * is contained within the point's boundingRect, the point is returned immediately.  If no
 	 * match is found after searching through all of the item's points, nullptr is returned.
 	 * The itemPos is given in the local item coordinates.

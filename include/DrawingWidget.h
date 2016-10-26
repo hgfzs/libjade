@@ -100,27 +100,28 @@
  * DrawingWidget comes with full undo support.  The widget has an internal undo stack that is
  * managed automatically.
  *
- * The following operations support undo through the specified function and associated undo
- * command classes:
+ * The following operations support undo through the specified undo command classes:
  *
- * \li Add a set of items to the widget: addItems(), DrawingAddItemsCommand
- * \li Flip an item horizontally: flipItems(), DrawingFlipItemsCommand
- * \li Insert an item point into an item: insertItemPoint(), DrawingItemInsertPointCommand
- * \li Create a connection between two items: connectItemPoints(), DrawingItemPointConnectCommand
- * \li Break a connection between two items: disconnectItemPoints(), DrawingItemPointDisconnectCommand
- * \li Remove an item point from an item: removeItemPoint(), DrawingItemRemovePointCommand
- * \li Move a set of items within the scene: moveItems(), DrawingMoveItemsCommand
- * \li Remove a set of items from the widget: removeItems(), DrawingRemoveItemsCommand
- * \li Bring items forward in the scene: bringForward(), DrawingReorderItemsCommand
- * \li Send items backward in the scene: sendBackward(), DrawingReorderItemsCommand
- * \li Bring items to the front of the scene: bringToFront(), DrawingReorderItemsCommand
- * \li Send items the the back of the scene: sendToBack(), DrawingReorderItemsCommand
- * \li Resize an item in the scene: resizeItem(), DrawingResizeItemCommand
- * \li Rotate an item backward: rotateBackItems(), DrawingRotateBackItemsCommand
- * \li Rotate an item forward: rotateItems(), DrawingRotateItemsCommand
+ * \li Add a set of items to the widget: DrawingAddItemsCommand
+ * \li Flip an item horizontally: DrawingFlipItemsCommand
+ * \li Insert an item point into an item: DrawingItemInsertPointCommand
+ * \li Create a connection between two items: DrawingItemPointConnectCommand
+ * \li Break a connection between two items: DrawingItemPointDisconnectCommand
+ * \li Remove an item point from an item: DrawingItemRemovePointCommand
+ * \li Move a set of items within the scene: DrawingMoveItemsCommand
+ * \li Remove a set of items from the widget: DrawingRemoveItemsCommand
+ * \li Bring items forward in the scene: DrawingReorderItemsCommand
+ * \li Send items backward in the scene: DrawingReorderItemsCommand
+ * \li Bring items to the front of the scene: DrawingReorderItemsCommand
+ * \li Send items the the back of the scene: DrawingReorderItemsCommand
+ * \li Resize an item in the scene: DrawingResizeItemCommand
+ * \li Rotate an item backward: DrawingRotateBackItemsCommand
+ * \li Rotate an item forward: DrawingRotateItemsCommand
  *
  * Call the setClean() function to mark the undo stack as clean (i.e. if a document is saved).  Call
  * isClean() to determine the current clean status.
+ *
+ * Custom undo events may be pushed on to the internal undo stack by calling pushUndoCommand().
  */
 class DrawingWidget : public QAbstractScrollArea
 {
@@ -149,6 +150,8 @@ private:
 	// future: selecting/unselecting items are undoable events, item has CanSelect flag
 	// add support for item styles
 	// items must accept mouseReleaseEvent or mouseDoubleClickEvent to place item in scene
+	// ensure that widget does not draw items that are not visible and does not send events to items
+	//     that are not visible
 	QRectF mSceneRect;
 	qreal mGrid;
 	QBrush mBackgroundBrush;
