@@ -111,8 +111,9 @@ class DrawingItemStyle;
  * item are #CanMove | #CanResize | #CanRotate | #CanFlip.  Default implementations are provided for
  * moveItem(), resizeItem(), rotateItem(), rotateItemBack(), and flipItem().
  *
- * For items that support adding/removing item points, implementations should set the
- * #CanInsertRemovePoints flag and provide an implementation for insertItemPoint() and removeItemPoint().
+ * For items that support adding and/or removing item points, implementations should set the
+ * #CanInsertPoints and/or #CanRemovePoints flags and provide an implementation for
+ * insertItemPoint() and/or removeItemPoint().
  *
  * \section itemCustom Custom Items
  *
@@ -270,8 +271,9 @@ public:
 	 * is valid for DrawingItem objects.  By default, the (#CanMove | #CanResize | #CanRotate |
 	 * #CanFlip) flags are set.
 	 *
-	 * Items that set the #CanInsertRemovePoints flag should also provide an implementation for
-	 * insertItemPoint() and removeItemPoint().
+	 * Items that set the #CanInsertPoints flag should also provide an implementation for
+	 * insertItemPoint().  Items that set the #CanRemovePoints flag should also provide an
+	 * implementation for and removeItemPoint().
 	 *
 	 * \sa flags()
 	 */
@@ -283,6 +285,41 @@ public:
 	 */
 	Flags flags() const;
 
+	/*! \brief Returns true if the #CanMove flag is set, false otherwise.
+	 *
+	 * \sa flags()
+	 */
+	bool canMove() const;
+
+	/*! \brief Returns true if the #CanResize flag is set, false otherwise.
+	 *
+	 * \sa flags()
+	 */
+	bool canResize() const;
+
+	/*! \brief Returns true if the #CanRotate flag is set, false otherwise.
+	 *
+	 * \sa flags()
+	 */
+	bool canRotate() const;
+
+	/*! \brief Returns true if the #CanFlip flag is set, false otherwise.
+	 *
+	 * \sa flags()
+	 */
+	bool canFlip() const;
+
+	/*! \brief Returns true if the #CanInsertPoints flag is set, false otherwise.
+	 *
+	 * \sa flags()
+	 */
+	bool canInsertPoints() const;
+
+	/*! \brief Returns true if the #CanRemovePoints flag is set, false otherwise.
+	 *
+	 * \sa flags()
+	 */
+	bool canRemovePoints() const;
 
 	/*! \brief Sets the rotation angle of the item.
 	 *
@@ -531,12 +568,10 @@ public:
 	virtual void rotateBackItem(const QPointF& scenePos);
 	virtual void flipItem(const QPointF& scenePos);
 
-	virtual void insertItemPoint(const QPointF& scenePos);
-	virtual void removeItemPoint(const QPointF& scenePos);
+	virtual void insertItemPoint(DrawingItemPoint* itemPoint);
+	virtual void removeItemPoint(DrawingItemPoint* itemPoint);
 
 protected:
-	virtual void createEvent();
-
 	virtual void mousePressEvent(DrawingMouseEvent* event);
 	virtual void mouseMoveEvent(DrawingMouseEvent* event);
 	virtual void mouseReleaseEvent(DrawingMouseEvent* event);
@@ -544,6 +579,8 @@ protected:
 
 	virtual void keyPressEvent(QKeyEvent* event);
 	virtual void keyReleaseEvent(QKeyEvent* event);
+
+	virtual bool newItemCopyEvent();
 
 private:
 	void recalculateTransform();

@@ -217,12 +217,11 @@ class DrawingItemInsertPointCommand : public DrawingUndoCommand
 private:
 	DrawingItem* mItem;
 	DrawingItemPoint* mPoint;
-	int mPointIndex;
 	bool mUndone;
 
 public:
 	DrawingItemInsertPointCommand(DrawingItem* item, DrawingItemPoint* point,
-		int pointIndex, QUndoCommand* parent = nullptr);
+		QUndoCommand* parent = nullptr);
 	~DrawingItemInsertPointCommand();
 
 	int id() const;
@@ -238,7 +237,6 @@ class DrawingItemRemovePointCommand : public DrawingUndoCommand
 private:
 	DrawingItem* mItem;
 	DrawingItemPoint* mPoint;
-	int mPointIndex;
 	bool mUndone;
 
 public:
@@ -287,63 +285,6 @@ public:
 	DrawingItemPointDisconnectCommand(const DrawingItemPointDisconnectCommand& command,
 		QUndoCommand* parent = NULL);
 	~DrawingItemPointDisconnectCommand();
-
-	int id() const;
-
-	void redo();
-	void undo();
-};
-
-//==================================================================================================
-
-class DrawingUpdateItemPropertiesCommand : public DrawingUndoCommand
-{
-private:
-	QList<DrawingItem*> mItems;
-	QMap<QString,QVariant> mProperties;
-	QMap<DrawingItem*, QMap<QString,QVariant>> mOriginalProperties;
-
-public:
-	DrawingUpdateItemPropertiesCommand(const QList<DrawingItem*>& items,
-		const QMap<QString,QVariant>& newProperties, QUndoCommand* parent = nullptr);
-	~DrawingUpdateItemPropertiesCommand();
-
-	int id() const;
-
-	void redo();
-	void undo();
-
-	bool mergeWith(const QUndoCommand* command);
-};
-
-//==================================================================================================
-
-class DrawingUpdatePropertiesCommand : public DrawingUndoCommand
-{
-private:
-	DrawingWidget* mDrawing;
-
-	QRectF mSceneRect;
-	qreal mGrid;
-	QBrush mBackgroundBrush;
-	DrawingGridStyle mGridStyle;
-	QBrush mGridBrush;
-	int mGridSpacingMajor;
-	int mGridSpacingMinor;
-
-	QRectF mOriginalSceneRect;
-	qreal mOriginalGrid;
-	QBrush mOriginalBackgroundBrush;
-	DrawingGridStyle mOriginalGridStyle;
-	QBrush mOriginalGridBrush;
-	int mOriginalGridSpacingMajor;
-	int mOriginalGridSpacingMinor;
-
-public:
-	DrawingUpdatePropertiesCommand(DrawingWidget* drawing, const QRectF& sceneRect, qreal grid,
-		const QBrush& backgroundBrush, DrawingGridStyle gridStyle, const QBrush& gridBrush,
-		int gridSpacingMajor, int gridSpacingMinor, QUndoCommand* parent = nullptr);
-	~DrawingUpdatePropertiesCommand();
 
 	int id() const;
 

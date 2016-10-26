@@ -53,6 +53,8 @@ void DrawingMouseEvent::setFromEvent(QMouseEvent* event, DrawingWidget* widget)
 		mDragged = (mDragged |
 			((mButtonDownPos - mPos).manhattanLength() >= QApplication::startDragDistance()));
 	}
+
+	setAccepted(false);
 }
 
 //==================================================================================================

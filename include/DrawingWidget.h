@@ -71,7 +71,7 @@
  * which can be used to draw a rect over a portion of the scene.  The viewport will then zoom in to
  * fit the entire rect into the new view.  Again, the user cannot interact with any
  * items in this mode.  By default, right-clicking or double clicking will bring the widget back
- * to #DefaulMode.
+ * to #DefaultMode.
  *
  * #DefaultMode is the most common mode for using a DrawingWidget.  This mode allows full
  * interaction with the items in the scene.  Users can click on items to select them or draw a
@@ -119,7 +119,7 @@
  * \li Rotate an item backward: rotateBackItems(), DrawingRotateBackItemsCommand
  * \li Rotate an item forward: rotateItems(), DrawingRotateItemsCommand
  *
- * Call the setClean function to mark the undo stack as clean (i.e. if a document is saved).  Call
+ * Call the setClean() function to mark the undo stack as clean (i.e. if a document is saved).  Call
  * isClean() to determine the current clean status.
  */
 class DrawingWidget : public QAbstractScrollArea
@@ -136,33 +136,38 @@ public:
 	{
 		DefaultMode,	//!< The normal mode for interacting with items in a DrawingWidget.
 		ScrollMode,		//!< Mode for the user to pan around the scene.  No interaction with items.
-		ZoomMode		//!< Mode for the user to zoom in on an area of the scene.  No interaction
+		ZoomMode,		//!< Mode for the user to zoom in on an area of the scene.  No interaction
 						//!< with items.
-		PlaceMode,	//!< Mode for placing new items into a DrawingWidget.
+		PlaceMode		//!< Mode for placing new items into a DrawingWidget.
 	};
 
 private:
 	enum MouseState { MouseReady, MouseSelect, MouseMoveItems, MouseResizeItem, MouseRubberBand };
 
 private:
+	// future: can place multiple new items at once
+	// future: selecting/unselecting items are undoable events, item has CanSelect flag
+	// add support for item styles
+	// items must accept mouseReleaseEvent or mouseDoubleClickEvent to place item in scene
 	QRectF mSceneRect;
 	qreal mGrid;
-
-	qreal mScale;
-	Mode mMode;
+	QBrush mBackgroundBrush;
 
 	QList<DrawingItem*> mItems;
-	DrawingItem* mNewItems;
+	QList<DrawingItem*> mSelectedItems;
+	DrawingItemPoint* mSelectedItemPoint;
+	DrawingItem* mNewItem;
+	DrawingItem* mMouseDownItem;
+	DrawingItem* mFocusItem;
 
+	Mode mMode;
 	Qt::ItemSelectionMode mItemSelectionMode;
+
+	qreal mScale;
 
 	// Internal variables
 	QTransform mViewportTransform;
 	QTransform mSceneTransform;
-
-	QList<DrawingItem*> mSelectedItems;
-	DrawingItem* mMouseDownItem;
-	DrawingItem* mFocusItem;
 
 	QUndoStack mUndoStack;
 	DrawingMouseEvent mMouseEvent;
@@ -174,6 +179,7 @@ private:
 	QPoint mPanStartPos;
 	QPoint mPanCurrentPos;
 	QTimer mPanTimer;
+	int mConsecutivePastes;
 	QPointF mSelectionCenter;
 
 public:
@@ -192,6 +198,9 @@ public:
 	qreal roundToGrid(qreal value) const;
 	QPointF roundToGrid(const QPointF& scenePos) const;
 
+	void setBackgroundBrush(const QBrush& brush);
+	QBrush backgroundBrush() const;
+
 	void setUndoLimit(int undoLimit);
 	void pushUndoCommand(QUndoCommand* command);
 	int undoLimit() const;
@@ -201,8 +210,11 @@ public:
 	QString undoText() const;
 	QString redoText() const;
 
-	qreal scale() const;
+	void setItemSelectionMode(Qt::ItemSelectionMode mode);
+	Qt::ItemSelectionMode itemSelectionMode() const;
+
 	Mode mode() const;
+	qreal scale() const;
 
 	// Items
 	void addItem(DrawingItem* item, bool place = false);
@@ -220,26 +232,26 @@ public:
 	void clearSelection();
 	QList<DrawingItem*> selectedItems() const;
 
-	void setNewItems(QList<DrawingItem*> items);
-	QList<DrawingItem*> newItems() const;
+	DrawingItem* newItem() const;
 	DrawingItem* mouseDownItem() const;
 	DrawingItem* focusItem() const;
 
+	// Item points
 	virtual QSize pointSizeHint() const;
 	QRect pointRect(DrawingItemPoint* point) const;
 
 	// View mapping
+	void centerOn(const QPointF& scenePos);
+	void centerOnCursor(const QPointF& scenePos);
+	void fitToView(const QRectF& sceneRect);
+	void scaleBy(qreal scale);
+
 	QPointF mapToScene(const QPoint& screenPos) const;
 	QRectF mapToScene(const QRect& screenRect) const;
 	QPoint mapFromScene(const QPointF& scenePos) const;
 	QRect mapFromScene(const QRectF& sceneRect) const;
 	QRectF visibleRect() const;
 	QRectF scrollBarDefinedRect() const;
-
-	void centerOn(const QPointF& scenePos);
-	void centerOnCursor(const QPointF& scenePos);
-	void fitToView(const QRectF& sceneRect);
-	void scaleBy(qreal scale);
 
 	// Rendering
 	virtual void render(QPainter* painter);
@@ -249,11 +261,10 @@ public slots:
 	void zoomOut();
 	void zoomFit();
 
+	void setDefaultMode();
 	void setScrollMode();
 	void setZoomMode();
-	void setPlaceMode(const QList<DrawingItem*>& newItems);
 	void setPlaceMode(DrawingItem* newItem);
-	void setDefaultMode();
 
 	void undo();
 	void redo();
@@ -272,7 +283,6 @@ public slots:
 	void rotateSelection();
 	void rotateBackSelection();
 	void flipSelection();
-	void updateSelectionProperties(const QMap<QString,QVariant>& properties);
 
 	void bringForward();
 	void sendBackward();
@@ -284,10 +294,6 @@ public slots:
 
 	void group();
 	void ungroup();
-
-	void properties();
-	void updateProperties(const QRectF& sceneRect, qreal grid, const QBrush& backgroundBrush,
-		DrawingGridStyle gridStyle, const QBrush& gridBrush, int gridSpacingMajor, int gridSpacingMinor);
 
 signals:
 	void scaleChanged(qreal scale);
@@ -301,7 +307,7 @@ signals:
 	void itemsGeometryChanged(const QList<DrawingItem*>& items);
 	void itemGeometryChanged(DrawingItem* item);
 	void selectionChanged(const QList<DrawingItem*>& items);
-	void newItemsChanged(const QList<DrawingItem*>& items);
+	void newItemChanged(DrawingItem* item);
 
 protected:
 	virtual void mousePressEvent(QMouseEvent* event);
@@ -309,16 +315,6 @@ protected:
 	virtual void mouseReleaseEvent(QMouseEvent* event);
 	virtual void mouseDoubleClickEvent(QMouseEvent* event);
 	virtual void wheelEvent(QWheelEvent* event);
-
-	virtual void defaultMousePressEvent(DrawingMouseEvent* event);
-	virtual void defaultMouseMoveEvent(DrawingMouseEvent* event);
-	virtual void defaultMouseReleaseEvent(DrawingMouseEvent* event);
-	virtual void defaultMouseDoubleClickEvent(DrawingMouseEvent* event);
-
-	virtual void placeModeMousePressEvent(DrawingMouseEvent* event);
-	virtual void placeModeMouseMoveEvent(DrawingMouseEvent* event);
-	virtual void placeModeMouseReleaseEvent(DrawingMouseEvent* event);
-	virtual void placeModeMouseDoubleClickEvent(DrawingMouseEvent* event);
 
 	virtual void keyPressEvent(QKeyEvent* event);
 	virtual void keyReleaseEvent(QKeyEvent* event);
@@ -330,13 +326,22 @@ protected:
 
 	virtual void resizeEvent(QResizeEvent* event);
 
-protected slots:
+private:
+	void defaultMousePressEvent(DrawingMouseEvent* event);
+	void defaultMouseMoveEvent(DrawingMouseEvent* event);
+	void defaultMouseReleaseEvent(DrawingMouseEvent* event);
+	void defaultMouseDoubleClickEvent(DrawingMouseEvent* event);
+
+	void placeModeMousePressEvent(DrawingMouseEvent* event);
+	void placeModeMouseMoveEvent(DrawingMouseEvent* event);
+	void placeModeMouseReleaseEvent(DrawingMouseEvent* event);
+	void placeModeMouseDoubleClickEvent(DrawingMouseEvent* event);
+
+private slots:
+	void updateSelectionCenter();
 	void mousePanEvent();
 
-	void updateSelectionCenter();
-	void updateActionsFromSelection();
-
-protected:
+private:
 	void addItems(const QList<DrawingItem*>& items, bool place, QUndoCommand* command = nullptr);
 	void addItems(DrawingItem* item, bool place, QUndoCommand* command = nullptr);
 	void removeItems(const QList<DrawingItem*>& items, QUndoCommand* command = nullptr);
@@ -368,10 +373,6 @@ protected:
 	void connectItemPoints(DrawingItemPoint* point0, DrawingItemPoint* point1, QUndoCommand* command = nullptr);
 	void disconnectItemPoints(DrawingItemPoint* point0, DrawingItemPoint* point1, QUndoCommand* command = nullptr);
 
-	void updateItemProperties(const QList<DrawingItem*>& items, const QMap<QString,QVariant>& properties,
-		QUndoCommand* command = nullptr);
-
-protected:
 	bool itemMatchesPoint(DrawingItem* item, const QPointF& scenePos) const;
 	bool itemMatchesRect(DrawingItem* item, const QRectF& rect, Qt::ItemSelectionMode mode) const;
 
@@ -379,14 +380,6 @@ protected:
 	bool shouldDisconnect(DrawingItemPoint* point1, DrawingItemPoint* point2) const;
 
 	void recalculateContentSize(const QRectF& targetSceneRect = QRectF());
-
-	void updateMouseInfo(const QPointF& pos);
-	void updateMouseInfo(const QPointF& p1, const QPointF& p2);
-
-	void addActions();
-	void createContextMenu();
-	QAction* addAction(const QString& text, QObject* slotObj, const char* slotFunction,
-		const QString& iconPath = QString(), const QString& shortcut = QString());
 };
 
 #endif

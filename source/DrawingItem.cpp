@@ -423,21 +423,14 @@ void DrawingItem::flipItem(const QPointF& scenePos)
 
 //==================================================================================================
 
-void DrawingItem::insertItemPoint(const QPointF& scenePos)
+void DrawingItem::insertItemPoint(DrawingItemPoint* itemPoint)
 {
-	Q_UNUSED(scenePos);
+	Q_UNUSED(itemPoint);
 }
 
-void DrawingItem::removeItemPoint(const QPointF& scenePos)
+void DrawingItem::removeItemPoint(DrawingItemPoint* itemPoint)
 {
-	Q_UNUSED(scenePos);
-}
-
-//==================================================================================================
-
-void DrawingItem::createEvent()
-{
-
+	Q_UNUSED(itemPoint);
 }
 
 //==================================================================================================
@@ -463,6 +456,7 @@ void DrawingItem::mouseReleaseEvent(DrawingMouseEvent* event)
 	if (mDrawing && mDrawing->mode() == DrawingWidget::PlaceMode)
 	{
 		setPos(mDrawing->roundToGrid(event->scenePos()));
+		event->accept();
 	}
 
 	Q_UNUSED(event);
@@ -473,7 +467,8 @@ void DrawingItem::mouseDoubleClickEvent(DrawingMouseEvent* event)
 	if (mDrawing && mDrawing->mode() == DrawingWidget::PlaceMode)
 	{
 		setPos(mDrawing->roundToGrid(event->scenePos()));
-
+		event->accept();
+	}
 
 	Q_UNUSED(event);
 }
@@ -488,6 +483,13 @@ void DrawingItem::keyPressEvent(QKeyEvent* event)
 void DrawingItem::keyReleaseEvent(QKeyEvent* event)
 {
 	Q_UNUSED(event);
+}
+
+//==================================================================================================
+
+bool DrawingItem::newItemCopyEvent()
+{
+	return true;
 }
 
 //==================================================================================================

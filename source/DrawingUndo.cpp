@@ -463,11 +463,10 @@ void DrawingReorderItemsCommand::undo()
 //==================================================================================================
 
 DrawingItemInsertPointCommand::DrawingItemInsertPointCommand(DrawingItem* item, DrawingItemPoint* point,
-	int pointIndex, QUndoCommand* parent) : DrawingUndoCommand("Insert Point", parent)
+	QUndoCommand* parent) : DrawingUndoCommand("Insert Point", parent)
 {
 	mItem = item;
 	mPoint = point;
-	mPointIndex = pointIndex;
 	mUndone = true;
 }
 
@@ -483,7 +482,7 @@ int DrawingItemInsertPointCommand::id() const
 
 void DrawingItemInsertPointCommand::redo()
 {
-	mItem->insertPoint(mPointIndex, mPoint);
+	mItem->insertItemPoint(mPoint);
 	mUndone = false;
 
 	DrawingUndoCommand::redo();
@@ -493,8 +492,7 @@ void DrawingItemInsertPointCommand::undo()
 {
 	DrawingUndoCommand::undo();
 
-	mPointIndex = mItem->points().indexOf(mPoint);
-	mItem->removePoint(mPoint);
+	mItem->removeItemPoint(mPoint);
 	mUndone = true;
 }
 
@@ -505,7 +503,6 @@ DrawingItemRemovePointCommand::DrawingItemRemovePointCommand(DrawingItem* item, 
 {
 	mItem = item;
 	mPoint = point;
-	mPointIndex = mItem->points().indexOf(mPoint);
 	mUndone = true;
 }
 
@@ -521,8 +518,7 @@ int DrawingItemRemovePointCommand::id() const
 
 void DrawingItemRemovePointCommand::redo()
 {
-	mPointIndex = mItem->points().indexOf(mPoint);
-	mItem->removePoint(mPoint);
+	mItem->removeItemPoint(mPoint);
 	mUndone = false;
 
 	DrawingUndoCommand::redo();
@@ -532,7 +528,7 @@ void DrawingItemRemovePointCommand::undo()
 {
 	DrawingUndoCommand::undo();
 
-	mItem->insertPoint(mPointIndex, mPoint);
+	mItem->insertItemPoint(mPoint);
 	mUndone = true;
 }
 
@@ -616,132 +612,4 @@ void DrawingItemPointDisconnectCommand::undo()
 	DrawingUndoCommand::undo();
 	mPoint1->addConnection(mPoint2);
 	mPoint2->addConnection(mPoint1);
-}
-
-//==================================================================================================
-
-DrawingUpdateItemPropertiesCommand::DrawingUpdateItemPropertiesCommand(const QList<DrawingItem*>& items,
-	const QMap<QString,QVariant>& newProperties, QUndoCommand* parent) : DrawingUndoCommand("Update Properties", parent)
-{
-	mItems = items;
-	mProperties = newProperties;
-
-	QStringList keys = newProperties.keys();
-
-	for(auto itemIter = mItems.begin(); itemIter != mItems.end(); itemIter++)
-	{
-		QMap<QString,QVariant> properties;
-
-		for(auto keyIter = keys.begin(); keyIter != keys.end(); keyIter++)
-		{
-			if ((*itemIter)->hasProperty(*keyIter))
-				properties[*keyIter] = (*itemIter)->property(*keyIter);
-		}
-
-		mOriginalProperties[*itemIter] = properties;
-	}
-}
-
-DrawingUpdateItemPropertiesCommand::~DrawingUpdateItemPropertiesCommand() { }
-
-int DrawingUpdateItemPropertiesCommand::id() const
-{
-	return UpdateItemPropertiesType;
-}
-
-void DrawingUpdateItemPropertiesCommand::redo()
-{
-	for(auto itemIter = mItems.begin(); itemIter != mItems.end(); itemIter++)
-		(*itemIter)->updateProperties(mProperties);
-
-	DrawingUndoCommand::redo();
-}
-
-void DrawingUpdateItemPropertiesCommand::undo()
-{
-	DrawingUndoCommand::undo();
-
-	for(auto itemIter = mItems.begin(); itemIter != mItems.end(); itemIter++)
-		(*itemIter)->updateProperties(mOriginalProperties[*itemIter]);
-}
-
-bool DrawingUpdateItemPropertiesCommand::mergeWith(const QUndoCommand* command)
-{
-	bool mergeSuccess = false;
-
-	if (command && command->id() == UpdateItemPropertiesType)
-	{
-		const DrawingUpdateItemPropertiesCommand* propertiesCommand =
-			static_cast<const DrawingUpdateItemPropertiesCommand*>(command);
-
-		if (propertiesCommand && mProperties.keys() == propertiesCommand->mProperties.keys() &&
-			mProperties.keys().size() == 1 && mProperties.keys().first() == "Caption")
-		{
-			mProperties = propertiesCommand->mProperties;
-			mergeSuccess = true;
-		}
-	}
-
-	return mergeSuccess;
-}
-
-//==================================================================================================
-
-DrawingUpdatePropertiesCommand::DrawingUpdatePropertiesCommand(DrawingWidget* drawing,
-	const QRectF& sceneRect, qreal grid, const QBrush& backgroundBrush,
-	DrawingGridStyle gridStyle, const QBrush& gridBrush, int gridSpacingMajor, int gridSpacingMinor,
-	QUndoCommand* parent) : DrawingUndoCommand("Update Properties", parent)
-{
-	mDrawing = drawing;
-
-	mSceneRect = sceneRect;
-	mGrid = grid;
-	mBackgroundBrush = backgroundBrush;
-	mGridStyle = gridStyle;
-	mGridBrush = gridBrush;
-	mGridSpacingMajor = gridSpacingMajor;
-	mGridSpacingMinor = gridSpacingMinor;
-
-	mOriginalSceneRect = drawing->sceneRect();
-	mOriginalGrid = drawing->grid();
-	mOriginalBackgroundBrush = drawing->backgroundBrush();
-	mOriginalGridStyle = drawing->gridStyle();
-	mOriginalGridBrush = drawing->gridBrush();
-	mOriginalGridSpacingMajor = drawing->gridSpacingMajor();
-	mOriginalGridSpacingMinor = drawing->gridSpacingMinor();
-}
-
-DrawingUpdatePropertiesCommand::~DrawingUpdatePropertiesCommand() { }
-
-int DrawingUpdatePropertiesCommand::id() const
-{
-	return UpdatePropertiesType;
-}
-
-void DrawingUpdatePropertiesCommand::redo()
-{
-	mDrawing->setSceneRect(mSceneRect);
-	mDrawing->setGrid(mGrid);
-	mDrawing->setBackgroundBrush(mBackgroundBrush);
-	mDrawing->setGridStyle(mGridStyle);
-	mDrawing->setGridBrush(mGridBrush);
-	mDrawing->setGridSpacing(mGridSpacingMajor, mGridSpacingMinor);
-
-	DrawingUndoCommand::redo();
-
-	if (mSceneRect != mOriginalSceneRect) mDrawing->zoomFit();
-}
-
-void DrawingUpdatePropertiesCommand::undo()
-{
-	DrawingUndoCommand::undo();
-
-	mDrawing->setSceneRect(mOriginalSceneRect);
-	mDrawing->setGrid(mOriginalGrid);
-	mDrawing->setBackgroundBrush(mOriginalBackgroundBrush);
-	mDrawing->setGridStyle(mOriginalGridStyle);
-	mDrawing->setGridBrush(mOriginalGridBrush);
-	mDrawing->setGridSpacing(mOriginalGridSpacingMajor, mOriginalGridSpacingMinor);
-
-	if (mSceneRect != mOriginalSceneRect) mDrawing->zoomFit();
 }

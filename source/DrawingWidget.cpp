@@ -23,8 +23,6 @@
 #include "DrawingItemGroup.h"
 #include "DrawingItemPoint.h"
 #include "DrawingUndo.h"
-#include "DrawingShapeItems.h"
-#include "DrawingTwoPointItems.h"
 
 DrawingWidget::DrawingWidget() : QAbstractScrollArea()
 {
@@ -34,19 +32,17 @@ DrawingWidget::DrawingWidget() : QAbstractScrollArea()
 
 	mSceneRect = QRectF(-5000, -3750, 10000, 7500);
 	mGrid = 50;
-
 	mBackgroundBrush = Qt::white;
-	mGridStyle = GridGraphPaper;
-	mGridBrush = QColor(0, 128, 128);
-	mGridSpacingMajor = 8;
-	mGridSpacingMinor = 2;
 
-	mScale = 1.0;
-	mMode = DefaultMode;
-
+	mSelectedItemPoint = nullptr;
 	mNewItem = nullptr;
 	mMouseDownItem = nullptr;
 	mFocusItem = nullptr;
+
+	mMode = DefaultMode;
+	mItemSelectionMode = Qt::ContainsItemBoundingRect;
+
+	mScale = 1.0;
 
 	mUndoStack.setUndoLimit(64);
 	connect(&mUndoStack, SIGNAL(cleanChanged(bool)), this, SIGNAL(cleanChanged(bool)));
@@ -60,15 +56,11 @@ DrawingWidget::DrawingWidget() : QAbstractScrollArea()
 	mPanTimer.setInterval(16);
 	connect(&mPanTimer, SIGNAL(timeout()), this, SLOT(mousePanEvent()));
 	mConsecutivePastes = 0;
-
-	addActions();
-	createContextMenu();
-	connect(this, SIGNAL(selectionChanged(const QList<DrawingItem*>&)), this, SLOT(updateActionsFromSelection()));
 }
 
 DrawingWidget::~DrawingWidget()
 {
-	setNewItem(nullptr);
+	delete mNewItem;
 	clearItems();
 }
 
@@ -145,44 +137,6 @@ QBrush DrawingWidget::backgroundBrush() const
 
 //==================================================================================================
 
-void DrawingWidget::setGridStyle(DrawingGridStyle style)
-{
-	mGridStyle = style;
-}
-
-void DrawingWidget::setGridBrush(const QBrush& brush)
-{
-	mGridBrush = brush;
-}
-
-void DrawingWidget::setGridSpacing(int majorSpacing, int minorSpacing)
-{
-	mGridSpacingMajor = majorSpacing;
-	mGridSpacingMinor = minorSpacing;
-}
-
-DrawingGridStyle DrawingWidget::gridStyle() const
-{
-	return mGridStyle;
-}
-
-QBrush DrawingWidget::gridBrush() const
-{
-	return mGridBrush;
-}
-
-int DrawingWidget::gridSpacingMajor() const
-{
-	return mGridSpacingMajor;
-}
-
-int DrawingWidget::gridSpacingMinor() const
-{
-	return mGridSpacingMinor;
-}
-
-//==================================================================================================
-
 void DrawingWidget::setUndoLimit(int undoLimit)
 {
 	mUndoStack.setUndoLimit(undoLimit);
@@ -226,14 +180,26 @@ QString DrawingWidget::redoText() const
 
 //==================================================================================================
 
-qreal DrawingWidget::scale() const
+void DrawingWidget::setItemSelectionMode(Qt::ItemSelectionMode mode)
 {
-	return mScale;
+	mItemSelectionMode = mode;
 }
+
+Qt::ItemSelectionMode DrawingWidget::itemSelectionMode() const
+{
+	return mItemSelectionMode;
+}
+
+//==================================================================================================
 
 DrawingWidget::Mode DrawingWidget::mode() const
 {
 	return mMode;
+}
+
+qreal DrawingWidget::scale() const
+{
+	return mScale;
 }
 
 //==================================================================================================
@@ -359,7 +325,7 @@ QList<DrawingItem*> DrawingWidget::items(const QRectF& sceneRect) const
 
 	for(auto itemIter = mItems.begin(); itemIter != mItems.end(); itemIter++)
 	{
-		if (itemMatchesRect(*itemIter, sceneRect, Qt::ContainsItemBoundingRect))
+		if (itemMatchesRect(*itemIter, sceneRect, mItemSelectionMode))
 			items.append(*itemIter);
 	}
 
@@ -438,19 +404,6 @@ QList<DrawingItem*> DrawingWidget::selectedItems() const
 
 //==================================================================================================
 
-void DrawingWidget::setNewItem(DrawingItem* item)
-{
-	if (mNewItem) mNewItem->mDrawing = nullptr;
-	delete mNewItem;
-
-	mNewItem = item;
-	if (mNewItem)
-	{
-		mNewItem->mDrawing = this;
-		mNewItem->setVisible(true);
-	}
-}
-
 DrawingItem* DrawingWidget::newItem() const
 {
 	return mNewItem;
@@ -490,6 +443,55 @@ QRect DrawingWidget::pointRect(DrawingItemPoint* point) const
 	}
 
 	return viewRect;
+}
+
+//==================================================================================================
+
+void DrawingWidget::centerOn(const QPointF& scenePos)
+{
+	QPointF oldScenePos = mapToScene(viewport()->rect().center());
+
+	int horizontalDelta = qRound((scenePos.x() - oldScenePos.x()) * mScale);
+	int verticalDelta = qRound((scenePos.y() - oldScenePos.y()) * mScale);
+
+	horizontalScrollBar()->setValue(horizontalScrollBar()->value() + horizontalDelta);
+	verticalScrollBar()->setValue(verticalScrollBar()->value() + verticalDelta);
+}
+
+void DrawingWidget::centerOnCursor(const QPointF& scenePos)
+{
+	QPointF oldScenePos = mapToScene(mapFromGlobal(QCursor::pos()));
+
+	int horizontalDelta = qRound((scenePos.x() - oldScenePos.x()) * mScale);
+	int verticalDelta = qRound((scenePos.y() - oldScenePos.y()) * mScale);
+
+	horizontalScrollBar()->setValue(horizontalScrollBar()->value() + horizontalDelta);
+	verticalScrollBar()->setValue(verticalScrollBar()->value() + verticalDelta);
+}
+
+void DrawingWidget::fitToView(const QRectF& sceneRect)
+{
+	qreal scaleX = (maximumViewportSize().width() - 5) / sceneRect.width();
+	qreal scaleY = (maximumViewportSize().height() - 5) / sceneRect.height();
+
+	mScale = qMin(scaleX, scaleY);
+
+	recalculateContentSize(sceneRect);
+
+	centerOn(sceneRect.center());
+}
+
+void DrawingWidget::scaleBy(qreal scale)
+{
+	QPointF mousePos = mapToScene(mapFromGlobal(QCursor::pos()));
+	QRectF scrollBarRect = scrollBarDefinedRect();
+
+	mScale *= scale;
+
+	recalculateContentSize(scrollBarRect);
+
+	if (viewport()->rect().contains(mapFromGlobal(QCursor::pos()))) centerOnCursor(mousePos);
+	else centerOn(QPointF());
 }
 
 //==================================================================================================
@@ -548,69 +550,11 @@ QRectF DrawingWidget::scrollBarDefinedRect() const
 
 //==================================================================================================
 
-void DrawingWidget::centerOn(const QPointF& scenePos)
-{
-	QPointF oldScenePos = mapToScene(viewport()->rect().center());
-
-	int horizontalDelta = qRound((scenePos.x() - oldScenePos.x()) * mScale);
-	int verticalDelta = qRound((scenePos.y() - oldScenePos.y()) * mScale);
-
-	horizontalScrollBar()->setValue(horizontalScrollBar()->value() + horizontalDelta);
-	verticalScrollBar()->setValue(verticalScrollBar()->value() + verticalDelta);
-}
-
-void DrawingWidget::centerOnCursor(const QPointF& scenePos)
-{
-	QPointF oldScenePos = mapToScene(mapFromGlobal(QCursor::pos()));
-
-	int horizontalDelta = qRound((scenePos.x() - oldScenePos.x()) * mScale);
-	int verticalDelta = qRound((scenePos.y() - oldScenePos.y()) * mScale);
-
-	horizontalScrollBar()->setValue(horizontalScrollBar()->value() + horizontalDelta);
-	verticalScrollBar()->setValue(verticalScrollBar()->value() + verticalDelta);
-}
-
-void DrawingWidget::fitToView(const QRectF& sceneRect)
-{
-	qreal scaleX = (maximumViewportSize().width() - 5) / sceneRect.width();
-	qreal scaleY = (maximumViewportSize().height() - 5) / sceneRect.height();
-
-	mScale = qMin(scaleX, scaleY);
-
-	recalculateContentSize(sceneRect);
-
-	centerOn(sceneRect.center());
-}
-
-void DrawingWidget::scaleBy(qreal scale)
-{
-	QPointF mousePos = mapToScene(mapFromGlobal(QCursor::pos()));
-	QRectF scrollBarRect = scrollBarDefinedRect();
-
-	mScale *= scale;
-
-	recalculateContentSize(scrollBarRect);
-
-	if (viewport()->rect().contains(mapFromGlobal(QCursor::pos()))) centerOnCursor(mousePos);
-	else centerOn(QPointF());
-}
-
-//==================================================================================================
-
 void DrawingWidget::render(QPainter* painter)
 {
 	drawBackground(painter);
 	drawItems(painter);
 	drawForeground(painter);
-}
-
-void DrawingWidget::renderExport(QPainter* painter)
-{
-	painter->setBrush(mBackgroundBrush);
-	painter->setPen(Qt::NoPen);
-	painter->drawRect(mSceneRect);
-
-	drawItems(painter);
 }
 
 //==================================================================================================
@@ -647,9 +591,11 @@ void DrawingWidget::setDefaultMode()
 	setCursor(Qt::ArrowCursor);
 
 	clearSelection();
-	setNewItem(nullptr);
-
 	emit selectionChanged(mSelectedItems);
+
+	delete mNewItem;
+	mNewItem = nullptr;
+
 	emit modeChanged(mMode);
 	viewport()->update();
 }
@@ -660,9 +606,11 @@ void DrawingWidget::setScrollMode()
 	setCursor(Qt::OpenHandCursor);
 
 	clearSelection();
-	setNewItem(nullptr);
-
 	emit selectionChanged(mSelectedItems);
+
+	delete mNewItem;
+	mNewItem = nullptr;
+
 	emit modeChanged(mMode);
 	viewport()->update();
 }
@@ -673,9 +621,11 @@ void DrawingWidget::setZoomMode()
 	setCursor(Qt::CrossCursor);
 
 	clearSelection();
-	setNewItem(nullptr);
-
 	emit selectionChanged(mSelectedItems);
+
+	delete mNewItem;
+	mNewItem = nullptr;
+
 	emit modeChanged(mMode);
 	viewport()->update();
 }
@@ -688,10 +638,14 @@ void DrawingWidget::setPlaceMode(DrawingItem* item)
 		setCursor(Qt::CrossCursor);
 
 		clearSelection();
-		setNewItem(item);
-		item->setPos(mapToScene(mapFromGlobal(QCursor::pos())));
+		emit selectionChanged(mSelectedItems);
 
-		emit newItemChanged(item);
+		mNewItem = item;
+		mNewItem->mDrawing = this;
+		mNewItem->setVisible(true);
+		mNewItem->setPos(mapToScene(mapFromGlobal(QCursor::pos())));
+
+		emit newItemChanged(mNewItem);
 		emit modeChanged(mMode);
 		viewport()->update();
 	}
@@ -710,9 +664,6 @@ void DrawingWidget::undo()
 		mUndoStack.undo();
 		emit numberOfItemsChanged(mItems.size());
 
-		emit propertiesChanged(mSceneRect, mGrid, mBackgroundBrush,	mGridStyle, mGridBrush,
-			mGridSpacingMajor, mGridSpacingMinor);
-
 		viewport()->update();
 	}
 	else setDefaultMode();
@@ -727,9 +678,6 @@ void DrawingWidget::redo()
 
 		mUndoStack.redo();
 		emit numberOfItemsChanged(mItems.size());
-
-		emit propertiesChanged(mSceneRect, mGrid, mBackgroundBrush,	mGridStyle, mGridBrush,
-			mGridSpacingMajor, mGridSpacingMinor);
 
 		viewport()->update();
 	}
@@ -853,11 +801,26 @@ void DrawingWidget::moveSelection(const QPointF& newPos)
 		emit itemGeometryChanged(mNewItem);
 		viewport()->update();
 	}
-	else if (mMode == DefaultMode && mSelectedItems.size() == 1 )
+	else if (mMode == DefaultMode && !mSelectedItems.isEmpty())
 	{
-		moveItems(mSelectedItems.first(), newPos, true);
-		emit itemsGeometryChanged(mSelectedItems);
-		viewport()->update();
+		QMap<DrawingItem*,QPointF> initialPositions, newPositions;
+		QPointF deltaPos = newPos - mSelectedItems.first()->pos();
+
+		for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
+		{
+			if ((*itemIter)->canMove())
+			{
+				initialPositions[*itemIter] = (*itemIter)->pos();
+				newPositions[*itemIter] = (*itemIter)->pos() + deltaPos;
+			}
+		}
+
+		if (!newPositions.isEmpty())
+		{
+			moveItems(newPositions.keys(), newPositions, initialPositions, true);
+			emit itemsGeometryChanged(mSelectedItems);
+			viewport()->update();
+		}
 	}
 }
 
@@ -869,7 +832,8 @@ void DrawingWidget::resizeSelection(DrawingItemPoint* itemPoint, const QPointF& 
 		emit itemGeometryChanged(mNewItem);
 		viewport()->update();
 	}
-	else if (mMode == DefaultMode && mSelectedItems.size() == 1 && mSelectedItems.first()->points().contains(itemPoint))
+	else if (mMode == DefaultMode && mSelectedItems.size() == 1 && mSelectedItems.first()->canResize() &&
+		mSelectedItems.first()->points().contains(itemPoint))
 	{
 		resizeItem(itemPoint, scenePos, true, true);
 		emit itemsGeometryChanged(mSelectedItems);
@@ -887,9 +851,18 @@ void DrawingWidget::rotateSelection()
 	}
 	else if (mMode == DefaultMode && !mSelectedItems.isEmpty())
 	{
-		rotateItems(mSelectedItems, roundToGrid(mSelectionCenter));
-		emit itemsGeometryChanged(mSelectedItems);
-		viewport()->update();
+		QList<DrawingItem*> itemsToRotate;
+		for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
+		{
+			if ((*itemIter)->canRotate()) itemsToRotate.append(*itemIter);
+		}
+
+		if (!itemsToRotate.isEmpty())
+		{
+			rotateItems(itemsToRotate, roundToGrid(mSelectionCenter));
+			emit itemsGeometryChanged(itemsToRotate);
+			viewport()->update();
+		}
 	}
 }
 
@@ -903,9 +876,18 @@ void DrawingWidget::rotateBackSelection()
 	}
 	else if (mMode == DefaultMode && !mSelectedItems.isEmpty())
 	{
-		rotateBackItems(mSelectedItems, roundToGrid(mSelectionCenter));
-		emit itemsGeometryChanged(mSelectedItems);
-		viewport()->update();
+		QList<DrawingItem*> itemsToRotate;
+		for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
+		{
+			if ((*itemIter)->canRotate()) itemsToRotate.append(*itemIter);
+		}
+
+		if (!itemsToRotate.isEmpty())
+		{
+			rotateBackItems(itemsToRotate, roundToGrid(mSelectionCenter));
+			emit itemsGeometryChanged(itemsToRotate);
+			viewport()->update();
+		}
 	}
 }
 
@@ -919,23 +901,18 @@ void DrawingWidget::flipSelection()
 	}
 	else if (mMode == DefaultMode && !mSelectedItems.isEmpty())
 	{
-		flipItems(mSelectedItems, roundToGrid(mSelectionCenter));
-		emit itemsGeometryChanged(mSelectedItems);
-		viewport()->update();
-	}
-}
+		QList<DrawingItem*> itemsToFlip;
+		for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
+		{
+			if ((*itemIter)->canFlip()) itemsToFlip.append(*itemIter);
+		}
 
-void DrawingWidget::updateSelectionProperties(const QMap<QString,QVariant>& properties)
-{
-	if (mMode == PlaceMode && mNewItem)
-	{
-		mNewItem->updateProperties(properties);
-		viewport()->update();
-	}
-	else if (mMode == DefaultMode && !mSelectedItems.isEmpty())
-	{
-		updateItemProperties(mSelectedItems, properties);
-		viewport()->update();
+		if (!itemsToFlip.isEmpty())
+		{
+			flipItems(itemsToFlip, roundToGrid(mSelectionCenter));
+			emit itemsGeometryChanged(itemsToFlip);
+			viewport()->update();
+		}
 	}
 }
 
@@ -1054,21 +1031,17 @@ void DrawingWidget::insertItemPoint()
 		DrawingItem* item = nullptr;
 		if (mSelectedItems.size() == 1) item = mSelectedItems.first();
 
-		if (item)
+		if (item && item->canInsertPoints())
 		{
 			DrawingItemPoint* itemPoint = new DrawingItemPoint();
 			itemPoint->setPos(
 				item->mapFromScene(roundToGrid(mMouseEvent.buttonDownScenePos())));
 
-			if (item->canInsertPoint(itemPoint) && item->insertPointIndex(itemPoint) >= 0)
-			{
-				pushUndoCommand(new DrawingItemInsertPointCommand(
-					item, itemPoint, item->insertPointIndex(itemPoint)));
+			pushUndoCommand(new DrawingItemInsertPointCommand(item, itemPoint));
 
-				emit itemsGeometryChanged(mSelectedItems);
+			emit itemsGeometryChanged(mSelectedItems);
 				emit selectionChanged(mSelectedItems);
-				viewport()->update();
-			}
+			viewport()->update();
 		}
 	}
 }
@@ -1080,19 +1053,16 @@ void DrawingWidget::removeItemPoint()
 		DrawingItem* item = nullptr;
 		if (mSelectedItems.size() == 1) item = mSelectedItems.first();
 
-		if (item)
+		if (item && item->canRemovePoints())
 		{
 			DrawingItemPoint* itemPoint = item->pointNearest(
 				item->mapFromScene(roundToGrid(mMouseEvent.buttonDownScenePos())));
 
-			if (item->canRemovePoint(itemPoint))
-			{
-				pushUndoCommand(new DrawingItemRemovePointCommand(item, itemPoint));
+			pushUndoCommand(new DrawingItemRemovePointCommand(item, itemPoint));
 
-				emit itemsGeometryChanged(mSelectedItems);
-				emit selectionChanged(mSelectedItems);
-				viewport()->update();
-			}
+			emit itemsGeometryChanged(mSelectedItems);
+			emit selectionChanged(mSelectedItems);
+			viewport()->update();
 		}
 	}
 }
@@ -1153,23 +1123,6 @@ void DrawingWidget::ungroup()
 
 //==================================================================================================
 
-void DrawingWidget::properties()
-{
-	emit propertiesTriggered();
-}
-
-void DrawingWidget::updateProperties(const QRectF& sceneRect, qreal grid, const QBrush& backgroundBrush,
-	DrawingGridStyle gridStyle, const QBrush& gridBrush, int gridSpacingMajor, int gridSpacingMinor)
-{
-	DrawingUpdatePropertiesCommand* propertiesCommand = new DrawingUpdatePropertiesCommand(this,
-		sceneRect, grid, backgroundBrush, gridStyle, gridBrush, gridSpacingMajor, gridSpacingMinor);
-
-	pushUndoCommand(propertiesCommand);
-	viewport()->update();
-}
-
-//==================================================================================================
-
 void DrawingWidget::mousePressEvent(QMouseEvent* event)
 {
 	if (event->button() == Qt::LeftButton)
@@ -1223,10 +1176,7 @@ void DrawingWidget::mouseMoveEvent(QMouseEvent* event)
 				mScrollButtonDownHorizontalScrollValue - (mMouseEvent.pos().x() - mMouseEvent.buttonDownPos().x()));
 			verticalScrollBar()->setValue(
 				mScrollButtonDownVerticalScrollValue - (mMouseEvent.pos().y() - mMouseEvent.buttonDownPos().y()));
-
-			updateMouseInfo(mMouseEvent.buttonDownScenePos());
 		}
-		else updateMouseInfo(mMouseEvent.scenePos());
 		break;
 	case ZoomMode:
 		if ((mMouseEvent.buttons() & Qt::LeftButton) && mMouseEvent.isDragged())
@@ -1234,10 +1184,7 @@ void DrawingWidget::mouseMoveEvent(QMouseEvent* event)
 			QPoint p1 = mMouseEvent.pos();
 			QPoint p2 = mMouseEvent.buttonDownPos();
 			mRubberBandRect = QRect(qMin(p1.x(), p2.x()), qMin(p1.y(), p2.y()), qAbs(p2.x() - p1.x()), qAbs(p2.y() - p1.y()));
-
-			updateMouseInfo(mMouseEvent.buttonDownScenePos(), mMouseEvent.scenePos());
 		}
-		else updateMouseInfo(mMouseEvent.scenePos());
 	case PlaceMode:
 		placeModeMouseMoveEvent(&mMouseEvent);
 		break;
@@ -1282,28 +1229,7 @@ void DrawingWidget::mouseReleaseEvent(QMouseEvent* event)
 	}
 	else if (event->button() == Qt::RightButton)
 	{
-		if (mMode == DefaultMode)
-		{
-			DrawingItem* mouseDownItem = itemAt(mapToScene(event->pos()));
-
-			if (mouseDownItem && mouseDownItem->isSelected() && mSelectedItems.size() == 1)
-			{
-				if (actions()[InsertPointAction]->isEnabled())
-					mSinglePolyItemContextMenu.popup(event->globalPos() + QPoint(2, 2));
-				else
-					mSingleItemContextMenu.popup(event->globalPos() + QPoint(2, 2));
-			}
-			else if (mouseDownItem && mouseDownItem->isSelected())
-			{
-				mMultipleItemContextMenu.popup(event->globalPos() + QPoint(2, 2));
-			}
-			else
-			{
-				if (mouseDownItem == nullptr) clearSelection();
-				mDrawingContextMenu.popup(event->globalPos() + QPoint(2, 2));
-			}
-		}
-		else setDefaultMode();
+		if (mMode != DefaultMode) setDefaultMode();
 	}
 
 	if (mPanTimer.isActive())
@@ -1334,238 +1260,6 @@ void DrawingWidget::wheelEvent(QWheelEvent* event)
 		else if (event->delta() < 0) zoomOut();
 	}
 	else QAbstractScrollArea::wheelEvent(event);
-}
-
-//==================================================================================================
-
-void DrawingWidget::defaultMousePressEvent(DrawingMouseEvent* event)
-{
-	mMouseState = MouseSelect;
-
-	if (event->button() == Qt::LeftButton)
-	{
-		mMouseDownItem = itemAt(event->scenePos());
-
-		if (mMouseDownItem)
-		{
-			mInitialPositions.clear();
-			for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
-				mInitialPositions[*itemIter] = (*itemIter)->pos();
-
-			if (mMouseDownItem->isSelected() && mSelectedItems.size() == 1)
-				mMouseDownItem->mousePressEvent(event);
-		}
-
-		mFocusItem = mMouseDownItem;
-
-		event->accept();
-	}
-}
-
-void DrawingWidget::defaultMouseMoveEvent(DrawingMouseEvent* event)
-{
-	QMap<DrawingItem*,QPointF> newPositions;
-
-	if (event->buttons() & Qt::LeftButton)
-	{
-		switch (mMouseState)
-		{
-		case MouseSelect:
-			if (event->isDragged())
-			{
-				if (mMouseDownItem && mMouseDownItem->isSelected())
-				{
-					bool resizeItem = (mSelectedItems.size() == 1 &&
-									   mSelectedItems.first()->canResize() &&
-									   mSelectedItems.first()->selectedPoint() &&
-									   mSelectedItems.first()->selectedPoint()->isControlPoint());
-					mMouseState = (resizeItem) ? MouseResizeItem : MouseMoveItems;
-				}
-				else mMouseState = MouseRubberBand;
-			}
-			updateMouseInfo(mMouseEvent.scenePos());
-			break;
-
-		case MouseMoveItems:
-			for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
-			{
-				newPositions[*itemIter] = mInitialPositions[*itemIter] +
-					roundToGrid(event->scenePos() - event->buttonDownScenePos());
-			}
-
-			if (!newPositions.isEmpty())
-			{
-				moveItems(newPositions.keys(), newPositions, mInitialPositions, false);
-				emit itemsGeometryChanged(mSelectedItems);
-			}
-			updateMouseInfo(roundToGrid(mMouseEvent.buttonDownScenePos()), roundToGrid(mMouseEvent.scenePos()));
-			break;
-
-		case MouseResizeItem:
-			resizeItem(mMouseDownItem->selectedPoint(), roundToGrid(event->scenePos()), false, true);
-			emit itemsGeometryChanged(mSelectedItems);
-			updateMouseInfo(roundToGrid(mMouseEvent.buttonDownScenePos()), roundToGrid(mMouseEvent.scenePos()));
-			break;
-
-		case MouseRubberBand:
-			mRubberBandRect = QRect(event->pos(), event->buttonDownPos()).normalized();
-			updateMouseInfo(mMouseEvent.buttonDownScenePos(), mMouseEvent.scenePos());
-			break;
-
-		default:
-			updateMouseInfo(mMouseEvent.scenePos());
-			break;
-		}
-
-		if (mMouseDownItem && mMouseDownItem->isSelected() && mSelectedItems.size() == 1)
-			mMouseDownItem->mouseMoveEvent(event);
-	}
-	else updateMouseInfo(mMouseEvent.scenePos());
-}
-
-void DrawingWidget::defaultMouseReleaseEvent(DrawingMouseEvent* event)
-{
-	bool controlDown = ((event->modifiers() & Qt::ControlModifier) != 0);
-	QMap<DrawingItem*,QPointF> newPositions;
-
-	switch (mMouseState)
-	{
-	case MouseSelect:
-		if (!controlDown) clearSelection();
-		if (mMouseDownItem)
-		{
-			if (controlDown && mMouseDownItem->isSelected()) deselectItem(mMouseDownItem);
-			else selectItem(mMouseDownItem);
-		}
-		emit selectionChanged(mSelectedItems);
-		break;
-
-	case MouseMoveItems:
-		for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
-		{
-			newPositions[*itemIter] = mInitialPositions[*itemIter] +
-				roundToGrid(event->scenePos() - event->buttonDownScenePos());
-		}
-
-		if (!newPositions.isEmpty())
-		{
-			moveItems(newPositions.keys(), newPositions, mInitialPositions, true);
-			emit itemsGeometryChanged(mSelectedItems);
-		}
-		break;
-
-	case MouseResizeItem:
-		resizeItem(mMouseDownItem->selectedPoint(), roundToGrid(event->scenePos()), true, true);
-		emit itemsGeometryChanged(mSelectedItems);
-		break;
-
-	case MouseRubberBand:
-		if (!controlDown) clearSelection();
-		selectItems(mapToScene(mRubberBandRect), Qt::ContainsItemBoundingRect);
-		mRubberBandRect = QRect();
-		emit selectionChanged(mSelectedItems);
-		break;
-
-	default:
-		break;
-	}
-
-	if (mMouseDownItem && mMouseDownItem->isSelected() && mSelectedItems.size() == 1)
-		mMouseDownItem->mouseReleaseEvent(event);
-
-	mMouseState = MouseReady;
-	mConsecutivePastes = 0;
-
-	updateSelectionCenter();
-}
-
-void DrawingWidget::defaultMouseDoubleClickEvent(DrawingMouseEvent* event)
-{
-	mMouseState = MouseSelect;
-
-	if (event->button() == Qt::LeftButton)
-	{
-		mMouseDownItem = itemAt(event->scenePos());
-
-		if (mMouseDownItem)
-		{
-			mInitialPositions.clear();
-			for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
-				mInitialPositions[*itemIter] = (*itemIter)->pos();
-
-			emit propertiesTriggered();
-		}
-
-		mFocusItem = mMouseDownItem;
-	}
-}
-
-//==================================================================================================
-
-void DrawingWidget::placeModeMousePressEvent(DrawingMouseEvent* event)
-{
-	if (mNewItem)
-	{
-		mNewItem->newMousePressEvent(event);
-		emit itemGeometryChanged(mNewItem);
-	}
-}
-
-void DrawingWidget::placeModeMouseMoveEvent(DrawingMouseEvent* event)
-{
-	if (mNewItem)
-	{
-		mNewItem->newMouseMoveEvent(event);
-		emit itemGeometryChanged(mNewItem);
-
-		if (event->buttons() & Qt::LeftButton)
-			updateMouseInfo(roundToGrid(mMouseEvent.buttonDownScenePos()), roundToGrid(mMouseEvent.scenePos()));
-		else
-			updateMouseInfo(roundToGrid(mMouseEvent.scenePos()));
-	}
-}
-
-void DrawingWidget::placeModeMouseReleaseEvent(DrawingMouseEvent* event)
-{
-	if (mNewItem)
-	{
-		bool addNewItem = mNewItem->newMouseReleaseEvent(event);
-		if (addNewItem && mNewItem->isValid())
-		{
-			mNewItem->mDrawing = nullptr;
-			addItems(mNewItem, true);
-			emit numberOfItemsChanged(mItems.size());
-
-			mNewItem = mNewItem->copy();
-			mNewItem->mDrawing = this;
-			mNewItem->setPos(roundToGrid(event->scenePos()));
-			emit newItemChanged(mNewItem);
-
-			if (!mNewItem->newItemCopyEvent()) setDefaultMode();
-		}
-	}
-}
-
-void DrawingWidget::placeModeMouseDoubleClickEvent(DrawingMouseEvent* event)
-{
-	if (mNewItem)
-	{
-		bool addNewItem = mNewItem->newMouseDoubleClickEvent(event);
-
-		if (addNewItem && mNewItem->isValid())
-		{
-			mNewItem->mDrawing = nullptr;
-			addItems(mNewItem, true);
-			emit numberOfItemsChanged(mItems.size());
-
-			mNewItem = mNewItem->copy();
-			mNewItem->mDrawing = this;
-			mNewItem->setPos(roundToGrid(event->scenePos()));
-			emit newItemChanged(mNewItem);
-
-			if (!mNewItem->newItemCopyEvent()) setDefaultMode();
-		}
-	}
 }
 
 //==================================================================================================
@@ -1609,77 +1303,9 @@ void DrawingWidget::paintEvent(QPaintEvent* event)
 
 void DrawingWidget::drawBackground(QPainter* painter)
 {
-	QRectF visibleRect = DrawingWidget::visibleRect();
-
-	QPainter::RenderHints renderHints = painter->renderHints();
-	painter->setRenderHints(renderHints, false);
-
-	// Draw background
 	painter->setBrush(mBackgroundBrush);
-	painter->setPen(Qt::NoPen);
-	painter->drawRect(visibleRect);
-
-	// Draw grid
-	QPen gridPen(mGridBrush, devicePixelRatio());
-	gridPen.setCosmetic(true);
-
-	if (mGridStyle != GridNone && mGrid >= 0)
-	{
-		painter->setPen(gridPen);
-
-		if (mGridStyle == GridDotted && mGridSpacingMajor > 0)
-		{
-			qreal spacing = mGrid * mGridSpacingMajor;
-			for(qreal y = qCeil(visibleRect.top() / spacing) * spacing; y < visibleRect.bottom(); y += spacing)
-			{
-				for(qreal x = qCeil(visibleRect.left() / spacing) * spacing; x < visibleRect.right(); x += spacing)
-					painter->drawPoint(QPointF(x, y));
-			}
-		}
-
-		if (mGridStyle == GridGraphPaper && mGridSpacingMinor > 0)
-		{
-			gridPen.setStyle(Qt::DotLine);
-			painter->setPen(gridPen);
-
-			qreal spacing = mGrid * mGridSpacingMinor;
-			for(qreal y = qCeil(visibleRect.top() / spacing) * spacing; y < visibleRect.bottom(); y += spacing)
-				painter->drawLine(QPointF(visibleRect.left(), y), QPointF(visibleRect.right(), y));
-			for(qreal x = qCeil(visibleRect.left() / spacing) * spacing; x < visibleRect.right(); x += spacing)
-				painter->drawLine(QPointF(x, visibleRect.top()), QPointF(x, visibleRect.bottom()));
-		}
-
-		if ((mGridStyle == GridLined || mGridStyle == GridGraphPaper) && mGridSpacingMajor > 0)
-		{
-			gridPen.setStyle(Qt::SolidLine);
-			painter->setPen(gridPen);
-
-			qreal spacing = mGrid * mGridSpacingMajor;
-			for(qreal y = qCeil(visibleRect.top() / spacing) * spacing; y < visibleRect.bottom(); y += spacing)
-				painter->drawLine(QPointF(visibleRect.left(), y), QPointF(visibleRect.right(), y));
-			for(qreal x = qCeil(visibleRect.left() / spacing) * spacing; x < visibleRect.right(); x += spacing)
-				painter->drawLine(QPointF(x, visibleRect.top()), QPointF(x, visibleRect.bottom()));
-		}
-	}
-
-	// Draw origin
-	painter->save();
-	painter->setBrush(Qt::transparent);
-	painter->setPen(gridPen);
-	painter->resetTransform();
-	painter->drawEllipse(mapFromScene(QPointF(0, 0)), 4, 4);
-	painter->restore();
-
-	// Draw border
-	QPen borderPen((mBackgroundBrush == Qt::black) ? Qt::white : Qt::black, devicePixelRatio() * 2);
-	borderPen.setCosmetic(true);
-
-	painter->setBrush(Qt::transparent);
-	painter->setPen(borderPen);
-	painter->drawRect(mSceneRect);
-
-	painter->setRenderHints(renderHints);
-	painter->setBrush(mBackgroundBrush);
+	painter->setPen(QPen(mBackgroundBrush, 1));
+	painter->drawRect(viewport()->rect());
 }
 
 void DrawingWidget::drawItems(QPainter* painter)
@@ -1750,10 +1376,7 @@ void DrawingWidget::drawItems(QPainter* painter)
 	}
 
 	painter->restore();
-}
 
-void DrawingWidget::drawForeground(QPainter* painter)
-{
 	// Draw hotpoints
 	QList<DrawingItem*> items = mSelectedItems;
 	if (mNewItem) items.prepend(mNewItem);
@@ -1814,6 +1437,11 @@ void DrawingWidget::drawForeground(QPainter* painter)
 	painter->restore();
 }
 
+void DrawingWidget::drawForeground(QPainter* painter)
+{
+	Q_UNUSED(painter);
+}
+
 //==================================================================================================
 
 void DrawingWidget::resizeEvent(QResizeEvent* event)
@@ -1823,6 +1451,244 @@ void DrawingWidget::resizeEvent(QResizeEvent* event)
 }
 
 //==================================================================================================
+
+void DrawingWidget::defaultMousePressEvent(DrawingMouseEvent* event)
+{
+	mMouseState = MouseSelect;
+
+	if (event->button() == Qt::LeftButton)
+	{
+		mMouseDownItem = itemAt(event->scenePos());
+
+		if (mMouseDownItem)
+		{
+			mInitialPositions.clear();
+			for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
+				mInitialPositions[*itemIter] = (*itemIter)->pos();
+
+			if (mMouseDownItem->isSelected() && mSelectedItems.size() == 1)
+				mMouseDownItem->mousePressEvent(event);
+		}
+
+		mFocusItem = mMouseDownItem;
+
+		event->accept();
+	}
+}
+
+void DrawingWidget::defaultMouseMoveEvent(DrawingMouseEvent* event)
+{
+	QMap<DrawingItem*,QPointF> newPositions;
+
+	if (event->buttons() & Qt::LeftButton)
+	{
+		switch (mMouseState)
+		{
+		case MouseSelect:
+			if (event->isDragged())
+			{
+				if (mMouseDownItem && mMouseDownItem->isSelected())
+				{
+					bool resizeItem = (mSelectedItems.size() == 1 &&
+									   mSelectedItems.first()->canResize() &&
+									   mSelectedItemPoint && mSelectedItemPoint->isControlPoint());
+					mMouseState = (resizeItem) ? MouseResizeItem : MouseMoveItems;
+				}
+				else mMouseState = MouseRubberBand;
+			}
+			break;
+
+		case MouseMoveItems:
+			for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
+			{
+				if ((*itemIter)->canMove())
+				{
+					newPositions[*itemIter] = mInitialPositions[*itemIter] +
+						roundToGrid(event->scenePos() - event->buttonDownScenePos());
+				}
+			}
+
+			if (!newPositions.isEmpty())
+			{
+				moveItems(newPositions.keys(), newPositions, mInitialPositions, false);
+				emit itemsGeometryChanged(mSelectedItems);
+			}
+			break;
+
+		case MouseResizeItem:
+			resizeItem(mSelectedItemPoint, roundToGrid(event->scenePos()), false, true);
+			emit itemsGeometryChanged(mSelectedItems);
+			break;
+
+		case MouseRubberBand:
+			mRubberBandRect = QRect(event->pos(), event->buttonDownPos()).normalized();
+			break;
+
+		default:
+			break;
+		}
+
+		if (mMouseDownItem && mMouseDownItem->isSelected() && mSelectedItems.size() == 1)
+			mMouseDownItem->mouseMoveEvent(event);
+	}
+}
+
+void DrawingWidget::defaultMouseReleaseEvent(DrawingMouseEvent* event)
+{
+	bool controlDown = ((event->modifiers() & Qt::ControlModifier) != 0);
+	QMap<DrawingItem*,QPointF> newPositions;
+
+	switch (mMouseState)
+	{
+	case MouseSelect:
+		if (!controlDown) clearSelection();
+		if (mMouseDownItem)
+		{
+			if (controlDown && mMouseDownItem->isSelected()) deselectItem(mMouseDownItem);
+			else selectItem(mMouseDownItem);
+		}
+		emit selectionChanged(mSelectedItems);
+		break;
+
+	case MouseMoveItems:
+		for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
+		{
+			if ((*itemIter)->canMove())
+			{
+				newPositions[*itemIter] = mInitialPositions[*itemIter] +
+					roundToGrid(event->scenePos() - event->buttonDownScenePos());
+			}
+		}
+
+		if (!newPositions.isEmpty())
+		{
+			moveItems(newPositions.keys(), newPositions, mInitialPositions, true);
+			emit itemsGeometryChanged(mSelectedItems);
+		}
+		break;
+
+	case MouseResizeItem:
+		resizeItem(mSelectedItemPoint, roundToGrid(event->scenePos()), true, true);
+		emit itemsGeometryChanged(mSelectedItems);
+		break;
+
+	case MouseRubberBand:
+		if (!controlDown) clearSelection();
+		selectItems(mapToScene(mRubberBandRect), mItemSelectionMode);
+		mRubberBandRect = QRect();
+		emit selectionChanged(mSelectedItems);
+		break;
+
+	default:
+		break;
+	}
+
+	if (mMouseDownItem && mMouseDownItem->isSelected() && mSelectedItems.size() == 1)
+		mMouseDownItem->mouseReleaseEvent(event);
+
+	mMouseState = MouseReady;
+	mConsecutivePastes = 0;
+
+	updateSelectionCenter();
+}
+
+void DrawingWidget::defaultMouseDoubleClickEvent(DrawingMouseEvent* event)
+{
+	mMouseState = MouseSelect;
+
+	if (event->button() == Qt::LeftButton)
+	{
+		mMouseDownItem = itemAt(event->scenePos());
+
+		if (mMouseDownItem)
+		{
+			mInitialPositions.clear();
+			for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
+				mInitialPositions[*itemIter] = (*itemIter)->pos();
+		}
+
+		mFocusItem = mMouseDownItem;
+	}
+}
+
+//==================================================================================================
+
+void DrawingWidget::placeModeMousePressEvent(DrawingMouseEvent* event)
+{
+	if (mNewItem)
+	{
+		mNewItem->mousePressEvent(event);
+		emit itemGeometryChanged(mNewItem);
+	}
+}
+
+void DrawingWidget::placeModeMouseMoveEvent(DrawingMouseEvent* event)
+{
+	if (mNewItem)
+	{
+		mNewItem->mouseMoveEvent(event);
+		emit itemGeometryChanged(mNewItem);
+	}
+}
+
+void DrawingWidget::placeModeMouseReleaseEvent(DrawingMouseEvent* event)
+{
+	if (mNewItem)
+	{
+		mNewItem->mouseReleaseEvent(event);
+
+		if (event->isAccepted() && mNewItem->isValid())
+		{
+			mNewItem->mDrawing = nullptr;
+			addItems(mNewItem, true);
+			emit numberOfItemsChanged(mItems.size());
+
+			mNewItem = mNewItem->copy();
+			mNewItem->mDrawing = this;
+			mNewItem->setPos(roundToGrid(event->scenePos()));
+			emit newItemChanged(mNewItem);
+
+			if (!mNewItem->newItemCopyEvent()) setDefaultMode();
+		}
+	}
+}
+
+void DrawingWidget::placeModeMouseDoubleClickEvent(DrawingMouseEvent* event)
+{
+	if (mNewItem)
+	{
+		mNewItem->mouseDoubleClickEvent(event);
+
+		if (event->isAccepted() && mNewItem->isValid())
+		{
+			mNewItem->mDrawing = nullptr;
+			addItems(mNewItem, true);
+			emit numberOfItemsChanged(mItems.size());
+
+			mNewItem = mNewItem->copy();
+			mNewItem->mDrawing = this;
+			mNewItem->setPos(roundToGrid(event->scenePos()));
+			emit newItemChanged(mNewItem);
+
+			if (!mNewItem->newItemCopyEvent()) setDefaultMode();
+		}
+	}
+}
+
+//==================================================================================================
+
+void DrawingWidget::updateSelectionCenter()
+{
+	mSelectionCenter = QPointF();
+
+	if (!mSelectedItems.isEmpty())
+	{
+		for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
+			mSelectionCenter += (*itemIter)->mapToScene((*itemIter)->centerPos());
+
+		mSelectionCenter /= mSelectedItems.size();
+	}
+}
 
 void DrawingWidget::mousePanEvent()
 {
@@ -1889,45 +1755,6 @@ void DrawingWidget::mousePanEvent()
 		}
 		else verticalScrollBar()->setValue(verticalScrollBar()->value() + delta);
 	}
-}
-
-//==================================================================================================
-
-void DrawingWidget::updateSelectionCenter()
-{
-	mSelectionCenter = QPointF();
-
-	if (!mSelectedItems.isEmpty())
-	{
-		for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
-			mSelectionCenter += (*itemIter)->mapToScene((*itemIter)->centerPos());
-
-		mSelectionCenter /= mSelectedItems.size();
-	}
-}
-
-void DrawingWidget::updateActionsFromSelection()
-{
-	QList<QAction*> actions = DrawingWidget::actions();
-
-	bool canInsertRemovePoints = false;
-	bool canGroup = (mSelectedItems.size() > 1);
-	bool canUngroup = false;
-
-	if (mSelectedItems.size() == 1)
-	{
-		DrawingPolylineItem* polylineItem = dynamic_cast<DrawingPolylineItem*>(mSelectedItems.first());
-		DrawingPolygonItem* polygonItem = dynamic_cast<DrawingPolygonItem*>(mSelectedItems.first());
-		DrawingItemGroup* groupItem = dynamic_cast<DrawingItemGroup*>(mSelectedItems.first());
-
-		canInsertRemovePoints = (polylineItem || polygonItem);
-		canUngroup = (groupItem);
-	}
-
-	actions[InsertPointAction]->setEnabled(canInsertRemovePoints);
-	actions[RemovePointAction]->setEnabled(canInsertRemovePoints);
-	actions[GroupAction]->setEnabled(canGroup);
-	actions[UngroupAction]->setEnabled(canUngroup);
 }
 
 //==================================================================================================
@@ -2170,8 +1997,12 @@ void DrawingWidget::tryToMaintainConnections(const QList<DrawingItem*>& items, b
 					if (item->mapToScene(itemPoint->pos()) != targetItem->mapToScene(targetItemPoint->pos()))
 					{
 						// Try to maintain the connection by resizing targetPoint if possible
-						if (allowResize && (targetItemPoint->flags() & DrawingItemPoint::Free) && !shouldDisconnect(itemPoint, targetItemPoint))
+						if (allowResize && targetItem->canResize() &&
+							(targetItemPoint->flags() & DrawingItemPoint::Free) &&
+							!shouldDisconnect(itemPoint, targetItemPoint))
+						{
 							resizeItem(targetItemPoint, item->mapToScene(itemPoint->pos()), false, false, command);
+						}
 						else
 							disconnectItemPoints(itemPoint, targetItemPoint, command);
 					}
@@ -2214,9 +2045,9 @@ void DrawingWidget::connectItemPoints(DrawingItemPoint* point0, DrawingItemPoint
 
 	if (point0Pos != point1Pos)
 	{
-		if (point1->isControlPoint())
+		if (point1->isControlPoint() && point1->item()->canResize())
 			resizeItem(point1, point0Pos, false, true, connectCommand);
-		else if (point0->isControlPoint())
+		else if (point0->isControlPoint() && point0->item()->canResize())
 			resizeItem(point0, point1Pos, false, true, connectCommand);
 	}
 
@@ -2229,17 +2060,6 @@ void DrawingWidget::disconnectItemPoints(DrawingItemPoint* point0, DrawingItemPo
 		new DrawingItemPointDisconnectCommand(point0, point1, command);
 
 	if (!command) pushUndoCommand(disconnectCommand);
-}
-
-//==================================================================================================
-
-void DrawingWidget::updateItemProperties(const QList<DrawingItem*>& items,
-	const QMap<QString,QVariant>& properties, QUndoCommand* command)
-{
-	DrawingUpdateItemPropertiesCommand* propertiesCommand =
-		new DrawingUpdateItemPropertiesCommand(items, properties, command);
-
-	if (!command) pushUndoCommand(propertiesCommand);
 }
 
 //==================================================================================================
@@ -2407,131 +2227,4 @@ void DrawingWidget::recalculateContentSize(const QRectF& targetSceneRect)
 	mViewportTransform.scale(mScale, mScale);
 
 	mSceneTransform = mViewportTransform.inverted();
-}
-
-//==================================================================================================
-
-void DrawingWidget::updateMouseInfo(const QPointF& pos)
-{
-	emit mouseInfoChanged("(" + QString::number(pos.x()) + "," + QString::number(pos.y()) + ")");
-}
-
-void DrawingWidget::updateMouseInfo(const QPointF& p1, const QPointF& p2)
-{
-	QString mouseInfoText;
-	QPointF delta = p2 - p1;
-
-	mouseInfoText += "(" + QString::number(p1.x()) + "," + QString::number(p1.y()) + ")";
-	mouseInfoText += " - (" + QString::number(p2.x()) + "," + QString::number(p2.y()) + ")";
-	mouseInfoText += "  " + QString(QChar(0x394)) + " = (" + QString::number(delta.x()) + "," + QString::number(delta.y()) + ")";
-
-	emit mouseInfoChanged(mouseInfoText);
-}
-
-//==================================================================================================
-
-void DrawingWidget::addActions()
-{
-	addAction("Undo", this, SLOT(undo()), ":/icons/oxygen/edit-undo.png", "Ctrl+Z");
-	addAction("Redo", this, SLOT(redo()), ":/icons/oxygen/edit-redo.png", "Ctrl+Shift+Z");
-	addAction("Cut", this, SLOT(cut()), ":/icons/oxygen/edit-cut.png", "Ctrl+X");
-	addAction("Copy", this, SLOT(copy()), ":/icons/oxygen/edit-copy.png", "Ctrl+C");
-	addAction("Paste", this, SLOT(paste()), ":/icons/oxygen/edit-paste.png", "Ctrl+V");
-	addAction("Delete", this, SLOT(deleteSelection()), ":/icons/oxygen/edit-delete.png", "Delete");
-	addAction("Select All", this, SLOT(selectAll()), ":/icons/oxygen/edit-select-all.png", "Ctrl+A");
-	addAction("Select None", this, SLOT(selectNone()), "", "Ctrl+Shift+A");
-
-	addAction("Rotate", this, SLOT(rotateSelection()), ":/icons/oxygen/object-rotate-right.png", "R");
-	addAction("Rotate Back", this, SLOT(rotateBackSelection()), ":/icons/oxygen/object-rotate-left.png", "Shift+R");
-	addAction("Flip", this, SLOT(flipSelection()), ":/icons/oxygen/object-flip-horizontal.png", "F");
-
-	addAction("Bring Forward", this, SLOT(bringForward()), ":/icons/oxygen/object-bring-forward.png");
-	addAction("Send Backward", this, SLOT(sendBackward()), ":/icons/oxygen/object-send-backward.png");
-	addAction("Bring to Front", this, SLOT(bringToFront()), ":/icons/oxygen/object-bring-to-front.png");
-	addAction("Send to Back", this, SLOT(sendToBack()), ":/icons/oxygen/object-send-to-back.png");
-
-	addAction("Insert Point", this, SLOT(insertItemPoint()), "");
-	addAction("Remove Point", this, SLOT(removeItemPoint()), "");
-
-	addAction("Group", this, SLOT(group()), ":/icons/oxygen/merge.png", "Ctrl+G");
-	addAction("Ungroup", this, SLOT(ungroup()), ":/icons/oxygen/split.png", "Ctrl+Shift+G");
-
-	addAction("Zoom In", this, SLOT(zoomIn()), ":/icons/oxygen/zoom-in.png", ".");
-	addAction("Zoom Out", this, SLOT(zoomOut()), ":/icons/oxygen/zoom-out.png", ",");
-	addAction("Zoom Fit", this, SLOT(zoomFit()), ":/icons/oxygen/zoom-fit-best.png", "/");
-
-	addAction("Properties...", this, SLOT(properties()), ":/icons/oxygen/games-config-board.png");
-}
-
-void DrawingWidget::createContextMenu()
-{
-	QList<QAction*> actions = DrawingWidget::actions();
-
-	mSingleItemContextMenu.addAction(actions[PropertiesAction]);
-	mSingleItemContextMenu.addSeparator();
-	mSingleItemContextMenu.addAction(actions[RotateAction]);
-	mSingleItemContextMenu.addAction(actions[RotateBackAction]);
-	mSingleItemContextMenu.addAction(actions[FlipAction]);
-	mSingleItemContextMenu.addAction(actions[DeleteAction]);
-	mSingleItemContextMenu.addSeparator();
-	mSingleItemContextMenu.addAction(actions[GroupAction]);
-	mSingleItemContextMenu.addAction(actions[UngroupAction]);
-	mSingleItemContextMenu.addSeparator();
-	mSingleItemContextMenu.addAction(actions[CutAction]);
-	mSingleItemContextMenu.addAction(actions[CopyAction]);
-	mSingleItemContextMenu.addAction(actions[PasteAction]);
-
-	mSinglePolyItemContextMenu.addAction(actions[PropertiesAction]);
-	mSinglePolyItemContextMenu.addSeparator();
-	mSinglePolyItemContextMenu.addAction(actions[InsertPointAction]);
-	mSinglePolyItemContextMenu.addAction(actions[RemovePointAction]);
-	mSinglePolyItemContextMenu.addSeparator();
-	mSinglePolyItemContextMenu.addAction(actions[RotateAction]);
-	mSinglePolyItemContextMenu.addAction(actions[RotateBackAction]);
-	mSinglePolyItemContextMenu.addAction(actions[FlipAction]);
-	mSinglePolyItemContextMenu.addAction(actions[DeleteAction]);
-	mSinglePolyItemContextMenu.addSeparator();
-	mSinglePolyItemContextMenu.addAction(actions[CutAction]);
-	mSinglePolyItemContextMenu.addAction(actions[CopyAction]);
-	mSinglePolyItemContextMenu.addAction(actions[PasteAction]);
-
-	mMultipleItemContextMenu.addAction(actions[PropertiesAction]);
-	mMultipleItemContextMenu.addSeparator();
-	mMultipleItemContextMenu.addAction(actions[RotateAction]);
-	mMultipleItemContextMenu.addAction(actions[RotateBackAction]);
-	mMultipleItemContextMenu.addAction(actions[FlipAction]);
-	mMultipleItemContextMenu.addAction(actions[DeleteAction]);
-	mMultipleItemContextMenu.addSeparator();
-	mMultipleItemContextMenu.addAction(actions[GroupAction]);
-	mMultipleItemContextMenu.addAction(actions[UngroupAction]);
-	mMultipleItemContextMenu.addSeparator();
-	mMultipleItemContextMenu.addAction(actions[CutAction]);
-	mMultipleItemContextMenu.addAction(actions[CopyAction]);
-	mMultipleItemContextMenu.addAction(actions[PasteAction]);
-
-	mDrawingContextMenu.addAction(actions[PropertiesAction]);
-	mDrawingContextMenu.addSeparator();
-	mDrawingContextMenu.addAction(actions[UndoAction]);
-	mDrawingContextMenu.addAction(actions[RedoAction]);
-	mDrawingContextMenu.addSeparator();
-	mDrawingContextMenu.addAction(actions[CutAction]);
-	mDrawingContextMenu.addAction(actions[CopyAction]);
-	mDrawingContextMenu.addAction(actions[PasteAction]);
-	mDrawingContextMenu.addSeparator();
-	mDrawingContextMenu.addAction(actions[ZoomInAction]);
-	mDrawingContextMenu.addAction(actions[ZoomOutAction]);
-	mDrawingContextMenu.addAction(actions[ZoomFitAction]);
-}
-
-QAction* DrawingWidget::addAction(const QString& text, QObject* slotObj, const char* slotFunction,
-	const QString& iconPath, const QString& shortcut)
-{
-	QAction* action = new QAction(text, this);
-	if (slotObj) connect(action, SIGNAL(triggered()), slotObj, slotFunction);
-
-	if (!iconPath.isEmpty()) action->setIcon(QIcon(iconPath));
-	if (!shortcut.isEmpty()) action->setShortcut(QKeySequence(shortcut));
-
-	QAbstractScrollArea::addAction(action);
-	return action;
 }
