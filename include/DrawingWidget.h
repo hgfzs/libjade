@@ -350,53 +350,356 @@ public:
 	 * \sa redoText(), canUndo()
 	 */
 	bool canRedo() const;
+
+	/*! \brief Returns the text of the command which will be redone in the next call to undo().
+	 *
+	 * \sa canUndo(), redoText()
+	 */
 	QString undoText() const;
+
+	/*! \brief Returns the text of the command which will be redone in the next call to redo().
+	 *
+	 * \sa canRedo(), undoText()
+	 */
 	QString redoText() const;
 
+
+	/*! \brief Sets the widget's item selection mode.
+	 *
+	 * The item selection mode affects how items are selected with a rubber band select box:
+	 * \li Qt::ContainsItemBoundingRect - only items whose bounding rectangle is fully contained
+	 * inside the selection area are selected
+	 * \li Qt::ContainsItemShape - only items whose shape is fully contained inside the
+	 * selection area are selected
+	 * \li Qt::IntersectsItemBoundingRect - all items whose bounding rectangle intersects with the
+	 * selection area are selected
+	 * \li Qt::IntersectsItemShape - all items whose shape intersects with the selection area are
+	 * selected
+	 *
+	 * This also affects which items are returned by items(const QRectF&) const.
+	 *
+	 * The default mode is set to Qt::ContainsItemBoundingRect.
+	 *
+	 * \sa itemSelectionMode()
+	 */
 	void setItemSelectionMode(Qt::ItemSelectionMode mode);
+
+	/*! \brief Returns the widget's item selection mode.
+	 *
+	 * \sa setItemSelectionMode()
+	 */
 	Qt::ItemSelectionMode itemSelectionMode() const;
 
+
+	/*! \brief Returns the widget's current operating mode.
+	 *
+	 * The default operating mode is #DefaultMode.
+	 *
+	 * \sa setDefaultMode(), setScrollMode(), setZoomMode(), setPlaceMode()
+	 */
 	Mode mode() const;
+
+	/*! \brief Returns the current scale between the widget viewport and the scene.
+	 *
+	 * The default scale is set to 1.0 (no scaling between viewport and scene).
+	 *
+	 * \sa zoomIn(), zoomOut(), zoomFit(), scaleBy(), fitToView()
+	 */
 	qreal scale() const;
 
-	// Items
-	void addItem(DrawingItem* item, bool place = false);
-	void insertItem(int index, DrawingItem* item, bool place = false);
+
+	/*! \brief Adds an existing item to the widget.
+	 *
+	 * This convenience function is equivalent to calling #insertItem(items().size(), item).
+	 *
+	 * \sa removeItem()
+	 */
+	void addItem(DrawingItem* item);
+
+	/*! \brief Inserts an existing item to the widget at the specified index.
+	 *
+	 * If a valid item is passed to this function, DrawingWidget will insert it into its list of
+	 * items() at the specified index.  DrawingItem takes ownership of the item and will
+	 * delete it as necessary.
+	 *
+	 * It is safe to pass a nullptr to this function; if a nullptr is received, this function
+	 * does nothing.  This function also does nothing if the item is already one of the widget's
+	 * items().
+	 *
+	 * \sa addItem(), removeItem()
+	 */
+	void insertItem(int index, DrawingItem* item);
+
+	/*! \brief Removes an existing item from the widget.
+	 *
+	 * If a valid item is passed to this function, DrawingWidget will remove it from its list of
+	 * items().  DrawingWidget relinquishes ownership of the item and does not delete the
+	 * item from memory.
+	 *
+	 * It is safe to pass a nullptr to this function; if a nullptr is received, this function
+	 * does nothing.  This function also does nothing if the item is not one of the widget's
+	 * items().
+	 *
+	 * \sa addPoint(), insertPoint(), clearPoints()
+	 */
 	void removeItem(DrawingItem* item);
+
+	/*! \brief Removes and deletes all items from the widget.
+	 *
+	 * This function removes and deletes all of the widgets's items() from memory.
+	 *
+	 * \sa removeItem()
+	 */
 	void clearItems();
+
+	/*! \brief Returns a list of all items added to the widget.
+	 *
+	 * \sa addItem(), insertItem(), removeItem()
+	 */
 	QList<DrawingItem*> items() const;
+
+	/*! \brief Returns a list of all visible items added to the widget that are at the specified
+	 * position.
+	 *
+	 * This function uses DrawingItem::shape() to determine the exact shape of each item to test
+	 * against the specified position.
+	 *
+	 * \sa items(const QRectF&) const, itemAt()
+	 */
 	QList<DrawingItem*> items(const QPointF& scenePos) const;
+
+	/*! \brief Returns a list of all visible items added to the widget that are inside the
+	 * specified rectangle.
+	 *
+	 * This function uses the current itemSelectionMode() to affect how it matches items to the rect:
+	 * \li Qt::ContainsItemBoundingRect - only items whose bounding rectangle is fully contained
+	 * inside the specified rect are included in the list
+	 * \li Qt::ContainsItemShape - only items whose shape is fully contained inside the
+	 * specified rect are included in the list
+	 * \li Qt::IntersectsItemBoundingRect - all items whose bounding rectangle intersects with the
+	 * specified rect are included in the list
+	 * \li Qt::IntersectsItemShape - all items whose shape intersects with the specified rect are
+	 * included in the list
+	 *
+	 * \sa items(const QPointF&) const
+	 */
 	QList<DrawingItem*> items(const QRectF& sceneRect) const;
+
+	/*! \brief Returns the topmost visible item at the specified position, or nulltr if there are
+	 * no items at this position.
+	 *
+	 * This function favors already selected items in its search.  First it searches through all
+	 * of the selected items for a match.  If none of the selected items is at the specified
+	 * position, then this function searches through all of the widget items.
+	 *
+	 * This function uses DrawingItem::shape() to determine the exact shape of each item to test
+	 * against the specified position.  It returns immediately once it finds the first item that
+	 * matches the specified position.
+	 *
+	 * \sa items(const QPointF&) const
+	 */
 	DrawingItem* itemAt(const QPointF& scenePos) const;
 
+
+	/*! \brief Adds the specified item to the selection.
+	 *
+	 * If a valid item is passed to this function, DrawingWidget will set it as selected and
+	 * append it into its list of selectedItems() at the specified index.
+	 *
+	 * It is safe to pass a nullptr to this function; if a nullptr is received, this function
+	 * does nothing.  This function also does nothing if the item is already one of the widget's
+	 * selectedItems().
+	 *
+	 * \sa selectItems(), deselectItem()
+	 */
 	void selectItem(DrawingItem* item);
+
+	/*! \brief Removes the specified item from the selection.
+	 *
+	 * If a valid item is passed to this function, DrawingWidget will set it as unselected and
+	 * remove it from its list of selectedItems().
+	 *
+	 * It is safe to pass a nullptr to this function; if a nullptr is received, this function
+	 * does nothing.  This function also does nothing if the item is not one of the widget's
+	 * selectedItems().
+	 *
+	 * \sa selectItem(), clearSelection()
+	 */
 	void deselectItem(DrawingItem* item);
+
+	/*! \brief Sets the selection to all visible items added to the widget that are inside the
+	 * specified rectangle.
+	 *
+	 * This function first clears the current selection, then searches for itesm that match
+	 * the specified rect.
+	 *
+	 * This function uses the specified mode to affect how it matches items to the rect:
+	 * \li Qt::ContainsItemBoundingRect - only items whose bounding rectangle is fully contained
+	 * inside the specified rect are included in the selection
+	 * \li Qt::ContainsItemShape - only items whose shape is fully contained inside the
+	 * specified rect are included in the selection
+	 * \li Qt::IntersectsItemBoundingRect - all items whose bounding rectangle intersects with the
+	 * specified rect are included in the selection
+	 * \li Qt::IntersectsItemShape - all items whose shape intersects with the specified rect are
+	 * included in the selection
+	 *
+	 * \sa selectItem(), clearSelection()
+	 */
 	void selectItems(const QRectF& sceneRect, Qt::ItemSelectionMode mode);
+
+	/*! \brief Removes all items from the selection.
+	 *
+	 * This function calls deselectItem() on each item in the current selection.  After running this
+	 * function, no items will be selected.
+	 */
 	void clearSelection();
+
+	/*! \brief Returns a list of all currently selected items in the widget.
+	 *
+	 * \sa addItem(), insertItem(), removeItem()
+	 */
 	QList<DrawingItem*> selectedItems() const;
 
+
+	/*! \brief Returns the widget's new item, or nullptr if no new item is set.
+	 *
+	 * The new item is set when entering #PlaceMode.  It is used to place new items within the
+	 * widget's scene.
+	 *
+	 * \sa setPlaceMode()
+	 */
 	DrawingItem* newItem() const;
+
+	/*! \brief Returns the widget's mouse down item, or nullpty if no mouse down item is set.
+	 *
+	 * The mouse down item is the item that receives all mouse events sent to the scene.
+	 *
+	 * An item becomes a mouse down when it receives a mouse press event, and it stays
+	 * the mouse down until it receives a mouse release event.
+	 */
 	DrawingItem* mouseDownItem() const;
+
+	/*! \brief Returns the widget's focus item, or nullpty if no focus item is set.
+	 *
+	 * The focus item is the item that receives all keyboard events sent to the scene.
+	 *
+	 * An item becomes a focus item when it receives a mouse press event, and it stays
+	 * the mouse down until the next mouse press event.
+	 */
 	DrawingItem* focusItem() const;
 
-	// Item points
+
+	/*! \brief Returns the size to use when rendering DrawingItemPoint objects in the scene.
+	 *
+	 * The default width and height are both set to 8 * devicePixelRatio().
+	 *
+	 * \sa pointRect()
+	 */
 	virtual QSize pointSizeHint() const;
+
+	/*! \brief Returns the screen rect used to render a DrawingItemPoint in the scene.
+	 *
+	 * The rect will be centered on the item point's position and have size as set by the
+	 * pointSizeHint().
+	 */
 	QRect pointRect(DrawingItemPoint* point) const;
 
-	// View mapping
+
+	/*! \brief Scrolls the contents of the viewport to ensure that specified scenePos is centered
+	 * in the view.
+	 *
+	 * Because scenePos is a floating point coordinate and the scroll bars operate on integer
+	 * coordinates, the centering is only an approximation.
+	 *
+	 * Note: If the item is close to or outside the border, it will be visible in the view, but not
+	 * centered.
+	 *
+	 * \sa centerOnCursor(), fitToView()
+	 */
 	void centerOn(const QPointF& scenePos);
+
+	/*! \brief Scrolls the contents of the viewport to ensure that specified scenePos is centered
+	 * under the cursor.
+	 *
+	 * Because scenePos is a floating point coordinate and the scroll bars operate on integer
+	 * coordinates, the centering is only an approximation.
+	 *
+	 * Note: If the item is close to or outside the border, it will be visible in the view, but not
+	 * centered under the cursor.
+	 *
+	 * \sa centerOnCursor(), fitToView()
+	 */
 	void centerOnCursor(const QPointF& scenePos);
+
+	/*! \brief Scales the view and scrolls the scroll bars to ensure that the sceneRect fits inside
+	 * the viewport.
+	 *
+	 * The specified rect must be inside the sceneRect(), otherwise fitInView() cannot guarantee
+	 * that the whole rect is visible.
+	 *
+	 * \sa zoomFit()
+	 */
 	void fitToView(const QRectF& sceneRect);
+
+	/*! \brief Scales the view by the specified scaling factor.
+	 *
+	 * The scaling factor must be greater than zero; if not, then this function does nothing.
+	 *
+	 * \sa zoomFit()
+	 */
 	void scaleBy(qreal scale);
 
+
+	/*! \brief Maps the point from the coordinate system of the viewport to the scene's
+	 * coordinate system.
+	 *
+	 * \sa mapFromScene(const QPointF&) const
+	 */
 	QPointF mapToScene(const QPoint& screenPos) const;
+
+	/*! \brief Maps the rect from the coordinate system of the viewport to the scene's
+	 * coordinate system.
+	 *
+	 * \sa mapFromScene(const QRectF&) const
+	 */
 	QRectF mapToScene(const QRect& screenRect) const;
+
+	/*! \brief Maps the point from the scene's coordinate system to the coordinate system of the
+	 * viewport.
+	 *
+	 * \sa mapToScene(const QPoint&) const
+	 */
 	QPoint mapFromScene(const QPointF& scenePos) const;
+
+	/*! \brief Maps the rect from the scene's coordinate system to the coordinate system of the
+	 * viewport.
+	 *
+	 * \sa mapToScene(const QRect&) const
+	 */
 	QRect mapFromScene(const QRectF& sceneRect) const;
+
+	/*! \brief Returns a rect representing the currently visible area of the scene.
+	 *
+	 * \sa scrollBarDefinedRect()
+	 */
 	QRectF visibleRect() const;
+
+	/*! \brief Returns a rect representing the scrollable area of the scene.
+	 *
+	 * Normally this function returns the widget's sceneRect().  However, if the viewport is zoomed
+	 * out enough that more of the scene can be seen than the sceneRect(), this function will
+	 * return a rect representing the entire area.
+	 *
+	 * \sa visibleRect()
+	 */
 	QRectF scrollBarDefinedRect() const;
 
-	// Rendering
+
+	/*! \brief Renders the scene using the specified painter.
+	 *
+	 * This function simply calls drawBackground(), drawItems(), and drawForeground() in succession
+	 * using the specified painter.
+	 */
 	virtual void render(QPainter* painter);
 
 public slots:

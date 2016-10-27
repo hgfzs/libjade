@@ -203,73 +203,21 @@ qreal DrawingWidget::scale() const
 
 //==================================================================================================
 
-void DrawingWidget::addItem(DrawingItem* item, bool place)
+void DrawingWidget::addItem(DrawingItem* item)
 {
 	if (item && !mItems.contains(item))
 	{
 		mItems.append(item);
 		item->mDrawing = this;
-
-		if (place)
-		{
-			QList<DrawingItemPoint*> itemPoints, otherItemPoints;
-			for(auto itemIter = mItems.begin(); itemIter != mItems.end(); itemIter++)
-			{
-				if (item != *itemIter)
-				{
-					itemPoints = item->points();
-					otherItemPoints = (*itemIter)->points();
-
-					for(auto itemPointIter = itemPoints.begin(); itemPointIter != itemPoints.end(); itemPointIter++)
-					{
-						for(auto otherItemPointIter = otherItemPoints.begin();
-							otherItemPointIter != otherItemPoints.end(); otherItemPointIter++)
-						{
-							if (shouldConnect(*itemPointIter, *otherItemPointIter))
-							{
-								(*itemPointIter)->addConnection(*otherItemPointIter);
-								(*otherItemPointIter)->addConnection(*itemPointIter);
-							}
-						}
-					}
-				}
-			}
-		}
 	}
 }
 
-void DrawingWidget::insertItem(int index, DrawingItem* item, bool place)
+void DrawingWidget::insertItem(int index, DrawingItem* item)
 {
 	if (item && !mItems.contains(item))
 	{
 		mItems.insert(index, item);
 		item->mDrawing = this;
-
-		if (place)
-		{
-			QList<DrawingItemPoint*> itemPoints, otherItemPoints;
-			for(auto itemIter = mItems.begin(); itemIter != mItems.end(); itemIter++)
-			{
-				if (item != *itemIter)
-				{
-					itemPoints = item->points();
-					otherItemPoints = (*itemIter)->points();
-
-					for(auto itemPointIter = itemPoints.begin(); itemPointIter != itemPoints.end(); itemPointIter++)
-					{
-						for(auto otherItemPointIter = otherItemPoints.begin();
-							otherItemPointIter != otherItemPoints.end(); otherItemPointIter++)
-						{
-							if (shouldConnect(*itemPointIter, *otherItemPointIter))
-							{
-								(*itemPointIter)->addConnection(*otherItemPointIter);
-								(*otherItemPointIter)->addConnection(*itemPointIter);
-							}
-						}
-					}
-				}
-			}
-		}
 	}
 }
 
@@ -422,7 +370,7 @@ DrawingItem* DrawingWidget::focusItem() const
 
 QSize DrawingWidget::pointSizeHint() const
 {
-	return QSize(8, 8);
+	return QSize(8 * devicePixelRatio(), 8 * devicePixelRatio());
 }
 
 QRect DrawingWidget::pointRect(DrawingItemPoint* point) const
@@ -482,15 +430,18 @@ void DrawingWidget::fitToView(const QRectF& sceneRect)
 
 void DrawingWidget::scaleBy(qreal scale)
 {
-	QPointF mousePos = mapToScene(mapFromGlobal(QCursor::pos()));
-	QRectF scrollBarRect = scrollBarDefinedRect();
+	if (scale > 0)
+	{
+		QPointF mousePos = mapToScene(mapFromGlobal(QCursor::pos()));
+		QRectF scrollBarRect = scrollBarDefinedRect();
 
-	mScale *= scale;
+		mScale *= scale;
 
-	recalculateContentSize(scrollBarRect);
+		recalculateContentSize(scrollBarRect);
 
-	if (viewport()->rect().contains(mapFromGlobal(QCursor::pos()))) centerOnCursor(mousePos);
-	else centerOn(QPointF());
+		if (viewport()->rect().contains(mapFromGlobal(QCursor::pos()))) centerOnCursor(mousePos);
+		else centerOn(QPointF());
+	}
 }
 
 //==================================================================================================

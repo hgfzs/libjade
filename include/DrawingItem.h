@@ -398,7 +398,7 @@ public:
 
 	/*! \brief Adds an existing item point to the item.
 	 *
-	 *This convenience function is equivalent to calling #insertPoint(itemPoint, points().size()).
+	 * This convenience function is equivalent to calling #insertPoint(itemPoint, points().size()).
 	 *
 	 * \sa removePoint()
 	 */
@@ -421,7 +421,7 @@ public:
 	/*! \brief Removes an existing item point from the item.
 	 *
 	 * If a valid item point is passed to this function, DrawingItem will remove it from its list of
-	 * points().  DrawingItem relinquishes ownership of the itemPoint, but does not delete the
+	 * points().  DrawingItem relinquishes ownership of the itemPoint and does not delete the
 	 * point from memory.
 	 *
 	 * It is safe to pass a nullptr to this function; if a nullptr is received, this function
@@ -498,59 +498,59 @@ public:
 	DrawingItemStyle* style() const;
 
 
-	/*! \brief Maps the point from the item's coordinate system to the coordinate system of the
-	 * DrawingWidget.
+	/*! \brief Maps the point from the coordinate system of the DrawingWidget to the item's
+	 * coordinate system.
 	 *
-	 * \sa mapToScene(const QPointF& point) const
+	 * \sa mapToScene(const QPointF&) const
 	 */
 	QPointF mapFromScene(const QPointF& point) const;
 
-	/*! \brief Maps the rect from the item's coordinate system to the coordinate system of the
-	 * DrawingWidget.
+	/*! \brief Maps the rect from the coordinate system of the DrawingWidget to the item's
+	 * coordinate system.
 	 *
-	 * \sa mapToScene(const QRectF& rect) const
+	 * \sa mapToScene(const QRectF&) const
 	 */
 	QRectF mapFromScene(const QRectF& rect) const;
 
-	/*! \brief Maps the polygon from the item's coordinate system to the coordinate system of the
-	 * DrawingWidget.
+	/*! \brief Maps the polygon from the coordinate system of the DrawingWidget to the item's
+	 * coordinate system.
 	 *
 	 * \sa mapToScene(const QPolygonF&) const
 	 */
 	QPolygonF mapFromScene(const QPolygonF& polygon) const;
 
-	/*! \brief Maps the path from the item's coordinate system to the coordinate system of the
-	 * DrawingWidget.
-	 *
-	 * \sa mapToScene(const QPainterPath& path) const
-	 */
-	QPainterPath mapFromScene(const QPainterPath& path) const;
-
-	/*! \brief Maps the point from the coordinate system of the DrawingWidget to the item's
-	 * coordinate system.
-	 *
-	 * \sa mapFromScene(const QPointF& point) const
-	 */
-	QPointF mapToScene(const QPointF& point) const;
-
-	/*! \brief Maps the rect from the coordinate system of the DrawingWidget to the item's
-	 * coordinate system.
-	 *
-	 * \sa mapFromScene(const QRectF& rect) const
-	 */
-	QRectF mapToScene(const QRectF& rect) const;
-
-	/*! \brief Maps the polygon from the coordinate system of the DrawingWidget to the item's
-	 * coordinate system.
-	 *
-	 * \sa mapFromScene(const QPolygonF& polygon) const
-	 */
-	QPolygonF mapToScene(const QPolygonF& polygon) const;
-
 	/*! \brief Maps the path from the coordinate system of the DrawingWidget to the item's
 	 * coordinate system.
 	 *
-	 * \sa mapFromScene(const QPainterPath& path) const
+	 * \sa mapToScene(const QPainterPath&) const
+	 */
+	QPainterPath mapFromScene(const QPainterPath& path) const;
+
+	/*! \brief Maps the point from the item's coordinate system to the coordinate system of the
+	 * DrawingWidget.
+	 *
+	 * \sa mapFromScene(const QPointF&) const
+	 */
+	QPointF mapToScene(const QPointF& point) const;
+
+	/*! \brief Maps the rect from the item's coordinate system to the coordinate system of the
+	 * DrawingWidget.
+	 *
+	 * \sa mapFromScene(const QRectF&) const
+	 */
+	QRectF mapToScene(const QRectF& rect) const;
+
+	/*! \brief Maps the polygon from the item's coordinate system to the coordinate system of the
+	 * DrawingWidget.
+	 *
+	 * \sa mapFromScene(const QPolygonF&) const
+	 */
+	QPolygonF mapToScene(const QPolygonF& polygon) const;
+
+	/*! \brief Maps the path from the item's coordinate system to the coordinate system of the
+	 * DrawingWidget.
+	 *
+	 * \sa mapFromScene(const QPainterPath&) const
 	 */
 	QPainterPath mapToScene(const QPainterPath& path) const;
 
