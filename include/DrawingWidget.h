@@ -186,29 +186,169 @@ private:
 	QPointF mSelectionCenter;
 
 public:
+	/*! \brief Create a new DrawingWidget with default settings.
+	 *
+	 * The new widget does not contain any items.  Items can be added by calling addItem() or
+	 * insertItem().
+	 */
 	DrawingWidget();
+
+	/*! \brief Delete an existing DrawingWidget object.
+	 *
+	 * Also deletes all items contained in the widget.
+	 */
 	~DrawingWidget();
 
-	// Selectors
+
+	/*! \brief Sets the bounding rectangle of the scene.
+	 *
+	 * The scene rectangle defines the extent of the scene.  It is used by DrawingWidget to
+	 * determine the scrollable area of the viewport.
+	 *
+	 * The scene rectangle must be set to a valid QRectF.  The behavior of DrawingWidget is
+	 * undefined if its sceneRect is invalid.
+	 *
+	 * The default scene rectangle is set to QRectF(-5000, -3750, 10000, 7500).
+	 *
+	 * \sa sceneRect()
+	 */
 	void setSceneRect(const QRectF& rect);
+
+	/*! \brief Sets the bounding rectangle of the scene.
+	 *
+	 * This convenience function is equivalent to calling setSceneRect(QRectF(left, top, width, height)).
+	 *
+	 * \sa sceneRect(), width(), height()
+	 */
 	void setSceneRect(qreal left, qreal top, qreal width, qreal height);
+
+	/*! \brief Returns the widget's bounding rectangle.
+	 *
+	 * \sa setSceneRect(), width(), height()
+	 */
 	QRectF sceneRect() const;
+
+	/*! \brief Returns the width of the widget's bounding rectangle.
+	 *
+	 * \sa setSceneRect(), sceneRect(), height()
+	 */
 	qreal width() const;
+
+	/*! \brief Returns the height of the widget's bounding rectangle.
+	 *
+	 * \sa setSceneRect(), sceneRect(), width()
+	 */
 	qreal height() const;
 
+
+	/*! \brief Sets the widget's grid.
+	 *
+	 * Snap to grid is enabled when the grid is set to a value greater than 0.  With snap to grid,
+	 * DrawingWidget will force items to be aligned on a grid when moved around the scene or
+	 * resized.
+	 *
+	 * Set the grid to 0 (or a negative number) to disable snap to grid.
+	 *
+	 * The default grid is set to 50.
+	 *
+	 * \sa grid(), roundToGrid()
+	 */
 	void setGrid(qreal grid);
+
+	/*! \brief Returns the widget's grid.
+	 *
+	 * \sa setGrid(), roundToGrid()
+	 */
 	qreal grid() const;
+
+	/*! \brief Rounds to specified value to be aligned on the grid and returns the rounded value.
+	 *
+	 * If the grid is 0 or a negative number, this function simply returns the original value.
+	 *
+	 * \sa grid()
+	 */
 	qreal roundToGrid(qreal value) const;
+
+	/*! \brief Rounds to specified point to be aligned on the grid and returns the rounded value.
+	 *
+	 * If the grid is 0 or a negative number, this function simply returns the original point.
+	 *
+	 * \sa grid()
+	 */
 	QPointF roundToGrid(const QPointF& scenePos) const;
 
+
+	/*! \brief Sets the widget's background brush.
+	 *
+	 * The background brush is used to fill the background of the widget by the default
+	 * implementation of drawBackground().  It is also used to determine the outline color when
+	 * rendering DrawingItemPoint objects.
+	 *
+	 * The default background brush is set to white.
+	 *
+	 * \sa backgroundBrush()
+	 */
 	void setBackgroundBrush(const QBrush& brush);
+
+	/*! \brief Returns the widget's background brush.
+	 *
+	 * \sa setBackgroundBrush()
+	 */
 	QBrush backgroundBrush() const;
 
+
+	/*! \brief Set the maximum depth of the internal undo stack of the widget.
+	 *
+	 * When the number of commands on the stack exceeds the undo limit, commands are deleted from
+	 * the bottom of the stack.
+	 *
+	 * This property may only be set when the undo stack is empty, since setting it on a non-empty
+	 * stack might delete the command at the current index. Calling setUndoLimit() on a non-empty
+	 * stack does nothing.
+	 *
+	 * The default undo limit is set to 64.
+	 *
+	 * \sa undoLimit(), pushUndoCommand()
+	 */
 	void setUndoLimit(int undoLimit);
+
+	/*! \brief Pushes the specified command onto the widget's internal undo stack.
+	 *
+	 * This function either adds the command to the stack or merges it with the most recently
+	 * executed command. In either case, executes the command by calling its redo function.
+	 *
+	 * If commands were undone before the command was pushed, the current command and all commands
+	 * above it are deleted. Hence command always ends up being the top-most on the stack.
+	 *
+	 * Once a command is pushed, the stack takes ownership of it. There are no getters to return
+	 * the command, since modifying it after it has been executed will almost always lead to
+	 * corruption of the document's state.
+	 */
 	void pushUndoCommand(QUndoCommand* command);
+
+	/*! \brief Returns the maximum number of undo commands that can be stored in the widget.
+	 *
+	 * \sa setUndoLimit()
+	 */
 	int undoLimit() const;
+
+	/*! \brief Returns true if the widget's internal undo stack is in a clean state, false
+	 * otherwise.
+	 *
+	 * \sa setClean()
+	 */
 	bool isClean() const;
+
+	/*! \brief Returns true if there is a command available for undo; otherwise returns false.
+	 *
+	 * \sa undoText(), canRedo()
+	 */
 	bool canUndo() const;
+
+	/*! \brief Returns true if there is a command available for redo; otherwise returns false.
+	 *
+	 * \sa redoText(), canUndo()
+	 */
 	bool canRedo() const;
 	QString undoText() const;
 	QString redoText() const;
@@ -271,6 +411,18 @@ public slots:
 
 	void undo();
 	void redo();
+
+	/*! \brief Marks the widget's internal undo stack as clean.
+	 *
+	 * This is typically called when a document is saved, for example.
+	 *
+	 * This function also emits cleanChanged() if the stack was not already clean.
+	 *
+	 * Whenever the stack returns to this state through the use of undo/redo commands, it emits the
+	 * signal cleanChanged(). This signal is also emitted when the stack leaves the clean state.
+	 *
+	 * \sa isClean()
+	 */
 	void setClean();
 
 	void cut();

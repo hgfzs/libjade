@@ -144,7 +144,6 @@ void DrawingWidget::setUndoLimit(int undoLimit)
 
 void DrawingWidget::pushUndoCommand(QUndoCommand* command)
 {
-	qDebug() << "pushUndo";
 	mUndoStack.push(command);
 }
 
@@ -728,7 +727,7 @@ void DrawingWidget::paste()
 	if (!newItems.isEmpty())
 	{
 		// Offset items based on mConsecutivePastes
-		qreal offset = 2 * mConsecutivePastes * grid();
+		qreal offset = 2 * mConsecutivePastes * mGrid;
 		QPointF deltaPosition = QPointF(offset, offset) +
 			roundToGrid(mMouseEvent.buttonDownScenePos() - newItems.first()->pos());
 
