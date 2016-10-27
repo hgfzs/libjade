@@ -555,11 +555,67 @@ public:
 	QPainterPath mapToScene(const QPainterPath& path) const;
 
 
+	/*! \brief Returns an estimate of the area painted by an item.
+	 *
+	 * The function returns a rectangle in local item coordinates.
+	 *
+	 * The implementation of boundingRect() is meant to be as lightweight as possible.  It is not
+	 * recommended to return the boundingRect of the QPainterPath returned by shape() for most
+	 * items.  A better approach would be a quick way to estimate this rect without creating
+	 * a QPainterPath.
+	 *
+	 * \sa shape(), centerPos(), isValid()
+	 */
 	virtual QRectF boundingRect() const = 0;
+
+	/*! \brief Returns an accurate outline of an item's shape.
+	 *
+	 * The function returns a path in local item coordinates.
+	 *
+	 * The default implementation calls boundingRect() to return a simple rectangular shape.  Most
+	 * derived classes will want to reimplement this behavior to match the actual shape of the item
+	 * being represented.
+	 *
+	 * The outline of a shape can vary depending on the width and style of the pen used when
+	 * drawing. To include this outline in the item's shape, create a shape from the stroke using
+	 * QPainterPathStroker.
+	 *
+	 * \sa boundingRect(), centerPos(), isValid()
+	 */
 	virtual QPainterPath shape() const;
+
+	/*! \brief Returns a position representing the center of the item.
+	 *
+	 * The function returns a location in local item coordinates.
+	 *
+	 * This function is used to determine the center of all of the currently selected items in the
+	 * scene.
+	 *
+	 * The default implementation is to return the center of the item's boundingRect().
+	 *
+	 * \sa boundingRect(), shape(), isValid()
+	 */
 	virtual QPointF centerPos() const;
+
+	/*! \brief Return false if the item is degenerate, true otherwise.
+	 *
+	 * This function should return false if the item is not really valid (for example, a line
+	 * where the start and end points are the same).  DrawingWidget will prevent invalid items from
+	 * being added to the scene
+	 *
+	 * The default implementation is to return true if the item's boundingRect() is a valid rect.
+	 *
+	 * \sa boundingRect(), shape(), centerPos()
+	 */
 	virtual bool isValid() const;
 
+
+	/*! \brief Paints the contents of the item into the scene.
+	 *
+	 * This function is typically called by DrawingWidget when rendering the scene.  DrawingWidget
+	 * handles all of the necessary transformations, so this function should paint the item in
+	 * local item coordinates.
+	 */
 	virtual void paint(QPainter* painter) = 0;
 
 
