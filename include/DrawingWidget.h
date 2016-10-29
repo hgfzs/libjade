@@ -703,14 +703,97 @@ public:
 	virtual void render(QPainter* painter);
 
 public slots:
+	/*! \brief Zooms in on the scene.
+	 *
+	 * Zooms in on the scene by scaling the view by a factor of sqrt(2) and sends the
+	 * scaleChanged() signal to indicate the new scale factor.
+	 *
+	 * \sa zoomOut(), zoomFit(), scaleBy()
+	 */
 	void zoomIn();
+
+	/*! \brief Zooms out from the scene.
+	 *
+	 * Zooms out on the scene by scaling the view by a factor of sqrt(2)/2 and sends the
+	 * scaleChanged() signal to indicate the new scale factor.
+	 *
+	 * \sa zoomOut(), zoomFit(), scaleBy()
+	 */
 	void zoomOut();
+
+	/*! \brief Zooms to fit the entire sceneRect() within the view.
+	 *
+	 * Scales the view and scrolls the scroll bars to ensure that the sceneRect() fits inside
+	 * the viewport, then sends the scaleChanged() signal to indicate the new scale factor.
+	 *
+	 * \sa zoomOut(), zoomFit(), scaleBy()
+	 */
 	void zoomFit();
 
+
+	/*! \brief Sets the current operating mode to #DefaultMode.
+	 *
+	 * #DefaultMode is used for normal interaction with items in the scene.  Users can click on
+	 * items to select them or draw a rubber band over an area to select all items in that area.
+	 * Selected items can be moved around the scene.  A single selected item can be resized if the
+	 * user clicks on a Control DrawingItemPoint.  Clicking on empty space will clear the current
+	 * selection.
+	 *
+	 * Any selection is cleared when changing operating modes.  This slot emits the modeChanged()
+	 * signal to indicate that the mode has changed.
+	 *
+	 * \sa setScrollMode(), setZoomMode(), setPlaceMode()
+	 */
 	void setDefaultMode();
+
+	/*! \brief Sets the current operating mode to #ScrollMode.
+	 *
+	 * #ScrollMode is used for panning around the scene.  The cursor turns into a hand, which can
+	 * grab the scene at any point and drag it around the viewport.  Right-clicking or
+	 * double-clicking will set the mode back to #DefaultMode.
+	 *
+	 * Any selection is cleared when changing operating modes.  This slot emits the modeChanged()
+	 * signal to indicate that the mode has changed.
+	 *
+	 * \sa setDefaultMode(), setZoomMode(), setPlaceMode()
+	 */
 	void setScrollMode();
+
+	/*! \brief Sets the current operating mode to #ZoomMode.
+	 *
+	 * #ZoomMode is used for selecting an area of the scene to zoom in on.  The cursor turns into a
+	 * crosshairs, which can be used to draw a rect over a portion of the scene.  The
+	 * viewport will then zoom in to fit the entire rect into the new view.  Right-clicking or
+	 * double-clicking will set the mode back to #DefaultMode.
+	 *
+	 * Any selection is cleared when changing operating modes.  This slot emits the modeChanged()
+	 * signal to indicate that the mode has changed.
+	 *
+	 * \sa setDefaultMode(), setScrollMode(), setPlaceMode()
+	 */
 	void setZoomMode();
+
+	/*! \brief Sets the current operating mode to #ScrollMode.
+	 *
+	 * #PlaceMode is used to add new items to the widget.  By default, mouse move events move the
+	 * new item around the scene.  The new item is added to the scene on a
+	 * mouse release event.  Copies of the new item can continue to be placed until the user
+	 * right-clicks or until the user enters a different mode.
+	 *
+	 * DrawingWidget is expecting to receive a pointer to a DrawingItem that is not already
+	 * one of the widget's items().  DrawingWidget takes ownership of the item and will delete
+	 * it upon exiting #PlaceMode.
+	 *
+	 * It is safe to pass a nullptr to this function; if a nullptr is received, this function
+	 * sets the operating mode to #DefaultMode.
+	 *
+	 * Any selection is cleared when changing operating modes.  This slot emits the modeChanged()
+	 * signal to indicate that the mode has changed.
+	 *
+	 * \sa setDefaultMode(), setScrollMode(), setZoomMode()
+	 */
 	void setPlaceMode(DrawingItem* newItem);
+
 
 	void undo();
 	void redo();
@@ -754,7 +837,22 @@ public slots:
 	void ungroup();
 
 signals:
+	/*! \brief Emitted whenever the scale of the viewport changes.
+	 *
+	 * This signal is emitted whenever the scale is changed from the zoomIn(), zoomOut(), and
+	 * zoomFit() slots.  It is also emitted in #ZoomMode when the view is changed to zoom in on
+	 * a rectangular area of the scene.
+	 *
+	 * This signal is not emitted when using the fitToView() or scaleBy() functions directly.
+	 */
 	void scaleChanged(qreal scale);
+
+	/*! \brief Emitted whenever the operating mode of the widget changes.
+	 *
+	 * This signal is emitted whenever the mode is changed using the setDefaultMode(),
+	 * setScrollMode(), setZoomMode(), and setPlaceMode() slots.  It is also emitted in when
+	 * exiting other operating modes by right-clicking or double-clicking.
+	 */
 	void modeChanged(DrawingWidget::Mode mode);
 
 	void cleanChanged(bool clean);
