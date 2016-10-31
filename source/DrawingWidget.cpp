@@ -39,9 +39,10 @@ DrawingWidget::DrawingWidget() : QAbstractScrollArea()
 	mMouseDownItem = nullptr;
 	mFocusItem = nullptr;
 
-	mMode = DefaultMode;
+	mFlags = 0;
 	mItemSelectionMode = Qt::ContainsItemBoundingRect;
 
+	mMode = DefaultMode;
 	mScale = 1.0;
 
 	mUndoStack.setUndoLimit(64);
@@ -179,9 +180,19 @@ QString DrawingWidget::redoText() const
 
 //==================================================================================================
 
+void DrawingWidget::setFlags(Flags flags)
+{
+	mFlags = flags;
+}
+
 void DrawingWidget::setItemSelectionMode(Qt::ItemSelectionMode mode)
 {
 	mItemSelectionMode = mode;
+}
+
+DrawingWidget::Flags DrawingWidget::flags() const
+{
+	return mFlags;
 }
 
 Qt::ItemSelectionMode DrawingWidget::itemSelectionMode() const
@@ -283,12 +294,15 @@ DrawingItem* DrawingWidget::itemAt(const QPointF& scenePos) const
 {
 	DrawingItem* item = nullptr;
 
-	// Favor selected items
-	auto itemIter = mSelectedItems.end();
-	while (item == nullptr && itemIter != mSelectedItems.begin())
+	if (mFlags & SelectedItemsOnTop)
 	{
-		itemIter--;
-		if (itemMatchesPoint(*itemIter, scenePos)) item = *itemIter;
+		// Favor selected items
+		auto itemIter = mSelectedItems.end();
+		while (item == nullptr && itemIter != mSelectedItems.begin())
+		{
+			itemIter--;
+			if (itemMatchesPoint(*itemIter, scenePos)) item = *itemIter;
+		}
 	}
 
 	// Search all items
@@ -322,7 +336,7 @@ void DrawingWidget::deselectItem(DrawingItem* item)
 	}
 }
 
-void DrawingWidget::selectItems(const QRectF& sceneRect, Qt::ItemSelectionMode mode)
+void DrawingWidget::selectItems(const QRectF& sceneRect)
 {
 	clearSelection();
 
@@ -330,7 +344,7 @@ void DrawingWidget::selectItems(const QRectF& sceneRect, Qt::ItemSelectionMode m
 	{
 		for(auto itemIter = mItems.begin(); itemIter != mItems.end(); itemIter++)
 		{
-			if (itemMatchesRect(*itemIter, sceneRect, mode))
+			if (itemMatchesRect(*itemIter, sceneRect, mItemSelectionMode))
 				selectItem(*itemIter);
 		}
 	}
@@ -606,32 +620,24 @@ void DrawingWidget::setPlaceMode(DrawingItem* item)
 
 void DrawingWidget::undo()
 {
-	if (mMode == DefaultMode)
+	if (mMode == DefaultMode && mUndoStack.canUndo())
 	{
-		clearSelection();
-		emit selectionChanged(mSelectedItems);
-
+		if ((mFlags & UndoableSelectCommands) == 0) clearSelection();
 		mUndoStack.undo();
-		emit numberOfItemsChanged(mItems.size());
-
+		emit undoEvent();
 		viewport()->update();
 	}
-	else setDefaultMode();
 }
 
 void DrawingWidget::redo()
 {
-	if (mMode == DefaultMode)
+	if (mMode == DefaultMode && mUndoStack.canRedo())
 	{
-		clearSelection();
-		emit selectionChanged(mSelectedItems);
-
+		if ((mFlags & UndoableSelectCommands) == 0) clearSelection();
 		mUndoStack.redo();
-		emit numberOfItemsChanged(mItems.size());
-
+		emit redoEvent();
 		viewport()->update();
 	}
-	else setDefaultMode();
 }
 
 void DrawingWidget::setClean()

@@ -142,6 +142,20 @@ public:
 		PlaceMode		//!< Mode for placing new items into a DrawingWidget.
 	};
 
+	/*! \brief Enum used to modify the default behavior of DrawingWidget.
+	 */
+	enum Flag
+	{
+		SelectedItemsOnTop = 0x0001,		//!< The itemAt() function will search through all
+											//!< selectedItems() first when trying to find the
+											//!< topmost item.  This also affects how DrawingWidget
+											//!< determines the mouseDownItem().
+		UndoableSelectCommands = 0x0002		//!< Selecting and deselecting items are commands that
+											//!< the user can undo() and redo().
+	};
+	Q_DECLARE_FLAGS(Flags, Flag)
+
+
 private:
 	enum MouseState { MouseReady, MouseSelect, MouseMoveItems, MouseResizeItem, MouseRubberBand };
 
@@ -163,9 +177,10 @@ private:
 	DrawingItem* mMouseDownItem;
 	DrawingItem* mFocusItem;
 
-	Mode mMode;
+	Flags mFlags;
 	Qt::ItemSelectionMode mItemSelectionMode;
 
+	Mode mMode;
 	qreal mScale;
 
 	// Internal variables
@@ -364,6 +379,15 @@ public:
 	QString redoText() const;
 
 
+	/*! \brief Modifies the default behavior of DrawingWidget through a combination of flags.
+	 *
+	 * The default flags are set to 0.  Applications can set any combination of flags to set the
+	 * desired behavior of DrawingWidget.
+	 *
+	 * \sa flags()
+	 */
+	void setFlags(Flags flags);
+
 	/*! \brief Sets the widget's item selection mode.
 	 *
 	 * The item selection mode affects how items are selected with a rubber band select box:
@@ -383,6 +407,13 @@ public:
 	 * \sa itemSelectionMode()
 	 */
 	void setItemSelectionMode(Qt::ItemSelectionMode mode);
+
+	/*! \brief Returns any modifications to DrawingWidget's default behavior represented as a
+	 * combination of flags.
+	 *
+	 * \sa setFlags()
+	 */
+	Flags flags() const;
 
 	/*! \brief Returns the widget's item selection mode.
 	 *
@@ -530,10 +561,10 @@ public:
 	/*! \brief Sets the selection to all visible items added to the widget that are inside the
 	 * specified rectangle.
 	 *
-	 * This function first clears the current selection, then searches for itesm that match
+	 * This function first clears the current selection, then searches for items that match
 	 * the specified rect.
 	 *
-	 * This function uses the specified mode to affect how it matches items to the rect:
+	 * This function uses the widget's itemSelectionMode() to affect how it matches items to the rect:
 	 * \li Qt::ContainsItemBoundingRect - only items whose bounding rectangle is fully contained
 	 * inside the specified rect are included in the selection
 	 * \li Qt::ContainsItemShape - only items whose shape is fully contained inside the
@@ -545,7 +576,7 @@ public:
 	 *
 	 * \sa selectItem(), clearSelection()
 	 */
-	void selectItems(const QRectF& sceneRect, Qt::ItemSelectionMode mode);
+	void selectItems(const QRectF& sceneRect);
 
 	/*! \brief Removes all items from the selection.
 	 *
@@ -795,7 +826,32 @@ public slots:
 	void setPlaceMode(DrawingItem* newItem);
 
 
+	/*! \brief Undoes the previous command.
+	 *
+	 * The undo operation is only performed if the mode() is #DefaultMode.  If the mode() is any
+	 * other mode, this function does nothing.
+	 *
+	 * This function will send the undoEvent() signal if there was a command to undo.
+	 *
+	 * If the #UndoableSelectCommands flag is not set, this function will clear any selected items
+	 * before performing the undo operation.
+	 *
+	 * \sa redo(), setClean(), isClean()
+	 */
 	void undo();
+
+	/*! \brief Redoes the previous command.
+	 *
+	 * The redo operation is only performed if the mode() is #DefaultMode.  If the mode() is any
+	 * other mode, this function does nothing.
+	 *
+	 * This function will send the redoEvent() signal if there was a command to redo.
+	 *
+	 * If the #UndoableSelectCommands flag is not set, this function will clear any selected items
+	 * before performing the redo operation.
+	 *
+	 * \sa undo(), setClean(), isClean()
+	 */
 	void redo();
 
 	/*! \brief Marks the widget's internal undo stack as clean.
@@ -810,6 +866,7 @@ public slots:
 	 * \sa isClean()
 	 */
 	void setClean();
+
 
 	void cut();
 	void copy();
@@ -855,9 +912,40 @@ signals:
 	 */
 	void modeChanged(DrawingWidget::Mode mode);
 
+	/*! \brief Emitted whenever the stack enters or leaves the clean state.
+	 *
+	 * If clean is true, the stack is in a clean state; otherwise this signal indicates that it
+	 * has left the clean state.
+	 *
+	 * \sa setClean(), isClean()
+	 */
 	void cleanChanged(bool clean);
+
+	/*! \brief Emitted whenever the value of canUndo() changes.
+	 *
+	 * This signal may be used to enable or disable an undo action associated with this widget.
+	 */
 	void canUndoChanged(bool canUndo);
+
+	/*! \brief Emitted whenever the value of canRedo() changes.
+	 *
+	 * This signal may be used to enable or disable a redo action associated with this widget.
+	 */
 	void canRedoChanged(bool canRedo);
+
+	/*! \brief Emitted whenever the widget undoes the previous operation with undo().
+	 *
+	 * This signal is not emitted if the user tries to call undo() but there is no command available
+	 * to be undone.
+	 */
+	void undoEvent();
+
+	/*! \brief Emitted whenever the widget redoes the previous operation with redo().
+	 *
+	 * This signal is not emitted if the user tries to call redo() but there is no command available
+	 * to be redone.
+	 */
+	void redoEvent();
 
 	void numberOfItemsChanged(int itemCount);
 	void itemsGeometryChanged(const QList<DrawingItem*>& items);
@@ -937,5 +1025,7 @@ private:
 
 	void recalculateContentSize(const QRectF& targetSceneRect = QRectF());
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(DrawingWidget::Flags)
 
 #endif
