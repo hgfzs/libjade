@@ -558,26 +558,6 @@ public:
 	 */
 	void deselectItem(DrawingItem* item);
 
-	/*! \brief Sets the selection to all visible items added to the widget that are inside the
-	 * specified rectangle.
-	 *
-	 * This function first clears the current selection, then searches for items that match
-	 * the specified rect.
-	 *
-	 * This function uses the widget's itemSelectionMode() to affect how it matches items to the rect:
-	 * \li Qt::ContainsItemBoundingRect - only items whose bounding rectangle is fully contained
-	 * inside the specified rect are included in the selection
-	 * \li Qt::ContainsItemShape - only items whose shape is fully contained inside the
-	 * specified rect are included in the selection
-	 * \li Qt::IntersectsItemBoundingRect - all items whose bounding rectangle intersects with the
-	 * specified rect are included in the selection
-	 * \li Qt::IntersectsItemShape - all items whose shape intersects with the specified rect are
-	 * included in the selection
-	 *
-	 * \sa selectItem(), clearSelection()
-	 */
-	void selectItems(const QRectF& sceneRect);
-
 	/*! \brief Removes all items from the selection.
 	 *
 	 * This function calls deselectItem() on each item in the current selection.  After running this
@@ -770,8 +750,7 @@ public slots:
 	 * user clicks on a Control DrawingItemPoint.  Clicking on empty space will clear the current
 	 * selection.
 	 *
-	 * Any selection is cleared when changing operating modes.  This slot emits the modeChanged()
-	 * signal to indicate that the mode has changed.
+	 * This slot emits the modeChanged() signal to indicate that the mode has changed.
 	 *
 	 * \sa setScrollMode(), setZoomMode(), setPlaceMode()
 	 */
@@ -783,8 +762,7 @@ public slots:
 	 * grab the scene at any point and drag it around the viewport.  Right-clicking or
 	 * double-clicking will set the mode back to #DefaultMode.
 	 *
-	 * Any selection is cleared when changing operating modes.  This slot emits the modeChanged()
-	 * signal to indicate that the mode has changed.
+	 * This slot emits the modeChanged() signal to indicate that the mode has changed.
 	 *
 	 * \sa setDefaultMode(), setZoomMode(), setPlaceMode()
 	 */
@@ -797,8 +775,7 @@ public slots:
 	 * viewport will then zoom in to fit the entire rect into the new view.  Right-clicking or
 	 * double-clicking will set the mode back to #DefaultMode.
 	 *
-	 * Any selection is cleared when changing operating modes.  This slot emits the modeChanged()
-	 * signal to indicate that the mode has changed.
+	 * This slot emits the modeChanged() signal to indicate that the mode has changed.
 	 *
 	 * \sa setDefaultMode(), setScrollMode(), setPlaceMode()
 	 */
@@ -818,8 +795,7 @@ public slots:
 	 * It is safe to pass a nullptr to this function; if a nullptr is received, this function
 	 * sets the operating mode to #DefaultMode.
 	 *
-	 * Any selection is cleared when changing operating modes.  This slot emits the modeChanged()
-	 * signal to indicate that the mode has changed.
+	 * This slot emits the modeChanged() signal to indicate that the mode has changed.
 	 *
 	 * \sa setDefaultMode(), setScrollMode(), setZoomMode()
 	 */
@@ -868,13 +844,128 @@ public slots:
 	void setClean();
 
 
+	/*! \brief Copies the selected items to the clipboard, then deletes them from the scene.
+	 *
+	 * The cut operation is only performed if the mode() is #DefaultMode.  If the mode() is any
+	 * other mode, this function does nothing.
+	 *
+	 * \sa copy(), paste(), deleteSelection()
+	 */
 	void cut();
+
+	/*! \brief Copies the selected items to the clipboard.
+	 *
+	 * The cut operation is only performed if the mode() is #DefaultMode.  If the mode() is any
+	 * other mode, this function does nothing.
+	 *
+	 * \sa cut(), paste(), deleteSelection()
+	 */
 	void copy();
+
+	/*! \brief Pastes copies of any items on the clipboard into the scene.
+	 *
+	 * This function emits the numberOfItemsChanged() signal to indicate that items were added
+	 * to the widget.
+	 *
+	 * Any existing selection is cleared before the new items are added.  The new items become
+	 * the new selection.  This function  emits the selectionChanged() signal to indicate the new
+	 * selection has changed.
+	 *
+	 * The cut operation is only performed if the mode() is #DefaultMode.  If the mode() is any
+	 * other mode, this function does nothing.
+	 *
+	 * \sa cut(), copy(), deleteSelection()
+	 */
 	void paste();
+
+	/*! \brief Deletes the selected items from the scene.
+	 *
+	 * This function emits the numberOfItemsChanged() signal to indicate that items were removed
+	 * from the widget.  This function also emits the selectionChanged() signal because the
+	 * selection is cleared when the items are deleted.
+	 *
+	 * If no items are currently selected, this function does nothing.
+	 *
+	 * The delete operation is only performed if the mode() is #DefaultMode.  If the mode() is any
+	 * other mode, this function calls setDefaultMode().
+	 *
+	 * \sa cut(), copy(), paste()
+	 */
 	void deleteSelection();
 
+
+	/*! \brief Selects all the items in the scene.
+	 *
+	 * This function emits the selectionChanged() signal after the items have been selected.
+	 *
+	 * The select operation is only performed if the mode() is #DefaultMode.  If the mode() is any
+	 * other mode, this function does nothing.
+	 *
+	 * \sa selectArea(const QRectF&), selectArea(const QPainterPath&), selectNone()
+	 */
 	void selectAll();
+
+	/*! \brief Sets the selection to all visible items added to the widget that are inside the
+	 * specified rectangle.
+	 *
+	 * This function first clears the current selection, then searches for items that match
+	 * the specified rect.
+	 *
+	 * This function uses the widget's itemSelectionMode() to affect how it matches items to the rect:
+	 * \li Qt::ContainsItemBoundingRect - only items whose bounding rectangle is fully contained
+	 * inside the specified rect are included in the selection
+	 * \li Qt::ContainsItemShape - only items whose shape is fully contained inside the
+	 * specified rect are included in the selection
+	 * \li Qt::IntersectsItemBoundingRect - all items whose bounding rectangle intersects with the
+	 * specified rect are included in the selection
+	 * \li Qt::IntersectsItemShape - all items whose shape intersects with the specified rect are
+	 * included in the selection
+	 *
+	 * The selectionChanged() signal is emitted after the items have been selected.
+	 *
+	 * The select operation is only performed if the mode() is #DefaultMode.  If the mode() is any
+	 * other mode, this function does nothing.
+	 *
+	 * \sa selectAll(), selectArea(const QPainterPath&), selectNone()
+	 */
+	void selectArea(const QRectF& rect);
+
+	/*! \brief Sets the selection to all visible items added to the widget that are inside the
+	 * specified path.
+	 *
+	 * This function first clears the current selection, then searches for items that match
+	 * the specified path.
+	 *
+	 * This function uses the widget's itemSelectionMode() to affect how it matches items to the path:
+	 * \li Qt::ContainsItemBoundingRect - only items whose bounding rectangle is fully contained
+	 * inside the specified path are included in the selection
+	 * \li Qt::ContainsItemShape - only items whose shape is fully contained inside the
+	 * specified path are included in the selection
+	 * \li Qt::IntersectsItemBoundingRect - all items whose bounding rectangle intersects with the
+	 * specified path are included in the selection
+	 * \li Qt::IntersectsItemShape - all items whose shape intersects with the specified path are
+	 * included in the selection
+	 *
+	 * The selectionChanged() signal is emitted after the items have been selected.
+	 *
+	 * The select operation is only performed if the mode() is #DefaultMode.  If the mode() is any
+	 * other mode, this function does nothing.
+	 *
+	 * \sa selectAll(), selectArea(const QRectF&), selectNone()
+	 */
+	void selectArea(const QPainterPath& path);
+
+	/*! \brief Deselects all the items in the scene.
+	 *
+	 * This function emits the selectionChanged() signal after the items have been deselected.
+	 *
+	 * The select operation is only performed if the mode() is #DefaultMode.  If the mode() is any
+	 * other mode, this function does nothing.
+	 *
+	 * \sa selectAll(), selectArea(const QRectF&), selectArea(const QPainterPath&)
+	 */
 	void selectNone();
+
 
 	void moveSelection(const QPointF& newPos);
 	void resizeSelection(DrawingItemPoint* itemPoint, const QPointF& scenePos);
@@ -933,23 +1024,8 @@ signals:
 	 */
 	void canRedoChanged(bool canRedo);
 
-	/*! \brief Emitted whenever the widget undoes the previous operation with undo().
-	 *
-	 * This signal is not emitted if the user tries to call undo() but there is no command available
-	 * to be undone.
-	 */
-	void undoEvent();
-
-	/*! \brief Emitted whenever the widget redoes the previous operation with redo().
-	 *
-	 * This signal is not emitted if the user tries to call redo() but there is no command available
-	 * to be redone.
-	 */
-	void redoEvent();
-
 	void numberOfItemsChanged(int itemCount);
 	void itemsGeometryChanged(const QList<DrawingItem*>& items);
-	void itemGeometryChanged(DrawingItem* item);
 	void selectionChanged(const QList<DrawingItem*>& items);
 	void newItemChanged(DrawingItem* item);
 
@@ -986,44 +1062,56 @@ private slots:
 	void mousePanEvent();
 
 private:
-	void addItems(const QList<DrawingItem*>& items, bool place, QUndoCommand* command = nullptr);
-	void addItems(DrawingItem* item, bool place, QUndoCommand* command = nullptr);
-	void removeItems(const QList<DrawingItem*>& items, QUndoCommand* command = nullptr);
-	void removeItems(DrawingItem* item, QUndoCommand* command = nullptr);
-
-	void moveItems(const QList<DrawingItem*>& items, const QMap<DrawingItem*,QPointF>& newPos,
-		const QMap<DrawingItem*,QPointF>& initialPos, bool place, QUndoCommand* command = nullptr);
-	void moveItems(const QList<DrawingItem*>& items, const QMap<DrawingItem*,QPointF>& newPos,
+	// Functions that generate undo commands
+	void addItemsCommand(const QList<DrawingItem*>& items, bool place, QUndoCommand* command = nullptr);
+	void removeItemsCommand(const QList<DrawingItem*>& items, QUndoCommand* command = nullptr);
+	void moveItemsCommand(const QList<DrawingItem*>& items, const QMap<DrawingItem*,QPointF>& newPos,
 		bool place, QUndoCommand* command = nullptr);
-	void moveItems(DrawingItem* item, const QPointF& newPos, bool place, QUndoCommand* command = nullptr);
-	void resizeItem(DrawingItemPoint* itemPoint, const QPointF& scenePos,
+	void resizeItemCommand(DrawingItemPoint* itemPoint, const QPointF& scenePos,
 		bool place, bool disconnect, QUndoCommand* command = nullptr);
-
-	void rotateItems(const QList<DrawingItem*>& items, const QPointF& scenePos, QUndoCommand* command = nullptr);
-	void rotateBackItems(const QList<DrawingItem*>& items, const QPointF& scenePos, QUndoCommand* command = nullptr);
-	void flipItems(const QList<DrawingItem*>& items, const QPointF& scenePos, QUndoCommand* command = nullptr);
+	void rotateItemsCommand(const QList<DrawingItem*>& items, const QPointF& scenePos, QUndoCommand* command = nullptr);
+	void rotateBackItemsCommand(const QList<DrawingItem*>& items, const QPointF& scenePos, QUndoCommand* command = nullptr);
+	void flipItemsCommand(const QList<DrawingItem*>& items, const QPointF& scenePos, QUndoCommand* command = nullptr);
+	void reorderItemsCommand(const QList<DrawingItem*>& itemsOrdered, QUndoCommand* command = nullptr);
+	void selectItemsCommand(const QList<DrawingItem*>& items, bool finalSelect = true, QUndoCommand* command = nullptr);
+	void insertItemPointCommand(DrawingItem* item, DrawingItemPoint* itemPoint, int pointIndex, QUndoCommand* command = nullptr);
+	void removeItemPointCommand(DrawingItem* item, DrawingItemPoint* itemPoint, QUndoCommand* command = nullptr);
+	void connectItemPointsCommand(DrawingItemPoint* point0, DrawingItemPoint* point1, QUndoCommand* command = nullptr);
+	void disconnectItemPointsCommand(DrawingItemPoint* point0, DrawingItemPoint* point1, QUndoCommand* command = nullptr);
 
 	void placeItems(const QList<DrawingItem*>& items, QUndoCommand* command);
-	void placeItems(DrawingItem* item, QUndoCommand* command);
 	void unplaceItems(const QList<DrawingItem*>& items, QUndoCommand* command);
-	void unplaceItems(DrawingItem* item, QUndoCommand* command);
-
 	void tryToMaintainConnections(const QList<DrawingItem*>& items, bool allowResize,
 		bool checkControlPoints, DrawingItemPoint* pointToSkip, QUndoCommand* command);
-	void tryToMaintainConnections(DrawingItem* item, bool allowResize,
-		bool checkControlPoints, DrawingItemPoint* pointToSkip, QUndoCommand* command);
 	void disconnectAll(DrawingItemPoint* itemPoint, QUndoCommand* command);
+	
+	// Functions called by undo commands
+	void addItems(const QList<DrawingItem*>& items);
+	void insertItems(const QList<DrawingItem*>& items, const QHash<DrawingItem*,int>& index);
+	void removeItems(const QList<DrawingItem*>& items);
+	void moveItems(const QList<DrawingItem*>& items, const QHash<DrawingItem*,QPointF>& scenePos);
+	void resizeItem(DrawingItemPoint* itemPoint, const QPointF& scenePos);
+	void rotateItems(const QList<DrawingItem*>& items, const QPointF& scenePos);
+	void rotateBackItems(const QList<DrawingItem*>& items, const QPointF& scenePos);
+	void flipItems(const QList<DrawingItem*>& items, const QPointF& scenePos);
+	void reorderItems(const QList<DrawingItem*>& items);
+	void selectItems(const QList<DrawingItem*>& items);
+	void insertItemPoint(DrawingItem* item, DrawingItemPoint* itemPoint, int pointIndex);
+	void removeItemPoint(DrawingItem* item, DrawingItemPoint* itemPoint);
+	void connectItemPoints(DrawingItemPoint* point1, DrawingItemPoint* point2);
+	void disconnectItemPoints(DrawingItemPoint* point1, DrawingItemPoint* point2);
 
-	void connectItemPoints(DrawingItemPoint* point0, DrawingItemPoint* point1, QUndoCommand* command = nullptr);
-	void disconnectItemPoints(DrawingItemPoint* point0, DrawingItemPoint* point1, QUndoCommand* command = nullptr);
-
+	// Miscellaneous helper functions
 	bool itemMatchesPoint(DrawingItem* item, const QPointF& scenePos) const;
 	bool itemMatchesRect(DrawingItem* item, const QRectF& rect, Qt::ItemSelectionMode mode) const;
+	bool itemMatchesPath(DrawingItem* item, const QPainterPath& path, Qt::ItemSelectionMode mode) const;
 
 	bool shouldConnect(DrawingItemPoint* point1, DrawingItemPoint* point2) const;
 	bool shouldDisconnect(DrawingItemPoint* point1, DrawingItemPoint* point2) const;
 
 	void recalculateContentSize(const QRectF& targetSceneRect = QRectF());
+	
+private:
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(DrawingWidget::Flags)
