@@ -421,12 +421,12 @@ void DrawingItem::flipItem(const QPointF& scenePos)
 
 void DrawingItem::insertItemPoint(const QPointF& scenePos)
 {
-	Q_UNUSED(itemPoint);
+	Q_UNUSED(scenePos);
 }
 
 void DrawingItem::removeItemPoint(const QPointF& scenePos)
 {
-	Q_UNUSED(itemPoint);
+	Q_UNUSED(scenePos);
 }
 
 //==================================================================================================

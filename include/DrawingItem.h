@@ -273,7 +273,7 @@ public:
 	 *
 	 * The type of item point is represented by a combination of flags.  Any combination of flags
 	 * is valid for DrawingItem objects.  By default, the (#CanMove | #CanResize | #CanRotate |
-	 * #CanFlip) flags are set.
+	 * #CanFlip | #CanSelect) flags are set.
 	 *
 	 * Items that set the #CanInsertPoints flag should also provide an implementation for
 	 * insertItemPoint().  Items that set the #CanRemovePoints flag should also provide an
@@ -289,41 +289,6 @@ public:
 	 */
 	Flags flags() const;
 
-	/*! \brief Returns true if the #CanMove flag is set, false otherwise.
-	 *
-	 * \sa flags()
-	 */
-	bool canMove() const;
-
-	/*! \brief Returns true if the #CanResize flag is set, false otherwise.
-	 *
-	 * \sa flags()
-	 */
-	bool canResize() const;
-
-	/*! \brief Returns true if the #CanRotate flag is set, false otherwise.
-	 *
-	 * \sa flags()
-	 */
-	bool canRotate() const;
-
-	/*! \brief Returns true if the #CanFlip flag is set, false otherwise.
-	 *
-	 * \sa flags()
-	 */
-	bool canFlip() const;
-
-	/*! \brief Returns true if the #CanInsertPoints flag is set, false otherwise.
-	 *
-	 * \sa flags()
-	 */
-	bool canInsertPoints() const;
-
-	/*! \brief Returns true if the #CanRemovePoints flag is set, false otherwise.
-	 *
-	 * \sa flags()
-	 */
-	bool canRemovePoints() const;
 
 	/*! \brief Sets the rotation angle of the item.
 	 *

@@ -674,7 +674,7 @@ void DrawingWidget::paste()
 			}
 
 			// Add new items to scene and select them
-			addItems(newItems, false, pasteCommand);
+			addItemsCommand(newItems, false, pasteCommand);
 			selectItemsCommand(newItems, true, pasteCommand);
 			
 			pushUndoCommand(pasteCommand);
@@ -716,7 +716,7 @@ void DrawingWidget::selectAll()
 		
 		for(auto itemIter = mItems.begin(); itemIter != mItems.end(); itemIter++)
 		{
-			if ((*itemIter)->canSelect()) itemsToSelect.append(*itemIter);
+			if ((*itemIter)->flags() & DrawingItem::CanSelect) itemsToSelect.append(*itemIter);
 		}
 		
 		selectItemsCommand(itemsToSelect, true);
@@ -732,8 +732,8 @@ void DrawingWidget::selectArea(const QRectF& rect)
 		
 		for(auto itemIter = mItems.begin(); itemIter != mItems.end(); itemIter++)
 		{
-			if (itemMatchesRect(*itemIter, rect, mItemSelectionMode) && (*itemIter)->canSelect())
-				itemsToSelect.append(*itemIter);
+			if (itemMatchesRect(*itemIter, rect, mItemSelectionMode) &&
+				((*itemIter)->flags() & DrawingItem::CanSelect)) itemsToSelect.append(*itemIter);
 		}
 		
 		selectItemsCommand(itemsToSelect, true);
@@ -749,8 +749,8 @@ void DrawingWidget::selectArea(const QPainterPath& path)
 		
 		for(auto itemIter = mItems.begin(); itemIter != mItems.end(); itemIter++)
 		{
-			if (itemMatchesPath(*itemIter, path, mItemSelectionMode) && (*itemIter)->canSelect())
-				itemsToSelect.append(*itemIter);
+			if (itemMatchesPath(*itemIter, path, mItemSelectionMode) &&
+				((*itemIter)->flags() & DrawingItem::CanSelect)) itemsToSelect.append(*itemIter);
 		}
 		
 		selectItemsCommand(itemsToSelect, true);
@@ -778,7 +778,7 @@ void DrawingWidget::moveSelection(const QPointF& newPos)
 
 		for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
 		{
-			if ((*itemIter)->canMove())
+			if ((*itemIter)->flags() & DrawingItem::CanMove)
 				newPositions[*itemIter] = (*itemIter)->pos() + deltaPos;
 		}
 
@@ -792,7 +792,8 @@ void DrawingWidget::moveSelection(const QPointF& newPos)
 
 void DrawingWidget::resizeSelection(DrawingItemPoint* itemPoint, const QPointF& scenePos)
 {
-	if (mMode == DefaultMode && mSelectedItems.size() == 1 && mSelectedItems.first()->canResize() &&
+	if (mMode == DefaultMode && mSelectedItems.size() == 1 &&
+		(mSelectedItems.first()->flags() & DrawingItem::CanResize) &&
 		mSelectedItems.first()->points().contains(itemPoint))
 	{
 		resizeItemCommand(itemPoint, scenePos, true, true);
@@ -807,7 +808,7 @@ void DrawingWidget::rotateSelection()
 		QList<DrawingItem*> itemsToRotate;
 		for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
 		{
-			if ((*itemIter)->canRotate()) itemsToRotate.append(*itemIter);
+			if ((*itemIter)->flags() & DrawingItem::CanRotate) itemsToRotate.append(*itemIter);
 		}
 
 		if (!itemsToRotate.isEmpty())
@@ -825,7 +826,7 @@ void DrawingWidget::rotateBackSelection()
 		QList<DrawingItem*> itemsToRotate;
 		for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
 		{
-			if ((*itemIter)->canRotate()) itemsToRotate.append(*itemIter);
+			if ((*itemIter)->flags() & DrawingItem::CanRotate) itemsToRotate.append(*itemIter);
 		}
 
 		if (!itemsToRotate.isEmpty())
@@ -843,7 +844,7 @@ void DrawingWidget::flipSelection()
 		QList<DrawingItem*> itemsToFlip;
 		for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
 		{
-			if ((*itemIter)->canFlip()) itemsToFlip.append(*itemIter);
+			if ((*itemIter)->flags() & DrawingItem::CanFlip) itemsToFlip.append(*itemIter);
 		}
 
 		if (!itemsToFlip.isEmpty())
@@ -969,7 +970,7 @@ void DrawingWidget::insertItemPoint()
 		DrawingItem* item = nullptr;
 		if (mSelectedItems.size() == 1) item = mSelectedItems.first();
 
-		if (item && item->canInsertPoints()) 
+		if (item && (item->flags() & DrawingItem::CanInsertPoints))
 		{
 			item->insertItemPoint(roundToGrid(mMouseEvent.buttonDownScenePos()));
 			viewport()->update();
@@ -984,7 +985,7 @@ void DrawingWidget::removeItemPoint()
 		DrawingItem* item = nullptr;
 		if (mSelectedItems.size() == 1) item = mSelectedItems.first();
 
-		if (item && item->canRemovePoints()) 
+		if (item && (item->flags() & DrawingItem::CanRemovePoints))
 		{
 			item->removeItemPoint(roundToGrid(mMouseEvent.buttonDownScenePos()));
 			viewport()->update();
@@ -1421,7 +1422,7 @@ void DrawingWidget::defaultMouseMoveEvent(DrawingMouseEvent* event)
 				if (mMouseDownItem && mMouseDownItem->isSelected())
 				{
 					bool resizeItem = (mSelectedItems.size() == 1 &&
-									   mSelectedItems.first()->canResize() &&
+									   (mSelectedItems.first()->flags() & DrawingItem::CanResize) &&
 									   mSelectedItemPoint && mSelectedItemPoint->isControlPoint());
 					mMouseState = (resizeItem) ? MouseResizeItem : MouseMoveItems;
 				}
@@ -1432,7 +1433,7 @@ void DrawingWidget::defaultMouseMoveEvent(DrawingMouseEvent* event)
 		case MouseMoveItems:
 			for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
 			{
-				if ((*itemIter)->canMove())
+				if ((*itemIter)->flags() & DrawingItem::CanMove)
 				{
 					newPositions[*itemIter] = mInitialPositions[*itemIter] +
 						roundToGrid(event->scenePos() - event->buttonDownScenePos());
@@ -1473,7 +1474,7 @@ void DrawingWidget::defaultMouseReleaseEvent(DrawingMouseEvent* event)
 		if (mMouseDownItem)
 		{
 			if (controlDown && mMouseDownItem->isSelected()) newSelection.removeAll(mMouseDownItem);
-			else if (mMouseDownItem->canSelect()) newSelection.append(mMouseDownItem);
+			else if (mMouseDownItem->flags() & DrawingItem::CanSelect) newSelection.append(mMouseDownItem);
 		}
 		selectItemsCommand(newSelection, !controlDown);
 		break;
@@ -1481,7 +1482,7 @@ void DrawingWidget::defaultMouseReleaseEvent(DrawingMouseEvent* event)
 	case MouseMoveItems:
 		for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
 		{
-			if ((*itemIter)->canMove())
+			if ((*itemIter)->flags() & DrawingItem::CanMove)
 			{
 				newPositions[*itemIter] = mInitialPositions[*itemIter] +
 					roundToGrid(event->scenePos() - event->buttonDownScenePos());
@@ -1501,7 +1502,7 @@ void DrawingWidget::defaultMouseReleaseEvent(DrawingMouseEvent* event)
 		for(auto itemIter = mItems.begin(); itemIter != mItems.end(); itemIter++)
 		{
 			if (itemMatchesRect(*itemIter, rubberBandSceneRect, mItemSelectionMode) &&
-				(*itemIter)->canSelect() && !newSelection.contains(*itemIter))
+				((*itemIter)->flags() & DrawingItem::CanSelect) && !newSelection.contains(*itemIter))
 			{
 				newSelection.append(*itemIter);
 			}
@@ -1826,9 +1827,9 @@ void DrawingWidget::connectItemPointsCommand(DrawingItemPoint* point1, DrawingIt
 
 	if (point0Pos != point1Pos)
 	{
-		if (point2->isControlPoint() && point2->item()->canResize())
+		if (point2->isControlPoint() && (point2->item()->flags() & DrawingItem::CanResize))
 			resizeItemCommand(point2, point0Pos, false, true, connectCommand);
-		else if (point1->isControlPoint() && point1->item()->canResize())
+		else if (point1->isControlPoint() && (point1->item()->flags() & DrawingItem::CanResize))
 			resizeItemCommand(point1, point1Pos, false, true, connectCommand);
 	}
 
@@ -1924,7 +1925,7 @@ void DrawingWidget::tryToMaintainConnections(const QList<DrawingItem*>& items, b
 					if (item->mapToScene(itemPoint->pos()) != targetItem->mapToScene(targetItemPoint->pos()))
 					{
 						// Try to maintain the connection by resizing targetPoint if possible
-						if (allowResize && targetItem->canResize() &&
+						if (allowResize && (targetItem->flags() & DrawingItem::CanResize) &&
 							(targetItemPoint->flags() & DrawingItemPoint::Free) &&
 							!shouldDisconnect(itemPoint, targetItemPoint))
 						{
