@@ -67,6 +67,7 @@
  * Todo:
  * - can place multiple new items at once (including paste)
  * - add support for item styles
+ * - add support for item behavior hints, like MapFirstItemPointToOrigin
  * Todo (future):
  * - layers and/or pages
  * - hierarchial items (parent/children)

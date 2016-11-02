@@ -36,7 +36,7 @@
  * to determine which item (if any) was clicked on by the user.
  *
  * DrawingWidget maintains selection information for items within the widget. To select items, call
- * selectItems().  To clear the current selection, call clearSelection(). Call selectedItems() to
+ * selectItem().  To clear the current selection, call clearSelection(). Call selectedItems() to
  * get the list of all currently selected items.
  *
  * \section widget_viewport Viewport
@@ -86,8 +86,8 @@
  * keyboard events are forwarded to the focusItem().
  *
  * #PlaceMode is used to add new items to the widget.  By default, mouse move events move the
- * new item around the scene.  The new item is added to the scene on a
- * mouse release event.  Copies of the new item can continue to be placed until the user
+ * new items around the scene.  The new items are added to the scene on a
+ * mouse release event.  Copies of the new items can continue to be placed until the user
  * right-clicks or until the user enters a different mode.
  *
  * The default event handlers mousePressEvent(), mouseMoveEvent(), mouseReleaseEvent(),
@@ -100,23 +100,21 @@
  * DrawingWidget comes with full undo support.  The widget has an internal undo stack that is
  * managed automatically.
  *
- * The following operations support undo through the specified undo command classes:
+ * The following operations are undoable:
+ * \li Adding items to the widget using #PlaceMode
+ * \li Deleting items using deleteSelection()
+ * \li Moving items around the scene using mouse events or moveSelection()
+ * \li Resizing items within the scene using mouse events or resizeSelection()
+ * \li Rotating or flipping items in the scene using rotateSelection(), rotateBackSelection() and
+ *     flipSelection().
+ * \li Cut/copy/paste of items using cut(), copy(), and paste()
+ * \li Reordering the items in the scene using bringForward(), sendBackward(), bringToFront(), and
+ *     sendToBack()
+ * \li Inserting and removing item points using insertItemPoint() and removeItemPoint()
+ * \li Grouping and ungrouping items using group() and ungroup()
  *
- * \li Add a set of items to the widget: DrawingAddItemsCommand
- * \li Flip an item horizontally: DrawingFlipItemsCommand
- * \li Insert an item point into an item: DrawingItemInsertPointCommand
- * \li Create a connection between two items: DrawingItemPointConnectCommand
- * \li Break a connection between two items: DrawingItemPointDisconnectCommand
- * \li Remove an item point from an item: DrawingItemRemovePointCommand
- * \li Move a set of items within the scene: DrawingMoveItemsCommand
- * \li Remove a set of items from the widget: DrawingRemoveItemsCommand
- * \li Bring items forward in the scene: DrawingReorderItemsCommand
- * \li Send items backward in the scene: DrawingReorderItemsCommand
- * \li Bring items to the front of the scene: DrawingReorderItemsCommand
- * \li Send items the the back of the scene: DrawingReorderItemsCommand
- * \li Resize an item in the scene: DrawingResizeItemCommand
- * \li Rotate an item backward: DrawingRotateBackItemsCommand
- * \li Rotate an item forward: DrawingRotateItemsCommand
+ * If the #UndoableSelectCommands flag is set, then the following additional operations are undoable:
+ * \li Selecting items using mouse events or selectAll(), selectArea(), or selectNone()
  *
  * Call the setClean() function to mark the undo stack as clean (i.e. if a document is saved).  Call
  * isClean() to determine the current clean status.
