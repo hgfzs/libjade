@@ -127,7 +127,19 @@ class DrawingWidget : public QAbstractScrollArea
 {
 	Q_OBJECT
 
+	friend class DrawingAddItemsCommand;
+	friend class DrawingRemoveItemsCommand;
+	friend class DrawingMoveItemsCommand;
+	friend class DrawingResizeItemCommand;
+	friend class DrawingRotateItemsCommand;
+	friend class DrawingRotateBackItemsCommand;
+	friend class DrawingFlipItemsCommand;
 	friend class DrawingReorderItemsCommand;
+	friend class DrawingSelectItemsCommand;
+	friend class DrawingItemInsertPointCommand;
+	friend class DrawingItemRemovePointCommand;
+	friend class DrawingItemPointConnectCommand;
+	friend class DrawingItemPointDisconnectCommand;
 
 public:
 	/*! \brief Enum used to set the current mode of the DrawingWidget.  See the \ref widget_events
@@ -190,7 +202,7 @@ private:
 	QUndoStack mUndoStack;
 	DrawingMouseEvent mMouseEvent;
 	MouseState mMouseState;
-	QMap<DrawingItem*,QPointF> mInitialPositions;
+	QHash<DrawingItem*,QPointF> mInitialPositions;
 	QRect mRubberBandRect;
 	int mScrollButtonDownHorizontalScrollValue;
 	int mScrollButtonDownVerticalScrollValue;
@@ -1065,7 +1077,7 @@ private:
 	// Functions that generate undo commands
 	void addItemsCommand(const QList<DrawingItem*>& items, bool place, QUndoCommand* command = nullptr);
 	void removeItemsCommand(const QList<DrawingItem*>& items, QUndoCommand* command = nullptr);
-	void moveItemsCommand(const QList<DrawingItem*>& items, const QMap<DrawingItem*,QPointF>& newPos,
+	void moveItemsCommand(const QList<DrawingItem*>& items, const QHash<DrawingItem*,QPointF>& newPos,
 		bool place, QUndoCommand* command = nullptr);
 	void resizeItemCommand(DrawingItemPoint* itemPoint, const QPointF& scenePos,
 		bool place, bool disconnect, QUndoCommand* command = nullptr);
@@ -1085,7 +1097,7 @@ private:
 		bool checkControlPoints, DrawingItemPoint* pointToSkip, QUndoCommand* command);
 	void disconnectAll(DrawingItemPoint* itemPoint, QUndoCommand* command);
 	
-	// Functions called by undo commands
+	// Functions called by undo command classes
 	void addItems(const QList<DrawingItem*>& items);
 	void insertItems(const QList<DrawingItem*>& items, const QHash<DrawingItem*,int>& index);
 	void removeItems(const QList<DrawingItem*>& items);

@@ -151,7 +151,7 @@ DrawingRemoveItemsCommand::DrawingRemoveItemsCommand(DrawingWidget* drawing,
 	{
 		QList<DrawingItem*> drawingItems = mDrawing->items();
 		for(auto itemIter = mItems.begin(); itemIter != mItems.end(); itemIter++)
-			mItemIndex[*itemIter] = drawingItems.indexof(*itemIter);
+			mItemIndex[*itemIter] = drawingItems.indexOf(*itemIter);
 	}
 }
 
@@ -185,7 +185,7 @@ void DrawingRemoveItemsCommand::undo()
 //==================================================================================================
 
 DrawingMoveItemsCommand::DrawingMoveItemsCommand(DrawingWidget* drawing, 
-	const QList<DrawingItem*>& items, const QMap<DrawingItem*,QPointF>& newPos, bool finalMove, 
+	const QList<DrawingItem*>& items, const QHash<DrawingItem*,QPointF>& newPos, bool finalMove,
 	QUndoCommand* parent) : DrawingUndoCommand("Move Items", parent)
 {
 	mDrawing = drawing;
@@ -448,10 +448,10 @@ bool DrawingSelectItemsCommand::mergeWith(const QUndoCommand* command)
 
 	if (command && command->id() == SelectItemsType)
 	{
-		const DrawingItemSelectCommand* selectCommand =
-			static_cast<const DrawingItemSelectCommand*>(command);
+		const DrawingSelectItemsCommand* selectCommand =
+			static_cast<const DrawingSelectItemsCommand*>(command);
 
-		if (selectCommand && mDrawing == moveCommand->mDrawing && !mFinalSelect)
+		if (selectCommand && mDrawing == selectCommand->mDrawing && !mFinalSelect)
 		{
 			mSelectedItems = selectCommand->mSelectedItems;
 			mFinalSelect = selectCommand->mFinalSelect;
@@ -481,6 +481,7 @@ DrawingItemInsertPointCommand::DrawingItemInsertPointCommand(DrawingWidget* draw
 	DrawingItem* item, DrawingItemPoint* point, int pointIndex, QUndoCommand* parent) 
 	: DrawingUndoCommand("Insert Point", parent)
 {
+	mDrawing = drawing;
 	mItem = item;
 	mPoint = point;
 	mPointIndex = pointIndex;
@@ -517,6 +518,7 @@ DrawingItemRemovePointCommand::DrawingItemRemovePointCommand(DrawingWidget* draw
 	DrawingItem* item, DrawingItemPoint* point, QUndoCommand* parent) 
 	: DrawingUndoCommand("Remove Point", parent)
 {
+	mDrawing = drawing;
 	mItem = item;
 	mPoint = point;
 	mUndone = true;

@@ -619,6 +619,9 @@ public:
 	virtual void paint(QPainter* painter) = 0;
 
 
+	// todo: delete this in favor of itemPointMovedEvent(), etc...
+	// todo: add behavior hints for rectResize items, text items, two point items, etc
+	// todo: refactor insert/remove item point behavior
 	virtual void moveItem(const QPointF& scenePos);
 	virtual void resizeItem(DrawingItemPoint* itemPoint, const QPointF& scenePos);
 

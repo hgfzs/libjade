@@ -29,7 +29,7 @@ private:
 	QString mName;
 	QPainterPath mPath;
 	QRectF mPathRect;
-	QMap<DrawingItemPoint*,QPointF> mPathConnectionPoints;
+	QHash<DrawingItemPoint*,QPointF> mPathConnectionPoints;
 
 public:
 	DrawingPathItem();
