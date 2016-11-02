@@ -27,7 +27,7 @@ DrawingItem::DrawingItem()
 {
 	mDrawing = nullptr;
 
-	mFlags = (CanMove | CanResize | CanRotate | CanFlip);
+	mFlags = (CanMove | CanResize | CanRotate | CanFlip | CanSelect);
 
 	mRotation = 0;
 	mFlipped = false;
@@ -372,9 +372,9 @@ void DrawingItem::resizeItem(DrawingItemPoint* itemPoint, const QPointF& scenePo
 	{
 		itemPoint->setPos(mapFromScene(scenePos));
 
-		// Adjust position of item and item points so that point(0)->pos() == QPointF(0, 0)
-		if (!mPoints.isEmpty() && mPoints.first())
+		if ((mFlags & MapFirstItemPointToOrigin) && !mPoints.isEmpty() && mPoints.first())
 		{
+			// Adjust position of item and item points so that point(0)->pos() == QPointF(0, 0)
 			QPointF deltaPos = -mPoints.first()->pos();
 			QPointF scenePos = mapToScene(mPoints.first()->pos());
 
@@ -385,8 +385,6 @@ void DrawingItem::resizeItem(DrawingItemPoint* itemPoint, const QPointF& scenePo
 		}
 	}
 }
-
-//==================================================================================================
 
 void DrawingItem::rotateItem(const QPointF& scenePos)
 {
@@ -421,14 +419,12 @@ void DrawingItem::flipItem(const QPointF& scenePos)
 	mFlipped = !mFlipped;
 }
 
-//==================================================================================================
-
-void DrawingItem::insertItemPoint(DrawingItemPoint* itemPoint)
+void DrawingItem::insertItemPoint(const QPointF& scenePos)
 {
 	Q_UNUSED(itemPoint);
 }
 
-void DrawingItem::removeItemPoint(DrawingItemPoint* itemPoint)
+void DrawingItem::removeItemPoint(const QPointF& scenePos)
 {
 	Q_UNUSED(itemPoint);
 }
@@ -437,43 +433,23 @@ void DrawingItem::removeItemPoint(DrawingItemPoint* itemPoint)
 
 void DrawingItem::mousePressEvent(DrawingMouseEvent* event)
 {
-	if (mDrawing && mDrawing->mode() == DrawingWidget::PlaceMode)
-	{
-		setPos(mDrawing->roundToGrid(event->scenePos()));
-	}
+	Q_UNUSED(event);
 }
 
 void DrawingItem::mouseMoveEvent(DrawingMouseEvent* event)
 {
-	if (mDrawing && mDrawing->mode() == DrawingWidget::PlaceMode)
-	{
-		setPos(mDrawing->roundToGrid(event->scenePos()));
-	}
+	Q_UNUSED(event);
 }
 
 void DrawingItem::mouseReleaseEvent(DrawingMouseEvent* event)
 {
-	if (mDrawing && mDrawing->mode() == DrawingWidget::PlaceMode)
-	{
-		setPos(mDrawing->roundToGrid(event->scenePos()));
-		event->accept();
-	}
-
 	Q_UNUSED(event);
 }
 
 void DrawingItem::mouseDoubleClickEvent(DrawingMouseEvent* event)
 {
-	if (mDrawing && mDrawing->mode() == DrawingWidget::PlaceMode)
-	{
-		setPos(mDrawing->roundToGrid(event->scenePos()));
-		event->accept();
-	}
-
 	Q_UNUSED(event);
 }
-
-//==================================================================================================
 
 void DrawingItem::keyPressEvent(QKeyEvent* event)
 {
@@ -486,6 +462,34 @@ void DrawingItem::keyReleaseEvent(QKeyEvent* event)
 }
 
 //==================================================================================================
+
+void DrawingItem::newMousePressEvent(DrawingMouseEvent* event)
+{
+	if (mDrawing && mDrawing->mode() == DrawingWidget::PlaceMode)
+		setPos(mDrawing->roundToGrid(event->scenePos()));
+}
+
+void DrawingItem::newMouseMoveEvent(DrawingMouseEvent* event)
+{
+	if (mDrawing && mDrawing->mode() == DrawingWidget::PlaceMode)
+		setPos(mDrawing->roundToGrid(event->scenePos()));
+}
+
+bool DrawingItem::newMouseReleaseEvent(DrawingMouseEvent* event)
+{
+	if (mDrawing && mDrawing->mode() == DrawingWidget::PlaceMode)
+		setPos(mDrawing->roundToGrid(event->scenePos()));
+	
+	return true;
+}
+
+bool DrawingItem::newMouseDoubleClickEvent(DrawingMouseEvent* event)
+{
+	if (mDrawing && mDrawing->mode() == DrawingWidget::PlaceMode)
+		setPos(mDrawing->roundToGrid(event->scenePos()));
+	
+	return true;
+}
 
 bool DrawingItem::newItemCopyEvent()
 {

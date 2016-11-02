@@ -23,6 +23,10 @@
 
 #include <DrawingTypes.h>
 
+enum DrawingArrowStyle { ArrowNone, ArrowNormal, ArrowReverse, ArrowTriangle, ArrowTriangleFilled,
+	ArrowConcave, ArrowConcaveFilled, ArrowCircle, ArrowCircleFilled,
+	ArrowDiamond, ArrowDiamondFilled, ArrowHarpoon, ArrowHarpoonMirrored, ArrowX };
+
 class DrawingItemStyle
 {
 private:

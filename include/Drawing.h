@@ -1,4 +1,4 @@
-/* \file Drawing.h
+/* Drawing.h
  *
  * Copyright (C) 2013-2016 Jason Allen
  *
@@ -20,6 +20,18 @@
 
 #ifndef __DRAWING__H__
 #define __DRAWING__H__
+
+#include <DrawingTypes.h>
+#include <DrawingWidget.h>
+#include <DrawingItem.h>
+#include <DrawingItemPoint.h>
+#include <DrawingItemStyle.h>
+
+#include <DrawingItemGroup.h>
+#include <DrawingPathItem.h>
+#include <DrawingShapeItems.h>
+#include <DrawingTextItem.h>
+#include <DrawingTwoPointItems.h>
 
 /*! \mainpage
  *
@@ -53,7 +65,8 @@
  
 /*
  * Todo:
- * - save item defaults with drawing, load item defaults from drawing
+ * - can place multiple new items at once (including paste)
+ * - add support for item styles
  * Todo (future):
  * - layers and/or pages
  * - hierarchial items (parent/children)

@@ -108,8 +108,8 @@ class DrawingItemStyle;
  *
  * These slots are only called if their corresponding flag is set on the item.  For example, the
  * resizeItem() slot is only called if the #CanResize flag is set. The default flags() set on a new
- * item are #CanMove | #CanResize | #CanRotate | #CanFlip.  Default implementations are provided for
- * moveItem(), resizeItem(), rotateItem(), rotateItemBack(), and flipItem().
+ * item are #CanMove | #CanResize | #CanRotate | #CanFlip | #CanSelect.  Default implementations 
+ * are provided for moveItem(), resizeItem(), rotateItem(), rotateItemBack(), and flipItem().
  *
  * For items that support adding item points, implementations should set the #CanInsertPoints flag
  * and provide an implementation for insertItemPoint().  For items that support adding item points,
@@ -145,8 +145,10 @@ public:
 										//!< within the scene.  See also flipItem().
 		CanInsertPoints = 0x10,			//!< Indicates that item points can be added
 										//!< to the item.  See also insertItemPoint().
-		CanRemovePoints = 0x20			//!< Indicates that item points can be removed
+		CanRemovePoints = 0x20,			//!< Indicates that item points can be removed
 										//!< from the item.  See also removeItemPoint().
+		CanSelect = 0x40				//!< Indicates that the item can be selected by the user
+										//!< within the scene.
 	};
 	Q_DECLARE_FLAGS(Flags, Flag)
 
@@ -619,34 +621,236 @@ public:
 	virtual void paint(QPainter* painter) = 0;
 
 
-	// todo: delete this in favor of itemPointMovedEvent(), etc...
-	// todo: add behavior hints for rectResize items, text items, two point items, etc
-	// todo: refactor insert/remove item point behavior
+	/*! \brief Moves the item within the scene.
+	 *
+	 * This function is called when the item's drawing() wants to move it within the scene. 
+	 * This will only be called for items that have the #CanMove flag set as one of
+	 * their flags().
+	 *
+	 * The default implementation simply calls setPos() to update the item's position.
+	 *
+	 * Derived class implementations can add additional behavior.  These implementations should
+	 * call the parent implementation first before adding custom logic.
+	 *
+	 * \sa resizeItem(), rotateItem(), rotateBackItem(), flipItem()
+	 */
 	virtual void moveItem(const QPointF& scenePos);
+	
+	/*! \brief Resizes the item within the scene.
+	 *
+	 * This function is called when the item's drawing() wants to resize it within the scene. 
+	 * This will only be called for items that have the #CanResize flag set as one of
+	 * their flags().
+	 *
+	 * The default implementation calls itemPoint->setPos() to update the point's position.
+	 *
+	 * If the #MapFirstItemPointToOrigin is set as one of the item's flags(), than after the resize 
+	 * this function will adjust the position of the item's points so that the first point is at 
+	 * the origin of the local item coordinate system.
+	 *
+	 * Derived class implementations can add additional behavior.  These implementations should
+	 * call the parent implementation first before adding custom logic.
+	 *
+	 * \sa moveItem(), rotateItem(), rotateBackItem(), flipItem()
+	 */
 	virtual void resizeItem(DrawingItemPoint* itemPoint, const QPointF& scenePos);
-
+	
+	/*! \brief Rotates the item counter-clockwise within the scene.
+	 *
+	 * This function is called when the item's drawing() wants to rotate it within the scene. 
+	 * This will only be called for items that have the #CanRotate flag set as one of
+	 * their flags().
+	 *
+	 * The default implementation updates the position to rotate the item around the specified 
+	 * scenePos and updates the item's rotation().
+	 *
+	 * Derived class implementations can add additional behavior.  These implementations should
+	 * call the parent implementation first before adding custom logic.
+	 *
+	 * \sa moveItem(), resizeItem(), rotateBackItem(), flipItem()
+	 */
 	virtual void rotateItem(const QPointF& scenePos);
+	
+	/*! \brief Rotates the item clockwise within the scene.
+	 *
+	 * This function is called when the item's drawing() wants to rotate it within the scene. 
+	 * This will only be called for items that have the #CanRotate flag set as one of
+	 * their flags().
+	 *
+	 * The default implementation updates the position to rotate the item around the specified 
+	 * scenePos and updates the item's rotation().
+	 *
+	 * Derived class implementations can add additional behavior.  These implementations should
+	 * call the parent implementation first before adding custom logic.
+	 *
+	 * \sa moveItem(), resizeItem(), rotateItem(), flipItem()
+	 */
 	virtual void rotateBackItem(const QPointF& scenePos);
+	
+	/*! \brief Flips the item horizontally within the scene.
+	 *
+	 * This function is called when the item's drawing() wants to flip it within the scene. 
+	 * This will only be called for items that have the #CanFlip flag set as one of
+	 * their flags().
+	 *
+	 * The default implementation updates the position to flip the item about the specified 
+	 * scenePos and updates the item's isFlipped() field.
+	 *
+	 * Derived class implementations can add additional behavior.  These implementations should
+	 * call the parent implementation first before adding custom logic.
+	 *
+	 * \sa moveItem(), resizeItem(), rotateBackItem(), flipItem()
+	 */
 	virtual void flipItem(const QPointF& scenePos);
 
-	virtual void insertItemPoint(DrawingItemPoint* itemPoint);
-	virtual void removeItemPoint(DrawingItemPoint* itemPoint);
+	/*! \brief Inserts a new DrawingItemPoint into the item at the specified position.
+	 *
+	 * This function is called when the item's drawing() wants to insert a new item point in the
+	 * item.  This will only be called for items that have the #CanInsertPoints flag set as one of
+	 * their flags(). 
+	 *
+	 * The #CanInsertPoints flag is not set by default, and the default implementation of this 
+	 * function does nothing.  Derived classes that support inserting item points should set the
+	 * #CanInsertPoints flag and provide an implementation for this function.
+	 *
+	 * \sa removeItemPoint()
+	 */
+	virtual void insertItemPoint(const QPointF& scenePos);
+	
+	/*! \brief Removes an existing DrawingItemPoint from the item at the specified position.
+	 *
+	 * This function is called when the item's drawing() wants to remove an item point from the
+	 * item.  This will only be called for items that have the #CanRemovePoints flag set as one of
+	 * their flags(). 
+	 *
+	 * The #CanRemovePoints flag is not set by default, and the default implementation of this 
+	 * function does nothing.  Derived classes that support removing item points should set the
+	 * #CanRemovePoints flag and provide an implementation for this function.
+	 *
+	 * \sa insertItemPoint()
+	 */
+	virtual void removeItemPoint(const QPointF& scenePos);
 
 protected:
+	/*! \brief Handles mouse press events for the item.
+	 *
+	 * This function does nothing.  It can be reimplemented in a derived class to add event
+	 * handling behavior to the item.
+	 *
+	 * \sa mouseMoveEvent(), mouseReleaseEvent(), mouseDoubleClickEvent()
+	 */
 	virtual void mousePressEvent(DrawingMouseEvent* event);
+	
+	/*! \brief Handles mouse move events for the item.
+	 *
+	 * This function does nothing.  It can be reimplemented in a derived class to add event
+	 * handling behavior to the item.
+	 *
+	 * \sa mousePressEvent(), mouseReleaseEvent(), mouseDoubleClickEvent()
+	 */
 	virtual void mouseMoveEvent(DrawingMouseEvent* event);
+	
+	/*! \brief Handles mouse release events for the item.
+	 *
+	 * This function does nothing.  It can be reimplemented in a derived class to add event
+	 * handling behavior to the item.
+	 *
+	 * \sa mousePressEvent(), mouseMoveEvent(), mouseDoubleClickEvent()
+	 */
 	virtual void mouseReleaseEvent(DrawingMouseEvent* event);
+	
+	/*! \brief Handles mouse double-click events for the item.
+	 *
+	 * This function does nothing.  It can be reimplemented in a derived class to add event
+	 * handling behavior to the item.
+	 *
+	 * \sa mousePressEvent(), mouseMoveEvent(), mouseReleaseEvent()
+	 */
 	virtual void mouseDoubleClickEvent(DrawingMouseEvent* event);
-
+	
+	/*! \brief Handles key press events for the item.
+	 *
+	 * This function does nothing.  It can be reimplemented in a derived class to add event
+	 * handling behavior to the item.
+	 *
+	 * \sa keyReleaseEvent()
+	 */
 	virtual void keyPressEvent(QKeyEvent* event);
+	
+	/*! \brief Handles key release events for the item.
+	 *
+	 * This function does nothing.  It can be reimplemented in a derived class to add event
+	 * handling behavior to the item.
+	 *
+	 * \sa keyReleaseEvent()
+	 */
 	virtual void keyReleaseEvent(QKeyEvent* event);
+	
+	
+	/*! \brief Handles mouse press events for the item when the parent drawing() is in PlaceMode.
+	 *
+	 * The default implementation of this function updates the item's position to the
+	 * current mouse location.  This event handler can be reimplemented in a derived class to 
+	 * modify the default behavior.
+	 *
+	 * \sa newMouseMoveEvent(), newMouseReleaseEvent(), newMouseDoubleClickEvent()
+	 */
+	virtual void newMousePressEvent(DrawingMouseEvent* event);
+	
+	/*! \brief Handles mouse move events for the item when the parent drawing() is in PlaceMode.
+	 *
+	 * The default implementation of this function updates the item's position to the
+	 * current mouse location.  This event handler can be reimplemented in a derived class to 
+	 * modify the default behavior.
+	 *
+	 * \sa newMousePressEvent(), newMouseReleaseEvent(), newMouseDoubleClickEvent()
+	 */
+	virtual void newMouseMoveEvent(DrawingMouseEvent* event);
+	
+	/*! \brief Handles mouse release events for the item when the parent drawing() is in PlaceMode.
+	 *
+	 * The default implementation of this function updates the item's position to the
+	 * current mouse location and return true.  This event handler can be reimplemented in 
+	 * a derived class to modify the default behavior.
+	 *
+	 * \sa newMousePressEvent(), newMouseMoveEvent(), newMouseDoubleClickEvent()
+	 */
+	virtual bool newMouseReleaseEvent(DrawingMouseEvent* event);
+	
+	/*! \brief Handles mouse double-click events for the item when the parent drawing() is in PlaceMode.
+	 *
+	 * The default implementation of this function updates the item's position to the
+	 * current mouse location and return true.  This event handler can be reimplemented in 
+	 * a derived class to modify the default behavior.
+	 *
+	 * \sa newMousePressEvent(), newMouseMoveEvent(), newMouseReleaseEvent()
+	 */
+	virtual bool newMouseDoubleClickEvent(DrawingMouseEvent* event);
 
+	/*! \brief Handles copy events for the item when the parent drawing() is in PlaceMode.
+	 *
+	 * This function is called on the newItem() of the DrawingWidget when it changes.  It can be
+	 * used to set up the item to prepare it to be placed in the scene.  Often this is used to
+	 * reset the item's geometry for items whose size is changed as they are placed in the scene.
+	 *
+	 * The default implementation does nothing except return true.
+	 *
+	 * \sa DrawingWidget::mouseReleaseEvent()
+	 */
 	virtual bool newItemCopyEvent();
 
 private:
 	void recalculateTransform();
 
 public:
+	/*! \brief Creates a copy of each of the specified items and returns them as a new list.
+	 *
+	 * This function iterates through each item and creates a copy using the copy() function.
+	 * The copied items are returned in the same order as provided.
+	 * 
+	 * Any item point connections between items in the original list are maintained in the new
+	 * list.  Any item point connections to items not in the original list are broken.
+	 */
 	static QList<DrawingItem*> copyItems(const QList<DrawingItem*>& items);
 };
 

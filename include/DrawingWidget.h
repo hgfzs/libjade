@@ -172,12 +172,6 @@ private:
 	enum MouseState { MouseReady, MouseSelect, MouseMoveItems, MouseResizeItem, MouseRubberBand };
 
 private:
-	// future: can place multiple new items at once
-	// future: selecting/unselecting items are undoable events, item has CanSelect flag
-	// add support for item styles
-	// items must accept mouseReleaseEvent or mouseDoubleClickEvent to place item in scene
-	// ensure that widget does not draw items that are not visible and does not send events to items
-	//     that are not visible
 	QRectF mSceneRect;
 	qreal mGrid;
 	QBrush mBackgroundBrush;
@@ -200,6 +194,7 @@ private:
 	QTransform mSceneTransform;
 
 	QUndoStack mUndoStack;
+	QList<DrawingItem*> mClipboardItems;
 	DrawingMouseEvent mMouseEvent;
 	MouseState mMouseState;
 	QHash<DrawingItem*,QPointF> mInitialPositions;
@@ -856,7 +851,11 @@ public slots:
 	void setClean();
 
 
-	/*! \brief Copies the selected items to the clipboard, then deletes them from the scene.
+	/*! \brief Copies the selected items to an internal clipboard, then deletes them from the scene.
+	 *
+	 * This function does not use the standard clipboard (i.e. QApplication::clipboard()).  Instead,
+	 * DrawingWidget maintains its own internal list of items.  This means that items cannot be
+	 * copied between two different DrawingWidget objects.
 	 *
 	 * The cut operation is only performed if the mode() is #DefaultMode.  If the mode() is any
 	 * other mode, this function does nothing.
@@ -865,7 +864,11 @@ public slots:
 	 */
 	void cut();
 
-	/*! \brief Copies the selected items to the clipboard.
+	/*! \brief Copies the selected items to an internal clipboard.
+	 *
+	 * This function does not use the standard clipboard (i.e. QApplication::clipboard()).  Instead,
+	 * DrawingWidget maintains its own internal list of items.  This means that items cannot be
+	 * copied between two different DrawingWidget objects.
 	 *
 	 * The cut operation is only performed if the mode() is #DefaultMode.  If the mode() is any
 	 * other mode, this function does nothing.
@@ -882,6 +885,10 @@ public slots:
 	 * Any existing selection is cleared before the new items are added.  The new items become
 	 * the new selection.  This function  emits the selectionChanged() signal to indicate the new
 	 * selection has changed.
+	 *
+	 * This function does not use the standard clipboard (i.e. QApplication::clipboard()).  Instead,
+	 * DrawingWidget maintains its own internal list of items.  This means that items cannot be
+	 * pasted between two different DrawingWidget objects.
 	 *
 	 * The cut operation is only performed if the mode() is #DefaultMode.  If the mode() is any
 	 * other mode, this function does nothing.
@@ -979,21 +986,193 @@ public slots:
 	void selectNone();
 
 
+	/*! \brief Moves the selected items to the specified position.
+	 *
+	 * This function emits the itemsGeometryChanged() signal after the items have been moved.
+	 *
+	 * If multiple items are selected, this function sets the position of the first item to newPos,
+	 * then moves the remaining items such that the change in position for all items is the same.
+	 *
+	 * Only items with the CanMove flag set are moved.  If no items are movable, or if no items 
+	 * are selected, this function does nothing.
+	 *
+	 * The move operation is only performed if the mode() is #DefaultMode.  If the mode() is any
+	 * other mode, this function does nothing.
+	 *
+	 * \sa resizeSelection()
+	 */
 	void moveSelection(const QPointF& newPos);
+	
+	/*! \brief Resizes the selected item by moving the itemPoint to the specified position.
+	 *
+	 * This function emits the itemsGeometryChanged() signal after the item has been resized.
+	 *
+	 * Exactly one item must be selected; if multiple items or no items are selected, this function
+	 * does nothing.  The item must have the CanResize flag set.
+	 *
+	 * The resize operation is only performed if the mode() is #DefaultMode.  If the mode() is any
+	 * other mode, this function does nothing.
+	 *
+	 * \sa moveSelection()
+	 */
 	void resizeSelection(DrawingItemPoint* itemPoint, const QPointF& scenePos);
+	
+	/*! \brief Rotates the selected items 90 degrees counter-clockwise.
+	 *
+	 * This function emits the itemsGeometryChanged() signal after the items have been rotated.
+	 *
+	 * Items are rotated about the center of the selection, which is calculated by taking the
+	 * average of each selected item's centerPos().
+	 *
+	 * Only items with the CanRotate flag set are rotated.  If no items can be rotated, or if 
+	 * no items are selected, this function does nothing.
+	 *
+	 * The rotate operation is only performed if the mode() is #DefaultMode.  If the mode() is any
+	 * other mode, this function does nothing.
+	 *
+	 * \sa rotateBackSelection(), flipSelection()
+	 */
 	void rotateSelection();
+	
+	/*! \brief Rotates the selected items 90 degrees clockwise.
+	 *
+	 * This function emits the itemsGeometryChanged() signal after the items have been rotated.
+	 *
+	 * Items are rotated about the center of the selection, which is calculated by taking the
+	 * average of each selected item's centerPos().
+	 *
+	 * Only items with the CanRotate flag set are rotated.  If no items can be rotated, or if 
+	 * no items are selected, this function does nothing.
+	 *
+	 * The rotate operation is only performed if the mode() is #DefaultMode.  If the mode() is any
+	 * other mode, this function does nothing.
+	 *
+	 * \sa rotateSelection(), flipSelection()
+	 */
 	void rotateBackSelection();
+	
+	/*! \brief Flips the selected items horizontally.
+	 *
+	 * This function emits the itemsGeometryChanged() signal after the items have been flipped.
+	 *
+	 * Items are flipped over the center of the selection, which is calculated by taking the
+	 * average of each selected item's centerPos().
+	 *
+	 * Only items with the CanFlip flag set are rotated.  If no items can be flipped, or if 
+	 * no items are selected, this function does nothing.
+	 *
+	 * The flip operation is only performed if the mode() is #DefaultMode.  If the mode() is any
+	 * other mode, this function does nothing.
+	 *
+	 * \sa rotateSelection(), rotateBackSelection()
+	 */
 	void flipSelection();
 
+	
+	/*! \brief Brings each selected item forward in the widget's stacking order.
+	 *
+	 * If no items are selected, this function does nothing.
+	 *
+	 * The reordering operation is only performed if the mode() is #DefaultMode.  If the mode() is 
+	 * any other mode, this function does nothing.
+	 *
+	 * \sa sendBackward(), bringToFront(), sendToBack()
+	 */
 	void bringForward();
+	
+	/*! \brief Sends each selected item backward in the widget's stacking order.
+	 *
+	 * If no items are selected, this function does nothing.
+	 *
+	 * The reordering operation is only performed if the mode() is #DefaultMode.  If the mode() is 
+	 * any other mode, this function does nothing.
+	 *
+	 * \sa bringForward(), bringToFront(), sendToBack()
+	 */
 	void sendBackward();
+	
+	/*! \brief Brings all of the selected items to the front of the widget's stacking order.
+	 *
+	 * If no items are selected, this function does nothing.
+	 *
+	 * The reordering operation is only performed if the mode() is #DefaultMode.  If the mode() is 
+	 * any other mode, this function does nothing.
+	 *
+	 * \sa bringForward(), sendBackward(), sendToBack()
+	 */
 	void bringToFront();
+	
+	/*! \brief Sends all of the selected items to the back of the widget's stacking order.
+	 *
+	 * If no items are selected, this function does nothing.
+	 *
+	 * The reordering operation is only performed if the mode() is #DefaultMode.  If the mode() is 
+	 * any other mode, this function does nothing.
+	 *
+	 * \sa bringForward(), sendBackward(), bringToFront()
+	 */
 	void sendToBack();
 
+	
+	/*! \brief Inserts a new DrawingItemPoint into an item at the specified position.
+	 *
+	 * This function emits the itemsGeometryChanged() signal after the new item point has been 
+	 * added.
+	 *
+	 * Exactly one item must be selected; if multiple items or no items are selected, this function
+	 * does nothing.  The item must have the CanInsertPoints flag set.
+	 *
+	 * The insert operation is only performed if the mode() is #DefaultMode.  If the mode() is any
+	 * other mode, this function does nothing.
+	 *
+	 * \sa removeItemPoint()
+	 */
 	void insertItemPoint();
+	
+	/*! \brief Removes an existing DrawingItemPoint from an item at the specified position.
+	 *
+	 * This function emits the itemsGeometryChanged() signal after the new item point has been 
+	 * removed.
+	 *
+	 * Exactly one item must be selected; if multiple items or no items are selected, this function
+	 * does nothing.  The item must have the CanRemovePoints flag set.
+	 *
+	 * The remove operation is only performed if the mode() is #DefaultMode.  If the mode() is any
+	 * other mode, this function does nothing.
+	 *
+	 * \sa insertItemPoint()
+	 */
 	void removeItemPoint();
+	
 
+	/*! \brief Combines all selected items into a new DrawingItemGroup and adds it to the widget.
+	 *
+	 * This function emits the numberOfItemsChanged() signal after the group operation is complete.
+	 *
+	 * More than one item must be selected; if one or zero items are selected, this function
+	 * does nothing.
+	 *
+	 * The group operation is only performed if the mode() is #DefaultMode.  If the mode() is any
+	 * other mode, this function does nothing.
+	 *
+	 * \sa removeItemPoint()
+	 */
 	void group();
+	
+	/*! \brief Splits the selected DrawingItemGroup into its constituent items and adds them to
+	 * the widget.
+	 *
+	 * This function emits the numberOfItemsChanged() signal after the ungroup operation is 
+	 * complete.
+	 *
+	 * Exactly one item must be selected and it must be a DrawingItemGroup, otherwise this function
+	 * does nothing.
+	 *
+	 * The ungroup operation is only performed if the mode() is #DefaultMode.  If the mode() is any
+	 * other mode, this function does nothing.
+	 *
+	 * \sa removeItemPoint()
+	 */
 	void ungroup();
 
 signals:
@@ -1036,26 +1215,209 @@ signals:
 	 */
 	void canRedoChanged(bool canRedo);
 
+	/*! \brief Emitted whenever the number of items in the widget changes.
+	 *
+	 * This signal is emitted whenever the user adds items using mouse events in #PlaceMode,
+	 * as well as when the user removes items using deleteSelection().  It is also emitted
+	 * when performing cut() and paste() operations as well as group() and ungroup() operations.
+	 *
+	 * This signal is not emitted when using the addItem(), removeItem(), or clearItems() 
+	 * functions directly.
+	 */
 	void numberOfItemsChanged(int itemCount);
+	
+	/*! \brief Emitted whenever items' geometry changes.
+	 *
+	 * This signal is emitted whenever the user moves, resizes, rotates, or flips items using 
+	 * mouse events in #DefaultMode, as well as when using moveSelection(), resizeSelection(),
+	 * rotateSelection(), rotateBackSelection(), and flipSelection().  It is also emitted when
+	 * new DrawingItemPoint objects are inserted or removed from items that support it using
+	 * insertItemPoint() and removeItemPoint().
+	 
+	 * This signal is emitted whenever the newItem() is moved, resized, rotated, or flipped using
+	 * mouse events in #PlaceMode.
+	 *
+	 * This signal is not emitted when using functions in DrawingItem to directly manipulate the
+	 * position, geometry, or transform of the item.
+	 */
 	void itemsGeometryChanged(const QList<DrawingItem*>& items);
+	
+	/*! \brief Emitted whenever the widget's list of selectedItems() changes.
+	 *
+	 * This signal is emitted whenever the user selects or deselects items using mouse events in 
+	 * #DefaultMode, as well as when the user selects items using selectAll(), 
+	 * selectArea(const QRectF&), selectArea(const QPainterPath&), and selectNone().  It is also 
+	 * emitted when performing cut(), paste(), and deleteSelection() operations as well as 
+	 * group() and ungroup() operations.
+	 *
+	 * This signal is not emitted when using the selectItem(), deselectItem(), or clearSelection()
+	 * functions directly.
+	 */
 	void selectionChanged(const QList<DrawingItem*>& items);
+	
+	/*! \brief Emitted whenever the widget's newItem() changes.
+	 *
+	 * This signal is emitted whenever a different newItem() is set on the widget, either through
+	 * mouse events in #PlaceMode or using setPlaceMode() directly.  This signal is also emitted
+	 * when the newItem() is deleted when switching modes using setScrollMode(), setZoomMode(),
+	 * and setDefaultMode(), so the item pointer returned could be nullptr.
+	 */
 	void newItemChanged(DrawingItem* item);
 
 protected:
+	/*! \brief Handles mouse press events for the widget.
+	 *
+	 * The default implementation handles mouse press events differently based on the current
+	 * mode() of operation.  This event handler can be reimplemented in a derived class to
+	 * modify the default behavior.
+	 *
+	 * In #DefaultMode, the widget updates its mouseDownItem() and focusItem().  The mouse press
+	 * event is forwarded to the mouseDownItem() if it is the only selected item.
+	 *
+	 * In #PlaceMode, the mouse press event is forwarded to the widget's newItem().  Since the
+	 * geometry of the newItem() may have changed, the itemsGeometryChanged() signal is sent.
+	 *
+	 * \sa mouseMoveEvent(), mouseReleaseEvent(), mouseDoubleClickEvent(), wheelEvent()
+	 */
 	virtual void mousePressEvent(QMouseEvent* event);
+	
+	/*! \brief Handles mouse move events for the widget.
+	 *
+	 * The default implementation handles mouse press events differently based on the current
+	 * mode() of operation.  This event handler can be reimplemented in a derived class to
+	 * modify the default behavior.
+	 *
+	 * In #DefaultMode, the widget determines whether to move, resize, or select items based on
+	 * where the mouse was clicked.
+	 *
+	 * In #PlaceMode, the mouse move event is forwarded to the widget's newItem().  Since the
+	 * geometry of the newItem() may have changed, the itemsGeometryChanged() signal is sent.
+	 *
+	 * \sa mousePressEvent(), mouseReleaseEvent(), mouseDoubleClickEvent(), wheelEvent()
+	 */
 	virtual void mouseMoveEvent(QMouseEvent* event);
+	
+	/*! \brief Handles mouse release events for the widget.
+	 *
+	 * The default implementation handles mouse press events differently based on the current
+	 * mode() of operation.  This event handler can be reimplemented in a derived class to
+	 * modify the default behavior.
+	 *
+	 * In #DefaultMode, the widget finishes moving, resizing, or selecting items based on
+	 * where the mouse was clicked and how much it has moved.
+	 *
+	 * In #PlaceMode, the mouse move event is forwarded to the widget's newItem().  If the
+	 * newItem() accepts the event by returning true, then the item is added to the widget and 
+	 * placed in the scene.  Then a copy of the item is set as the newItem() and the newItemChanged() 
+	 * signal is sent.  The new newItem() is forwarded a newItemCopyEvent().  If true is returned
+	 * from this event, the widget continues in #PlaceMode; otherwise, the widget is returned to 
+	 * #DefaultMode.
+	 *
+	 * \sa mousePressEvent(), mouseMoveEvent(), mouseDoubleClickEvent(), wheelEvent()
+	 */
 	virtual void mouseReleaseEvent(QMouseEvent* event);
+	
+	/*! \brief Handles mouse double-click events for the widget.
+	 *
+	 * The default implementation handles mouse double-click events differently based on the current
+	 * mode() of operation.  This event handler can be reimplemented in a derived class to
+	 * modify the default behavior.
+	 *
+	 * In #DefaultMode, the widget updates its mouseDownItem() and focusItem().  The mouse 
+	 * double-click event is forwarded to the mouseDownItem() if it is the only selected item.
+	 *
+	 * In #PlaceMode, the mouse double-click event is forwarded to the widget's newItem().  If the
+	 * newItem() accepts the event by returning true, then the item is added to the widget and 
+	 * placed in the scene.  Then a copy of the item is set as the newItem() and the newItemChanged() 
+	 * signal is sent.  The new newItem() is forwarded a newItemCopyEvent().  If true is returned
+	 * from this event, the widget continues in #PlaceMode; otherwise, the widget is returned to 
+	 * #DefaultMode.
+	 *
+	 * \sa mouseMoveEvent(), mouseMoveEvent(), mouseReleaseEvent(), wheelEvent()
+	 */
 	virtual void mouseDoubleClickEvent(QMouseEvent* event);
+	
+	/*! \brief Handles mouse wheel events for the widget.
+	 *
+	 * The default implementation zooms in on the scene if the scroll wheel is moved up with
+	 * the Control key held down and zooms out on the scene if the scroll wheel is moved down with
+	 * the Control key held down.
+	 *
+	 * \sa mouseMoveEvent(), mouseMoveEvent(), mouseReleaseEvent(), mouseDoubleClickEvent()
+	 */
 	virtual void wheelEvent(QWheelEvent* event);
 
+	/*! \brief Handles key press events for the widget.
+	 *
+	 * The default implementation forwards the key press event to the current focusItem().
+	 *
+	 * \sa keyReleaseEvent()
+	 */
 	virtual void keyPressEvent(QKeyEvent* event);
+	
+	/*! \brief Handles key release events for the widget.
+	 *
+	 * The default implementation forwards the key release event to the current focusItem().
+	 *
+	 * \sa keyPressEvent()
+	 */
 	virtual void keyReleaseEvent(QKeyEvent* event);
 
+	
+	/*! \brief Handles paint events for the widget.
+	 *
+	 * The default implementation paints the scene by calling drawBackground(), drawItems(), 
+	 * and drawForeground() in order.
+	 */
 	virtual void paintEvent(QPaintEvent* event);
+	
+	/*! \brief Renders the background of the scene using the specified painter.
+	 *
+	 * The default implementation fills the background of the scene using the current 
+	 * backgroundBrush().  This function may be overridden in a derived class to provide a 
+	 * custom background for the scene.
+	 *
+	 * This function is called before rendering the widget's items.
+	 *
+	 * \sa drawItems(), drawForeground()
+	 */
 	virtual void drawBackground(QPainter* painter);
+	
+	/*! \brief Renders the widget's items into the scene using the specified painter.
+	 *
+	 * The default implementation renders items the order they were added to the widget, starting 
+	 * with the first item added and ending with the most recent item added.  Any newItem() is
+	 * rendered last.
+	 *
+	 * DrawingWidget handles all rendering of item's points.  The default implementation is to draw
+	 * item points only when the associated item is selected.
+	 
+	 * This function may be overridden in a derived class to provide a custom rendering 
+	 * implementation for items in the scene.
+	 *
+	 * This function is called after rendering the background of the scene and before rendering
+	 * the foreground.
+	 *
+	 * \sa drawBackground(), drawForeground()
+	 */
 	virtual void drawItems(QPainter* painter);
+	
+	/*! \brief Renders the foreground of the scene using the specified painter.
+	 *
+	 * The default implementation does nothing.  This function may be overridden in a derived
+	 * class to provide a custom foreground for the scene.
+	 *
+	 * This function is called after rendering the widget's items.
+	 *
+	 * \sa drawBackground(), drawItems()
+	 */
 	virtual void drawForeground(QPainter* painter);
 
+	
+	/*! \brief Handles resize events for the widget.
+	 *
+	 * The default implementation updates the scroll bars to reflect the new size of the viewport.
+	 */
 	virtual void resizeEvent(QResizeEvent* event);
 
 private:
@@ -1086,10 +1448,8 @@ private:
 	void flipItemsCommand(const QList<DrawingItem*>& items, const QPointF& scenePos, QUndoCommand* command = nullptr);
 	void reorderItemsCommand(const QList<DrawingItem*>& itemsOrdered, QUndoCommand* command = nullptr);
 	void selectItemsCommand(const QList<DrawingItem*>& items, bool finalSelect = true, QUndoCommand* command = nullptr);
-	void insertItemPointCommand(DrawingItem* item, DrawingItemPoint* itemPoint, int pointIndex, QUndoCommand* command = nullptr);
-	void removeItemPointCommand(DrawingItem* item, DrawingItemPoint* itemPoint, QUndoCommand* command = nullptr);
-	void connectItemPointsCommand(DrawingItemPoint* point0, DrawingItemPoint* point1, QUndoCommand* command = nullptr);
-	void disconnectItemPointsCommand(DrawingItemPoint* point0, DrawingItemPoint* point1, QUndoCommand* command = nullptr);
+	void connectItemPointsCommand(DrawingItemPoint* point1, DrawingItemPoint* point2, QUndoCommand* command = nullptr);
+	void disconnectItemPointsCommand(DrawingItemPoint* point1, DrawingItemPoint* point2, QUndoCommand* command = nullptr);
 
 	void placeItems(const QList<DrawingItem*>& items, QUndoCommand* command);
 	void unplaceItems(const QList<DrawingItem*>& items, QUndoCommand* command);
@@ -1122,8 +1482,6 @@ private:
 	bool shouldDisconnect(DrawingItemPoint* point1, DrawingItemPoint* point2) const;
 
 	void recalculateContentSize(const QRectF& targetSceneRect = QRectF());
-	
-private:
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(DrawingWidget::Flags)

@@ -26,27 +26,19 @@
 class DrawingWidget;
 class DrawingItem;
 class DrawingItemPoint;
-class DrawingLineItem;
-class DrawingArcItem;
-class DrawingPolylineItem;
-class DrawingCurveItem;
-class DrawingRectItem;
-class DrawingEllipseItem;
-class DrawingPolygonItem;
-class DrawingTextItem;
-class DrawingPathItem;
-class DrawingItemGroup;
-
-enum DrawingGridStyle { GridNone, GridDotted, GridLined, GridGraphPaper };
-
-enum DrawingArrowStyle { ArrowNone, ArrowNormal, ArrowReverse, ArrowTriangle, ArrowTriangleFilled,
-	ArrowConcave, ArrowConcaveFilled, ArrowCircle, ArrowCircleFilled,
-	ArrowDiamond, ArrowDiamondFilled, ArrowHarpoon, ArrowHarpoonMirrored, ArrowX };
 
 //==================================================================================================
 
+/*! \brief Provides mouse events in a DrawingWidget scene.
+ *
+ * When a DrawingWidget receives a QMouseEvent, it translates it to a DrawingMouseEvent.  
+ * DrawingMouseEvent stores the screen position and scene position for important event information.  
+ * The event is then used in the various DrawingWidget and DrawingItem event handlers.
+ */
 class DrawingMouseEvent : public QEvent
 {
+	friend class DrawingWidget;
+	
 private:
 	QPoint mPos;
 	QPointF mScenePos;
@@ -61,18 +53,69 @@ private:
 	bool mDragged;
 
 public:
+	/*! \brief Create a new DrawingMouseEvent with default settings.
+	 *
+	 * The new mouse event needs to be initialized by DrawingWidget before it can be used.
+	 */
 	DrawingMouseEvent();
+	
+	//! \brief Delete an existing DrawingMouseEvent object.
 	~DrawingMouseEvent();
 
-	void setFromEvent(QMouseEvent* event, DrawingWidget* widget);
+	
+	/*! \brief Returns the mouse cursor position in screen coordinates.
+	 *
+	 * \sa scenePos()
+	 */
 	QPoint pos() const;
+	
+	/*! \brief Returns the mouse cursor position in scene coordinates.
+	 *
+	 * \sa pos()
+	 */
 	QPointF scenePos() const;
+	
+	/*! \brief Returns the mouse button down position in screen coordinates.
+	 *
+	 * \sa buttonDownScenePos()
+	 */
 	QPoint buttonDownPos() const;
+	
+	/*! \brief Returns the mouse button down position in scene coordinates.
+	 *
+	 * \sa buttonDownPos()
+	 */
 	QPointF buttonDownScenePos() const;
+	
+	/*! \brief Returns the mouse button (if any) that caused the event.
+	 *
+	 * \sa buttons(), modifiers()
+	 */
 	Qt::MouseButton button() const;
+	
+	/*! \brief Returns the combination of mouse buttons that were pressed at the time the event was sent.
+	 *
+	 * \sa button(), modifiers()
+	 */
 	Qt::MouseButtons buttons() const;
+	
+	/*! \brief Returns the keyboard modifiers in use at the time the event was sent.
+	 *
+	 * \sa button(), buttons()
+	 */
 	Qt::KeyboardModifiers modifiers() const;
+	
+	
+	/*! \brief Returns whether the mouse has moved
+	 *
+	 * If the Manhattan length of the difference between the event position and button down
+	 * position is less than the application's drag distance QApplication::startDragDistance(),
+	 * this function returns true; otherwise it returns false.
+	 */
 	bool isDragged() const;
+	
+private:
+	void setFromEvent(QMouseEvent* event, DrawingWidget* widget);
 };
 
 #endif

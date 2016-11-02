@@ -33,32 +33,6 @@ DrawingMouseEvent::~DrawingMouseEvent() { }
 
 //==================================================================================================
 
-void DrawingMouseEvent::setFromEvent(QMouseEvent* event, DrawingWidget* widget)
-{
-	mPos = event->pos();
-	mScenePos = widget->mapToScene(mPos);
-
-	mButton	= event->button();
-	mButtons = event->buttons();
-	mModifiers = event->modifiers();
-
-	if (event->type() == QEvent::MouseButtonPress)
-	{
-		mButtonDownPos = mPos;
-		mButtonDownScenePos = mScenePos;
-		mDragged = false;
-	}
-	else if (event->type() == QEvent::MouseMove && (mButtons & Qt::LeftButton))
-	{
-		mDragged = (mDragged |
-			((mButtonDownPos - mPos).manhattanLength() >= QApplication::startDragDistance()));
-	}
-
-	setAccepted(false);
-}
-
-//==================================================================================================
-
 QPoint DrawingMouseEvent::pos() const
 {
 	return mPos;
@@ -97,4 +71,30 @@ Qt::KeyboardModifiers DrawingMouseEvent::modifiers() const
 bool DrawingMouseEvent::isDragged() const
 {
 	return mDragged;
+}
+
+//==================================================================================================
+
+void DrawingMouseEvent::setFromEvent(QMouseEvent* event, DrawingWidget* widget)
+{
+	mPos = event->pos();
+	mScenePos = widget->mapToScene(mPos);
+
+	mButton	= event->button();
+	mButtons = event->buttons();
+	mModifiers = event->modifiers();
+
+	if (event->type() == QEvent::MouseButtonPress)
+	{
+		mButtonDownPos = mPos;
+		mButtonDownScenePos = mScenePos;
+		mDragged = false;
+	}
+	else if (event->type() == QEvent::MouseMove && (mButtons & Qt::LeftButton))
+	{
+		mDragged = (mDragged |
+			((mButtonDownPos - mPos).manhattanLength() >= QApplication::startDragDistance()));
+	}
+
+	setAccepted(false);
 }
