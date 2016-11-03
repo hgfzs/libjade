@@ -30,12 +30,36 @@ enum DrawingArrowStyle { ArrowNone, ArrowNormal, ArrowReverse, ArrowTriangle, Ar
 class DrawingItemStyle
 {
 private:
-
+	QHash<QString,QVariant> mProperties;
 
 public:
-	//DrawingItemStyle();
-	//DrawingItemStyle(const DrawingItemStyle& style);
-	//~DrawingItemStyle();
+	DrawingItemStyle();
+	DrawingItemStyle(const DrawingItemStyle& style);
+	~DrawingItemStyle();
+
+	void addProperty(const QString& name, const QVariant& value);
+	void removeProperty(const QString& name);
+	void clearProperties();
+	bool hasProperty(const QString& name) const;
+	QVariant propertyValue(const QString& name) const;
+
+	QVariant propertyLookup(const QString& name) const;
+
+	// Convenience lookup functions
+	QPen pen() const;
+	QBrush brush() const;
+	QFont font() const;
+	QBrush textBrush() const;
+	Qt::Alignment textAlignment() const;
+
+	DrawingArrowStyle startArrowStyle() const;
+	qreal startArrowSize() const;
+	DrawingArrowStyle endArrowStyle() const;
+	qreal endArrowSize() const;
+
+
+private:
+	static QHash<QString,QVariant> mProperties;
 };
 
 #endif
