@@ -21,11 +21,8 @@ SOURCES += \
 	source/DrawingItemGroup.cpp \
 	source/DrawingItemPoint.cpp \
     source/DrawingItemStyle.cpp \
-    source/DrawingPathItem.cpp \
-	source/DrawingShapeItems.cpp \
-	source/DrawingTextItem.cpp \
-	source/DrawingTwoPointItems.cpp \
-	source/DrawingTypes.cpp \
+    source/DrawingLineItem.cpp \
+    source/DrawingTypes.cpp \
 	source/DrawingUndo.cpp \
     source/DrawingWidget.cpp
 
@@ -34,10 +31,7 @@ HEADERS += \
     include/DrawingItemGroup.h \
     include/DrawingItemPoint.h \
     include/DrawingItemStyle.h \
-    include/DrawingPathItem.h \
-    include/DrawingShapeItems.h \
-    include/DrawingTextItem.h \
-    include/DrawingTwoPointItems.h \
+    include/DrawingLineItem.h \
     include/DrawingTypes.h \
 	include/DrawingUndo.h \
 	include/DrawingWidget.h \

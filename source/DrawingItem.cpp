@@ -368,22 +368,7 @@ void DrawingItem::moveItem(const QPointF& scenePos)
 
 void DrawingItem::resizeItem(DrawingItemPoint* itemPoint, const QPointF& scenePos)
 {
-	if (itemPoint)
-	{
-		itemPoint->setPos(mapFromScene(scenePos));
-
-		if ((mFlags & MapFirstItemPointToOrigin) && !mPoints.isEmpty() && mPoints.first())
-		{
-			// Adjust position of item and item points so that point(0)->pos() == QPointF(0, 0)
-			QPointF deltaPos = -mPoints.first()->pos();
-			QPointF scenePos = mapToScene(mPoints.first()->pos());
-
-			for(auto pointIter = mPoints.begin(); pointIter != mPoints.end(); pointIter++)
-				(*pointIter)->setPos((*pointIter)->pos() + deltaPos);
-
-			setPos(scenePos);
-		}
-	}
+	if (itemPoint) itemPoint->setPos(mapFromScene(scenePos));
 }
 
 void DrawingItem::rotateItem(const QPointF& scenePos)

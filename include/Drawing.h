@@ -27,11 +27,8 @@
 #include <DrawingItemPoint.h>
 #include <DrawingItemStyle.h>
 
+#include <DrawingLineItem.h>
 #include <DrawingItemGroup.h>
-#include <DrawingPathItem.h>
-#include <DrawingShapeItems.h>
-#include <DrawingTextItem.h>
-#include <DrawingTwoPointItems.h>
 
 /*! \mainpage
  *
@@ -65,13 +62,13 @@
  
 /*
  * Todo:
- * - can place multiple new items at once (including paste)
  * - add support for item styles
  * - add support for item behavior hints, like MapFirstItemPointToOrigin
  * Todo (future):
  * - layers and/or pages
  * - hierarchial items (parent/children)
  * - units (inches, mm, etc)
+ * - can place multiple new items at once (including paste)
  */
 
 #endif
