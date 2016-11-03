@@ -267,7 +267,32 @@ public:
 	 */
 	qreal endArrowSize() const;
 
-	
+
+	/*! \brief Convenience function that draws an arrow using the specified painter.
+	 *
+	 * The arrow is drawn from the given position in the specified direction.  When this function
+	 * returns, the painter is in the same state as when the function was entered.
+	 *
+	 * \sa arrowShape()
+	 */
+	void drawArrow(QPainter* painter, ArrowStyle style, qreal size,
+		const QPointF& pos, qreal direction, const QPen& pen, const QBrush& backgroundBrush);
+
+	/*! \brief Convenience function that returns the shape of a particular arrow style as a
+	 * QPainterPath.
+	 *
+	 * The arrow's path is drawn from the given position in the specified direction.
+	 *
+	 * \sa arrowShape()
+	 */
+	QPainterPath arrowShape(ArrowStyle style, qreal size,
+		const QPointF& pos, qreal direction) const;
+
+private:
+	QPolygonF calculateArrowPoints(ArrowStyle style, qreal size,
+		const QPointF& pos, qreal direction) const;
+
+
 private:
 	static QHash<Property,QVariant> mDefaultProperties;
 	

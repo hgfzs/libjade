@@ -609,10 +609,6 @@ public:
 	 *
 	 * The default implementation calls itemPoint->setPos() to update the point's position.
 	 *
-	 * If the #MapFirstItemPointToOrigin is set as one of the item's flags(), than after the resize 
-	 * this function will adjust the position of the item's points so that the first point is at 
-	 * the origin of the local item coordinate system.
-	 *
 	 * Derived class implementations can add additional behavior.  These implementations should
 	 * call the parent implementation first before adding custom logic.
 	 *
@@ -803,6 +799,10 @@ protected:
 	 * \sa DrawingWidget::mouseReleaseEvent()
 	 */
 	virtual bool newItemCopyEvent();
+
+protected:
+	QPainterPath strokePath(const QPainterPath& path, const QPen& pen) const;
+	qreal minimumPenWidth() const;
 
 private:
 	void recalculateTransform();

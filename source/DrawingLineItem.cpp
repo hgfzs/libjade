@@ -147,8 +147,8 @@ QPainterPath DrawingLineItem::shape() const
 		}
 
 		// Determine outline path
-		pen.setWidthF(qMax(pen.widthF(), style->minimumPenWidth()));
-		shape = style->strokePath(drawPath, pen);
+		pen.setWidthF(qMax(pen.widthF(), minimumPenWidth()));
+		shape = strokePath(drawPath, pen);
 	}
 
 	return shape;
@@ -221,12 +221,12 @@ void DrawingLineItem::resizeItem(DrawingItemPoint* itemPoint, const QPointF& sce
 
 	// Adjust position of item and item points so that point(0)->pos() == QPointF(0, 0)
 	QPointF deltaPos = -points.first()->pos();
-	QPointF scenePos = mapToScene(points.first()->pos());
+	QPointF pointScenePos = mapToScene(points.first()->pos());
 
 	for(auto pointIter = points.begin(); pointIter != points.end(); pointIter++)
 		(*pointIter)->setPos((*pointIter)->pos() + deltaPos);
 
-	setPos(scenePos);
+	setPos(pointScenePos);
 }
 
 //==================================================================================================

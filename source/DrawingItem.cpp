@@ -483,6 +483,44 @@ bool DrawingItem::newItemCopyEvent()
 
 //==================================================================================================
 
+QPainterPath DrawingItem::strokePath(const QPainterPath& path, const QPen& pen) const
+{
+	if (path == QPainterPath()) return path;
+
+	QPainterPathStroker ps;
+	const qreal penWidthZero = qreal(0.00000001);
+
+	if (pen.widthF() <= 0.0)
+		ps.setWidth(penWidthZero);
+	else
+		ps.setWidth(pen.widthF());
+
+	//ps.setCapStyle(pen.capStyle());
+	//ps.setJoinStyle(pen.joinStyle());
+	//ps.setMiterLimit(pen.miterLimit());
+
+	ps.setCapStyle(Qt::SquareCap);
+	ps.setJoinStyle(Qt::BevelJoin);
+
+	return ps.createStroke(path);
+}
+
+qreal DrawingItem::minimumPenWidth() const
+{
+	qreal width = 0;
+
+	if (mDrawing)
+	{
+		QPointF mappedSize = mDrawing->mapToScene(
+			QPoint(mDrawing->pointSizeHint().width(), mDrawing->pointSizeHint().height()));
+		width = qMax(qAbs(mappedSize.x()), qAbs(mappedSize.y()));
+	}
+
+	return width;
+}
+
+//==================================================================================================
+
 void DrawingItem::recalculateTransform()
 {
 	mTransform = QTransform();

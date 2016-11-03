@@ -183,6 +183,192 @@ qreal DrawingItemStyle::endArrowSize() const
 
 //==================================================================================================
 
+void DrawingItemStyle::drawArrow(QPainter* painter, ArrowStyle style, qreal size,
+	const QPointF& pos, qreal direction, const QPen& pen, const QBrush& backgroundBrush)
+{
+	if (style != ArrowNone)
+	{
+		QBrush originalBrush = painter->brush();
+		QPen originalPen = painter->pen();
+
+		QPolygonF polygon = calculateArrowPoints(style, size, pos, direction);
+		QPen arrowPen = pen;
+
+		if (arrowPen.style() != Qt::NoPen) arrowPen.setStyle(Qt::SolidLine);
+		painter->setPen(arrowPen);
+
+		switch (style)
+		{
+		case ArrowTriangleFilled:
+		case ArrowCircleFilled:
+		case ArrowDiamondFilled:
+		case ArrowConcaveFilled:
+			painter->setBrush(pen.brush());
+			break;
+		case ArrowTriangle:
+		case ArrowCircle:
+		case ArrowDiamond:
+		case ArrowConcave:
+			painter->setBrush(backgroundBrush);
+			break;
+		default:
+			painter->setBrush(Qt::transparent);
+			break;
+		}
+
+		switch (style)
+		{
+		case ArrowNormal:
+		case ArrowReverse:
+			painter->drawLine(polygon[0], polygon[1]);
+			painter->drawLine(polygon[0], polygon[2]);
+			break;
+		case ArrowCircle:
+		case ArrowCircleFilled:
+			painter->drawEllipse(pos, size / 2, size / 2);
+			break;
+		case ArrowHarpoon:
+		case ArrowHarpoonMirrored:
+			painter->drawLine(polygon[0], polygon[1]);
+			break;
+		case ArrowX:
+			painter->drawLine(polygon[0], polygon[1]);
+			painter->drawLine(polygon[2], polygon[3]);
+			break;
+		default:
+			painter->drawPolygon(polygon);
+			break;
+		}
+
+		painter->setPen(originalPen);
+		painter->setBrush(originalBrush);
+	}
+}
+
+QPainterPath DrawingItemStyle::arrowShape(ArrowStyle style, qreal size, const QPointF& pos,
+	qreal direction) const
+{
+	QPainterPath path;
+	QPolygonF polygon;
+
+	if (style != ArrowNone)
+	{
+		switch (style)
+		{
+		case ArrowCircle:
+		case ArrowCircleFilled:
+			path.addEllipse(pos, size / 2, size / 2);
+			break;
+		case ArrowHarpoon:
+		case ArrowHarpoonMirrored:
+			polygon = calculateArrowPoints(style, size, pos, direction);
+			path.moveTo(polygon[0]);
+			path.lineTo(polygon[1]);
+			break;
+		case ArrowX:
+			polygon = calculateArrowPoints(style, size, pos, direction);
+			path.moveTo(polygon[0]);
+			path.lineTo(polygon[1]);
+			path.moveTo(polygon[2]);
+			path.lineTo(polygon[3]);
+			break;
+		default:
+			polygon = calculateArrowPoints(style, size, pos, direction);
+			path.moveTo(polygon[0]);
+			path.addPolygon(polygon);
+			path.closeSubpath();
+			break;
+		}
+	}
+
+	return path;
+}
+
+QPolygonF DrawingItemStyle::calculateArrowPoints(ArrowStyle style, qreal size,
+	const QPointF& pos, qreal direction) const
+{
+	QPolygonF polygon;
+	const qreal sqrt2 = qSqrt(2);
+	qreal angle = 0;
+
+	direction = direction * 3.141592654 / 180;
+
+	switch (style)
+	{
+	case ArrowNormal:
+	case ArrowTriangle:
+	case ArrowTriangleFilled:
+		angle = 3.141592654 / 6;
+		polygon.append(pos);
+		polygon.append(QPointF(pos.x() + size / sqrt2 * qCos(direction - angle),
+							   pos.y() + size / sqrt2 * qSin(direction - angle)));
+		polygon.append(QPointF(pos.x() + size / sqrt2 * qCos(direction + angle),
+							   pos.y() + size / sqrt2 * qSin(direction + angle)));
+		break;
+	case ArrowDiamond:
+	case ArrowDiamondFilled:
+		angle = 3.141592654;
+		polygon.append(QPointF(pos.x() + size / 2 * qCos(direction),
+							   pos.y() + size / 2 * qSin(direction)));
+		polygon.append(QPointF(pos.x() + size / 2 * qCos(direction - angle / 2),
+							   pos.y() + size / 2 * qSin(direction - angle / 2)));
+		polygon.append(QPointF(pos.x() + size / 2 * qCos(direction - angle),
+							   pos.y() + size / 2 * qSin(direction - angle)));
+		polygon.append(QPointF(pos.x() + size / 2 * qCos(direction + angle / 2),
+							   pos.y() + size / 2 * qSin(direction + angle / 2)));
+		break;
+	case ArrowHarpoon:
+		angle = 3.141592654 / 6;
+		polygon.append(pos);
+		polygon.append(QPointF(pos.x() + size / sqrt2 * qCos(direction - angle),
+							   pos.y() + size / sqrt2 * qSin(direction - angle)));
+		break;
+	case ArrowHarpoonMirrored:
+		angle = 3.141592654 / 6;
+		polygon.append(pos);
+		polygon.append(QPointF(pos.x() + size / sqrt2 * qCos(direction + angle),
+							   pos.y() + size / sqrt2 * qSin(direction + angle)));
+		break;
+	case ArrowConcave:
+	case ArrowConcaveFilled:
+		angle = 3.141592654 / 6;
+		polygon.append(pos);
+		polygon.append(QPointF(pos.x() + size / sqrt2 * qCos(direction - angle),
+							   pos.y() + size / sqrt2 * qSin(direction - angle)));
+		polygon.append(QPointF(pos.x() + size / sqrt2 / 2 * qCos(direction),
+							   pos.y() + size / sqrt2 / 2 * qSin(direction)));
+		polygon.append(QPointF(pos.x() + size / sqrt2 * qCos(direction + angle),
+							   pos.y() + size / sqrt2 * qSin(direction + angle)));
+		break;
+	case ArrowReverse:
+		angle = 3.141592654 / 6;
+		polygon.append(QPointF(pos.x() + size / sqrt2 * qCos(direction),
+							   pos.y() + size / sqrt2 * qSin(direction)));
+		polygon.append(QPointF(polygon[0].x() - size / sqrt2 * qCos(direction - angle),
+							   polygon[0].y() - size / sqrt2 * qSin(direction - angle)));
+		polygon.append(QPointF(polygon[0].x() - size / sqrt2 * qCos(direction + angle),
+							   polygon[0].y() - size / sqrt2 * qSin(direction + angle)));
+		break;
+	case ArrowX:
+		angle = 3.141592654 / 4;
+		polygon.append(QPointF(pos.x() + size / sqrt2 * qCos(direction + angle),
+							   pos.y() + size / sqrt2 * qSin(direction + angle)));
+		polygon.append(QPointF(pos.x() + size / sqrt2 * qCos(direction + 5 * angle),
+							   pos.y() + size / sqrt2 * qSin(direction + 5 * angle)));
+		polygon.append(QPointF(pos.x() + size / sqrt2 * qCos(direction + 3 * angle),
+							   pos.y() + size / sqrt2 * qSin(direction + 3 * angle)));
+		polygon.append(QPointF(pos.x() + size / sqrt2 * qCos(direction + 7 * angle),
+							   pos.y() + size / sqrt2 * qSin(direction + 7 * angle)));
+		break;
+	default:
+		break;
+	}
+
+	return polygon;
+}
+
+//==================================================================================================
+
 void DrawingItemStyle::setDefaultValues(const QHash<Property,QVariant>& values)
 {
 	mDefaultProperties = values;
