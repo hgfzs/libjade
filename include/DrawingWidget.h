@@ -21,7 +21,7 @@
 #ifndef DRAWINGWIDGET_H
 #define DRAWINGWIDGET_H
 
-#include <DrawingItem.h>
+#include <DrawingTypes.h>
 
 /*! \brief Widget for managing a large number of two-dimensional DrawingItem objects.
  *

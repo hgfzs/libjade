@@ -3,12 +3,12 @@ TEMPLATE = lib
 win32:TARGET = jade
 !win32:TARGET = jade
 
-DESTDIR = bin
+DESTDIR = lib
 INCLUDEPATH += include
 
-CONFIG += release warn_on embed_manifest_dll c++11 qt
+CONFIG += release warn_on embed_manifest_dll c++11 qt staticlib
 CONFIG -= debug
-QT += widgets printsupport svg
+QT += widgets
 
 !win32:MOC_DIR = release
 !win32:OBJECTS_DIR = release
