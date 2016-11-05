@@ -1210,6 +1210,7 @@ void DrawingWidget::paintEvent(QPaintEvent* event)
 
 	// Render scene
 	QPainter painter(&image);
+	painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
 
 	painter.translate(-horizontalScrollBar()->value(), -verticalScrollBar()->value());
 	painter.setTransform(mViewportTransform, true);
@@ -1230,9 +1231,23 @@ void DrawingWidget::paintEvent(QPaintEvent* event)
 
 void DrawingWidget::drawBackground(QPainter* painter)
 {
+	QColor backgroundColor = mBackgroundBrush.color();
+	QColor borderColor(255 - backgroundColor.red(), 255 - backgroundColor.green(),
+		255 - backgroundColor.blue());
+	QPen borderPen(borderColor, 1);
+	borderPen.setCosmetic(true);
+
+	QPainter::RenderHints hints = painter->renderHints();
+
+	painter->setRenderHints((QPainter::RenderHints)0);
 	painter->setBrush(mBackgroundBrush);
 	painter->setPen(QPen(mBackgroundBrush, 1));
 	painter->drawRect(viewport()->rect());
+
+	painter->setPen(borderPen);
+	painter->drawRect(mSceneRect);
+
+	painter->setRenderHints(hints);
 }
 
 void DrawingWidget::drawItems(QPainter* painter)

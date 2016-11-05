@@ -32,9 +32,15 @@ class DiagramWindow : public QMainWindow
 private:
 	DiagramWidget* mDiagramWidget;
 
+	// status bar for DrawingWidget signals
+
 public:
 	DiagramWindow();
 	~DiagramWindow();
+
+
+private:
+	void showEvent(QShowEvent* event);
 };
 
 #endif

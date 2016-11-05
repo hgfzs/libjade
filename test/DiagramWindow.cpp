@@ -34,3 +34,11 @@ DiagramWindow::~DiagramWindow()
 {
 	
 }
+
+//==================================================================================================
+
+void DiagramWindow::showEvent(QShowEvent* event)
+{
+	QMainWindow::showEvent(event);
+	if (!event->spontaneous()) mDiagramWidget->zoomFit();
+}
