@@ -27,7 +27,13 @@
 #include <DrawingItemPoint.h>
 #include <DrawingItemStyle.h>
 
+#include <DrawingArcItem.h>
+#include <DrawingCurveItem.h>
+#include <DrawingEllipseItem.h>
 #include <DrawingLineItem.h>
+#include <DrawingPolygonItem.h>
+#include <DrawingPolylineItem.h>
+#include <DrawingRectItem.h>
 #include <DrawingItemGroup.h>
 
 /*! \mainpage

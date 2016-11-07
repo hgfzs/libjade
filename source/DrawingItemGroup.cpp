@@ -23,6 +23,8 @@
 
 DrawingItemGroup::DrawingItemGroup() : DrawingItem()
 {
+	setFlags(CanMove | CanRotate | CanFlip | CanSelect);
+
 	for(int i = 0; i < 8; i++)
 		addPoint(new DrawingItemPoint(QPointF(0.0, 0.0), DrawingItemPoint::NoFlags));
 }
@@ -68,8 +70,6 @@ QRectF DrawingItemGroup::boundingRect() const
 
 QPainterPath DrawingItemGroup::shape() const
 {
-	//return DrawingItem::shape();
-
 	QPainterPath shape;
 
 	if (isValid())

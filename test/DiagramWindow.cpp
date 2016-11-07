@@ -24,6 +24,7 @@
 DiagramWindow::DiagramWindow() : QMainWindow()
 {
 	mDiagramWidget = new DiagramWidget();
+	mDiagramWidget->setFlags(DrawingWidget::UndoableSelectCommands);
 	setCentralWidget(mDiagramWidget);
 	connect(mDiagramWidget, SIGNAL(modeChanged(DrawingWidget::Mode)),
 		this, SLOT(updateActionFromMode(DrawingWidget::Mode)));
@@ -60,26 +61,27 @@ void DiagramWindow::setModeFromAction(QAction* action)
 {
 	if (action->text() == "Scroll Mode") mDiagramWidget->setScrollMode();
 	else if (action->text() == "Zoom Mode") mDiagramWidget->setZoomMode();
-	//else if (action->text() == "Place Arc") mDiagramWidget->setPlaceMode(new DrawingArcItem());
-	//else if (action->text() == "Place Curve") mDiagramWidget->setPlaceMode(new DrawingCurveItem());
-	//else if (action->text() == "Place Ellipse") mDiagramWidget->setPlaceMode(new DrawingEllipseItem());
+	else if (action->text() == "Place Arc") mDiagramWidget->setPlaceMode(new DrawingArcItem());
+	else if (action->text() == "Place Curve") mDiagramWidget->setPlaceMode(new DrawingCurveItem());
+	else if (action->text() == "Place Ellipse") mDiagramWidget->setPlaceMode(new DrawingEllipseItem());
 	else if (action->text() == "Place Line") mDiagramWidget->setPlaceMode(new DrawingLineItem());
-	//else if (action->text() == "Place Polygon") mDiagramWidget->setPlaceMode(new DrawingPolygonItem());
-	//else if (action->text() == "Place Polyline") mDiagramWidget->setPlaceMode(new DrawingPolylineItem());
-	//else if (action->text() == "Place Rect") mDiagramWidget->setPlaceMode(new DrawingRectItem());
+	else if (action->text() == "Place Polygon") mDiagramWidget->setPlaceMode(new DrawingPolygonItem());
+	else if (action->text() == "Place Polyline") mDiagramWidget->setPlaceMode(new DrawingPolylineItem());
+	else if (action->text() == "Place Rect") mDiagramWidget->setPlaceMode(new DrawingRectItem());
 	//else if (action->text() == "Place Text") mDiagramWidget->setPlaceMode(new DrawingTextItem());
+	//else if (action->text() == "Place Path") mDiagramWidget->setPlaceMode(new DrawingPathItem());
 	else mDiagramWidget->setDefaultMode();
 }
 
 void DiagramWindow::updateActionFromMode(DrawingWidget::Mode mode)
 {
-	QList<QAction*> actions = QMainWindow::actions();
+	QList<QAction*> modeActions = mModeActionGroup->actions();
 
 	switch (mode)
 	{
-	case DrawingWidget::ScrollMode: actions[ScrollModeAction]->setChecked(true); break;
-	case DrawingWidget::ZoomMode: actions[ZoomModeAction]->setChecked(true); break;
-	case DrawingWidget::DefaultMode: actions[DefaultModeAction]->setChecked(true); break;
+	case DrawingWidget::ScrollMode: modeActions[ScrollModeAction]->setChecked(true); break;
+	case DrawingWidget::ZoomMode: modeActions[ZoomModeAction]->setChecked(true); break;
+	case DrawingWidget::DefaultMode: modeActions[DefaultModeAction]->setChecked(true); break;
 	}
 }
 
@@ -142,6 +144,7 @@ void DiagramWindow::createActions()
 	addModeAction("Place Curve", "", "");
 	addModeAction("Place Ellipse", "", "");
 	addModeAction("Place Line", "", "");
+	addModeAction("Place Path", "", "");
 	addModeAction("Place Polygon", "", "");
 	addModeAction("Place Polyline", "", "");
 	addModeAction("Place Rect", "", "");
@@ -199,6 +202,7 @@ void DiagramWindow::createMenus()
 	menu->addAction(modeActions[PlaceCurveAction]);
 	menu->addAction(modeActions[PlaceEllipseAction]);
 	menu->addAction(modeActions[PlaceLineAction]);
+	menu->addAction(modeActions[PlacePathAction]);
 	menu->addAction(modeActions[PlacePolygonAction]);
 	menu->addAction(modeActions[PlacePolylineAction]);
 	menu->addAction(modeActions[PlaceRectAction]);

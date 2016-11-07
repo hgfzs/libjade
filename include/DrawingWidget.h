@@ -156,11 +156,7 @@ public:
 	 */
 	enum Flag
 	{
-		SelectedItemsOnTop = 0x0001,		//!< The itemAt() function will search through all
-											//!< selectedItems() first when trying to find the
-											//!< topmost item.  This also affects how DrawingWidget
-											//!< determines the mouseDownItem().
-		UndoableSelectCommands = 0x0002		//!< Selecting and deselecting items are commands that
+		UndoableSelectCommands = 0x0001		//!< Selecting and deselecting items are commands that
 											//!< the user can undo() and redo().
 	};
 	Q_DECLARE_FLAGS(Flags, Flag)

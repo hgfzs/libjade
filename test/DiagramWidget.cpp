@@ -66,17 +66,6 @@ void DiagramWidget::mouseReleaseEvent(QMouseEvent* event)
 
 void DiagramWidget::addActions()
 {
-//	void 	moveSelection (const QPointF &newPos)
-//	void 	resizeSelection (DrawingItemPoint *itemPoint, const QPointF &scenePos)
-//	void 	selectArea (const QRectF &rect)
-//	void 	selectArea (const QPainterPath &path)
-//	void 	setDefaultMode ()
-//	void 	setPlaceMode (DrawingItem *newItem)
-//	void 	setScrollMode ()
-//	void 	setZoomMode ()
-
-
-
 	addAction("Undo", this, SLOT(undo()), "", "Ctrl+Z");
 	addAction("Redo", this, SLOT(redo()), "", "Ctrl+Shift+Z");
 	addAction("Cut", this, SLOT(cut()), "", "Ctrl+X");
@@ -116,8 +105,8 @@ void DiagramWidget::createContextMenus()
 	mSingleItemContextMenu.addAction(actions[DeleteAction]);
 	mSingleItemContextMenu.addSeparator();
 	mSingleItemContextMenu.addAction(actions[GroupAction]);
-	mSingleItemContextMenu.addSeparator();
 	mSingleItemContextMenu.addAction(actions[UngroupAction]);
+	mSingleItemContextMenu.addSeparator();
 	mSingleItemContextMenu.addAction(actions[CutAction]);
 	mSingleItemContextMenu.addAction(actions[CopyAction]);
 	mSingleItemContextMenu.addAction(actions[PasteAction]);

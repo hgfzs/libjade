@@ -296,19 +296,16 @@ DrawingItem* DrawingWidget::itemAt(const QPointF& scenePos) const
 {
 	DrawingItem* item = nullptr;
 
-	if (mFlags & SelectedItemsOnTop)
+	// Favor selected items
+	auto itemIter = mSelectedItems.end();
+	while (item == nullptr && itemIter != mSelectedItems.begin())
 	{
-		// Favor selected items
-		auto itemIter = mSelectedItems.end();
-		while (item == nullptr && itemIter != mSelectedItems.begin())
-		{
-			itemIter--;
-			if (itemMatchesPoint(*itemIter, scenePos)) item = *itemIter;
-		}
+		itemIter--;
+		if (itemMatchesPoint(*itemIter, scenePos)) item = *itemIter;
 	}
 
 	// Search all items
-	auto itemIter = mItems.end();
+	itemIter = mItems.end();
 	while (item == nullptr && itemIter != mItems.begin())
 	{
 		itemIter--;
@@ -613,7 +610,12 @@ void DrawingWidget::undo()
 {
 	if (mMode == DefaultMode && mUndoStack.canUndo())
 	{
-		if ((mFlags & UndoableSelectCommands) == 0) clearSelection();
+		if ((mFlags & UndoableSelectCommands) == 0)
+		{
+			clearSelection();
+			emit selectionChanged(mSelectedItems);
+		}
+
 		mUndoStack.undo();
 		viewport()->update();
 	}
@@ -623,7 +625,12 @@ void DrawingWidget::redo()
 {
 	if (mMode == DefaultMode && mUndoStack.canRedo())
 	{
-		if ((mFlags & UndoableSelectCommands) == 0) clearSelection();
+		if ((mFlags & UndoableSelectCommands) == 0)
+		{
+			clearSelection();
+			emit selectionChanged(mSelectedItems);
+		}
+
 		mUndoStack.redo();
 		viewport()->update();
 	}
@@ -1008,7 +1015,10 @@ void DrawingWidget::group()
 
 		itemGroup->setPos(items.first()->pos());
 		for(auto iter = items.begin(); iter != items.end(); iter++)
+		{
+			(*iter)->mDrawing = this;
 			(*iter)->setPos(itemGroup->mapFromScene((*iter)->pos()));
+		}
 		itemGroup->setItems(items);
 		itemsToAdd.append(itemGroup);
 

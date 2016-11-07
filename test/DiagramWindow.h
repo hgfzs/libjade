@@ -32,7 +32,7 @@ class DiagramWindow : public QMainWindow
 public:
 	enum ActionIndex { AboutQtAction, ExitAction, NumberOfActions };
 	enum ModeActionIndex { DefaultModeAction, ScrollModeAction, ZoomModeAction,
-		PlaceArcAction, PlaceCurveAction, PlaceEllipseAction, PlaceLineAction,
+		PlaceArcAction, PlaceCurveAction, PlaceEllipseAction, PlaceLineAction, PlacePathAction,
 		PlacePolygonAction, PlacePolylineAction, PlaceRectAction, PlaceTextAction,
 		NumberOfModeActions };
 

@@ -1,4 +1,4 @@
-/* DrawingLineItem.h
+/* DrawingArcItem.h
  *
  * Copyright (C) 2013-2016 Jason Allen
  *
@@ -20,36 +20,36 @@
 
 #include <DrawingItem.h>
 
-/*! \brief Provides a line item that can be added to a DrawingWidget.
+/*! \brief Provides an arc item that can be added to a DrawingWidget.
  *
- * To set the item's line, call the setLine() function.  The line() function returns the current
- * line.  Both functions operate in local item coordinates.
+ * To set the item's arc, call the setArc() function.  The arc() function returns the current
+ * arc.  Both functions operate in local item coordinates.
  * 
- * Rendering options for the line can be controlled through properties of the item's style().
- * The line item supports all of the pen style properties as well as start arrow and end arrow
+ * Rendering options for the arc can be controlled through properties of the item's style().
+ * The arc item supports all of the pen style properties as well as start arrow and end arrow
  * properties.
  * 
- * DrawingLineItem provides a reasonable implementation of boundingRect(), shape(), and isValid().
- * The paint() function draws the line using the item's associated pen.
+ * DrawingArcItem provides a reasonable implementation of boundingRect(), shape(), and isValid().
+ * The paint() function draws the arc using the item's associated pen.
  *
- * When their parent drawing() is in PlaceMode, line items are placed by clicking and dragging 
+ * When their parent drawing() is in PlaceMode, arc items are placed by clicking and dragging
  * within the scene.  A mouse press event sets the position of the item's start point and a mouse
  * release sets the position of the item's end point.  Mouse release events also 
  * cause the item to be placed in the drawing() if isValid() returns true. From there, a new 
- * line item can be placed by clicking and dragging again.
+ * arc item can be placed by clicking and dragging again.
  */
-class DrawingLineItem : public DrawingItem
+class DrawingArcItem : public DrawingItem
 {
 public:
-	/*! \brief Create a new DrawingLineItem with default settings.
+	/*! \brief Create a new DrawingArcItem with default settings.
 	 *
-	 * This function creates three DrawingItemPoint objects and adds them to the item.  These
-	 * item points represent the start, middle, and end points of the line.  By default, the
+	 * This function creates two DrawingItemPoint objects and adds them to the item.  These
+	 * item points represent the start and end points of the arc.  By default, the
 	 * position of each point is set to the origin of the item.
 	 *
 	 * This function fills in the item's style() with default values for the following properties.
 	 * The default values are pulled from the style's DrawingItemStyle::defaultValues() if present,
-	 * otherwise DrawingLineItem attempts to use reasonable initial values for each property:
+	 * otherwise DrawingArcItem attempts to use reasonable initial values for each property:
 	 * \li DrawingItemStyle::PenStyle
 	 * \li DrawingItemStyle::PenColor
 	 * \li DrawingItemStyle::PenOpacity
@@ -61,57 +61,56 @@ public:
 	 * \li DrawingItemStyle::EndArrowStyle
 	 * \li DrawingItemStyle::EndArrowSize
 	 */
-	DrawingLineItem();
+	DrawingArcItem();
 	
-	/*! \brief Create a new DrawingLineItem as a copy of an existing line item.
+	/*! \brief Create a new DrawingArcItem as a copy of an existing arc item.
 	 *
-	 * Creates copies of all item points to the new line item, including the point's positions.
+	 * Creates copies of all item points to the new arc item, including the point's positions.
 	 * Also creates a new item style with all of the same properties as the existing item's style.
 	 */
-	DrawingLineItem(const DrawingLineItem& item);
+	DrawingArcItem(const DrawingArcItem& item);
 	
-	/*! \brief Delete an existing DrawingLineItem object.
+	/*! \brief Delete an existing DrawingArcItem object.
 	 *
 	 * All of the item's points are also deleted.
 	 */
-	virtual ~DrawingLineItem();
+	virtual ~DrawingArcItem();
 
-	/*! \brief Creates a copy of the DrawingLineItem and return it.
+	/*! \brief Creates a copy of the DrawingArcItem and return it.
 	 *
 	 * Simply calls the copy constructor.
 	 */
 	virtual DrawingItem* copy() const;
 
 	
-	/*! \brief Sets the item's line to line, which is given in local item coordinates.
+	/*! \brief Sets the item's arc to line, which is given in local item coordinates.
 	 *
 	 * Sets the positions of the item's points so that:
-	 * \li point[0] is at start point of the line (line.p1())
-	 * \li point[1] is at the midpoint of the line
-	 * \li point[2] is at end point of the line (line.p2())
+	 * \li point[0] is at start point of the arc (line.p1())
+	 * \li point[1] is at end point of the arc (line.p2())
 	 *
-	 * \sa line()
+	 * \sa arc()
 	 */
-	void setLine(const QLineF& line);
+	void setArc(const QLineF& line);
 	
-	/*! \brief Sets the item's line, which is given in local item coordinates.
+	/*! \brief Sets the item's arc, which is given in local item coordinates.
 	 *
-	 * This convenience function is equivalent to calling setLine(QLineF(x1, y1, x2, y2)).
+	 * This convenience function is equivalent to calling setArc(QLineF(x1, y1, x2, y2)).
 	 *
-	 * \sa line()
+	 * \sa arc()
 	 */
-	void setLine(qreal x1, qreal y1, qreal x2, qreal y2);
+	void setArc(qreal x1, qreal y1, qreal x2, qreal y2);
 	
-	/*! \brief Returns item's line in local item coordinates.
+	/*! \brief Returns item's arc in local item coordinates.
 	 *
-	 * \sa setLine(const QLineF&), setLine(qreal, qreal, qreal, qreal)
+	 * \sa setArc(const QLineF&), setArc(qreal, qreal, qreal, qreal)
 	 */
-	QLineF line() const;
+	QLineF arc() const;
 	
 	
-	/*! \brief Returns an estimate of the area painted by the line item.
+	/*! \brief Returns an estimate of the area painted by the arc item.
 	 *
-	 * Calculates the bounding rect of the line based on the position of its start and end points.
+	 * Calculates the bounding rect of the arc based on the position of its start and end points.
 	 * The rect includes an adjustment for the width of the pen as set by the item's style().
 	 * The rect does not include any consideration of any arrows that may be set by the style().
 	 *
@@ -121,13 +120,13 @@ public:
 	
 	/*! \brief Returns an accurate outline of the item's shape.
 	 *
-	 * Calculates the shape of the line, including any arrows that may be set by the item's 
+	 * Calculates the shape of the arc, including any arrows that may be set by the item's
 	 * style().
 	 *
 	 * Note that the stroke width used to determine the shape is either the actual width of the 
 	 * pen set by the item's style() or a reasonable minimum width as determined by the current
 	 * zoom scale of the item's drawing(), whichever is larger.  This is done to make it easier to
-	 * click on line items when zoomed out on a large scene.
+	 * click on arc items when zoomed out on a large scene.
 	 *
 	 * \sa boundingRect(), isValid()
 	 */
@@ -135,7 +134,7 @@ public:
 	
 	/*! \brief Return false if the item is degenerate, true otherwise.
 	 *
-	 * A line item is considered degenerate if the positions of its start and end points
+	 * An arc item is considered degenerate if the positions of its start and end points
 	 * are the same.
 	 *
 	 * \sa boundingRect(), shape()
@@ -143,9 +142,9 @@ public:
 	virtual bool isValid() const;
 
 	
-	/*! \brief Paints the contents of the line item into the scene.
+	/*! \brief Paints the contents of the arc item into the scene.
 	 *
-	 * The line is painted in the scene based on properties set by the item's style(), including 
+	 * The arc is painted in the scene based on properties set by the item's style(), including
 	 * any arrows set by the style.
 	 *
 	 * At the end of this function, the QPainter object is returned to the same state that it was
@@ -156,29 +155,26 @@ public:
 	
 	/*! \brief Resizes the item within the scene.
 	 *
-	 * After moving the specified item point to the new scene position, this function adjusts the
-	 * position of the line item's midpoint to ensure that it is still in the middle of the line.
-	 *
-	 * Before returning, this function also remaps the position of the item and all of its points 
-	 * such that the position of the line item's start point is at the origin of the item.
+	 * This function also remaps the position of the item and all of its points
+	 * such that the position of the arc item's start point is at the origin of the item.
 	 */
 	virtual void resizeItem(DrawingItemPoint* itemPoint, const QPointF& scenePos);
 	
 protected:
-	/*! \brief Handles copy events for the line item when the parent drawing() is in 
+	/*! \brief Handles copy events for the arc item when the parent drawing() is in
 	 * PlaceMode.
 	 *
-	 * This function ensures that the position of the line item's start and end points is
+	 * This function ensures that the position of the arc item's start and end points is
 	 * at the item's origin before allowing the user to start placing it within the scene.
 	 *
 	 * \sa newMouseMoveEvent(), newMouseReleaseEvent()
 	 */
 	virtual bool newItemCopyEvent();
 	
-	/*! \brief Handles mouse move events for the line item when the parent drawing() is in 
+	/*! \brief Handles mouse move events for the arc item when the parent drawing() is in
 	 * PlaceMode.
 	 *
-	 * When the mouse button is not down, this function sets the position of the line item's
+	 * When the mouse button is not down, this function sets the position of the arc item's
 	 * start point within the scene.  When the user presses the mouse button, the start point 
 	 * is placed and this function sets ths position of the item's end point.
 	 *
@@ -186,13 +182,21 @@ protected:
 	 */
 	virtual void newMouseMoveEvent(DrawingMouseEvent* event);
 	
-	/*! \brief Handles mouse release events for the line item when the parent drawing() is in 
+	/*! \brief Handles mouse release events for the arc item when the parent drawing() is in
 	 * PlaceMode.
 	 *
-	 * This function sets the position of the line item's end point within the scene and, if
-	 * isValid() returns true, causes the line item to be placed within the scene.
+	 * This function sets the position of the arc item's end point within the scene and, if
+	 * isValid() returns true, causes the arc item to be placed within the scene.
 	 *
 	 * \sa newMouseMoveEvent(), newItemCopyEvent()
 	 */
 	virtual bool newMouseReleaseEvent(DrawingMouseEvent* event);
+
+private:
+	QRectF arcRect() const;
+	qreal arcStartAngle() const;
+
+	QPointF pointFromAngle(qreal angle) const;
+	qreal startArrowAngle() const;
+	qreal endArrowAngle() const;
 };

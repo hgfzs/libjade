@@ -401,7 +401,7 @@ void DrawingItem::flipItem(const QPointF& scenePos)
 	setPos(2 * scenePos.x() - x(), y());
 
 	// Update orientation
-	mFlipped = !mFlipped;
+	setFlipped(!isFlipped());
 }
 
 void DrawingItem::insertItemPoint(const QPointF& scenePos)
@@ -511,8 +511,9 @@ qreal DrawingItem::minimumPenWidth() const
 
 	if (mDrawing)
 	{
+		QSize sizeHint = mDrawing->pointSizeHint();
 		QPointF mappedSize = mDrawing->mapToScene(
-			QPoint(mDrawing->pointSizeHint().width(), mDrawing->pointSizeHint().height()));
+			QPoint(sizeHint.width(), sizeHint.height())) - mDrawing->mapToScene(QPoint(0, 0));
 		width = qMax(qAbs(mappedSize.x()), qAbs(mappedSize.y()));
 	}
 

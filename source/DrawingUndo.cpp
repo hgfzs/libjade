@@ -453,7 +453,12 @@ bool DrawingSelectItemsCommand::mergeWith(const QUndoCommand* command)
 
 		if (selectCommand && mDrawing == selectCommand->mDrawing && !mFinalSelect)
 		{
-			mSelectedItems = selectCommand->mSelectedItems;
+			for(auto itemIter = selectCommand->mSelectedItems.begin();
+				itemIter != selectCommand->mSelectedItems.end(); itemIter++)
+			{
+				if (!mSelectedItems.contains(*itemIter)) mSelectedItems.append(*itemIter);
+			}
+
 			mFinalSelect = selectCommand->mFinalSelect;
 			mergeChildren(selectCommand);
 			mergeSuccess = true;
