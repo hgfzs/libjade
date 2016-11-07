@@ -27,12 +27,30 @@ class DiagramWidget : public DrawingWidget
 {
 	Q_OBJECT
 	
-private:
+public:
+	enum ActionIndex { UndoAction, RedoAction, CutAction, CopyAction, PasteAction, DeleteAction,
+		SelectAllAction, SelectNoneAction, RotateAction, RotateBackAction, FlipAction,
+		BringForwardAction, SendBackwardAction, BringToFrontAction, SendToBackAction,
+		InsertPointAction, RemovePointAction, GroupAction, UngroupAction,
+		ZoomInAction, ZoomOutAction, ZoomFitAction, NumberOfActions };
 
+private:
+	QMenu mSingleItemContextMenu;
+	QMenu mSinglePolyItemContextMenu;
+	QMenu mMultipleItemContextMenu;
+	QMenu mDiagramContextMenu;
 
 public:
 	DiagramWidget();
 	~DiagramWidget();
+
+private:
+	void mouseReleaseEvent(QMouseEvent* event);
+
+	void addActions();
+	void createContextMenus();
+	QAction* addAction(const QString& text, QObject* slotObj, const char* slotFunction,
+		const QString& iconPath = QString(), const QString& shortcut = QString());
 };
 
 #endif

@@ -21,7 +21,7 @@
 #ifndef DIAGRAMWINDOW_H
 #define DIAGRAMWINDOW_H
 
-#include <QtWidgets>
+#include <Drawing.h>
 
 class DiagramWidget;
 
@@ -29,18 +29,47 @@ class DiagramWindow : public QMainWindow
 {
 	Q_OBJECT
 	
+public:
+	enum ActionIndex { AboutQtAction, ExitAction, NumberOfActions };
+	enum ModeActionIndex { DefaultModeAction, ScrollModeAction, ZoomModeAction,
+		PlaceArcAction, PlaceCurveAction, PlaceEllipseAction, PlaceLineAction,
+		PlacePolygonAction, PlacePolylineAction, PlaceRectAction, PlaceTextAction,
+		NumberOfModeActions };
+
 private:
 	DiagramWidget* mDiagramWidget;
 
-	// status bar for DrawingWidget signals
+	QLabel* mModifiedLabel;
+	QLabel* mModeLabel;
+	QLabel* mNumberOfItemsLabel;
+	QLabel* mNumberOfSelectedItemsLabel;
+	QLabel* mScaleLabel;
+
+	QActionGroup* mModeActionGroup;
 
 public:
 	DiagramWindow();
 	~DiagramWindow();
 
+private slots:
+	void setModeFromAction(QAction* action);
+	void updateActionFromMode(DrawingWidget::Mode mode);
+
+	void setModifiedLabel(bool clean);
+	void setModeLabel(DrawingWidget::Mode mode);
+	void setNumberOfItemsLabel(int numberOfItems);
+	void setNumberOfSelectedItemsLabel(const QList<DrawingItem*>& selectedItems);
+	void setScaleLabel(qreal scale);
 
 private:
 	void showEvent(QShowEvent* event);
+
+	void createActions();
+	void createMenus();
+	void addAction(const QString& text, QObject* slotObj, const char* slotFunction,
+		const QString& iconPath = QString(), const QString& shortcut = QString());
+	QAction* addModeAction(const QString& text,
+		const QString& iconPath = QString(), const QString& shortcut = QString());
 };
 
 #endif
