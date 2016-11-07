@@ -241,11 +241,6 @@ bool DrawingLineItem::newItemCopyEvent()
 	return true;
 }
 
-void DrawingLineItem::newMousePressEvent(DrawingMouseEvent* event)
-{
-	DrawingItem::newMousePressEvent(event);
-}
-
 void DrawingLineItem::newMouseMoveEvent(DrawingMouseEvent* event)
 {
 	if (event->buttons() & Qt::LeftButton)
