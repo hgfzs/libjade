@@ -18,7 +18,7 @@ public:
 		CanRemovePoints = 0x20,
 		CanSelect = 0x40
 	};
-	Q_DECLARE_FLAGS(Flags, Flag)
+	typedef QFlags<Flag> Flags;
 
 public:
 	DrawingItem();
@@ -104,4 +104,4 @@ public:
 	static QList<DrawingItem*> copyItems(const QList<DrawingItem*>& items);
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(DrawingItem::Flags)
+//Q_DECLARE_OPERATORS_FOR_FLAGS(DrawingItem::Flags)

@@ -20,7 +20,7 @@ public:
 	{
 		UndoableSelectCommands = 0x0001
 	};
-	Q_DECLARE_FLAGS(Flags, Flag)
+	typedef QFlags<Flag> Flags;
 
 public:
 	DrawingWidget();
@@ -161,4 +161,4 @@ protected:
 	virtual void resizeEvent(QResizeEvent* event);
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(DrawingWidget::Flags)
+//Q_DECLARE_OPERATORS_FOR_FLAGS(DrawingWidget::Flags)

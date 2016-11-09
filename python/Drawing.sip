@@ -3,11 +3,10 @@
 %Module jade
 
 %Import QtCore/QtCoremod.sip
+%Import QtGui/QtGuimod.sip
 
 %If (Qt_5_0_0 -)
 %Import QtWidgets/QtWidgetsmod.sip
-%Else
-%Import QtGui/QtGuimod.sip
 %End
 
 %Include DrawingArcItem.sip

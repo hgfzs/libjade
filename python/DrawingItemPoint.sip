@@ -15,7 +15,7 @@ public:
 		Connection = 0x0002,
 		Free = 0x0004
 	};
-	Q_DECLARE_FLAGS(Flags, Flag)
+	typedef QFlags<Flag> Flags;
 
 public:
 	DrawingItemPoint(const QPointF& pos = QPointF(), Flags flags = Control);
@@ -46,4 +46,4 @@ public:
 	bool isConnected(DrawingItem* item) const;
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(DrawingItemPoint::Flags)
+//Q_DECLARE_OPERATORS_FOR_FLAGS(DrawingItemPoint::Flags)
