@@ -2,7 +2,10 @@
 
 class DrawingItemPoint
 {
-	friend class DrawingItem;
+
+%TypeHeaderCode
+#include <DrawingItemPoint.h>
+%End
 
 public:
 	enum Flag
@@ -13,14 +16,6 @@ public:
 		Free = 0x0004
 	};
 	Q_DECLARE_FLAGS(Flags, Flag)
-
-private:
-	DrawingItem* mItem;
-
-	QPointF mPosition;
-	Flags mFlags;
-
-	QList<DrawingItemPoint*> mConnections;
 
 public:
 	DrawingItemPoint(const QPointF& pos = QPointF(), Flags flags = Control);

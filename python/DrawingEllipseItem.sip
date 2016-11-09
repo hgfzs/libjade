@@ -2,12 +2,17 @@
 
 class DrawingEllipseItem : public DrawingItem
 {
+
+%TypeHeaderCode
+#include <DrawingEllipseItem.h>
+%End
+
 public:
 	DrawingEllipseItem();
 	DrawingEllipseItem(const DrawingEllipseItem& item);
 	virtual ~DrawingEllipseItem();
 
-	virtual DrawingItem* copy() const;
+	virtual DrawingItem* copy() const /TransferBack/;
 
 	void setEllipse(const QRectF& rect);
 	void setEllipse(qreal left, qreal top, qreal width, qreal height);

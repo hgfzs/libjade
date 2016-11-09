@@ -2,15 +2,17 @@
 
 class DrawingTextEllipseItem : public DrawingItem
 {
-private:
-	QString mCaption;
+
+%TypeHeaderCode
+#include <DrawingTextEllipseItem.h>
+%End
 
 public:
 	DrawingTextEllipseItem();
 	DrawingTextEllipseItem(const DrawingTextEllipseItem& item);
 	virtual ~DrawingTextEllipseItem();
 
-	virtual DrawingItem* copy() const;
+	virtual DrawingItem* copy() const /TransferBack/;
 
 	void setEllipse(const QRectF& rect);
 	void setEllipse(qreal left, qreal top, qreal width, qreal height);
@@ -26,7 +28,4 @@ public:
 	virtual void paint(QPainter* painter);
 
 	virtual void resizeItem(DrawingItemPoint* itemPoint, const QPointF& scenePos);
-
-private:
-	QRectF calculateTextRect(const QString& caption, const QFont& font) const;
 };

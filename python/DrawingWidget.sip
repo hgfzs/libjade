@@ -2,21 +2,10 @@
 
 class DrawingWidget : public QAbstractScrollArea
 {
-	Q_OBJECT
 
-	friend class DrawingAddItemsCommand;
-	friend class DrawingRemoveItemsCommand;
-	friend class DrawingMoveItemsCommand;
-	friend class DrawingResizeItemCommand;
-	friend class DrawingRotateItemsCommand;
-	friend class DrawingRotateBackItemsCommand;
-	friend class DrawingFlipItemsCommand;
-	friend class DrawingReorderItemsCommand;
-	friend class DrawingSelectItemsCommand;
-	friend class DrawingItemInsertPointCommand;
-	friend class DrawingItemRemovePointCommand;
-	friend class DrawingItemPointConnectCommand;
-	friend class DrawingItemPointDisconnectCommand;
+%TypeHeaderCode
+#include <DrawingWidget.h>
+%End
 
 public:
 	enum Mode
@@ -32,46 +21,6 @@ public:
 		UndoableSelectCommands = 0x0001
 	};
 	Q_DECLARE_FLAGS(Flags, Flag)
-
-
-private:
-	enum MouseState { MouseReady, MouseSelect, MouseMoveItems, MouseResizeItem, MouseRubberBand };
-
-private:
-	QRectF mSceneRect;
-	qreal mGrid;
-	QBrush mBackgroundBrush;
-
-	QList<DrawingItem*> mItems;
-	QList<DrawingItem*> mSelectedItems;
-	DrawingItemPoint* mSelectedItemPoint;
-	DrawingItem* mNewItem;
-	DrawingItem* mMouseDownItem;
-	DrawingItem* mFocusItem;
-
-	Flags mFlags;
-	Qt::ItemSelectionMode mItemSelectionMode;
-
-	Mode mMode;
-	qreal mScale;
-
-	// Internal variables
-	QTransform mViewportTransform;
-	QTransform mSceneTransform;
-
-	QUndoStack mUndoStack;
-	QList<DrawingItem*> mClipboardItems;
-	DrawingMouseEvent mMouseEvent;
-	MouseState mMouseState;
-	QHash<DrawingItem*,QPointF> mInitialPositions;
-	QRect mRubberBandRect;
-	int mScrollButtonDownHorizontalScrollValue;
-	int mScrollButtonDownVerticalScrollValue;
-	QPoint mPanStartPos;
-	QPoint mPanCurrentPos;
-	QTimer mPanTimer;
-	int mConsecutivePastes;
-	QPointF mSelectionCenter;
 
 public:
 	DrawingWidget();
@@ -92,7 +41,7 @@ public:
 	QBrush backgroundBrush() const;
 
 	void setUndoLimit(int undoLimit);
-	void pushUndoCommand(QUndoCommand* command);
+	void pushUndoCommand(QUndoCommand* command /Transfer/);
 	int undoLimit() const;
 	bool isClean() const;
 	bool canUndo() const;
@@ -108,9 +57,9 @@ public:
 	Mode mode() const;
 	qreal scale() const;
 
-	void addItem(DrawingItem* item);
-	void insertItem(int index, DrawingItem* item);
-	void removeItem(DrawingItem* item);
+	void addItem(DrawingItem* item /TransferThis/);
+	void insertItem(int index, DrawingItem* item /TransferThis/);
+	void removeItem(DrawingItem* item /TransferBack/);
 	void clearItems();
 	QList<DrawingItem*> items() const;
 	QList<DrawingItem*> items(const QPointF& scenePos) const;
@@ -151,7 +100,7 @@ public slots:
 	void setDefaultMode();
 	void setScrollMode();
 	void setZoomMode();
-	void setPlaceMode(DrawingItem* newItem);
+	void setPlaceMode(DrawingItem* newItem /TransferThis/);
 
 	void undo();
 	void redo();
@@ -210,69 +159,6 @@ protected:
 	virtual void drawForeground(QPainter* painter);
 
 	virtual void resizeEvent(QResizeEvent* event);
-
-private:
-	void defaultMousePressEvent(DrawingMouseEvent* event);
-	void defaultMouseMoveEvent(DrawingMouseEvent* event);
-	void defaultMouseReleaseEvent(DrawingMouseEvent* event);
-	void defaultMouseDoubleClickEvent(DrawingMouseEvent* event);
-
-	void placeModeMousePressEvent(DrawingMouseEvent* event);
-	void placeModeMouseMoveEvent(DrawingMouseEvent* event);
-	void placeModeMouseReleaseEvent(DrawingMouseEvent* event);
-	void placeModeMouseDoubleClickEvent(DrawingMouseEvent* event);
-
-private slots:
-	void updateSelectionCenter();
-	void mousePanEvent();
-
-private:
-	// Functions that generate undo commands
-	void addItemsCommand(const QList<DrawingItem*>& items, bool place, QUndoCommand* command = nullptr);
-	void removeItemsCommand(const QList<DrawingItem*>& items, QUndoCommand* command = nullptr);
-	void moveItemsCommand(const QList<DrawingItem*>& items, const QHash<DrawingItem*,QPointF>& newPos,
-		bool place, QUndoCommand* command = nullptr);
-	void resizeItemCommand(DrawingItemPoint* itemPoint, const QPointF& scenePos,
-		bool place, bool disconnect, QUndoCommand* command = nullptr);
-	void rotateItemsCommand(const QList<DrawingItem*>& items, const QPointF& scenePos, QUndoCommand* command = nullptr);
-	void rotateBackItemsCommand(const QList<DrawingItem*>& items, const QPointF& scenePos, QUndoCommand* command = nullptr);
-	void flipItemsCommand(const QList<DrawingItem*>& items, const QPointF& scenePos, QUndoCommand* command = nullptr);
-	void reorderItemsCommand(const QList<DrawingItem*>& itemsOrdered, QUndoCommand* command = nullptr);
-	void selectItemsCommand(const QList<DrawingItem*>& items, bool finalSelect = true, QUndoCommand* command = nullptr);
-	void connectItemPointsCommand(DrawingItemPoint* point1, DrawingItemPoint* point2, QUndoCommand* command = nullptr);
-	void disconnectItemPointsCommand(DrawingItemPoint* point1, DrawingItemPoint* point2, QUndoCommand* command = nullptr);
-
-	void placeItems(const QList<DrawingItem*>& items, QUndoCommand* command);
-	void unplaceItems(const QList<DrawingItem*>& items, QUndoCommand* command);
-	void tryToMaintainConnections(const QList<DrawingItem*>& items, bool allowResize,
-		bool checkControlPoints, DrawingItemPoint* pointToSkip, QUndoCommand* command);
-	void disconnectAll(DrawingItemPoint* itemPoint, QUndoCommand* command);
-	
-	// Functions called by undo command classes
-	void addItems(const QList<DrawingItem*>& items);
-	void insertItems(const QList<DrawingItem*>& items, const QHash<DrawingItem*,int>& index);
-	void removeItems(const QList<DrawingItem*>& items);
-	void moveItems(const QList<DrawingItem*>& items, const QHash<DrawingItem*,QPointF>& scenePos);
-	void resizeItem(DrawingItemPoint* itemPoint, const QPointF& scenePos);
-	void rotateItems(const QList<DrawingItem*>& items, const QPointF& scenePos);
-	void rotateBackItems(const QList<DrawingItem*>& items, const QPointF& scenePos);
-	void flipItems(const QList<DrawingItem*>& items, const QPointF& scenePos);
-	void reorderItems(const QList<DrawingItem*>& items);
-	void selectItems(const QList<DrawingItem*>& items);
-	void insertItemPoint(DrawingItem* item, DrawingItemPoint* itemPoint, int pointIndex);
-	void removeItemPoint(DrawingItem* item, DrawingItemPoint* itemPoint);
-	void connectItemPoints(DrawingItemPoint* point1, DrawingItemPoint* point2);
-	void disconnectItemPoints(DrawingItemPoint* point1, DrawingItemPoint* point2);
-
-	// Miscellaneous helper functions
-	bool itemMatchesPoint(DrawingItem* item, const QPointF& scenePos) const;
-	bool itemMatchesRect(DrawingItem* item, const QRectF& rect, Qt::ItemSelectionMode mode) const;
-	bool itemMatchesPath(DrawingItem* item, const QPainterPath& path, Qt::ItemSelectionMode mode) const;
-
-	bool shouldConnect(DrawingItemPoint* point1, DrawingItemPoint* point2) const;
-	bool shouldDisconnect(DrawingItemPoint* point1, DrawingItemPoint* point2) const;
-
-	void recalculateContentSize(const QRectF& targetSceneRect = QRectF());
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(DrawingWidget::Flags)

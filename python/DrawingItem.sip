@@ -2,8 +2,10 @@
 
 class DrawingItem
 {
-	friend class DrawingWidget;
-	friend class DrawingItemGroup;
+
+%TypeHeaderCode
+#include <DrawingItem.h>
+%End
 
 public:
 	enum Flag
@@ -18,32 +20,12 @@ public:
 	};
 	Q_DECLARE_FLAGS(Flags, Flag)
 
-private:
-	DrawingWidget* mDrawing;
-
-	QPointF mPos;
-	Flags mFlags;
-
-	qreal mRotation;
-	bool mFlipped;
-
-	bool mSelected;
-	bool mVisible;
-
-	QList<DrawingItemPoint*> mPoints;
-
-	DrawingItemStyle* mStyle;
-
-	// Internal
-	QTransform mTransform;
-	QTransform mTransformInverse;
-
 public:
 	DrawingItem();
 	DrawingItem(const DrawingItem& item);
 	virtual ~DrawingItem();
 
-	virtual DrawingItem* copy() const = 0;
+	virtual DrawingItem* copy() const = 0 /TransferBack/;
 
 	DrawingWidget* drawing() const;
 
@@ -69,15 +51,15 @@ public:
 	bool isSelected() const;
 	bool isVisible() const;
 
-	void addPoint(DrawingItemPoint* itemPoint);
-	void insertPoint(int index, DrawingItemPoint* itemPoint);
-	void removePoint(DrawingItemPoint* itemPoint);
+	void addPoint(DrawingItemPoint* itemPoint /TransferThis/);
+	void insertPoint(int index, DrawingItemPoint* itemPoint /TransferThis/);
+	void removePoint(DrawingItemPoint* itemPoint /TransferBack/);
 	void clearPoints();
 	QList<DrawingItemPoint*> points() const;
 	DrawingItemPoint* pointAt(const QPointF& itemPos) const;
 	DrawingItemPoint* pointNearest(const QPointF& itemPos) const;
 
-	void setStyle(DrawingItemStyle* style);
+	void setStyle(DrawingItemStyle* style /TransferThis/);
 	DrawingItemStyle* style() const;
 
 	QPointF mapFromScene(const QPointF& point) const;
@@ -117,13 +99,6 @@ protected:
 	virtual bool newMouseReleaseEvent(DrawingMouseEvent* event);
 	virtual bool newMouseDoubleClickEvent(DrawingMouseEvent* event);
 	virtual bool newItemCopyEvent();
-
-protected:
-	QPainterPath strokePath(const QPainterPath& path, const QPen& pen) const;
-	qreal minimumPenWidth() const;
-
-private:
-	void recalculateTransform();
 
 public:
 	static QList<DrawingItem*> copyItems(const QList<DrawingItem*>& items);

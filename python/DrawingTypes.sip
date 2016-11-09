@@ -2,21 +2,11 @@
 
 class DrawingMouseEvent : public QEvent
 {
-	friend class DrawingWidget;
+
+%TypeHeaderCode
+#include <DrawingTypes.h>
+%End
 	
-private:
-	QPoint mPos;
-	QPointF mScenePos;
-
-	QPoint mButtonDownPos;
-	QPointF mButtonDownScenePos;
-
-	Qt::MouseButton mButton;
-	Qt::MouseButtons mButtons;
-	Qt::KeyboardModifiers mModifiers;
-
-	bool mDragged;
-
 public:
 	DrawingMouseEvent();
 	~DrawingMouseEvent();
@@ -29,7 +19,4 @@ public:
 	Qt::MouseButtons buttons() const;
 	Qt::KeyboardModifiers modifiers() const;	
 	bool isDragged() const;
-	
-private:
-	void setFromEvent(QMouseEvent* event, DrawingWidget* widget);
 };

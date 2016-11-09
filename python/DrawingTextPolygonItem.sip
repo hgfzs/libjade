@@ -2,15 +2,17 @@
 
 class DrawingTextPolygonItem : public DrawingItem
 {
-private:
-	QString mCaption;
+
+%TypeHeaderCode
+#include <DrawingTextPolygonItem.h>
+%End
 
 public:
 	DrawingTextPolygonItem();
 	DrawingTextPolygonItem(const DrawingTextPolygonItem& item);
 	virtual ~DrawingTextPolygonItem();
 
-	virtual DrawingItem* copy() const;
+	virtual DrawingItem* copy() const /TransferBack/;
 
 	void setPolygon(const QPolygonF& polygon);
 	QPolygonF polygon() const;
@@ -27,8 +29,4 @@ public:
 	virtual void resizeItem(DrawingItemPoint* itemPoint, const QPointF& scenePos);
 	virtual void insertItemPoint(const QPointF& scenePos);
 	virtual void removeItemPoint(const QPointF& scenePos);
-
-private:
-	qreal distanceFromPointToLineSegment(const QPointF& point, const QLineF& line) const;
-	QRectF calculateTextRect(const QString& caption, const QFont& font) const;
 };

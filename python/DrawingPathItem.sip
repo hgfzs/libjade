@@ -2,18 +2,17 @@
 
 class DrawingPathItem : public DrawingItem
 {
-private:
-	QString mName;
-	QPainterPath mPath;
-	QRectF mPathRect;
-	QHash<DrawingItemPoint*,QPointF> mPathConnectionPoints;
+
+%TypeHeaderCode
+#include <DrawingPathItem.h>
+%End
 
 public:
 	DrawingPathItem();
 	DrawingPathItem(const DrawingPathItem& item);
 	virtual ~DrawingPathItem();
 
-	virtual DrawingItem* copy() const;
+	virtual DrawingItem* copy() const /TransferBack/;
 
 	void setRect(const QRectF& rect);
 	void setRect(qreal left, qreal top, qreal width, qreal height);
@@ -42,7 +41,4 @@ public:
 	virtual void paint(QPainter* painter);
 
 	virtual void resizeItem(DrawingItemPoint* itemPoint, const QPointF& scenePos);
-
-private:
-	QPainterPath transformedPath() const;
 };

@@ -2,12 +2,17 @@
 
 class DrawingArcItem : public DrawingItem
 {
+
+%TypeHeaderCode
+#include <DrawingArcItem.h>
+%End
+
 public:
 	DrawingArcItem();
 	DrawingArcItem(const DrawingArcItem& item);
 	virtual ~DrawingArcItem();
 
-	virtual DrawingItem* copy() const;
+	virtual DrawingItem* copy() const /TransferBack/;
 
 	void setArc(const QLineF& line);
 	void setArc(qreal x1, qreal y1, qreal x2, qreal y2);
@@ -25,12 +30,4 @@ protected:
 	virtual bool newItemCopyEvent();
 	virtual void newMouseMoveEvent(DrawingMouseEvent* event);
 	virtual bool newMouseReleaseEvent(DrawingMouseEvent* event);
-
-private:
-	QRectF arcRect() const;
-	qreal arcStartAngle() const;
-
-	QPointF pointFromAngle(qreal angle) const;
-	qreal startArrowAngle() const;
-	qreal endArrowAngle() const;
 };

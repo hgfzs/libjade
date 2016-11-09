@@ -2,15 +2,17 @@
 
 class DrawingRectItem : public DrawingItem
 {
-private:
-	qreal mCornerRadiusX, mCornerRadiusY;
+
+%TypeHeaderCode
+#include <DrawingRectItem.h>
+%End
 
 public:
 	DrawingRectItem();
 	DrawingRectItem(const DrawingRectItem& item);
 	virtual ~DrawingRectItem();
 
-	virtual DrawingItem* copy() const;
+	virtual DrawingItem* copy() const /TransferBack/;
 
 	void setRect(const QRectF& rect);
 	void setRect(qreal left, qreal top, qreal width, qreal height);
@@ -27,9 +29,4 @@ public:
 	virtual void paint(QPainter* painter);
 
 	virtual void resizeItem(DrawingItemPoint* itemPoint, const QPointF& scenePos);
-
-protected:
-	virtual bool newItemCopyEvent();
-	virtual void newMouseMoveEvent(DrawingMouseEvent* event);
-	virtual bool newMouseReleaseEvent(DrawingMouseEvent* event);
 };

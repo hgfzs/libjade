@@ -2,12 +2,17 @@
 
 class DrawingPolygonItem : public DrawingItem
 {
+
+%TypeHeaderCode
+#include <DrawingPolygonItem.h>
+%End
+
 public:
 	DrawingPolygonItem();
 	DrawingPolygonItem(const DrawingPolygonItem& item);
 	virtual ~DrawingPolygonItem();
 
-	virtual DrawingItem* copy() const;
+	virtual DrawingItem* copy() const /TransferBack/;
 
 	void setPolygon(const QPolygonF& polygon);
 	QPolygonF polygon() const;
@@ -21,7 +26,4 @@ public:
 	virtual void resizeItem(DrawingItemPoint* itemPoint, const QPointF& scenePos);
 	virtual void insertItemPoint(const QPointF& scenePos);
 	virtual void removeItemPoint(const QPointF& scenePos);
-
-private:
-	qreal distanceFromPointToLineSegment(const QPointF& point, const QLineF& line) const;
 };

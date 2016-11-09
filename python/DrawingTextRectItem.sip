@@ -2,16 +2,17 @@
 
 class DrawingTextRectItem : public DrawingItem
 {
-private:
-	qreal mCornerRadiusX, mCornerRadiusY;
-	QString mCaption;
+
+%TypeHeaderCode
+#include <DrawingTextRectItem.h>
+%End
 
 public:
 	DrawingTextRectItem();
 	DrawingTextRectItem(const DrawingTextRectItem& item);
 	virtual ~DrawingTextRectItem();
 
-	virtual DrawingItem* copy() const;
+	virtual DrawingItem* copy() const /TransferBack/;
 
 	void setRect(const QRectF& rect);
 	void setRect(qreal left, qreal top, qreal width, qreal height);
@@ -31,7 +32,4 @@ public:
 	virtual void paint(QPainter* painter);
 
 	virtual void resizeItem(DrawingItemPoint* itemPoint, const QPointF& scenePos);
-
-private:
-	QRectF calculateTextRect(const QString& caption, const QFont& font) const;
 };

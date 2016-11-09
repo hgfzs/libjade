@@ -2,12 +2,17 @@
 
 class DrawingLineItem : public DrawingItem
 {
+
+%TypeHeaderCode
+#include <DrawingLineItem.h>
+%End
+
 public:
 	DrawingLineItem();
 	DrawingLineItem(const DrawingLineItem& item);
 	virtual ~DrawingLineItem();
 
-	virtual DrawingItem* copy() const;
+	virtual DrawingItem* copy() const /TransferBack/;
 
 	void setLine(const QLineF& line);
 	void setLine(qreal x1, qreal y1, qreal x2, qreal y2);

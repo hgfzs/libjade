@@ -2,18 +2,19 @@
 
 class DrawingItemGroup : public DrawingItem
 {
-private:
-	QList<DrawingItem*> mItems;
-	QRectF mItemsRect;
+
+%TypeHeaderCode
+#include <DrawingItemGroup.h>
+%End
 
 public:
 	DrawingItemGroup();
 	DrawingItemGroup(const DrawingItemGroup& item);
 	~DrawingItemGroup();
 
-	DrawingItem* copy() const;
+	DrawingItem* copy() const /TransferBack/;
 
-	void setItems(const QList<DrawingItem*>& items);
+	void setItems(const QList<DrawingItem*>& items /Transfer/);
 	QList<DrawingItem*> items() const;
 
 	virtual QRectF boundingRect() const;
@@ -25,7 +26,4 @@ public:
 	virtual void rotateItem(const QPointF& scenePos);
 	virtual void rotateBackItem(const QPointF& scenePos);
 	virtual void flipItem(const QPointF& scenePos);
-
-private:
-	void recalculateContentsRect();
 };

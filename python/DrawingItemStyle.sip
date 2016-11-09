@@ -2,6 +2,11 @@
 
 class DrawingItemStyle
 {
+
+%TypeHeaderCode
+#include <DrawingItemStyle.h>
+%End
+
 public:
 	enum Property 
 	{ 
@@ -50,9 +55,6 @@ public:
 		ArrowX
 	};
 
-private:
-	QHash<Property,QVariant> mProperties;
-
 public:
 	DrawingItemStyle();
 	DrawingItemStyle(const DrawingItemStyle& style);
@@ -85,14 +87,7 @@ public:
 	QPainterPath arrowShape(ArrowStyle style, qreal size,
 		const QPointF& pos, qreal direction) const;
 
-private:
-	QPolygonF calculateArrowPoints(ArrowStyle style, qreal size,
-		const QPointF& pos, qreal direction) const;
 
-
-private:
-	static QHash<Property,QVariant> mDefaultProperties;
-	
 public:
 	static void setDefaultValues(const QHash<Property,QVariant>& values);
 	static QHash<Property,QVariant> defaultValues();

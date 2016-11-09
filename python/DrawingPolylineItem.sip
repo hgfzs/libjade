@@ -2,12 +2,17 @@
 
 class DrawingPolylineItem : public DrawingItem
 {
+
+%TypeHeaderCode
+#include <DrawingPolylineItem.h>
+%End
+
 public:
 	DrawingPolylineItem();
 	DrawingPolylineItem(const DrawingPolylineItem& item);
 	virtual ~DrawingPolylineItem();
 
-	virtual DrawingItem* copy() const;
+	virtual DrawingItem* copy() const /TransferBack/;
 
 	void setPolyline(const QPolygonF& polygon);
 	QPolygonF polyline() const;
@@ -26,7 +31,4 @@ protected:
 	virtual bool newItemCopyEvent();
 	virtual void newMouseMoveEvent(DrawingMouseEvent* event);
 	virtual bool newMouseReleaseEvent(DrawingMouseEvent* event);
-
-private:
-	qreal distanceFromPointToLineSegment(const QPointF& point, const QLineF& line) const;
 };

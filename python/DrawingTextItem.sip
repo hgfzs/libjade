@@ -2,15 +2,17 @@
 
 class DrawingTextItem : public DrawingItem
 {
-private:
-	QString mCaption;
+
+%TypeHeaderCode
+#include <DrawingTextItem.h>
+%End
 
 public:
 	DrawingTextItem();
 	DrawingTextItem(const DrawingTextItem& item);
 	virtual ~DrawingTextItem();
 
-	virtual DrawingItem* copy() const;
+	virtual DrawingItem* copy() const /TransferBack/;
 
 	void setCaption(const QString& caption);
 	QString caption() const;
@@ -21,8 +23,4 @@ public:
 	virtual bool isValid() const;
 
 	virtual void paint(QPainter* painter);
-
-private:
-	QRectF calculateTextRect(const QString& caption, const QFont& font,
-		Qt::Alignment textAlignment) const;
 };
