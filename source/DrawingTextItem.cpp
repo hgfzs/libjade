@@ -21,24 +21,47 @@
 #include "DrawingTextItem.h"
 #include "DrawingWidget.h"
 #include "DrawingItemPoint.h"
+#include "DrawingItemStyle.h"
 
 DrawingTextItem::DrawingTextItem() : DrawingItem()
 {
-	setCaption("Label");
-	setTextColor(QColor(0, 0, 0));
-	setFontFamily("Arial");
-	setFontSize(100);
-	setFontBold(false);
-	setFontItalic(false);
-	setFontUnderline(false);
-	setFontOverline(false);
-	setFontStrikeOut(false);
-	setTextAlignment(Qt::AlignLeft | Qt::AlignBottom);
+	mCaption = "Label";
+
+	setFlags(CanMove | CanRotate | CanFlip | CanSelect);
 
 	addPoint(new DrawingItemPoint(QPointF(0, 0), DrawingItemPoint::NoFlags));
+
+	DrawingItemStyle* style = DrawingItem::style();
+	style->setValue(DrawingItemStyle::TextColor,
+		style->valueLookup(DrawingItemStyle::TextColor, QVariant(QColor(0, 0, 0))));
+	style->setValue(DrawingItemStyle::TextOpacity,
+		style->valueLookup(DrawingItemStyle::TextOpacity, QVariant(1.0)));
+
+	style->setValue(DrawingItemStyle::FontName,
+		style->valueLookup(DrawingItemStyle::FontName, QVariant("Arial")));
+	style->setValue(DrawingItemStyle::FontSize,
+		style->valueLookup(DrawingItemStyle::FontSize, QVariant(100.0)));
+	style->setValue(DrawingItemStyle::FontBold,
+		style->valueLookup(DrawingItemStyle::FontBold, QVariant(false)));
+	style->setValue(DrawingItemStyle::FontItalic,
+		style->valueLookup(DrawingItemStyle::FontItalic, QVariant(false)));
+	style->setValue(DrawingItemStyle::FontUnderline,
+		style->valueLookup(DrawingItemStyle::FontUnderline, QVariant(false)));
+	style->setValue(DrawingItemStyle::FontOverline,
+		style->valueLookup(DrawingItemStyle::FontOverline, QVariant(false)));
+	style->setValue(DrawingItemStyle::FontStrikeThrough,
+		style->valueLookup(DrawingItemStyle::FontStrikeThrough, QVariant(false)));
+
+	style->setValue(DrawingItemStyle::TextHorizontalAlignment,
+		style->valueLookup(DrawingItemStyle::TextHorizontalAlignment, QVariant((uint)Qt::AlignLeft)));
+	style->setValue(DrawingItemStyle::TextVerticalAlignment,
+		style->valueLookup(DrawingItemStyle::TextVerticalAlignment, QVariant((uint)Qt::AlignBottom)));
 }
 
-DrawingTextItem::DrawingTextItem(const DrawingTextItem& item) : DrawingItem(item) { }
+DrawingTextItem::DrawingTextItem(const DrawingTextItem& item) : DrawingItem(item)
+{
+	mCaption = item.mCaption;
+}
 
 DrawingTextItem::~DrawingTextItem() { }
 
@@ -53,162 +76,30 @@ DrawingItem* DrawingTextItem::copy() const
 
 void DrawingTextItem::setCaption(const QString& caption)
 {
-	setProperty("Caption", caption);
+	mCaption = caption;
 }
 
 QString DrawingTextItem::caption() const
 {
-	return property("Caption").toString();
-}
-
-//==================================================================================================
-
-void DrawingTextItem::setTextColor(const QColor& color)
-{
-	setProperty("Text Color", color);
-}
-
-QColor DrawingTextItem::textColor() const
-{
-	return hasProperty("Text Color") ? property("Text Color").value<QColor>() : QColor(0, 0, 0);
-}
-
-//==================================================================================================
-
-void DrawingTextItem::setFont(const QFont& font)
-{
-	setFontFamily(font.family());
-	setFontSize(font.pointSizeF());
-	setFontBold(font.bold());
-	setFontItalic(font.italic());
-	setFontUnderline(font.underline());
-	setFontOverline(font.overline());
-	setFontStrikeOut(font.strikeOut());
-}
-
-void DrawingTextItem::setFontFamily(const QString& family)
-{
-	setProperty("Font Family", family);
-}
-
-void DrawingTextItem::setFontSize(qreal size)
-{
-	setProperty("Font Size", size);
-}
-
-void DrawingTextItem::setFontBold(bool bold)
-{
-	setProperty("Font Bold", bold);
-}
-
-void DrawingTextItem::setFontItalic(bool italic)
-{
-	setProperty("Font Italic", italic);
-}
-
-void DrawingTextItem::setFontUnderline(bool underline)
-{
-	setProperty("Font Underline", underline);
-}
-
-void DrawingTextItem::setFontOverline(bool overline)
-{
-	setProperty("Font Overline", overline);
-}
-
-void DrawingTextItem::setFontStrikeOut(bool strikeOut)
-{
-	setProperty("Font Strike-Out", strikeOut);
-}
-
-QFont DrawingTextItem::font() const
-{
-	QFont font;
-
-	font.setFamily(fontFamily());
-	font.setPointSizeF(fontSize());
-	font.setBold(isFontBold());
-	font.setItalic(isFontItalic());
-	font.setUnderline(isFontUnderline());
-	font.setOverline(isFontOverline());
-	font.setStrikeOut(isFontStrikeOut());
-
-	return font;
-}
-
-QString DrawingTextItem::fontFamily() const
-{
-	return hasProperty("Font Family") ? property("Font Family").toString() : "Arial";
-}
-
-qreal DrawingTextItem::fontSize() const
-{
-	return hasProperty("Font Size") ? property("Font Size").toDouble() : 0;
-}
-
-bool DrawingTextItem::isFontBold() const
-{
-	return hasProperty("Font Bold") ? property("Font Bold").toBool() : false;
-}
-
-bool DrawingTextItem::isFontItalic() const
-{
-	return hasProperty("Font Italic") ? property("Font Italic").toBool() : false;
-}
-
-bool DrawingTextItem::isFontUnderline() const
-{
-	return hasProperty("Font Underline") ? property("Font Underline").toBool() : false;
-}
-
-bool DrawingTextItem::isFontOverline() const
-{
-	return hasProperty("Font Overline") ? property("Font Overline").toBool() : false;
-}
-
-bool DrawingTextItem::isFontStrikeOut() const
-{
-	return hasProperty("Font Strike-Out") ? property("Font Strike-Out").toBool() : false;
-}
-
-//==================================================================================================
-
-void DrawingTextItem::setTextAlignmentHorizontal(Qt::Alignment alignment)
-{
-	setProperty("Text Horizontal Alignment", QVariant((quint32)(alignment & Qt::AlignHorizontal_Mask)));
-}
-
-void DrawingTextItem::setTextAlignmentVertical(Qt::Alignment alignment)
-{
-	setProperty("Text Vertical Alignment", QVariant((quint32)(alignment & Qt::AlignVertical_Mask)));
-}
-
-void DrawingTextItem::setTextAlignment(Qt::Alignment alignment)
-{
-	setTextAlignmentHorizontal(alignment);
-	setTextAlignmentVertical(alignment);
-}
-
-Qt::Alignment DrawingTextItem::textAlignmentHorizontal() const
-{
-	return hasProperty("Text Horizontal Alignment") ? (Qt::Alignment)property("Text Horizontal Alignment").toUInt() : Qt::AlignHCenter;
-}
-
-Qt::Alignment DrawingTextItem::textAlignmentVertical() const
-{
-	return hasProperty("Text Vertical Alignment") ? (Qt::Alignment)property("Text Vertical Alignment").toUInt() : Qt::AlignVCenter;
-}
-
-Qt::Alignment DrawingTextItem::textAlignment() const
-{
-	return (textAlignmentHorizontal() | textAlignmentVertical());
+	return mCaption;
 }
 
 //==================================================================================================
 
 QRectF DrawingTextItem::boundingRect() const
 {
-	return calculateTextRect(caption(), font(), textAlignment());
+	DrawingItemStyle* style = DrawingTextItem::style();
+	QFont font = style->font();
+	Qt::Alignment textAlignment = style->textAlignment();
+
+	return calculateTextRect(mCaption, font, textAlignment);
+}
+
+QPainterPath DrawingTextItem::shape() const
+{
+	QPainterPath path;
+	path.addRect(boundingRect());
+	return path;
 }
 
 QPointF DrawingTextItem::centerPos() const
@@ -218,7 +109,7 @@ QPointF DrawingTextItem::centerPos() const
 
 bool DrawingTextItem::isValid() const
 {
-	return (caption() != "");
+	return (!mCaption.isEmpty());
 }
 
 //==================================================================================================
@@ -231,12 +122,17 @@ void DrawingTextItem::paint(QPainter* painter)
 		QPen scenePen = painter->pen();
 		QFont sceneFont = painter->font();
 
+		DrawingItemStyle* style = DrawingTextItem::style();
+		QBrush textBrush = style->textBrush();
+		QFont font = style->font();
+		Qt::Alignment textAlignment = style->textAlignment();
+
 		// Draw text
-		QPen textPen(textColor());
+		QPen textPen(textBrush, 1, Qt::SolidLine);
 		painter->setBrush(Qt::transparent);
 		painter->setPen(textPen);
-		painter->setFont(font());
-		painter->drawText(calculateTextRect(caption(), font(), textAlignment()), textAlignment(), caption());
+		painter->setFont(font);
+		painter->drawText(calculateTextRect(mCaption, font, textAlignment), textAlignment, mCaption);
 
 		painter->setBrush(sceneBrush);
 		painter->setPen(scenePen);
@@ -247,4 +143,36 @@ void DrawingTextItem::paint(QPainter* painter)
 	//painter->setBrush(QColor(255, 0, 255, 128));
 	//painter->setPen(QPen(painter->brush(), 1));
 	//painter->drawPath(shape());
+}
+
+//==================================================================================================
+
+QRectF DrawingTextItem::calculateTextRect(const QString& caption, const QFont& font,
+	Qt::Alignment textAlignment) const
+{
+	qreal textWidth = 0, textHeight = 0;
+
+	QFontMetricsF fontMetrics(font);
+	QStringList lines = caption.split("\n");
+
+	for(auto lineIter = lines.begin(); lineIter != lines.end(); lineIter++)
+	{
+		textWidth = qMax(textWidth, fontMetrics.width(*lineIter));
+		textHeight += fontMetrics.lineSpacing();
+	}
+
+	textHeight -= fontMetrics.leading();
+
+	// Determine text position
+	qreal textLeft = 0, textTop = 0;
+
+	if (textAlignment & Qt::AlignLeft) textLeft = 0;
+	else if (textAlignment & Qt::AlignRight) textLeft = -textWidth;
+	else textLeft = -textWidth / 2;
+
+	if (textAlignment & Qt::AlignBottom) textTop = -textHeight;
+	else if (textAlignment & Qt::AlignTop) textTop = 0;
+	else textTop = -textHeight / 2;
+
+	return QRectF(textLeft, textTop, textWidth, textHeight);
 }

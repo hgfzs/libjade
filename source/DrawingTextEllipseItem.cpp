@@ -1,4 +1,4 @@
-/* DrawingRectItem.cpp
+/* DrawingTextEllipseItem.cpp
  *
  * Copyright (C) 2013-2016 Jason Allen
  *
@@ -18,19 +18,19 @@
  * along with jade.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#include "DrawingRectItem.h"
+#include "DrawingTextEllipseItem.h"
 #include "DrawingWidget.h"
 #include "DrawingItemPoint.h"
 #include "DrawingItemStyle.h"
 #include "DrawingUndo.h"
 
-DrawingRectItem::DrawingRectItem() : DrawingItem()
+DrawingTextEllipseItem::DrawingTextEllipseItem() : DrawingItem()
 {
-	mCornerRadiusX = 0;
-	mCornerRadiusY = 0;
+	mCaption = "Label";
 
 	DrawingItemPoint::Flags flags = (DrawingItemPoint::Control | DrawingItemPoint::Connection);
 	for(int i = 0; i < 8; i++) addPoint(new DrawingItemPoint(QPointF(0, 0), flags));
+	setEllipse(QRectF(-400, -200, 800, 400));
 
 	DrawingItemStyle* style = DrawingItem::style();
 	style->setValue(DrawingItemStyle::PenStyle,
@@ -52,28 +52,47 @@ DrawingRectItem::DrawingRectItem() : DrawingItem()
 		style->valueLookup(DrawingItemStyle::BrushColor, QVariant(QColor(255, 255, 255))));
 	style->setValue(DrawingItemStyle::BrushOpacity,
 		style->valueLookup(DrawingItemStyle::BrushOpacity, QVariant(1.0)));
+
+	style->setValue(DrawingItemStyle::TextColor,
+		style->valueLookup(DrawingItemStyle::TextColor, QVariant(QColor(0, 0, 0))));
+	style->setValue(DrawingItemStyle::TextOpacity,
+		style->valueLookup(DrawingItemStyle::TextOpacity, QVariant(1.0)));
+
+	style->setValue(DrawingItemStyle::FontName,
+		style->valueLookup(DrawingItemStyle::FontName, QVariant("Arial")));
+	style->setValue(DrawingItemStyle::FontSize,
+		style->valueLookup(DrawingItemStyle::FontSize, QVariant(100.0)));
+	style->setValue(DrawingItemStyle::FontBold,
+		style->valueLookup(DrawingItemStyle::FontBold, QVariant(false)));
+	style->setValue(DrawingItemStyle::FontItalic,
+		style->valueLookup(DrawingItemStyle::FontItalic, QVariant(false)));
+	style->setValue(DrawingItemStyle::FontUnderline,
+		style->valueLookup(DrawingItemStyle::FontUnderline, QVariant(false)));
+	style->setValue(DrawingItemStyle::FontOverline,
+		style->valueLookup(DrawingItemStyle::FontOverline, QVariant(false)));
+	style->setValue(DrawingItemStyle::FontStrikeThrough,
+		style->valueLookup(DrawingItemStyle::FontStrikeThrough, QVariant(false)));
 }
 
-DrawingRectItem::DrawingRectItem(const DrawingRectItem& item) : DrawingItem(item)
+DrawingTextEllipseItem::DrawingTextEllipseItem(const DrawingTextEllipseItem& item) : DrawingItem(item)
 {
-	mCornerRadiusX = item.mCornerRadiusX;
-	mCornerRadiusY = item.mCornerRadiusY;
+	mCaption = item.mCaption;
 }
 
-DrawingRectItem::~DrawingRectItem() { }
+DrawingTextEllipseItem::~DrawingTextEllipseItem() { }
 
 //==================================================================================================
 
-DrawingItem* DrawingRectItem::copy() const
+DrawingItem* DrawingTextEllipseItem::copy() const
 {
-	return new DrawingRectItem(*this);
+	return new DrawingTextEllipseItem(*this);
 }
 
 //==================================================================================================
 
-void DrawingRectItem::setRect(const QRectF& rect)
+void DrawingTextEllipseItem::setEllipse(const QRectF& rect)
 {
-	QList<DrawingItemPoint*> points = DrawingRectItem::points();
+	QList<DrawingItemPoint*> points = DrawingTextEllipseItem::points();
 	points[0]->setPos(rect.left(), rect.top());
 	points[1]->setPos(rect.center().x(), rect.top());
 	points[2]->setPos(rect.right(), rect.top());
@@ -84,38 +103,32 @@ void DrawingRectItem::setRect(const QRectF& rect)
 	points[7]->setPos(rect.left(), rect.center().y());
 }
 
-void DrawingRectItem::setRect(qreal left, qreal top, qreal width, qreal height)
+void DrawingTextEllipseItem::setEllipse(qreal left, qreal top, qreal width, qreal height)
 {
-	setRect(QRectF(left, top, width, height));
+	setEllipse(QRectF(left, top, width, height));
 }
 
-QRectF DrawingRectItem::rect() const
+QRectF DrawingTextEllipseItem::ellipse() const
 {
-	QList<DrawingItemPoint*> points = DrawingRectItem::points();
+	QList<DrawingItemPoint*> points = DrawingTextEllipseItem::points();
 	return (points.size() >= 8) ? QRectF(points[0]->pos(), points[4]->pos()) : QRectF();
 }
 
 //==================================================================================================
 
-void DrawingRectItem::setCornerRadii(qreal radiusX, qreal radiusY)
+void DrawingTextEllipseItem::setCaption(const QString& caption)
 {
-	mCornerRadiusX = radiusX;
-	mCornerRadiusX = radiusY;
+	mCaption = caption;
 }
 
-qreal DrawingRectItem::cornerRadiusX() const
+QString DrawingTextEllipseItem::caption() const
 {
-	return mCornerRadiusX;
-}
-
-qreal DrawingRectItem::cornerRadiusY() const
-{
-	return mCornerRadiusY;
+	return mCaption;
 }
 
 //==================================================================================================
 
-QRectF DrawingRectItem::boundingRect() const
+QRectF DrawingTextEllipseItem::boundingRect() const
 {
 	QRectF rect;
 
@@ -123,14 +136,16 @@ QRectF DrawingRectItem::boundingRect() const
 	{
 		qreal penWidth = style()->valueLookup(DrawingItemStyle::PenWidth).toReal();
 
-		rect = DrawingRectItem::rect().normalized();
+		rect = DrawingTextEllipseItem::ellipse().normalized();
 		rect.adjust(-penWidth/2, -penWidth/2, penWidth/2, penWidth/2);
+
+		rect = rect.united(calculateTextRect(mCaption, style()->font()));
 	}
 
 	return rect;
 }
 
-QPainterPath DrawingRectItem::shape() const
+QPainterPath DrawingTextEllipseItem::shape() const
 {
 	QPainterPath shape;
 
@@ -141,64 +156,80 @@ QPainterPath DrawingRectItem::shape() const
 		DrawingItemStyle* style = DrawingItem::style();
 		QPen pen = style->pen();
 		QBrush brush = style->brush();
+		QFont font = style->font();
 
 		// Add rect
-		drawPath.addRoundedRect(rect().normalized(), mCornerRadiusX, mCornerRadiusY);
+		drawPath.addEllipse(ellipse().normalized());
 
 		// Determine outline path
 		pen.setWidthF(qMax(pen.widthF(), minimumPenWidth()));
 		shape = strokePath(drawPath, pen);
 
 		if (brush.color().alpha() > 0) shape.addPath(drawPath);
+
+		// Add text
+		shape.addRect(calculateTextRect(mCaption, font));
 	}
 
 	return shape;
 }
 
-bool DrawingRectItem::isValid() const
+bool DrawingTextEllipseItem::isValid() const
 {
-	QList<DrawingItemPoint*> points = DrawingRectItem::points();
-	return (points.size() >= 8 && points[0]->pos() != points[4]->pos());
+	QList<DrawingItemPoint*> points = DrawingTextEllipseItem::points();
+	return (points.size() >= 8 && points[0]->pos() != points[4]->pos() && !mCaption.isEmpty());
 }
 
 //==================================================================================================
 
-void DrawingRectItem::paint(QPainter* painter)
+void DrawingTextEllipseItem::paint(QPainter* painter)
 {
 	if (isValid())
 	{
 		QBrush sceneBrush = painter->brush();
 		QPen scenePen = painter->pen();
+		QFont sceneFont = painter->font();
 
 		DrawingItemStyle* style = DrawingItem::style();
 		QPen pen = style->pen();
 		QBrush brush = style->brush();
+		QFont font = style->font();
+		QBrush textBrush = style->textBrush();
 
 		// Draw rect
 		painter->setBrush(brush);
 		painter->setPen(pen);
-		painter->drawRoundedRect(rect(), mCornerRadiusX, mCornerRadiusY);
+		painter->drawEllipse(ellipse());
+
+		// Draw text
+		QPen textPen(textBrush, 1, Qt::SolidLine);
+		painter->setBrush(Qt::transparent);
+		painter->setPen(textPen);
+		painter->setFont(font);
+		painter->drawText(calculateTextRect(mCaption, font), Qt::AlignCenter, mCaption);
 
 		painter->setBrush(sceneBrush);
 		painter->setPen(scenePen);
+		painter->setFont(sceneFont);
 	}
 
 	// Draw shape (debug)
 	//painter->setBrush(QColor(255, 0, 255, 128));
 	//painter->setPen(QPen(painter->brush(), 1));
 	//painter->drawPath(shape());
+	//painter->drawRect(boundingRect());
 }
 
 //==================================================================================================
 
-void DrawingRectItem::resizeItem(DrawingItemPoint* itemPoint, const QPointF& scenePos)
+void DrawingTextEllipseItem::resizeItem(DrawingItemPoint* itemPoint, const QPointF& scenePos)
 {
 	DrawingItem::resizeItem(itemPoint, scenePos);
 
-	QList<DrawingItemPoint*> points = DrawingRectItem::points();
+	QList<DrawingItemPoint*> points = DrawingTextEllipseItem::points();
 	if (points.size() >= 8)
 	{
-		QRectF rect = DrawingRectItem::rect();
+		QRectF rect = DrawingTextEllipseItem::ellipse();
 		int pointIndex = points.indexOf(itemPoint);
 
 		if (0 <= pointIndex && pointIndex < 8)
@@ -239,34 +270,22 @@ void DrawingRectItem::resizeItem(DrawingItemPoint* itemPoint, const QPointF& sce
 
 //==================================================================================================
 
-bool DrawingRectItem::newItemCopyEvent()
+QRectF DrawingTextEllipseItem::calculateTextRect(const QString& caption, const QFont& font) const
 {
-	QList<DrawingItemPoint*> points = DrawingItem::points();
+	qreal textWidth = 0, textHeight = 0;
+	QRectF pointsRect = DrawingTextEllipseItem::ellipse();
 
-	for(auto pointIter = points.begin(); pointIter != points.end(); pointIter++)
-		(*pointIter)->setPos(0, 0);
+	QFontMetricsF fontMetrics(font);
+	QStringList lines = caption.split("\n");
 
-	return true;
-}
-
-void DrawingRectItem::newMouseMoveEvent(DrawingMouseEvent* event)
-{
-	if (event->buttons() & Qt::LeftButton)
+	for(auto lineIter = lines.begin(); lineIter != lines.end(); lineIter++)
 	{
-		DrawingWidget* drawing = DrawingItem::drawing();
-		QList<DrawingItemPoint*> points = DrawingRectItem::points();
-		DrawingItemPoint* endPoint = points[4];
-
-		QPointF newPos = event->scenePos();
-		if (drawing) newPos = drawing->roundToGrid(newPos);
-
-		resizeItem(endPoint, newPos);
+		textWidth = qMax(textWidth, fontMetrics.width(*lineIter));
+		textHeight += fontMetrics.lineSpacing();
 	}
-	else DrawingItem::newMouseMoveEvent(event);
+
+	textHeight -= fontMetrics.leading();
+
+	return QRectF(-textWidth / 2, -textHeight / 2, textWidth, textHeight).translated(pointsRect.center());
 }
 
-bool DrawingRectItem::newMouseReleaseEvent(DrawingMouseEvent* event)
-{
-	Q_UNUSED(event);
-	return isValid();
-}

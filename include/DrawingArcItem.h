@@ -18,6 +18,9 @@
  * along with jade.  If not, see <http://www.gnu.org/licenses/>
  */
 
+#ifndef DRAWINGARCITEM_H
+#define DRAWINGARCITEM_H
+
 #include <DrawingItem.h>
 
 /*! \brief Provides an arc item that can be added to a DrawingWidget.
@@ -200,3 +203,5 @@ private:
 	qreal startArrowAngle() const;
 	qreal endArrowAngle() const;
 };
+
+#endif

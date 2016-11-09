@@ -18,6 +18,9 @@
  * along with jade.  If not, see <http://www.gnu.org/licenses/>
  */
 
+#ifndef DRAWINGPOLYLINEITEM_H
+#define DRAWINGPOLYLINEITEM_H
+
 #include <DrawingItem.h>
 
 /*! \brief Provides a polyline item that can be added to a DrawingWidget.
@@ -205,3 +208,5 @@ protected:
 private:
 	qreal distanceFromPointToLineSegment(const QPointF& point, const QLineF& line) const;
 };
+
+#endif

@@ -18,6 +18,9 @@
  * along with jade.  If not, see <http://www.gnu.org/licenses/>
  */
 
+#ifndef DRAWINGLINEITEM_H
+#define DRAWINGLINEITEM_H
+
 #include <DrawingItem.h>
 
 /*! \brief Provides a line item that can be added to a DrawingWidget.
@@ -196,3 +199,5 @@ protected:
 	 */
 	virtual bool newMouseReleaseEvent(DrawingMouseEvent* event);
 };
+
+#endif

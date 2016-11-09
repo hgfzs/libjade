@@ -1,4 +1,4 @@
-/* DrawingEllipseItem.h
+/* DrawingTextEllipseItem.h
  *
  * Copyright (C) 2013-2016 Jason Allen
  *
@@ -18,33 +18,39 @@
  * along with jade.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef DRAWINGELLIPSEITEM_H
-#define DRAWINGELLIPSEITEM_H
+#ifndef DRAWINGTEXTELLIPSEITEM_H
+#define DRAWINGTEXTELLIPSEITEM_H
 
 #include <DrawingItem.h>
 
-/*! \brief Provides an ellipse item that can be added to a DrawingWidget.
+/*! \brief Provides a text ellipse item that can be added to a DrawingWidget.
  *
  * To set the item's ellipse, call the setEllipse() function.  The ellipse() function returns the
  * current ellipse.  Both functions operate in local item coordinates.
  * 
- * Rendering options for the ellipse can be controlled through properties of the item's style().
- * The ellipse item supports all of the pen and brush style properties.
- * 
- * DrawingEllipseItem provides a reasonable implementation of boundingRect(), shape(), and isValid().
- * The paint() function draws the ellipse using the item's associated pen and brush.
+ * To set the item's text, call the setCaption() function.  The caption() function returns the
+ * current text.
+
+ * Rendering options for the text ellipse can be controlled through properties of the item's style().
+ * The text ellipse item supports all of the pen, brush, font, and text brush style properties.
+ *
+ * DrawingTextEllipseItem provides a reasonable implementation of boundingRect(), shape(), and isValid().
+ * The paint() function draws the text ellipse using the item's style properties.
  */
-class DrawingEllipseItem : public DrawingItem
+class DrawingTextEllipseItem : public DrawingItem
 {
+private:
+	QString mCaption;
+
 public:
-	/*! \brief Create a new DrawingEllipseItem with default settings.
+	/*! \brief Create a new DrawingTextEllipseItem with default settings.
 	 *
 	 * This function creates eight DrawingItemPoint objects and adds them to the item.  These
-	 * item points represent the bounding points of the ellipse.
+	 * item points represent the bounding points of the text ellipse.
 	 *
 	 * This function fills in the item's style() with default values for the following properties.
 	 * The default values are pulled from the style's DrawingItemStyle::defaultValues() if present,
-	 * otherwise DrawingEllipseItem attempts to use reasonable initial values for each property:
+	 * otherwise DrawingTextEllipseItem attempts to use reasonable initial values for each property:
 	 * \li DrawingItemStyle::PenStyle
 	 * \li DrawingItemStyle::PenColor
 	 * \li DrawingItemStyle::PenOpacity
@@ -54,23 +60,32 @@ public:
 	 * \li DrawingItemStyle::BrushStyle
 	 * \li DrawingItemStyle::BrushColor
 	 * \li DrawingItemStyle::BrushOpacity
+	 * \li DrawingItemStyle::TextColor
+	 * \li DrawingItemStyle::TextOpacity
+	 * \li DrawingItemStyle::FontName
+	 * \li DrawingItemStyle::FontSize
+	 * \li DrawingItemStyle::FontBold
+	 * \li DrawingItemStyle::FontItalic
+	 * \li DrawingItemStyle::FontUnderline
+	 * \li DrawingItemStyle::FontOverline
+	 * \li DrawingItemStyle::FontStrikeThrough
 	 */
-	DrawingEllipseItem();
+	DrawingTextEllipseItem();
 	
-	/*! \brief Create a new DrawingEllipseItem as a copy of an existing ellipse item.
+	/*! \brief Create a new DrawingTextEllipseItem as a copy of an existing text ellipse item.
 	 *
-	 * Creates copies of all item points to the new ellipse item, including the point's positions.
+	 * Creates copies of all item points to the new text ellipse item, including the point's positions.
 	 * Also creates a new item style with all of the same properties as the existing item's style.
 	 */
-	DrawingEllipseItem(const DrawingEllipseItem& item);
+	DrawingTextEllipseItem(const DrawingTextEllipseItem& item);
 	
-	/*! \brief Delete an existing DrawingEllipseItem object.
+	/*! \brief Delete an existing DrawingTextEllipseItem object.
 	 *
 	 * All of the item's points are also deleted.
 	 */
-	virtual ~DrawingEllipseItem();
+	virtual ~DrawingTextEllipseItem();
 
-	/*! \brief Creates a copy of the DrawingEllipseItem and return it.
+	/*! \brief Creates a copy of the DrawingTextEllipseItem and return it.
 	 *
 	 * Simply calls the copy constructor.
 	 */
@@ -97,11 +112,25 @@ public:
 	 */
 	QRectF ellipse() const;
 
-
-	/*! \brief Returns an estimate of the area painted by the ellipse item.
+	
+	/*! \brief Sets the item's text to caption.
 	 *
-	 * Calculates the bounding rect of the ellipse based on the position of its points.
-	 * The ellipse includes an adjustment for the width of the pen as set by the item's style().
+	 * \sa caption()
+	 */
+	void setCaption(const QString& caption);
+
+	/*! \brief Returns the item's text.
+	 *
+	 * \sa setCaption()
+	 */
+	QString caption() const;
+
+
+	/*! \brief Returns an estimate of the area painted by the text ellipse item.
+	 *
+	 * Calculates the bounding rect of the text ellipse based on the position of its points and the
+	 * size of the item's text.  The rect includes an adjustment for the width of the pen as set
+	 * by the item's style().
 	 *
 	 * \sa shape(), isValid()
 	 */
@@ -109,12 +138,13 @@ public:
 	
 	/*! \brief Returns an accurate outline of the item's shape.
 	 *
-	 * Calculates the shape of the ellipse based on the position of its points.
+	 * Calculates the shape of the text ellipse based on the position of its points and the size of the
+	 * item's text.
 	 *
 	 * Note that the stroke width used to determine the shape is either the actual width of the 
 	 * pen set by the item's style() or a reasonable minimum width as determined by the current
 	 * zoom scale of the item's drawing(), whichever is larger.  This is done to make it easier to
-	 * click on ellipse items when zoomed out on a large scene.
+	 * click on text ellipse items when zoomed out on a large scene.
 	 *
 	 * \sa boundingRect(), isValid()
 	 */
@@ -122,17 +152,17 @@ public:
 	
 	/*! \brief Return false if the item is degenerate, true otherwise.
 	 *
-	 * A ellipse item is considered degenerate if the positions of all of its points
-	 * are the same.
+	 * A text ellipse item is considered degenerate if the positions of all of its points
+	 * are the same and the item's caption is empty.
 	 *
 	 * \sa boundingRect(), shape()
 	 */
 	virtual bool isValid() const;
 
 	
-	/*! \brief Paints the contents of the ellipse item into the scene.
+	/*! \brief Paints the contents of the text ellipse item into the scene.
 	 *
-	 * The ellipse is painted in the scene based on properties set by the item's style().
+	 * The text ellipse is painted in the scene based on properties set by the item's style().
 	 *
 	 * At the end of this function, the QPainter object is returned to the same state that it was
 	 * in when the function started.
@@ -143,41 +173,12 @@ public:
 	/*! \brief Resizes the item within the scene.
 	 *
 	 * Before returning, this function also remaps the position of the item and all of its points 
-	 * such that the position of the ellipse item's start point is at the origin of the item.
+	 * such that the position of the text ellipse item's start point is at the origin of the item.
 	 */
 	virtual void resizeItem(DrawingItemPoint* itemPoint, const QPointF& scenePos);
 
-protected:
-	/*! \brief Handles copy events for the ellipse item when the parent drawing() is in
-	 * PlaceMode.
-	 *
-	 * This function ensures that the position of the ellipse item's start and end points is
-	 * at the item's origin before allowing the user to start placing it within the scene.
-	 *
-	 * \sa newMouseMoveEvent(), newMouseReleaseEvent()
-	 */
-	virtual bool newItemCopyEvent();
-
-	/*! \brief Handles mouse move events for the ellipse item when the parent drawing() is in
-	 * PlaceMode.
-	 *
-	 * When the mouse button is not down, this function sets the position of the ellipse item's
-	 * start point within the scene.  When the user presses the mouse button, the start point
-	 * is placed and this function sets ths position of the item's end point.
-	 *
-	 * \sa newMouseReleaseEvent(), newItemCopyEvent()
-	 */
-	virtual void newMouseMoveEvent(DrawingMouseEvent* event);
-
-	/*! \brief Handles mouse release events for the ellipse item when the parent drawing() is in
-	 * PlaceMode.
-	 *
-	 * This function sets the position of the ellipse item's end point within the scene and, if
-	 * isValid() returns true, causes the ellipse item to be placed within the scene.
-	 *
-	 * \sa newMouseMoveEvent(), newItemCopyEvent()
-	 */
-	virtual bool newMouseReleaseEvent(DrawingMouseEvent* event);
+private:
+	QRectF calculateTextRect(const QString& caption, const QFont& font) const;
 };
 
 #endif

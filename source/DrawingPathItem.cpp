@@ -21,16 +21,37 @@
 #include "DrawingPathItem.h"
 #include "DrawingWidget.h"
 #include "DrawingItemPoint.h"
+#include "DrawingItemStyle.h"
 
-DrawingPathItem::DrawingPathItem() : DrawingRectResizeItem()
+DrawingPathItem::DrawingPathItem() : DrawingItem()
 {
-	setName("Path");
+	mName = "Path";
 
-	QList<DrawingItemPoint*> points = DrawingPathItem::points();
-	for(int i = 0; i < points.size(); i++) points[i]->setFlags(DrawingItemPoint::Control);
+	for(int i = 0; i < 8; i++) addPoint(new DrawingItemPoint(QPointF(0, 0), DrawingItemPoint::Control));
+
+	DrawingItemStyle* style = DrawingItem::style();
+	style->setValue(DrawingItemStyle::PenStyle,
+		style->valueLookup(DrawingItemStyle::PenStyle, QVariant((uint)Qt::SolidLine)));
+	style->setValue(DrawingItemStyle::PenColor,
+		style->valueLookup(DrawingItemStyle::PenColor, QVariant(QColor(0, 0, 0))));
+	style->setValue(DrawingItemStyle::PenOpacity,
+		style->valueLookup(DrawingItemStyle::PenOpacity, QVariant(1.0)));
+	style->setValue(DrawingItemStyle::PenWidth,
+		style->valueLookup(DrawingItemStyle::PenWidth, QVariant(12.0)));
+	style->setValue(DrawingItemStyle::PenCapStyle,
+		style->valueLookup(DrawingItemStyle::PenCapStyle, QVariant((uint)Qt::RoundCap)));
+	style->setValue(DrawingItemStyle::PenJoinStyle,
+		style->valueLookup(DrawingItemStyle::PenJoinStyle, QVariant((uint)Qt::RoundJoin)));
+
+	style->setValue(DrawingItemStyle::BrushStyle,
+		style->valueLookup(DrawingItemStyle::BrushStyle, QVariant((uint)Qt::SolidPattern)));
+	style->setValue(DrawingItemStyle::BrushColor,
+		style->valueLookup(DrawingItemStyle::BrushColor, QVariant(QColor(255, 255, 255))));
+	style->setValue(DrawingItemStyle::BrushOpacity,
+		style->valueLookup(DrawingItemStyle::BrushOpacity, QVariant(1.0)));
 }
 
-DrawingPathItem::DrawingPathItem(const DrawingPathItem& item) : DrawingRectResizeItem(item)
+DrawingPathItem::DrawingPathItem(const DrawingPathItem& item) : DrawingItem(item)
 {
 	mName = item.mName;
 	mPath = item.mPath;
@@ -53,6 +74,32 @@ DrawingItem* DrawingPathItem::copy() const
 
 //==================================================================================================
 
+void DrawingPathItem::setRect(const QRectF& rect)
+{
+	QList<DrawingItemPoint*> points = DrawingPathItem::points();
+	points[0]->setPos(rect.left(), rect.top());
+	points[1]->setPos(rect.center().x(), rect.top());
+	points[2]->setPos(rect.right(), rect.top());
+	points[3]->setPos(rect.right(), rect.center().y());
+	points[4]->setPos(rect.right(), rect.bottom());
+	points[5]->setPos(rect.center().x(), rect.bottom());
+	points[6]->setPos(rect.left(), rect.bottom());
+	points[7]->setPos(rect.left(), rect.center().y());
+}
+
+void DrawingPathItem::setRect(qreal left, qreal top, qreal width, qreal height)
+{
+	setRect(QRectF(left, top, width, height));
+}
+
+QRectF DrawingPathItem::rect() const
+{
+	QList<DrawingItemPoint*> points = DrawingPathItem::points();
+	return (points.size() >= 8) ? QRectF(points[0]->pos(), points[4]->pos()) : QRectF();
+}
+
+//==================================================================================================
+
 void DrawingPathItem::setName(const QString& name)
 {
 	mName = name;
@@ -65,10 +112,10 @@ QString DrawingPathItem::name() const
 
 //==================================================================================================
 
-void DrawingPathItem::setPath(const QPainterPath& path, const QRectF& rect)
+void DrawingPathItem::setPath(const QPainterPath& path, const QRectF& pathRect)
 {
 	mPath = path;
-	mPathRect = rect;
+	mPathRect = pathRect;
 }
 
 QPainterPath DrawingPathItem::path() const
@@ -103,7 +150,7 @@ void DrawingPathItem::addConnectionPoint(const QPointF& pathPos)
 	}
 }
 
-void DrawingPathItem::addConnectionPoints(const QPolygonF& pathPos)
+	void DrawingPathItem::addConnectionPoints(const QPolygonF& pathPos)
 {
 	for(auto posIter = pathPos.begin(); posIter != pathPos.end(); posIter++)
 		addConnectionPoint(*posIter);
@@ -157,6 +204,134 @@ QRectF DrawingPathItem::mapFromPath(const QRectF& pathRect) const
 	return QRectF(mapFromPath(pathRect.topLeft()), mapFromPath(pathRect.bottomRight()));
 }
 
+//==================================================================================================
+
+QRectF DrawingPathItem::boundingRect() const
+{
+	QRectF rect;
+
+	if (isValid())
+	{
+		qreal penWidth = style()->valueLookup(DrawingItemStyle::PenWidth).toReal();
+
+		rect = DrawingPathItem::rect().normalized();
+		rect.adjust(-penWidth/2, -penWidth/2, penWidth/2, penWidth/2);
+	}
+
+	return rect;
+}
+
+QPainterPath DrawingPathItem::shape() const
+{
+	QPainterPath shape;
+
+	if (isValid())
+	{
+		/*DrawingItemStyle* style = DrawingItem::style();
+		QPen pen = style->pen();
+
+		// Add path
+		QPainterPath drawPath = transformedPath();
+
+		// Determine outline path
+		pen.setWidthF(qMax(pen.widthF(), minimumPenWidth()));
+		shape = strokePath(drawPath, pen);*/
+
+		shape.addRect(boundingRect());
+	}
+
+	return shape;
+}
+
+bool DrawingPathItem::isValid() const
+{
+	QList<DrawingItemPoint*> points = DrawingPathItem::points();
+	return (points.size() >= 8 && points[0]->pos() != points[4]->pos() &&
+		!mPathRect.isNull() && !mPath.isEmpty());
+}
+
+//==================================================================================================
+
+void DrawingPathItem::paint(QPainter* painter)
+{
+	if (isValid())
+	{
+		QBrush sceneBrush = painter->brush();
+		QPen scenePen = painter->pen();
+
+		DrawingItemStyle* style = DrawingItem::style();
+		QPen pen = style->pen();
+		QBrush brush = style->brush();
+
+		// Draw path
+		painter->setBrush(brush);
+		painter->setPen(pen);
+		painter->drawPath(transformedPath());
+
+		painter->setBrush(sceneBrush);
+		painter->setPen(scenePen);
+	}
+
+	// Draw shape (debug)
+	//painter->setBrush(QColor(255, 0, 255, 128));
+	//painter->setPen(QPen(painter->brush(), 1));
+	//painter->drawPath(shape());
+}
+
+//==================================================================================================
+
+void DrawingPathItem::resizeItem(DrawingItemPoint* itemPoint, const QPointF& scenePos)
+{
+	DrawingItem::resizeItem(itemPoint, scenePos);
+
+	QList<DrawingItemPoint*> points = DrawingPathItem::points();
+	if (points.size() >= 8)
+	{
+		QRectF rect = DrawingPathItem::rect();
+		int pointIndex = points.indexOf(itemPoint);
+
+		if (0 <= pointIndex && pointIndex < 8)
+		{
+			switch (pointIndex)
+			{
+			case 0:	rect.setTopLeft(itemPoint->pos()); break;
+			case 1:	rect.setTop(itemPoint->y()); break;
+			case 2:	rect.setTopRight(itemPoint->pos()); break;
+			case 3:	rect.setRight(itemPoint->x()); break;
+			case 4:	rect.setBottomRight(itemPoint->pos()); break;
+			case 5:	rect.setBottom(itemPoint->y()); break;
+			case 6:	rect.setBottomLeft(itemPoint->pos()); break;
+			case 7:	rect.setLeft(itemPoint->x()); break;
+			default: break;
+			}
+
+			points[0]->setPos(rect.left(), rect.top());
+			points[1]->setPos(rect.center().x(), rect.top());
+			points[2]->setPos(rect.right(), rect.top());
+			points[3]->setPos(rect.right(), rect.center().y());
+			points[4]->setPos(rect.right(), rect.bottom());
+			points[5]->setPos(rect.center().x(), rect.bottom());
+			points[6]->setPos(rect.left(), rect.bottom());
+			points[7]->setPos(rect.left(), rect.center().y());
+		}
+	}
+
+	// Adjust position of item and item points so that point(0)->pos() == QPointF(0, 0)
+	QPointF deltaPos = -points.first()->pos();
+	QPointF pointScenePos = mapToScene(points.first()->pos());
+
+	for(auto pointIter = points.begin(); pointIter != points.end(); pointIter++)
+		(*pointIter)->setPos((*pointIter)->pos() + deltaPos);
+
+	setPos(pointScenePos);
+
+	// Adjust position of connection points
+	for(auto keyIter = mPathConnectionPoints.begin(); keyIter != mPathConnectionPoints.end(); keyIter++)
+		keyIter.key()->setPos(mapFromPath(keyIter.value()));
+}
+
+//==================================================================================================
+
 QPainterPath DrawingPathItem::transformedPath() const
 {
 	QPainterPath transformedPath;
@@ -192,87 +367,3 @@ QPainterPath DrawingPathItem::transformedPath() const
 
 	return transformedPath;
 }
-
-//==================================================================================================
-
-QPainterPath DrawingPathItem::shape() const
-{
-	QPainterPath shape;
-
-	if (isValid())
-	{
-		/*// Add path
-		QPainterPath drawPath = transformedPath();
-
-		// Determine outline path
-		QPen pen = DrawingPathItem::pen();
-		pen.setWidthF(qMax(pen.widthF(), qAbs(points().first()->itemRect().width())));
-		shape = strokePath(drawPath, pen);*/
-
-		shape.addRect(boundingRect());
-	}
-
-	return shape;
-}
-
-bool DrawingPathItem::isValid() const
-{
-	return (DrawingRectResizeItem::isValid() && !mPathRect.isNull() && !mPath.isEmpty());
-}
-
-//==================================================================================================
-
-void DrawingPathItem::paint(QPainter* painter)
-{
-	if (isValid())
-	{
-		QBrush sceneBrush = painter->brush();
-		QPen scenePen = painter->pen();
-
-		// Draw path
-		painter->setBrush(brush());
-		painter->setPen(pen());
-		painter->drawPath(transformedPath());
-
-		painter->setBrush(sceneBrush);
-		painter->setPen(scenePen);
-	}
-
-	// Draw shape (debug)
-	//painter->setBrush(QColor(255, 0, 255, 128));
-	//painter->setPen(QPen(painter->brush(), 1));
-	//painter->drawPath(shape());
-}
-
-//==================================================================================================
-
-void DrawingPathItem::resizeItem(DrawingItemPoint* itemPoint, const QPointF& scenePos)
-{
-	DrawingRectResizeItem::resizeItem(itemPoint, scenePos);
-
-	for(auto keyIter = mPathConnectionPoints.begin(); keyIter != mPathConnectionPoints.end(); keyIter++)
-		keyIter.key()->setPos(mapFromPath(keyIter.value()));
-}
-
-//==================================================================================================
-
-bool DrawingPathItem::newItemCopyEvent()
-{
-	return DrawingItem::newItemCopyEvent();
-}
-
-void DrawingPathItem::newMousePressEvent(DrawingMouseEvent* event)
-{
-	DrawingItem::newMousePressEvent(event);
-}
-
-void DrawingPathItem::newMouseMoveEvent(DrawingMouseEvent* event)
-{
-	DrawingItem::newMouseMoveEvent(event);
-}
-
-bool DrawingPathItem::newMouseReleaseEvent(DrawingMouseEvent* event)
-{
-	return DrawingItem::newMouseReleaseEvent(event);
-}
-

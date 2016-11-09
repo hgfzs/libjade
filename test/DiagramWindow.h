@@ -34,6 +34,7 @@ public:
 	enum ModeActionIndex { DefaultModeAction, ScrollModeAction, ZoomModeAction,
 		PlaceArcAction, PlaceCurveAction, PlaceEllipseAction, PlaceLineAction, PlacePathAction,
 		PlacePolygonAction, PlacePolylineAction, PlaceRectAction, PlaceTextAction,
+		PlaceTextRectAction, PlaceTextEllipseAction, PlaceTextPolygonAction,
 		NumberOfModeActions };
 
 private:

@@ -68,10 +68,10 @@ public:
 		FontName,					//!< (QString) Represents the font name
 		FontSize,					//!< (qreal) Represents the font size, given in scene coordinates, not point size
 		FontBold,					//!< (bool) Represents whether of not the font is bold
-		FontItalic,					//!< (bool) Represents whether of not the font is bold
-		FontUnderline,				//!< (bool) Represents whether of not the font is bold
-		FontOverline,				//!< (bool) Represents whether of not the font is bold
-		FontStrikeThrough,			//!< (bool) Represents whether of not the font is bold
+		FontItalic,					//!< (bool) Represents whether of not the font is italic
+		FontUnderline,				//!< (bool) Represents whether of not the font is underlined
+		FontOverline,				//!< (bool) Represents whether of not the font is overlined
+		FontStrikeThrough,			//!< (bool) Represents whether of not the font is strike-through
 		TextColor,					//!< (QColor) Represents the text color
 		TextOpacity,				//!< (qreal) Represents the opacity of the text color (allowed range is 0.0 - 1.0)
 		TextHorizontalAlignment,	//!< (Qt::Alignment) Represents the horizontal alignment of the text

@@ -68,8 +68,21 @@ void DiagramWindow::setModeFromAction(QAction* action)
 	else if (action->text() == "Place Polygon") mDiagramWidget->setPlaceMode(new DrawingPolygonItem());
 	else if (action->text() == "Place Polyline") mDiagramWidget->setPlaceMode(new DrawingPolylineItem());
 	else if (action->text() == "Place Rect") mDiagramWidget->setPlaceMode(new DrawingRectItem());
-	//else if (action->text() == "Place Text") mDiagramWidget->setPlaceMode(new DrawingTextItem());
-	//else if (action->text() == "Place Path") mDiagramWidget->setPlaceMode(new DrawingPathItem());
+	else if (action->text() == "Place Text") mDiagramWidget->setPlaceMode(new DrawingTextItem());
+	else if (action->text() == "Place Path")
+	{
+		QPainterPath path;
+		path.addRect(-200, -100, 400, 200);
+
+		DrawingPathItem* item = new DrawingPathItem();
+		item->setRect(-200, -100, 400, 200);
+		item->setPath(path, QRectF(-200, -100, 400, 200));
+
+		mDiagramWidget->setPlaceMode(item);
+	}
+	else if (action->text() == "Place Text Rect") mDiagramWidget->setPlaceMode(new DrawingTextRectItem());
+	else if (action->text() == "Place Text Ellipse") mDiagramWidget->setPlaceMode(new DrawingTextEllipseItem());
+	else if (action->text() == "Place Text Polygon") mDiagramWidget->setPlaceMode(new DrawingTextPolygonItem());
 	else mDiagramWidget->setDefaultMode();
 }
 
@@ -149,6 +162,9 @@ void DiagramWindow::createActions()
 	addModeAction("Place Polyline", "", "");
 	addModeAction("Place Rect", "", "");
 	addModeAction("Place Text", "", "");
+	addModeAction("Place Text Rect", "", "");
+	addModeAction("Place Text Ellipse", "", "");
+	addModeAction("Place Text Polygon", "", "");
 
 	actions()[DefaultModeAction]->setChecked(true);
 }
@@ -207,6 +223,9 @@ void DiagramWindow::createMenus()
 	menu->addAction(modeActions[PlacePolylineAction]);
 	menu->addAction(modeActions[PlaceRectAction]);
 	menu->addAction(modeActions[PlaceTextAction]);
+	menu->addAction(modeActions[PlaceTextRectAction]);
+	menu->addAction(modeActions[PlaceTextEllipseAction]);
+	menu->addAction(modeActions[PlaceTextPolygonAction]);
 
 	menu = menuBar()->addMenu("View");
 	menu->addAction(diagramActions[DiagramWidget::ZoomInAction]);

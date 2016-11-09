@@ -1,4 +1,4 @@
-/* DrawingRectItem.h
+/* DrawingTextRectItem.h
  *
  * Copyright (C) 2013-2016 Jason Allen
  *
@@ -18,36 +18,40 @@
  * along with jade.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef DRAWINGRECTITEM_H
-#define DRAWINGRECTITEM_H
+#ifndef DRAWINGTEXTRECTITEM_H
+#define DRAWINGTEXTRECTITEM_H
 
 #include <DrawingItem.h>
 
-/*! \brief Provides a rectangle item that can be added to a DrawingWidget.
+/*! \brief Provides a text rectangle item that can be added to a DrawingWidget.
  *
  * To set the item's rect, call the setRect() function.  The rect() function returns the
  * current rect.  Both functions operate in local item coordinates.
  * 
+ * To set the item's text, call the setCaption() function.  The caption() function returns the
+ * current text.
+ *
  * Rendering options for the rect can be controlled through properties of the item's style().
- * The rect item supports all of the pen and brush style properties.
- * 
- * DrawingRectItem provides a reasonable implementation of boundingRect(), shape(), and isValid().
- * The paint() function draws the rect using the item's associated pen and brush.
+ * The text rect item supports all of the pen, brush, font, and text brush style properties.
+ *
+ * DrawingTextRectItem provides a reasonable implementation of boundingRect(), shape(), and isValid().
+ * The paint() function draws the text rect using the item's style properties.
  */
-class DrawingRectItem : public DrawingItem
+class DrawingTextRectItem : public DrawingItem
 {
 private:
 	qreal mCornerRadiusX, mCornerRadiusY;
+	QString mCaption;
 
 public:
-	/*! \brief Create a new DrawingRectItem with default settings.
+	/*! \brief Create a new DrawingTextRectItem with default settings.
 	 *
 	 * This function creates eight DrawingItemPoint objects and adds them to the item.  These
-	 * item points represent the bounding points of the rect.
+	 * item points represent the bounding points of the text rect.
 	 *
 	 * This function fills in the item's style() with default values for the following properties.
 	 * The default values are pulled from the style's DrawingItemStyle::defaultValues() if present,
-	 * otherwise DrawingRectItem attempts to use reasonable initial values for each property:
+	 * otherwise DrawingTextRectItem attempts to use reasonable initial values for each property:
 	 * \li DrawingItemStyle::PenStyle
 	 * \li DrawingItemStyle::PenColor
 	 * \li DrawingItemStyle::PenOpacity
@@ -57,23 +61,32 @@ public:
 	 * \li DrawingItemStyle::BrushStyle
 	 * \li DrawingItemStyle::BrushColor
 	 * \li DrawingItemStyle::BrushOpacity
+	 * \li DrawingItemStyle::TextColor
+	 * \li DrawingItemStyle::TextOpacity
+	 * \li DrawingItemStyle::FontName
+	 * \li DrawingItemStyle::FontSize
+	 * \li DrawingItemStyle::FontBold
+	 * \li DrawingItemStyle::FontItalic
+	 * \li DrawingItemStyle::FontUnderline
+	 * \li DrawingItemStyle::FontOverline
+	 * \li DrawingItemStyle::FontStrikeThrough
 	 */
-	DrawingRectItem();
+	DrawingTextRectItem();
 	
-	/*! \brief Create a new DrawingRectItem as a copy of an existing rect item.
+	/*! \brief Create a new DrawingTextRectItem as a copy of an existing text rect item.
 	 *
-	 * Creates copies of all item points to the new rect item, including the point's positions.
+	 * Creates copies of all item points to the new text rect item, including the point's positions.
 	 * Also creates a new item style with all of the same properties as the existing item's style.
 	 */
-	DrawingRectItem(const DrawingRectItem& item);
+	DrawingTextRectItem(const DrawingTextRectItem& item);
 	
-	/*! \brief Delete an existing DrawingRectItem object.
+	/*! \brief Delete an existing DrawingTextRectItem object.
 	 *
 	 * All of the item's points are also deleted.
 	 */
-	virtual ~DrawingRectItem();
+	virtual ~DrawingTextRectItem();
 
-	/*! \brief Creates a copy of the DrawingRectItem and return it.
+	/*! \brief Creates a copy of the DrawingTextRectItem and return it.
 	 *
 	 * Simply calls the copy constructor.
 	 */
@@ -121,10 +134,24 @@ public:
 	qreal cornerRadiusY() const;
 
 
-	/*! \brief Returns an estimate of the area painted by the rect item.
+	/*! \brief Sets the item's text to caption.
 	 *
-	 * Calculates the bounding rect of the rect based on the position of its points.
-	 * The rect includes an adjustment for the width of the pen as set by the item's style().
+	 * \sa caption()
+	 */
+	void setCaption(const QString& caption);
+
+	/*! \brief Returns the item's text.
+	 *
+	 * \sa setCaption()
+	 */
+	QString caption() const;
+
+
+	/*! \brief Returns an estimate of the area painted by the text rect item.
+	 *
+	 * Calculates the bounding rect of the text rect based on the position of its points and the
+	 * size of the item's text.  The rect includes an adjustment for the width of the pen as set
+	 * by the item's style().
 	 *
 	 * \sa shape(), isValid()
 	 */
@@ -132,12 +159,13 @@ public:
 	
 	/*! \brief Returns an accurate outline of the item's shape.
 	 *
-	 * Calculates the shape of the rect based on the position of its points.
+	 * Calculates the shape of the text rect based on the position of its points and the size of the
+	 * item's text.
 	 *
 	 * Note that the stroke width used to determine the shape is either the actual width of the 
 	 * pen set by the item's style() or a reasonable minimum width as determined by the current
 	 * zoom scale of the item's drawing(), whichever is larger.  This is done to make it easier to
-	 * click on rect items when zoomed out on a large scene.
+	 * click on text rect items when zoomed out on a large scene.
 	 *
 	 * \sa boundingRect(), isValid()
 	 */
@@ -145,17 +173,17 @@ public:
 	
 	/*! \brief Return false if the item is degenerate, true otherwise.
 	 *
-	 * A rect item is considered degenerate if the positions of all of its points
-	 * are the same.
+	 * A text rect item is considered degenerate if the positions of all of its points
+	 * are the same and the item's caption is empty.
 	 *
 	 * \sa boundingRect(), shape()
 	 */
 	virtual bool isValid() const;
 
 	
-	/*! \brief Paints the contents of the rect item into the scene.
+	/*! \brief Paints the contents of the text rect item into the scene.
 	 *
-	 * The rect is painted in the scene based on properties set by the item's style().
+	 * The text rect is painted in the scene based on properties set by the item's style().
 	 *
 	 * At the end of this function, the QPainter object is returned to the same state that it was
 	 * in when the function started.
@@ -166,41 +194,12 @@ public:
 	/*! \brief Resizes the item within the scene.
 	 *
 	 * Before returning, this function also remaps the position of the item and all of its points 
-	 * such that the position of the rect item's start point is at the origin of the item.
+	 * such that the position of the text rect item's start point is at the origin of the item.
 	 */
 	virtual void resizeItem(DrawingItemPoint* itemPoint, const QPointF& scenePos);
 
-protected:
-	/*! \brief Handles copy events for the rect item when the parent drawing() is in
-	 * PlaceMode.
-	 *
-	 * This function ensures that the position of the rect item's start and end points is
-	 * at the item's origin before allowing the user to start placing it within the scene.
-	 *
-	 * \sa newMouseMoveEvent(), newMouseReleaseEvent()
-	 */
-	virtual bool newItemCopyEvent();
-
-	/*! \brief Handles mouse move events for the rect item when the parent drawing() is in
-	 * PlaceMode.
-	 *
-	 * When the mouse button is not down, this function sets the position of the rect item's
-	 * start point within the scene.  When the user presses the mouse button, the start point
-	 * is placed and this function sets ths position of the item's end point.
-	 *
-	 * \sa newMouseReleaseEvent(), newItemCopyEvent()
-	 */
-	virtual void newMouseMoveEvent(DrawingMouseEvent* event);
-
-	/*! \brief Handles mouse release events for the rect item when the parent drawing() is in
-	 * PlaceMode.
-	 *
-	 * This function sets the position of the rect item's end point within the scene and, if
-	 * isValid() returns true, causes the rect item to be placed within the scene.
-	 *
-	 * \sa newMouseMoveEvent(), newItemCopyEvent()
-	 */
-	virtual bool newMouseReleaseEvent(DrawingMouseEvent* event);
+private:
+	QRectF calculateTextRect(const QString& caption, const QFont& font) const;
 };
 
 #endif

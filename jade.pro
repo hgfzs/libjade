@@ -24,11 +24,16 @@ SOURCES += \
     source/DrawingItemGroup.cpp \
 	source/DrawingItemPoint.cpp \
     source/DrawingItemStyle.cpp \
-    source/DrawingLineItem.cpp \
-    source/DrawingPolygonItem.cpp \
+	source/DrawingLineItem.cpp \
+	source/DrawingPathItem.cpp \
+	source/DrawingPolygonItem.cpp \
     source/DrawingPolylineItem.cpp \
     source/DrawingRectItem.cpp \
-    source/DrawingTypes.cpp \
+	source/DrawingTextEllipseItem.cpp \
+	source/DrawingTextItem.cpp \
+	source/DrawingTextPolygonItem.cpp \
+	source/DrawingTextRectItem.cpp \
+	source/DrawingTypes.cpp \
 	source/DrawingUndo.cpp \
     source/DrawingWidget.cpp
 
@@ -41,10 +46,15 @@ HEADERS += \
     include/DrawingItemPoint.h \
     include/DrawingItemStyle.h \
     include/DrawingLineItem.h \
-    include/DrawingPolygonItem.h \
+	include/DrawingPathItem.h \
+	include/DrawingPolygonItem.h \
     include/DrawingPolylineItem.h \
     include/DrawingRectItem.h \
-    include/DrawingTypes.h \
+	include/DrawingTextEllipseItem.h \
+	include/DrawingTextItem.h \
+	include/DrawingTextPolygonItem.h \
+	include/DrawingTextRectItem.h \
+	include/DrawingTypes.h \
 	include/DrawingUndo.h \
 	include/DrawingWidget.h \
     include/Drawing.h

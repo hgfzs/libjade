@@ -31,9 +31,14 @@
 #include <DrawingCurveItem.h>
 #include <DrawingEllipseItem.h>
 #include <DrawingLineItem.h>
+#include <DrawingPathItem.h>
 #include <DrawingPolygonItem.h>
 #include <DrawingPolylineItem.h>
 #include <DrawingRectItem.h>
+#include <DrawingTextEllipseItem.h>
+#include <DrawingTextItem.h>
+#include <DrawingTextPolygonItem.h>
+#include <DrawingTextRectItem.h>
 #include <DrawingItemGroup.h>
 
 /*! \mainpage

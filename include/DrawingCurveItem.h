@@ -18,6 +18,9 @@
  * along with jade.  If not, see <http://www.gnu.org/licenses/>
  */
 
+#ifndef DRAWINGCURVEITEM_H
+#define DRAWINGCURVEITEM_H
+
 #include <DrawingItem.h>
 
 /*! \brief Provides a curve item that can be added to a DrawingWidget.
@@ -171,3 +174,5 @@ private:
 	qreal startArrowAngle() const;
 	qreal endArrowAngle() const;
 };
+
+#endif

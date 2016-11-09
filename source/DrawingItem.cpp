@@ -339,7 +339,6 @@ QPainterPath DrawingItem::mapToScene(const QPainterPath& path) const
 	return painterPath;
 }
 
-
 //==================================================================================================
 
 QPainterPath DrawingItem::shape() const

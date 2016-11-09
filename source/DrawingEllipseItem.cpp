@@ -118,7 +118,7 @@ QPainterPath DrawingEllipseItem::shape() const
 		QBrush brush = style->brush();
 
 		// Add ellipse
-		drawPath.addEllipse(ellipse());
+		drawPath.addEllipse(ellipse().normalized());
 
 		// Determine outline path
 		pen.setWidthF(qMax(pen.widthF(), minimumPenWidth()));

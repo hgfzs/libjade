@@ -1,4 +1,4 @@
-/* DrawingPolygonItem.h
+/* DrawingTextPolygonItem.h
  *
  * Copyright (C) 2013-2016 Jason Allen
  *
@@ -18,26 +18,32 @@
  * along with jade.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef DRAWINGPOLYGONITEM_H
-#define DRAWINGPOLYGONITEM_H
+#ifndef DRAWINGTEXTPOLYGONITEM_H
+#define DRAWINGTEXTPOLYGONITEM_H
 
 #include <DrawingItem.h>
 
-/*! \brief Provides a polygon item that can be added to a DrawingWidget.
+/*! \brief Provides a text polygon item that can be added to a DrawingWidget.
  *
  * To set the item's polygon, call the setPolygon() function.  The polygon() function returns the
  * current polygon.  Both functions operate in local item coordinates.
  * 
+ * To set the item's text, call the setCaption() function.  The caption() function returns the
+ * current text.
+ *
  * Rendering options for the polygon can be controlled through properties of the item's style().
- * The polygon item supports all of the pen and brush style properties.
- * 
- * DrawingPolygonItem provides a reasonable implementation of boundingRect(), shape(), and isValid().
- * The paint() function draws the polygon using the item's associated pen and brush.
+ * The text polygon item supports all of the pen, brush, font, and text brush style properties.
+ *
+ * DrawingTextPolygonItem provides a reasonable implementation of boundingRect(), shape(), and isValid().
+ * The paint() function draws the text polygon using the item's style properties.
  */
-class DrawingPolygonItem : public DrawingItem
+class DrawingTextPolygonItem : public DrawingItem
 {
+private:
+	QString mCaption;
+
 public:
-	/*! \brief Create a new DrawingPolygonItem with default settings.
+	/*! \brief Create a new DrawingTextPolygonItem with default settings.
 	 *
 	 * This function creates three DrawingItemPoint objects and adds them to the item.  These
 	 * item points represent the initial points of the polygon.
@@ -54,23 +60,32 @@ public:
 	 * \li DrawingItemStyle::BrushStyle
 	 * \li DrawingItemStyle::BrushColor
 	 * \li DrawingItemStyle::BrushOpacity
+	 * \li DrawingItemStyle::TextColor
+	 * \li DrawingItemStyle::TextOpacity
+	 * \li DrawingItemStyle::FontName
+	 * \li DrawingItemStyle::FontSize
+	 * \li DrawingItemStyle::FontBold
+	 * \li DrawingItemStyle::FontItalic
+	 * \li DrawingItemStyle::FontUnderline
+	 * \li DrawingItemStyle::FontOverline
+	 * \li DrawingItemStyle::FontStrikeThrough
 	 */
-	DrawingPolygonItem();
+	DrawingTextPolygonItem();
 	
-	/*! \brief Create a new DrawingPolygonItem as a copy of an existing polygon item.
+	/*! \brief Create a new DrawingTextPolygonItem as a copy of an existing polygon item.
 	 *
 	 * Creates copies of all item points to the new polygon item, including the point's positions.
 	 * Also creates a new item style with all of the same properties as the existing item's style.
 	 */
-	DrawingPolygonItem(const DrawingPolygonItem& item);
+	DrawingTextPolygonItem(const DrawingTextPolygonItem& item);
 	
-	/*! \brief Delete an existing DrawingPolygonItem object.
+	/*! \brief Delete an existing DrawingTextPolygonItem object.
 	 *
 	 * All of the item's points are also deleted.
 	 */
-	virtual ~DrawingPolygonItem();
+	virtual ~DrawingTextPolygonItem();
 
-	/*! \brief Creates a copy of the DrawingPolygonItem and return it.
+	/*! \brief Creates a copy of the DrawingTextPolygonItem and return it.
 	 *
 	 * Simply calls the copy constructor.
 	 */
@@ -93,10 +108,24 @@ public:
 	QPolygonF polygon() const;
 
 	
-	/*! \brief Returns an estimate of the area painted by the polygon item.
+	/*! \brief Sets the item's text to caption.
 	 *
-	 * Calculates the bounding rect of the polygon based on the position of its points.
-	 * The rect includes an adjustment for the width of the pen as set by the item's style().
+	 * \sa caption()
+	 */
+	void setCaption(const QString& caption);
+
+	/*! \brief Returns the item's text.
+	 *
+	 * \sa setCaption()
+	 */
+	QString caption() const;
+
+
+	/*! \brief Returns an estimate of the area painted by the text polygon item.
+	 *
+	 * Calculates the bounding rect of the text polygon based on the position of its points and the
+	 * size of the item's text.  The rect includes an adjustment for the width of the pen as set
+	 * by the item's style().
 	 *
 	 * \sa shape(), isValid()
 	 */
@@ -104,12 +133,13 @@ public:
 	
 	/*! \brief Returns an accurate outline of the item's shape.
 	 *
-	 * Calculates the shape of the polygon based on the position of its points.
+	 * Calculates the shape of the text polygon based on the position of its points and the
+	 * size of the item's text.
 	 *
 	 * Note that the stroke width used to determine the shape is either the actual width of the 
 	 * pen set by the item's style() or a reasonable minimum width as determined by the current
 	 * zoom scale of the item's drawing(), whichever is larger.  This is done to make it easier to
-	 * click on polygon items when zoomed out on a large scene.
+	 * click on text polygon items when zoomed out on a large scene.
 	 *
 	 * \sa boundingRect(), isValid()
 	 */
@@ -117,8 +147,8 @@ public:
 	
 	/*! \brief Return false if the item is degenerate, true otherwise.
 	 *
-	 * A polygon item is considered degenerate if the positions of all of its points
-	 * are the same.
+	 * A text polygon item is considered degenerate if the positions of all of its points
+	 * are the same and the item's caption is empty.
 	 *
 	 * \sa boundingRect(), shape()
 	 */
@@ -127,7 +157,7 @@ public:
 	
 	/*! \brief Paints the contents of the polygon item into the scene.
 	 *
-	 * The polygon is painted in the scene based on properties set by the item's style().
+	 * The text polygon is painted in the scene based on properties set by the item's style().
 	 *
 	 * At the end of this function, the QPainter object is returned to the same state that it was
 	 * in when the function started.
@@ -163,6 +193,7 @@ public:
 
 private:
 	qreal distanceFromPointToLineSegment(const QPointF& point, const QLineF& line) const;
+	QRectF calculateTextRect(const QString& caption, const QFont& font) const;
 };
 
 #endif
