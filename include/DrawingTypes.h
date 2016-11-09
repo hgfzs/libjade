@@ -21,7 +21,13 @@
 #ifndef DRAWINGTYPES_H
 #define DRAWINGTYPES_H
 
+#include <QtCore>
+
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+#include <QtGui>
+#else
 #include <QtWidgets>
+#endif
 
 class DrawingWidget;
 class DrawingItem;
