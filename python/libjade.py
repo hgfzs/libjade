@@ -1,6 +1,6 @@
 # libjade.py
 
-import os, shutil
+import os, shutil, time
 import sipconfig
 
 # Build settings
@@ -57,18 +57,18 @@ os.chdir(output_dir)
 
 makefile = sipconfig.SIPModuleMakefile(config, build_file)
 makefile.extra_include_dirs = [ qt_include_dir, os.path.join(qt_include_dir, "QtCore"), os.path.join(qt_include_dir, "QtGui"), os.path.join(qt_include_dir, "QtWidgets"), "../../include" ]
-makefile.extra_lib_dirs = [ qt_lib_dir, "../../lib" ]
+makefile.extra_lib_dirs = [ qt_lib_dir, "../../build/lib" ]
 makefile.extra_libs = [ "Qt5Core", "Qt5Gui", "Qt5Widgets", "jade" ]
 
 makefile.generate()
 
 
 # Build the code
-os.system("vcvars32.bat")
-os.system("nmake")
+os.system("vcvars32.bat && nmake")
+#os.system("nmake")
 
 os.chdir(current_dir)
 
 
 # Copy the python file to the lib directory
-shutil.copy("codegen/jade.pyd", "../lib")
+#shutil.copy("codegen/jade.pyd", "../lib")
