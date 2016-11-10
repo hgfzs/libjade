@@ -31,58 +31,40 @@ build_file = "jade.sbf"
 
 output_dir = "codegen"
 
+# Qt settings
+qt_include_dir = r"C:\Development\Qt5.5.1\5.5\msvc2010\include"
+qt_lib_dir = r"C:\Development\Qt5.5.1\5.5\msvc2010\lib"
+
 # SIP settings
-sip_bin = r"C:\Development\Python34\sip.exe"
-sip_includedir_pyqt = r"C:\Development\Python34\Lib\site-packages\PyQt5\sip\PyQt5"
+config = sipconfig.Configuration()
+
+sip_bin = config.sip_bin
+sip_includedir_pyqt = os.path.join(config.sip_bin, r"..\Lib\site-packages\PyQt5\sip\PyQt5")
 sip_flags_pyqt = "-t WS_WIN"
+
 
 # Run SIP
 if (os.path.exists(output_dir)):
 	shutil.rmtree(output_dir)
 os.mkdir(output_dir)
 
-os.system(" ".join([sip_bin, "-c", output_dir, "-b", os.path.join(output_dir, build_file), "-I", sip_includedir_pyqt, sip_flags_pyqt, master_input_file]))
+os.system(" ".join([config.sip_bin, "-c", output_dir, "-b", os.path.join(output_dir, build_file), "-I", sip_includedir_pyqt, sip_flags_pyqt, master_input_file]))
 
 
+# Create the Makefile.
+current_dir = os.getcwd()
+os.chdir(output_dir)
+
+makefile = sipconfig.SIPModuleMakefile(config, build_file)
+makefile.extra_include_dirs = [ qt_include_dir, os.path.join(qt_include_dir, "QtCore"), os.path.join(qt_include_dir, "QtGui"), os.path.join(qt_include_dir, "QtWidgets"), "../../include" ]
+makefile.extra_lib_dirs = [ qt_lib_dir, "../../lib" ]
+makefile.extra_libs = [ "Qt5Core", "Qt5Gui", "Qt5Widgets", "jade" ]
+
+makefile.generate()
 
 
+# Build the code
+os.system("vcvars32.bat")
+os.system("nmake")
 
-
-
-# # Get the PyQt4 configuration information.
-# config = pyqtconfig.Configuration()
-
-# # Get the extra SIP flags needed by the imported PyQt4 modules.  Note that
-# # this normally only includes those flags (-x and -t) that relate to SIP's
-# # versioning system.
-# pyqt_sip_flags = config.pyqt_sip_flags
-
-# # Run SIP to generate the code.  Note that we tell SIP where to find the qt
-# # module's specification files using the -I flag.
-# os.system(" ".join([config.sip_bin, "-c", ".", "-b", build_file, "-I", config.pyqt_sip_dir, pyqt_sip_flags, "Drawing.sip"]))
-
-# # We are going to install the SIP specification file for this module and
-# # its configuration module.
-# installs = []
-
-# installs.append([master_input_file, os.path.join(config.default_sip_dir, "jade")])
-
-# for filename in other_input_files:
-	# installs.append([filename, os.path.join(config.default_sip_dir, "jade")])
-
-# # Create the Makefile.  The QtWidgetsModuleMakefile class provided by the
-# # pyqtconfig module takes care of all the extra preprocessor, compiler and
-# # linker flags needed by the Qt library.
-# makefile = pyqtconfig.QtWidgetsModuleMakefile(
-    # configuration=config,
-    # build_file=build_file,
-    # installs=installs
-# )
-
-# # Add the library we are wrapping.  The name doesn't include any platform
-# # specific prefixes or extensions (e.g. the "lib" prefix on UNIX, or the
-# # ".dll" extension on Windows).
-# makefile.extra_libs = [ "jade" ]
-
-# # Generate the Makefile itself.
-# makefile.generate()
+os.chdir(current_dir)

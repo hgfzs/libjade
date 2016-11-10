@@ -60,17 +60,17 @@ public:
 	DrawingItemStyle(const DrawingItemStyle& style);
 	~DrawingItemStyle();
 
-	void setValues(const QHash<Property,QVariant>& values);
-	QHash<Property,QVariant> values() const;
+	void setValues(const QHash<DrawingItemStyle::Property,QVariant>& values);
+	QHash<DrawingItemStyle::Property,QVariant> values() const;
 
-	void setValue(Property index, const QVariant& value);
-	void unsetValue(Property index);
+	void setValue(DrawingItemStyle::Property index, const QVariant& value);
+	void unsetValue(DrawingItemStyle::Property index);
 	void clearValues();	
-	bool hasValue(Property index) const;
-	QVariant value(Property index) const;
+	bool hasValue(DrawingItemStyle::Property index) const;
+	QVariant value(DrawingItemStyle::Property index) const;
 	
-	QVariant valueLookup(Property index) const;
-	QVariant valueLookup(Property index, const QVariant& fallbackValue) const;
+	QVariant valueLookup(DrawingItemStyle::Property index) const;
+	QVariant valueLookup(DrawingItemStyle::Property index, const QVariant& fallbackValue) const;
 	
 	QPen pen() const;
 	QBrush brush() const;
@@ -89,12 +89,12 @@ public:
 
 
 public:
-	static void setDefaultValues(const QHash<Property,QVariant>& values);
-	static QHash<Property,QVariant> defaultValues();
+	static void setDefaultValues(const QHash<DrawingItemStyle::Property,QVariant>& values);
+	static QHash<DrawingItemStyle::Property,QVariant> defaultValues();
 
-	static void setDefaultValue(Property index, const QVariant& value);
-	static void unsetDefaultValue(Property index);
+	static void setDefaultValue(DrawingItemStyle::Property index, const QVariant& value);
+	static void unsetDefaultValue(DrawingItemStyle::Property index);
 	static void clearDefaultValues();	
-	static bool hasDefaultValue(Property index);
-	static QVariant defaultValue(Property index);
+	static bool hasDefaultValue(DrawingItemStyle::Property index);
+	static QVariant defaultValue(DrawingItemStyle::Property index);
 };

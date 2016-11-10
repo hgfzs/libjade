@@ -20,7 +20,7 @@ public:
 	{
 		UndoableSelectCommands = 0x0001
 	};
-	typedef QFlags<Flag> Flags;
+	typedef QFlags<DrawingWidget::Flag> Flags;
 
 public:
 	DrawingWidget();
@@ -49,12 +49,12 @@ public:
 	QString undoText() const;
 	QString redoText() const;
 
-	void setFlags(Flags flags);
+	void setFlags(DrawingWidget::Flags flags);
 	void setItemSelectionMode(Qt::ItemSelectionMode mode);
-	Flags flags() const;
+	DrawingWidget::Flags flags() const;
 	Qt::ItemSelectionMode itemSelectionMode() const;
 
-	Mode mode() const;
+	DrawingWidget::Mode mode() const;
 	qreal scale() const;
 
 	void addItem(DrawingItem* item /TransferThis/);

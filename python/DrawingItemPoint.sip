@@ -15,10 +15,10 @@ public:
 		Connection = 0x0002,
 		Free = 0x0004
 	};
-	typedef QFlags<Flag> Flags;
+	typedef QFlags<DrawingItemPoint::Flag> Flags;
 
 public:
-	DrawingItemPoint(const QPointF& pos = QPointF(), Flags flags = Control);
+	DrawingItemPoint(const QPointF& pos = QPointF(), DrawingItemPoint::Flags flags = Control);
 	DrawingItemPoint(const DrawingItemPoint& point);
 	virtual ~DrawingItemPoint();
 
@@ -32,8 +32,8 @@ public:
 	qreal x() const;
 	qreal y() const;
 
-	void setFlags(Flags flags);
-	Flags flags() const;
+	void setFlags(DrawingItemPoint::Flags flags);
+	DrawingItemPoint::Flags flags() const;
 	bool isControlPoint() const;
 	bool isConnectionPoint() const;
 	bool isFree() const;

@@ -18,7 +18,7 @@ public:
 		CanRemovePoints = 0x20,
 		CanSelect = 0x40
 	};
-	typedef QFlags<Flag> Flags;
+	typedef QFlags<DrawingItem::Flag> Flags;
 
 public:
 	DrawingItem();
@@ -37,8 +37,8 @@ public:
 	qreal x() const;
 	qreal y() const;
 
-	void setFlags(Flags flags);
-	Flags flags() const;
+	void setFlags(DrawingItem::Flags flags);
+	DrawingItem::Flags flags() const;
 
 	void setRotation(qreal angle);
 	void setFlipped(bool flipped);
