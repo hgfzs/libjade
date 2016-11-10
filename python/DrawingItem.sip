@@ -51,15 +51,15 @@ public:
 	bool isSelected() const;
 	bool isVisible() const;
 
-	void addPoint(DrawingItemPoint* itemPoint /TransferThis/);
-	void insertPoint(int index, DrawingItemPoint* itemPoint /TransferThis/);
+	void addPoint(DrawingItemPoint* itemPoint /Transfer/);
+	void insertPoint(int index, DrawingItemPoint* itemPoint /Transfer/);
 	void removePoint(DrawingItemPoint* itemPoint /TransferBack/);
 	void clearPoints();
 	QList<DrawingItemPoint*> points() const;
 	DrawingItemPoint* pointAt(const QPointF& itemPos) const;
 	DrawingItemPoint* pointNearest(const QPointF& itemPos) const;
 
-	void setStyle(DrawingItemStyle* style /TransferThis/);
+	void setStyle(DrawingItemStyle* style /Transfer/);
 	DrawingItemStyle* style() const;
 
 	QPointF mapFromScene(const QPointF& point) const;

@@ -57,8 +57,8 @@ public:
 	DrawingWidget::Mode mode() const;
 	qreal scale() const;
 
-	void addItem(DrawingItem* item /TransferThis/);
-	void insertItem(int index, DrawingItem* item /TransferThis/);
+	void addItem(DrawingItem* item /Transfer/);
+	void insertItem(int index, DrawingItem* item /Transfer/);
 	void removeItem(DrawingItem* item /TransferBack/);
 	void clearItems();
 	QList<DrawingItem*> items() const;
@@ -100,7 +100,7 @@ public slots:
 	void setDefaultMode();
 	void setScrollMode();
 	void setZoomMode();
-	void setPlaceMode(DrawingItem* newItem /TransferThis/);
+	void setPlaceMode(DrawingItem* newItem /Transfer/);
 
 	void undo();
 	void redo();

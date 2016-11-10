@@ -14,9 +14,9 @@ QT += widgets
 !win32:OBJECTS_DIR = release
 !win32:RCC_DIR = release
 
-INCLUDEPATH += ../include
-win32:LIBS += ../build/lib/jade.lib
-!win32:LIBS += -L../build/lib -ljade
+INCLUDEPATH += ../../include
+win32:LIBS += ../../lib/jade.lib
+!win32:LIBS += -L../../lib -ljade
 
 # --------------------------------------------------------------------------------------------------
 
