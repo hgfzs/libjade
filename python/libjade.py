@@ -68,3 +68,7 @@ os.system("vcvars32.bat")
 os.system("nmake")
 
 os.chdir(current_dir)
+
+
+# Copy the python file to the lib directory
+shutil.copy("codegen/jade.pyd", "../lib")
