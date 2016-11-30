@@ -133,7 +133,7 @@ QPainterPath DrawingCurveItem::shape() const
 		DrawingItemStyle::ArrowStyle startArrowStyle = style->startArrowStyle();
 		DrawingItemStyle::ArrowStyle endArrowStyle = style->endArrowStyle();
 		qreal startArrowSize = style->startArrowSize();
-		qreal endArrowSize = style->startArrowSize();
+		qreal endArrowSize = style->endArrowSize();
 		
 		// Add arc
 		drawPath.moveTo(points[0]->pos());
@@ -180,7 +180,7 @@ void DrawingCurveItem::paint(QPainter* painter)
 		DrawingItemStyle::ArrowStyle startArrowStyle = style->startArrowStyle();
 		DrawingItemStyle::ArrowStyle endArrowStyle = style->endArrowStyle();
 		qreal startArrowSize = style->startArrowSize();
-		qreal endArrowSize = style->startArrowSize();
+		qreal endArrowSize = style->endArrowSize();
 
 		// Draw curve
 		QPainterPath drawPath;

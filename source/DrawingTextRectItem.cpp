@@ -123,7 +123,7 @@ QRectF DrawingTextRectItem::rect() const
 void DrawingTextRectItem::setCornerRadii(qreal radiusX, qreal radiusY)
 {
 	mCornerRadiusX = radiusX;
-	mCornerRadiusX = radiusY;
+	mCornerRadiusY = radiusY;
 }
 
 qreal DrawingTextRectItem::cornerRadiusX() const

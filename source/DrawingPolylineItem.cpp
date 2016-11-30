@@ -140,7 +140,7 @@ QPainterPath DrawingPolylineItem::shape() const
 		DrawingItemStyle::ArrowStyle startArrowStyle = style->startArrowStyle();
 		DrawingItemStyle::ArrowStyle endArrowStyle = style->endArrowStyle();
 		qreal startArrowSize = style->startArrowSize();
-		qreal endArrowSize = style->startArrowSize();
+		qreal endArrowSize = style->endArrowSize();
 		
 		// Add line
 		drawPath.moveTo(points.first()->pos());
@@ -204,7 +204,7 @@ void DrawingPolylineItem::paint(QPainter* painter)
 		DrawingItemStyle::ArrowStyle startArrowStyle = style->startArrowStyle();
 		DrawingItemStyle::ArrowStyle endArrowStyle = style->endArrowStyle();
 		qreal startArrowSize = style->startArrowSize();
-		qreal endArrowSize = style->startArrowSize();
+		qreal endArrowSize = style->endArrowSize();
 
 		// Draw line
 		QPainterPath drawPath;
