@@ -1429,7 +1429,7 @@ private slots:
 	void updateSelectionCenter();
 	void mousePanEvent();
 
-private:
+protected:
 	// Functions that generate undo commands
 	void addItemsCommand(const QList<DrawingItem*>& items, bool place, QUndoCommand* command = nullptr);
 	void removeItemsCommand(const QList<DrawingItem*>& items, QUndoCommand* command = nullptr);
@@ -1451,6 +1451,7 @@ private:
 		bool checkControlPoints, DrawingItemPoint* pointToSkip, QUndoCommand* command);
 	void disconnectAll(DrawingItemPoint* itemPoint, QUndoCommand* command);
 	
+private:
 	// Functions called by undo command classes
 	void addItems(const QList<DrawingItem*>& items);
 	void insertItems(const QList<DrawingItem*>& items, const QHash<DrawingItem*,int>& index);
