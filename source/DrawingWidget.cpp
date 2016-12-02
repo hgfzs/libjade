@@ -726,8 +726,11 @@ void DrawingWidget::selectAll()
 			if ((*itemIter)->flags() & DrawingItem::CanSelect) itemsToSelect.append(*itemIter);
 		}
 		
-		selectItemsCommand(itemsToSelect, true);
-		viewport()->update();
+		if (mSelectedItems != itemsToSelect)
+		{
+			selectItemsCommand(itemsToSelect, true);
+			viewport()->update();
+		}
 	}
 }
 
@@ -743,8 +746,11 @@ void DrawingWidget::selectArea(const QRectF& rect)
 				((*itemIter)->flags() & DrawingItem::CanSelect)) itemsToSelect.append(*itemIter);
 		}
 		
-		selectItemsCommand(itemsToSelect, true);
-		viewport()->update();
+		if (mSelectedItems != itemsToSelect)
+		{
+			selectItemsCommand(itemsToSelect, true);
+			viewport()->update();
+		}
 	}
 }
 
@@ -760,14 +766,17 @@ void DrawingWidget::selectArea(const QPainterPath& path)
 				((*itemIter)->flags() & DrawingItem::CanSelect)) itemsToSelect.append(*itemIter);
 		}
 		
-		selectItemsCommand(itemsToSelect, true);
-		viewport()->update();
+		if (mSelectedItems != itemsToSelect)
+		{
+			selectItemsCommand(itemsToSelect, true);
+			viewport()->update();
+		}
 	}
 }
 
 void DrawingWidget::selectNone()
 {
-	if (mMode == DefaultMode)
+	if (mMode == DefaultMode && !mSelectedItems.isEmpty())
 	{
 		selectItemsCommand(QList<DrawingItem*>(), true);
 		viewport()->update();
@@ -1501,7 +1510,7 @@ void DrawingWidget::defaultMouseReleaseEvent(DrawingMouseEvent* event)
 			if (controlDown && mMouseDownItem->isSelected()) newSelection.removeAll(mMouseDownItem);
 			else if (mMouseDownItem->flags() & DrawingItem::CanSelect) newSelection.append(mMouseDownItem);
 		}
-		selectItemsCommand(newSelection, !controlDown);
+		if (mSelectedItems != newSelection) selectItemsCommand(newSelection, !controlDown);
 		break;
 
 	case MouseMoveItems:
@@ -1532,7 +1541,7 @@ void DrawingWidget::defaultMouseReleaseEvent(DrawingMouseEvent* event)
 				newSelection.append(*itemIter);
 			}
 		}	
-		selectItemsCommand(newSelection, true);
+		if (mSelectedItems != newSelection) selectItemsCommand(newSelection, true);
 		mRubberBandRect = QRect();
 		break;
 
