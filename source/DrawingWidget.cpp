@@ -1107,6 +1107,7 @@ void DrawingWidget::mousePressEvent(QMouseEvent* event)
 	}
 
 	viewport()->update();
+	emit mouseInfoChanged("");
 }
 
 void DrawingWidget::mouseMoveEvent(QMouseEvent* event)
@@ -1122,7 +1123,9 @@ void DrawingWidget::mouseMoveEvent(QMouseEvent* event)
 				mScrollButtonDownHorizontalScrollValue - (mMouseEvent.pos().x() - mMouseEvent.buttonDownPos().x()));
 			verticalScrollBar()->setValue(
 				mScrollButtonDownVerticalScrollValue - (mMouseEvent.pos().y() - mMouseEvent.buttonDownPos().y()));
+			sendMouseInfoText(mMouseEvent.buttonDownScenePos());
 		}
+		else sendMouseInfoText(mMouseEvent.scenePos());
 		break;
 	case ZoomMode:
 		if ((mMouseEvent.buttons() & Qt::LeftButton) && mMouseEvent.isDragged())
@@ -1130,7 +1133,10 @@ void DrawingWidget::mouseMoveEvent(QMouseEvent* event)
 			QPoint p1 = mMouseEvent.pos();
 			QPoint p2 = mMouseEvent.buttonDownPos();
 			mRubberBandRect = QRect(qMin(p1.x(), p2.x()), qMin(p1.y(), p2.y()), qAbs(p2.x() - p1.x()), qAbs(p2.y() - p1.y()));
+			
+			sendMouseInfoText(mMouseEvent.buttonDownScenePos(), mMouseEvent.scenePos());
 		}
+		else sendMouseInfoText(mMouseEvent.scenePos());
 	case PlaceMode:
 		placeModeMouseMoveEvent(&mMouseEvent);
 		break;
@@ -1140,8 +1146,8 @@ void DrawingWidget::mouseMoveEvent(QMouseEvent* event)
 	}
 
 	if (mPanTimer.isActive()) mPanCurrentPos = event->pos();
-
-	viewport()->update();
+	
+	if (event->buttons() != Qt::NoButton || mMode == PlaceMode) viewport()->update();
 }
 
 void DrawingWidget::mouseReleaseEvent(QMouseEvent* event)
@@ -1185,6 +1191,7 @@ void DrawingWidget::mouseReleaseEvent(QMouseEvent* event)
 	}
 
 	viewport()->update();
+	emit mouseInfoChanged("");
 }
 
 void DrawingWidget::mouseDoubleClickEvent(QMouseEvent* event)
@@ -1196,6 +1203,7 @@ void DrawingWidget::mouseDoubleClickEvent(QMouseEvent* event)
 	else defaultMouseDoubleClickEvent(&mMouseEvent);
 
 	viewport()->update();
+	emit mouseInfoChanged("");
 }
 
 void DrawingWidget::wheelEvent(QWheelEvent* event)
@@ -1431,6 +1439,7 @@ void DrawingWidget::defaultMousePressEvent(DrawingMouseEvent* event)
 			{
 				mSelectedItemPoint = mMouseDownItem->pointAt(mMouseDownItem->mapFromScene(event->scenePos()));
 				if (mSelectedItemPoint && !mSelectedItemPoint->isControlPoint()) mSelectedItemPoint = nullptr;
+				if (mSelectedItemPoint) mSelectedItemPointOriginalPos = mMouseDownItem->mapToScene(mSelectedItemPoint->pos());
 				
 				mMouseDownItem->mousePressEvent(event);
 			}
@@ -1462,6 +1471,7 @@ void DrawingWidget::defaultMouseMoveEvent(DrawingMouseEvent* event)
 				}
 				else mMouseState = MouseRubberBand;
 			}
+			sendMouseInfoText(event->scenePos());
 			break;
 
 		case MouseMoveItems:
@@ -1476,23 +1486,30 @@ void DrawingWidget::defaultMouseMoveEvent(DrawingMouseEvent* event)
 
 			if (!newPositions.isEmpty())
 				moveItemsCommand(newPositions.keys(), newPositions, false);
+			
+			sendMouseInfoText(mInitialPositions[mMouseDownItem], mInitialPositions[mMouseDownItem] +
+				roundToGrid(event->scenePos() - event->buttonDownScenePos()));
 			break;
 
 		case MouseResizeItem:
 			resizeItemCommand(mSelectedItemPoint, roundToGrid(event->scenePos()), false, true);
+			sendMouseInfoText(mSelectedItemPointOriginalPos, roundToGrid(event->scenePos()));
 			break;
 
 		case MouseRubberBand:
 			mRubberBandRect = QRect(event->pos(), event->buttonDownPos()).normalized();
+			sendMouseInfoText(event->buttonDownScenePos(), event->scenePos());
 			break;
 
 		default:
+			sendMouseInfoText(event->buttonDownScenePos(), event->scenePos());
 			break;
 		}
 
 		if (mMouseDownItem && mMouseDownItem->isSelected() && mSelectedItems.size() == 1)
 			mMouseDownItem->mouseMoveEvent(event);
 	}
+	else sendMouseInfoText(event->scenePos());
 }
 
 void DrawingWidget::defaultMouseReleaseEvent(DrawingMouseEvent* event)
@@ -1553,6 +1570,7 @@ void DrawingWidget::defaultMouseReleaseEvent(DrawingMouseEvent* event)
 		mMouseDownItem->mouseReleaseEvent(event);
 
 	mSelectedItemPoint = nullptr;
+	mSelectedItemPointOriginalPos = QPointF();
 	mMouseState = MouseReady;
 	mConsecutivePastes = 0;
 
@@ -1611,7 +1629,13 @@ void DrawingWidget::placeModeMouseMoveEvent(DrawingMouseEvent* event)
 
 		mNewItem->newMouseMoveEvent(event);
 		emit itemsGeometryChanged(newItems);
+		
+		if (event->buttons() & Qt::LeftButton) 
+			sendMouseInfoText(roundToGrid(event->buttonDownScenePos()), roundToGrid(event->scenePos()));
+		else 
+			sendMouseInfoText(roundToGrid(event->scenePos()));
 	}
+	else sendMouseInfoText(event->scenePos());
 }
 
 void DrawingWidget::placeModeMouseReleaseEvent(DrawingMouseEvent* event)
@@ -2329,4 +2353,28 @@ void DrawingWidget::recalculateContentSize(const QRectF& targetSceneRect)
 	mViewportTransform.scale(mScale, mScale);
 
 	mSceneTransform = mViewportTransform.inverted();
+}
+
+//==================================================================================================
+
+void DrawingWidget::sendMouseInfoText(const QPointF& pos)
+{
+	if (mFlags & SendsMouseMoveInfo)
+		emit mouseInfoChanged("(" + QString::number(pos.x()) + "," + QString::number(pos.y()) + ")");
+}
+
+void DrawingWidget::sendMouseInfoText(const QPointF& p1, const QPointF& p2)
+{
+	if (mFlags & SendsMouseMoveInfo)
+	{
+		QString mouseInfoText;
+		QPointF delta = p2 - p1;
+
+		mouseInfoText += "(" + QString::number(p1.x()) + "," + QString::number(p1.y()) + ")";
+		mouseInfoText += " - (" + QString::number(p2.x()) + "," + QString::number(p2.y()) + ")";
+		mouseInfoText += "  " + QString(QChar(0x394)) + " = (" +
+			QString::number(delta.x()) + "," + QString::number(delta.y()) + ")";
+		
+		emit mouseInfoChanged(mouseInfoText);
+	}
 }

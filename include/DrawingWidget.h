@@ -156,11 +156,12 @@ public:
 	 */
 	enum Flag
 	{
-		UndoableSelectCommands = 0x0001		//!< Selecting and deselecting items are commands that
+		UndoableSelectCommands = 0x0001,	//!< Selecting and deselecting items are commands that
 											//!< the user can undo() and redo().
+		SendsMouseMoveInfo = 0x0002			//!< Emits the mouseInfoChanged() signal when the mouse
+											//!< is moved within the scene.
 	};
 	Q_DECLARE_FLAGS(Flags, Flag)
-
 
 private:
 	enum MouseState { MouseReady, MouseSelect, MouseMoveItems, MouseResizeItem, MouseRubberBand };
@@ -192,6 +193,7 @@ private:
 	DrawingMouseEvent mMouseEvent;
 	MouseState mMouseState;
 	QHash<DrawingItem*,QPointF> mInitialPositions;
+	QPointF mSelectedItemPointOriginalPos;
 	QRect mRubberBandRect;
 	int mScrollButtonDownHorizontalScrollValue;
 	int mScrollButtonDownVerticalScrollValue;
@@ -1258,6 +1260,15 @@ signals:
 	 */
 	void newItemChanged(DrawingItem* item);
 
+	/*! \brief Emitted whenever the mouse position changes in the scene.
+	 *
+	 * This signal is emitted whenever the mouse moves in the scene.  It provides context as to
+	 * what the user is currently doing (moving/resizing items, doing a rubber band select, etc).
+	 *
+	 * This feature must be enabled by setting the #SendsMouseMoveInfo flag.
+	 */
+	void mouseInfoChanged(const QString& mouseInfo);
+
 protected:
 	/*! \brief Handles mouse press events for the widget.
 	 *
@@ -1477,6 +1488,9 @@ private:
 	bool shouldDisconnect(DrawingItemPoint* point1, DrawingItemPoint* point2) const;
 
 	void recalculateContentSize(const QRectF& targetSceneRect = QRectF());
+	
+	void sendMouseInfoText(const QPointF& pos);
+	void sendMouseInfoText(const QPointF& p1, const QPointF& p2);
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(DrawingWidget::Flags)
