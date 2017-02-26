@@ -1,4 +1,5 @@
 # libjade
+<a href="https://jaallen85.github.io/libjade/annotated.html">Class List</a>
 
 The jade library provides a Qt widget for managing a large number of two-dimensional graphical items within a scene: DrawingWidget.  DrawingWidget supports the following features:
 
@@ -18,3 +19,5 @@ DrawingItem is the base class for all graphical items in a DrawingWidget.  It pr
 DrawingWidget and DrawingItem are highly extensible; many functions are virtual and may be overridden in a derived class implementation to alter the default behavior.
 
 libjade is available under the <a href="https://www.gnu.org/licenses/gpl-3.0-standalone.html">GNU General Public License version 3.0</a>.
+
+Full class documentation can be found at: <a href="https://jaallen85.github.io/libjade/">https://jaallen85.github.io/libjade/annotated.html</a>.
