@@ -222,10 +222,14 @@ void DrawingTextPolygonItem::paint(QPainter* painter)
 		painter->drawPolygon(polygon());
 
 		// Draw text
+		QFont painterFont = font;
+		if (painter->paintEngine()->paintDevice())
+			painterFont.setPointSizeF(painterFont.pointSizeF() * 96.0 / painter->paintEngine()->paintDevice()->logicalDpiX());
+
 		QPen textPen(textBrush, 1, Qt::SolidLine);
 		painter->setBrush(Qt::transparent);
 		painter->setPen(textPen);
-		painter->setFont(font);
+		painter->setFont(painterFont);
 		painter->drawText(calculateTextRect(mCaption, font), Qt::AlignCenter, mCaption);
 
 		painter->setBrush(sceneBrush);

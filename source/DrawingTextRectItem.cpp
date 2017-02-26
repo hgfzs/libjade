@@ -123,7 +123,7 @@ QRectF DrawingTextRectItem::rect() const
 void DrawingTextRectItem::setCornerRadii(qreal radiusX, qreal radiusY)
 {
 	mCornerRadiusX = radiusX;
-	mCornerRadiusX = radiusY;
+	mCornerRadiusY = radiusY;
 }
 
 qreal DrawingTextRectItem::cornerRadiusX() const
@@ -217,17 +217,21 @@ void DrawingTextRectItem::paint(QPainter* painter)
 		QBrush brush = style->brush();
 		QFont font = style->font();
 		QBrush textBrush = style->textBrush();
-
+		
 		// Draw rect
 		painter->setBrush(brush);
 		painter->setPen(pen);
 		painter->drawRoundedRect(rect(), mCornerRadiusX, mCornerRadiusY);
 
 		// Draw text
+		QFont painterFont = font;
+		if (painter->paintEngine()->paintDevice())
+			painterFont.setPointSizeF(painterFont.pointSizeF() * 96.0 / painter->paintEngine()->paintDevice()->logicalDpiX());
+		
 		QPen textPen(textBrush, 1, Qt::SolidLine);
 		painter->setBrush(Qt::transparent);
 		painter->setPen(textPen);
-		painter->setFont(font);
+		painter->setFont(painterFont);
 		painter->drawText(calculateTextRect(mCaption, font), Qt::AlignCenter, mCaption);
 
 		painter->setBrush(sceneBrush);

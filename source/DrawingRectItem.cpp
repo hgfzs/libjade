@@ -100,7 +100,7 @@ QRectF DrawingRectItem::rect() const
 void DrawingRectItem::setCornerRadii(qreal radiusX, qreal radiusY)
 {
 	mCornerRadiusX = radiusX;
-	mCornerRadiusX = radiusY;
+	mCornerRadiusY = radiusY;
 }
 
 qreal DrawingRectItem::cornerRadiusX() const

@@ -130,7 +130,7 @@ QPainterPath DrawingArcItem::shape() const
 		DrawingItemStyle::ArrowStyle startArrowStyle = style->startArrowStyle();
 		DrawingItemStyle::ArrowStyle endArrowStyle = style->endArrowStyle();
 		qreal startArrowSize = style->startArrowSize();
-		qreal endArrowSize = style->startArrowSize();
+		qreal endArrowSize = style->endArrowSize();
 		
 		// Add arc
 		drawPath.arcMoveTo(arcRect, arcStartAngle);
@@ -180,7 +180,7 @@ void DrawingArcItem::paint(QPainter* painter)
 		DrawingItemStyle::ArrowStyle startArrowStyle = style->startArrowStyle();
 		DrawingItemStyle::ArrowStyle endArrowStyle = style->endArrowStyle();
 		qreal startArrowSize = style->startArrowSize();
-		qreal endArrowSize = style->startArrowSize();
+		qreal endArrowSize = style->endArrowSize();
 
 		// Draw line
 		QPainterPath drawPath;

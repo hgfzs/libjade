@@ -18,7 +18,8 @@ public:
 
 	enum Flag
 	{
-		UndoableSelectCommands = 0x0001
+		UndoableSelectCommands = 0x0001,
+		SendsMouseMoveInfo = 0x0002
 	};
 	typedef QFlags<DrawingWidget::Flag> Flags;
 
@@ -143,6 +144,7 @@ signals:
 	void itemsGeometryChanged(const QList<DrawingItem*>& items);
 	void selectionChanged(const QList<DrawingItem*>& items);
 	void newItemChanged(DrawingItem* item);
+	void mouseInfoChanged(const QString& mouseInfo);
 
 protected:
 	virtual void mousePressEvent(QMouseEvent* event);

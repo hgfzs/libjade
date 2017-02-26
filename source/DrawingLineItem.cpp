@@ -131,7 +131,7 @@ QPainterPath DrawingLineItem::shape() const
 		DrawingItemStyle::ArrowStyle startArrowStyle = style->startArrowStyle();
 		DrawingItemStyle::ArrowStyle endArrowStyle = style->endArrowStyle();
 		qreal startArrowSize = style->startArrowSize();
-		qreal endArrowSize = style->startArrowSize();
+		qreal endArrowSize = style->endArrowSize();
 		
 		// Add line
 		drawPath.moveTo(p1);
@@ -180,7 +180,7 @@ void DrawingLineItem::paint(QPainter* painter)
 		DrawingItemStyle::ArrowStyle startArrowStyle = style->startArrowStyle();
 		DrawingItemStyle::ArrowStyle endArrowStyle = style->endArrowStyle();
 		qreal startArrowSize = style->startArrowSize();
-		qreal endArrowSize = style->startArrowSize();
+		qreal endArrowSize = style->endArrowSize();
 
 		// Draw line
 		painter->setBrush(Qt::transparent);

@@ -128,10 +128,14 @@ void DrawingTextItem::paint(QPainter* painter)
 		Qt::Alignment textAlignment = style->textAlignment();
 
 		// Draw text
+		QFont painterFont = font;
+		if (painter->paintEngine()->paintDevice())
+			painterFont.setPointSizeF(painterFont.pointSizeF() * 96.0 / painter->paintEngine()->paintDevice()->logicalDpiX());
+
 		QPen textPen(textBrush, 1, Qt::SolidLine);
 		painter->setBrush(Qt::transparent);
 		painter->setPen(textPen);
-		painter->setFont(font);
+		painter->setFont(painterFont);
 		painter->drawText(calculateTextRect(mCaption, font, textAlignment), textAlignment, mCaption);
 
 		painter->setBrush(sceneBrush);
