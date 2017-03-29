@@ -1,8 +1,8 @@
 /* DrawingPolylineItem.cpp
  *
- * Copyright (C) 2013-2016 Jason Allen
+ * Copyright (C) 2013-2017 Jason Allen
  *
- * This file is part of the jade library.
+ * This file is part of the jade application.
  *
  * jade is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,14 +19,12 @@
  */
 
 #include "DrawingPolylineItem.h"
-#include "DrawingWidget.h"
 #include "DrawingItemPoint.h"
 #include "DrawingItemStyle.h"
-#include "DrawingUndo.h"
 
 DrawingPolylineItem::DrawingPolylineItem() : DrawingItem()
 {
-	setFlags(CanMove | CanResize | CanRotate | CanFlip | CanInsertPoints | CanRemovePoints | CanSelect);
+	setFlags(CanMove | CanResize | CanRotate | CanFlip | CanInsertPoints | CanRemovePoints | CanSelect | PlaceByMousePressAndRelease | AdjustPositionOnResize);
 
 	DrawingItemPoint::Flags flags =
 		DrawingItemPoint::Control | DrawingItemPoint::Connection | DrawingItemPoint::Free;
@@ -86,7 +84,7 @@ void DrawingPolylineItem::setPolyline(const QPolygonF& polygon)
 
 	QList<DrawingItemPoint*> points = DrawingPolylineItem::points();
 	for(int i = 0; i < polygon.size(); i++)
-		points[i]->setPos(polygon[i]);
+		points[i]->setPosition(polygon[i]);
 }
 
 QPolygonF DrawingPolylineItem::polyline() const
@@ -95,7 +93,7 @@ QPolygonF DrawingPolylineItem::polyline() const
 
 	QList<DrawingItemPoint*> points = DrawingPolylineItem::points();
 	for(int i = 0; i < points.size(); i++)
-		polygon.append(points[i]->pos());
+		polygon.append(points[i]->position());
 
 	return polygon;
 }
@@ -126,10 +124,10 @@ QPainterPath DrawingPolylineItem::shape() const
 		QPainterPath drawPath;
 
 		QList<DrawingItemPoint*> points = DrawingPolylineItem::points();
-		QPointF p0 = points[0]->pos();
-		QPointF p1 = points[1]->pos();
-		QPointF p2 = points[points.size()-2]->pos();
-		QPointF p3 = points[points.size()-1]->pos();
+		QPointF p0 = points[0]->position();
+		QPointF p1 = points[1]->position();
+		QPointF p2 = points[points.size()-2]->position();
+		QPointF p3 = points[points.size()-1]->position();
 		qreal firstLineLength = qSqrt((p1.x() - p0.x()) * (p1.x() - p0.x()) + (p1.y() - p0.y()) * (p1.y() - p0.y()));
 		qreal lastLineLength = qSqrt((p3.x() - p2.x()) * (p3.x() - p2.x()) + (p3.y() - p2.y()) * (p3.y() - p2.y()));
 		qreal firstLineAngle = 180 * qAtan2(p1.y() - p0.y(), p1.x() - p0.x()) / 3.141592654;
@@ -141,13 +139,13 @@ QPainterPath DrawingPolylineItem::shape() const
 		DrawingItemStyle::ArrowStyle endArrowStyle = style->endArrowStyle();
 		qreal startArrowSize = style->startArrowSize();
 		qreal endArrowSize = style->endArrowSize();
-		
+
 		// Add line
-		drawPath.moveTo(points.first()->pos());
+		drawPath.moveTo(points.first()->position());
 		for(auto pointIter = points.begin() + 1; pointIter != points.end(); pointIter++)
 		{
-			drawPath.lineTo((*pointIter)->pos());
-			drawPath.moveTo((*pointIter)->pos());
+			drawPath.lineTo((*pointIter)->position());
+			drawPath.moveTo((*pointIter)->position());
 		}
 
 		// Add arrows
@@ -160,7 +158,6 @@ QPainterPath DrawingPolylineItem::shape() const
 		}
 
 		// Determine outline path
-		pen.setWidthF(qMax(pen.widthF(), minimumPenWidth()));
 		shape = strokePath(drawPath, pen);
 	}
 
@@ -172,17 +169,17 @@ bool DrawingPolylineItem::isValid() const
 	bool superfluous = true;
 
 	QList<DrawingItemPoint*> points = DrawingPolylineItem::points();
-	QPointF pos = points.first()->pos();
+	QPointF position = points.first()->position();
 
 	for(auto pointIter = points.begin() + 1; superfluous && pointIter != points.end(); pointIter++)
-		superfluous = (pos == (*pointIter)->pos());
+		superfluous = (position == (*pointIter)->position());
 
 	return !superfluous;
 }
 
 //==================================================================================================
 
-void DrawingPolylineItem::paint(QPainter* painter)
+void DrawingPolylineItem::render(QPainter* painter)
 {
 	if (isValid())
 	{
@@ -190,10 +187,10 @@ void DrawingPolylineItem::paint(QPainter* painter)
 		QPen scenePen = painter->pen();
 
 		QList<DrawingItemPoint*> points = DrawingPolylineItem::points();
-		QPointF p0 = points[0]->pos();
-		QPointF p1 = points[1]->pos();
-		QPointF p2 = points[points.size()-2]->pos();
-		QPointF p3 = points[points.size()-1]->pos();
+		QPointF p0 = points[0]->position();
+		QPointF p1 = points[1]->position();
+		QPointF p2 = points[points.size()-2]->position();
+		QPointF p3 = points[points.size()-1]->position();
 		qreal firstLineLength = qSqrt((p1.x() - p0.x()) * (p1.x() - p0.x()) + (p1.y() - p0.y()) * (p1.y() - p0.y()));
 		qreal lastLineLength = qSqrt((p3.x() - p2.x()) * (p3.x() - p2.x()) + (p3.y() - p2.y()) * (p3.y() - p2.y()));
 		qreal firstLineAngle = 180 * qAtan2(p1.y() - p0.y(), p1.x() - p0.x()) / 3.141592654;
@@ -208,11 +205,11 @@ void DrawingPolylineItem::paint(QPainter* painter)
 
 		// Draw line
 		QPainterPath drawPath;
-		drawPath.moveTo(points.first()->pos());
+		drawPath.moveTo(points.first()->position());
 		for(auto pointIter = points.begin() + 1; pointIter != points.end(); pointIter++)
 		{
-			drawPath.lineTo((*pointIter)->pos());
-			drawPath.moveTo((*pointIter)->pos());
+			drawPath.lineTo((*pointIter)->position());
+			drawPath.moveTo((*pointIter)->position());
 		}
 
 		painter->setBrush(Qt::transparent);
@@ -231,107 +228,50 @@ void DrawingPolylineItem::paint(QPainter* painter)
 		painter->setBrush(sceneBrush);
 		painter->setPen(scenePen);
 	}
-
-	// Draw shape (debug)
-	//painter->setBrush(QColor(255, 0, 255, 128));
-	//painter->setPen(QPen(painter->brush(), 1));
-	//painter->drawPath(shape());
 }
 
 //==================================================================================================
 
-void DrawingPolylineItem::resizeItem(DrawingItemPoint* itemPoint, const QPointF& scenePos)
+DrawingItemPoint* DrawingPolylineItem::itemPointToInsert(const QPointF& itemPos, int& index)
 {
-	DrawingItem::resizeItem(itemPoint, scenePos);
+	DrawingItemPoint* pointToInsert = new DrawingItemPoint(
+		itemPos, DrawingItemPoint::Control | DrawingItemPoint::Connection);
 
-	// Adjust position of item and item points so that point(0)->pos() == QPointF(0, 0)
 	QList<DrawingItemPoint*> points = DrawingPolylineItem::points();
-	QPointF deltaPos = -points.first()->pos();
-	QPointF pointScenePos = mapToScene(points.first()->pos());
+	qreal distance = 0;
+	qreal minimumDistance = distanceFromPointToLineSegment(pointToInsert->position(),
+		QLineF(points[0]->position(), points[1]->position()));
 
-	for(auto pointIter = points.begin(); pointIter != points.end(); pointIter++)
-		(*pointIter)->setPos((*pointIter)->pos() + deltaPos);
+	index = 1;
 
-	setPos(pointScenePos);
-}
-
-void DrawingPolylineItem::insertItemPoint(const QPointF& scenePos)
-{
-	DrawingWidget* drawing = DrawingPolylineItem::drawing();
-
-	if (drawing)
+	for(int i = 1; i < points.size() - 1; i++)
 	{
-		DrawingItemPoint* newPoint = new DrawingItemPoint(
-			mapFromScene(drawing->roundToGrid(scenePos)),
-			DrawingItemPoint::Control | DrawingItemPoint::Connection);
-
-		QList<DrawingItemPoint*> points = DrawingPolylineItem::points();
-		int index = 1;
-		qreal distance = 0;
-		qreal minimumDistance = distanceFromPointToLineSegment(newPoint->pos(),
-			QLineF(points[0]->pos(), points[1]->pos()));
-
-		for(int i = 1; i < points.size() - 1; i++)
+		distance = distanceFromPointToLineSegment(pointToInsert->position(),
+			QLineF(points[i]->position(), points[i+1]->position()));
+		if (distance < minimumDistance)
 		{
-			distance = distanceFromPointToLineSegment(newPoint->pos(),
-				QLineF(points[i]->pos(), points[i+1]->pos()));
-			if (distance < minimumDistance)
-			{
-				index = i+1;
-				minimumDistance = distance;
-			}
+			index = i+1;
+			minimumDistance = distance;
 		}
-
-		drawing->pushUndoCommand(new DrawingItemInsertPointCommand(drawing, this, newPoint, index));
 	}
+
+	return pointToInsert;
 }
 
-void DrawingPolylineItem::removeItemPoint(const QPointF& scenePos)
+DrawingItemPoint* DrawingPolylineItem::itemPointToRemove(const QPointF& itemPos)
 {
-	DrawingWidget* drawing = DrawingPolylineItem::drawing();
+	DrawingItemPoint* pointToRemove = nullptr;
+
 	QList<DrawingItemPoint*> points = DrawingPolylineItem::points();
-
-	if (drawing && points.size() > 2)
+	if (points.size() > 2)
 	{
-		DrawingItemPoint* pointToRemove = pointNearest(mapFromScene(scenePos));
+		DrawingItemPoint* pointToRemove = pointNearest(itemPos);
 
-		if (pointToRemove && pointToRemove != points.first() && pointToRemove != points.last())
-			drawing->pushUndoCommand(new DrawingItemRemovePointCommand(drawing, this, pointToRemove));
+		if (pointToRemove && (pointToRemove == points.first() || pointToRemove == points.last()))
+			pointToRemove = nullptr;
 	}
-}
 
-//==================================================================================================
-
-bool DrawingPolylineItem::newItemCopyEvent()
-{
-	QList<DrawingItemPoint*> points = DrawingItem::points();
-
-	for(auto pointIter = points.begin(); pointIter != points.end(); pointIter++)
-		(*pointIter)->setPos(0, 0);
-
-	return true;
-}
-
-void DrawingPolylineItem::newMouseMoveEvent(DrawingMouseEvent* event)
-{
-	if (event->buttons() & Qt::LeftButton)
-	{
-		DrawingWidget* drawing = DrawingItem::drawing();
-		QList<DrawingItemPoint*> points = DrawingPolylineItem::points();
-		DrawingItemPoint* endPoint = points.last();
-
-		QPointF newPos = event->scenePos();
-		if (drawing) newPos = drawing->roundToGrid(newPos);
-
-		resizeItem(endPoint, newPos);
-	}
-	else DrawingItem::newMouseMoveEvent(event);
-}
-
-bool DrawingPolylineItem::newMouseReleaseEvent(DrawingMouseEvent* event)
-{
-	Q_UNUSED(event);
-	return isValid();
+	return pointToRemove;
 }
 
 //==================================================================================================

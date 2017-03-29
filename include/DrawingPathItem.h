@@ -1,8 +1,8 @@
 /* DrawingPathItem.h
  *
- * Copyright (C) 2013-2016 Jason Allen
+ * Copyright (C) 2013-2017 Jason Allen
  *
- * This file is part of the jade library.
+ * This file is part of the jade application.
  *
  * jade is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,25 +23,11 @@
 
 #include <DrawingItem.h>
 
-/*! \brief Provides a path item that can be added to a DrawingWidget.
- *
- * To set the item's rect, call the setRect() function.  The rect() function returns the
- * current rect.  Both functions operate in local item coordinates.
- *
- * A DrawingPathItem can draw an arbitrary QPainterPath, which can be set using setPath().  The path
- * is given in local path coordinates as specified by the pathRect(); path coordinates are mapped to
- * item coordinates using mapToPath() and mapFromPath().  These functions scale coordinates between
- * the rect() and the pathRect().
- *
- * Rendering options for the path can be controlled through properties of the item's style().
- * The path item supports all of the pen and brush style properties.
- *
- * DrawingPathItem provides a reasonable implementation of boundingRect(), shape(), and isValid().
- * The paint() function draws the path using the item's associated pen and brush.
- */
 class DrawingPathItem : public DrawingItem
 {
 private:
+	enum PointIndex { TopLeft, BottomRight, TopRight, BottomLeft, TopMiddle, MiddleRight, BottomMiddle, MiddleLeft };
+
 	QString mName;
 	QPainterPath mPath;
 	QRectF mPathRect;
@@ -80,6 +66,7 @@ public:
 	 * All of the item's points are also deleted.
 	 */
 	virtual ~DrawingPathItem();
+
 
 	/*! \brief Creates a copy of the DrawingPathItem and return it.
 	 *
@@ -235,15 +222,15 @@ public:
 	 * At the end of this function, the QPainter object is returned to the same state that it was
 	 * in when the function started.
 	 */
-	virtual void paint(QPainter* painter);
+	virtual void render(QPainter* painter);
 
-
+protected:
 	/*! \brief Resizes the item within the scene.
 	 *
-	 * Before returning, this function also remaps the position of the item and all of its points
-	 * such that the position of the path item's start point is at the origin of the item.
+	 * This function ensures that whenever the item is resized, all of the item's points are resized
+	 * to maintain position on the item's perimeter.
 	 */
-	virtual void resizeItem(DrawingItemPoint* itemPoint, const QPointF& scenePos);
+	virtual void resizeEvent(DrawingItemPoint* itemPoint, const QPointF& scenePos);
 
 private:
 	QPainterPath transformedPath() const;

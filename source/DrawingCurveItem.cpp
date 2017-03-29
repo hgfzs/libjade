@@ -1,8 +1,8 @@
 /* DrawingCurveItem.cpp
  *
- * Copyright (C) 2013-2016 Jason Allen
+ * Copyright (C) 2013-2017 Jason Allen
  *
- * This file is part of the jade library.
+ * This file is part of the jade application.
  *
  * jade is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,12 +19,13 @@
  */
 
 #include "DrawingCurveItem.h"
-#include "DrawingWidget.h"
 #include "DrawingItemPoint.h"
 #include "DrawingItemStyle.h"
 
 DrawingCurveItem::DrawingCurveItem() : DrawingItem()
 {
+	setFlags(CanMove | CanResize | CanRotate | CanFlip | CanSelect | AdjustPositionOnResize);
+
 	DrawingItemPoint::Flags flags =
 		DrawingItemPoint::Control | DrawingItemPoint::Connection | DrawingItemPoint::Free;
 	addPoint(new DrawingItemPoint(QPointF(0, 0), flags));						// start point
@@ -72,30 +73,30 @@ DrawingItem* DrawingCurveItem::copy() const
 void DrawingCurveItem::setCurve(const QPointF& p1, const QPointF& controlP1, const QPointF& controlP2, const QPointF& p2)
 {
 	QList<DrawingItemPoint*> points = DrawingCurveItem::points();
-	points[0]->setPos(p1);
-	points[1]->setPos(controlP1);
-	points[2]->setPos(controlP2);
-	points[3]->setPos(p2);
+	points[0]->setPosition(p1);
+	points[1]->setPosition(controlP1);
+	points[2]->setPosition(controlP2);
+	points[3]->setPosition(p2);
 }
 
 QPointF DrawingCurveItem::curveStartPos() const
 {
-	return points()[0]->pos();
+	return points()[0]->position();
 }
 
 QPointF DrawingCurveItem::curveStartControlPos() const
 {
-	return points()[1]->pos();
+	return points()[1]->position();
 }
 
 QPointF DrawingCurveItem::curveEndControlPos() const
 {
-	return points()[2]->pos();
+	return points()[2]->position();
 }
 
 QPointF DrawingCurveItem::curveEndPos() const
 {
-	return points()[3]->pos();
+	return points()[3]->position();
 }
 
 //==================================================================================================
@@ -105,8 +106,8 @@ QRectF DrawingCurveItem::boundingRect() const
 	QPainterPath drawPath;
 	QList<DrawingItemPoint*> points = DrawingCurveItem::points();
 
-	drawPath.moveTo(points[0]->pos());
-	drawPath.cubicTo(points[1]->pos(), points[2]->pos(), points[3]->pos());
+	drawPath.moveTo(points[0]->position());
+	drawPath.cubicTo(points[1]->position(), points[2]->position(), points[3]->position());
 
 	qreal penWidth = style()->valueLookup(DrawingItemStyle::PenWidth).toReal();
 	QRectF rect = drawPath.boundingRect();
@@ -124,20 +125,20 @@ QPainterPath DrawingCurveItem::shape() const
 		QPainterPath drawPath;
 
 		QList<DrawingItemPoint*> points = DrawingCurveItem::points();
-		QPointF p1 = points.first()->pos();
-		QPointF p2 = points.last()->pos();
+		QPointF p1 = points.first()->position();
+		QPointF p2 = points.last()->position();
 		qreal lineLength = qSqrt((p2.x() - p1.x()) * (p2.x() - p1.x()) + (p2.y() - p1.y()) * (p2.y() - p1.y()));
-		
+
 		DrawingItemStyle* style = DrawingItem::style();
 		QPen pen = style->pen();
 		DrawingItemStyle::ArrowStyle startArrowStyle = style->startArrowStyle();
 		DrawingItemStyle::ArrowStyle endArrowStyle = style->endArrowStyle();
 		qreal startArrowSize = style->startArrowSize();
 		qreal endArrowSize = style->endArrowSize();
-		
+
 		// Add arc
-		drawPath.moveTo(points[0]->pos());
-		drawPath.cubicTo(points[1]->pos(), points[2]->pos(), points[3]->pos());
+		drawPath.moveTo(points[0]->position());
+		drawPath.cubicTo(points[1]->position(), points[2]->position(), points[3]->position());
 
 		// Add arrows
 		if (pen.style() != Qt::NoPen)
@@ -149,7 +150,6 @@ QPainterPath DrawingCurveItem::shape() const
 		}
 
 		// Determine outline path
-		pen.setWidthF(qMax(pen.widthF(), minimumPenWidth()));
 		shape = strokePath(drawPath, pen);
 	}
 
@@ -163,7 +163,7 @@ bool DrawingCurveItem::isValid() const
 
 //==================================================================================================
 
-void DrawingCurveItem::paint(QPainter* painter)
+void DrawingCurveItem::render(QPainter* painter)
 {
 	if (isValid())
 	{
@@ -171,10 +171,10 @@ void DrawingCurveItem::paint(QPainter* painter)
 		QPen scenePen = painter->pen();
 
 		QList<DrawingItemPoint*> points = DrawingCurveItem::points();
-		QPointF p1 = points.first()->pos();
-		QPointF p2 = points.last()->pos();
+		QPointF p1 = points.first()->position();
+		QPointF p2 = points.last()->position();
 		qreal lineLength = qSqrt((p2.x() - p1.x()) * (p2.x() - p1.x()) + (p2.y() - p1.y()) * (p2.y() - p1.y()));
-		
+
 		DrawingItemStyle* style = DrawingItem::style();
 		QPen pen = style->pen();
 		DrawingItemStyle::ArrowStyle startArrowStyle = style->startArrowStyle();
@@ -184,8 +184,8 @@ void DrawingCurveItem::paint(QPainter* painter)
 
 		// Draw curve
 		QPainterPath drawPath;
-		drawPath.moveTo(points[0]->pos());
-		drawPath.cubicTo(points[1]->pos(), points[2]->pos(), points[3]->pos());
+		drawPath.moveTo(points[0]->position());
+		drawPath.cubicTo(points[1]->position(), points[2]->position(), points[3]->position());
 
 		painter->setBrush(Qt::transparent);
 		painter->setPen(pen);
@@ -207,23 +207,18 @@ void DrawingCurveItem::paint(QPainter* painter)
 			pen.setWidthF(pen.widthF() * 0.75);
 			painter->setBrush(Qt::transparent);
 			painter->setPen(pen);
-			painter->drawLine(points[0]->pos(), points[1]->pos());
-			painter->drawLine(points[3]->pos(), points[2]->pos());
+			painter->drawLine(points[0]->position(), points[1]->position());
+			painter->drawLine(points[3]->position(), points[2]->position());
 		}
 
 		painter->setBrush(sceneBrush);
 		painter->setPen(scenePen);
 	}
-
-	// Draw shape (debug)
-	//painter->setBrush(QColor(255, 0, 255, 128));
-	//painter->setPen(QPen(painter->brush(), 1));
-	//painter->drawPath(shape());
 }
 
 //==================================================================================================
 
-void DrawingCurveItem::resizeItem(DrawingItemPoint* itemPoint, const QPointF& scenePos)
+void DrawingCurveItem::resizeEvent(DrawingItemPoint* itemPoint, const QPointF& scenePos)
 {
 	QList<DrawingItemPoint*> points = DrawingCurveItem::points();
 
@@ -231,63 +226,54 @@ void DrawingCurveItem::resizeItem(DrawingItemPoint* itemPoint, const QPointF& sc
 
 	if (pointIndex == 0)
 	{
-		QPointF difference = points[1]->pos() - points[0]->pos();
-		points[1]->setPos(mapFromScene(scenePos) + difference);
+		QPointF difference = points[1]->position() - points[0]->position();
+		points[1]->setPosition(mapFromScene(scenePos) + difference);
 
 	}
 	else if (pointIndex == 3)
 	{
-		QPointF difference = points[2]->pos() - points[3]->pos();
-		points[2]->setPos(mapFromScene(scenePos) + difference);
+		QPointF difference = points[2]->position() - points[3]->position();
+		points[2]->setPosition(mapFromScene(scenePos) + difference);
 	}
 
-	DrawingItem::resizeItem(itemPoint, scenePos);
-
-	// Adjust position of item and item points so that point(0)->pos() == QPointF(0, 0)
-	QPointF deltaPos = -points.first()->pos();
-	QPointF pointScenePos = mapToScene(points.first()->pos());
-
-	for(auto pointIter = points.begin(); pointIter != points.end(); pointIter++)
-		(*pointIter)->setPos((*pointIter)->pos() + deltaPos);
-
-	setPos(pointScenePos);
+	DrawingItem::resizeEvent(itemPoint, scenePos);
 }
 
 //==================================================================================================
 
 QPointF DrawingCurveItem::pointFromRatio(qreal ratio) const
 {
-	QPointF pos;
+	QPointF position;
 	QList<DrawingItemPoint*> points = DrawingCurveItem::points();
 
-	QPointF p0 = points[0]->pos();
-	QPointF p1 = points[1]->pos();
-	QPointF p2 = points[2]->pos();
-	QPointF p3 = points[3]->pos();
+	QPointF p0 = points[0]->position();
+	QPointF p1 = points[1]->position();
+	QPointF p2 = points[2]->position();
+	QPointF p3 = points[3]->position();
 
-	pos.setX((1 - ratio)*(1 - ratio)*(1 - ratio) * p0.x() +
+	position.setX((1 - ratio)*(1 - ratio)*(1 - ratio) * p0.x() +
 		3*ratio*(1 - ratio)*(1 - ratio) * p1.x() +
 		3*ratio*ratio*(1 - ratio) * p2.x() +
 		ratio*ratio*ratio * p3.x());
 
-	pos.setY((1 - ratio)*(1 - ratio)*(1 - ratio) * p0.y() +
+	position.setY((1 - ratio)*(1 - ratio)*(1 - ratio) * p0.y() +
 		3*ratio*(1 - ratio)*(1 - ratio) * p1.y() +
 		3*ratio*ratio*(1 - ratio) * p2.y() +
 		ratio*ratio*ratio * p3.y());
 
-	return pos;
+	return position;
 }
 
 qreal DrawingCurveItem::startArrowAngle() const
 {
 	QList<DrawingItemPoint*> points = DrawingCurveItem::points();
-	QLineF startLine(points[0]->pos(), pointFromRatio(0.05));
+	QLineF startLine(points[0]->position(), pointFromRatio(0.05));
 	return -startLine.angle();
 }
 
 qreal DrawingCurveItem::endArrowAngle() const
 {
 	QList<DrawingItemPoint*> points = DrawingCurveItem::points();
-	QLineF endLine(points[3]->pos(), pointFromRatio(0.95));
+	QLineF endLine(points[3]->position(), pointFromRatio(0.95));
 	return -endLine.angle();
 }

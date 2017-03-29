@@ -1,8 +1,8 @@
 /* DrawingTextRectItem.h
  *
- * Copyright (C) 2013-2016 Jason Allen
+ * Copyright (C) 2013-2017 Jason Allen
  *
- * This file is part of the jade library.
+ * This file is part of the jade application.
  *
  * jade is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,11 +23,11 @@
 
 #include <DrawingItem.h>
 
-/*! \brief Provides a text rectangle item that can be added to a DrawingWidget.
+/*! \brief Provides a text rectangle item that can be added to a DrawingScene.
  *
  * To set the item's rect, call the setRect() function.  The rect() function returns the
  * current rect.  Both functions operate in local item coordinates.
- * 
+ *
  * To set the item's text, call the setCaption() function.  The caption() function returns the
  * current text.
  *
@@ -35,11 +35,13 @@
  * The text rect item supports all of the pen, brush, font, and text brush style properties.
  *
  * DrawingTextRectItem provides a reasonable implementation of boundingRect(), shape(), and isValid().
- * The paint() function draws the text rect using the item's style properties.
+ * The render() function draws the text rect using the item's style properties.
  */
 class DrawingTextRectItem : public DrawingItem
 {
 private:
+	enum PointIndex { TopLeft, BottomRight, TopRight, BottomLeft, TopMiddle, MiddleRight, BottomMiddle, MiddleLeft };
+
 	qreal mCornerRadiusX, mCornerRadiusY;
 	QString mCaption;
 
@@ -72,19 +74,20 @@ public:
 	 * \li DrawingItemStyle::FontStrikeThrough
 	 */
 	DrawingTextRectItem();
-	
+
 	/*! \brief Create a new DrawingTextRectItem as a copy of an existing text rect item.
 	 *
 	 * Creates copies of all item points to the new text rect item, including the point's positions.
 	 * Also creates a new item style with all of the same properties as the existing item's style.
 	 */
 	DrawingTextRectItem(const DrawingTextRectItem& item);
-	
+
 	/*! \brief Delete an existing DrawingTextRectItem object.
 	 *
 	 * All of the item's points are also deleted.
 	 */
 	virtual ~DrawingTextRectItem();
+
 
 	/*! \brief Creates a copy of the DrawingTextRectItem and return it.
 	 *
@@ -92,7 +95,7 @@ public:
 	 */
 	virtual DrawingItem* copy() const;
 
-	
+
 	/*! \brief Sets the item's rect to rect, which is given in local item coordinates.
 	 *
 	 * \sa rect()
@@ -113,7 +116,7 @@ public:
 	 */
 	QRectF rect() const;
 
-	
+
 	/*! \brief Sets the item's corner radius for the x-axis and y-axis as given in local item
 	 * coordinates.
 	 *
@@ -156,21 +159,16 @@ public:
 	 * \sa shape(), isValid()
 	 */
 	virtual QRectF boundingRect() const;
-	
+
 	/*! \brief Returns an accurate outline of the item's shape.
 	 *
 	 * Calculates the shape of the text rect based on the position of its points and the size of the
 	 * item's text.
 	 *
-	 * Note that the stroke width used to determine the shape is either the actual width of the 
-	 * pen set by the item's style() or a reasonable minimum width as determined by the current
-	 * zoom scale of the item's drawing(), whichever is larger.  This is done to make it easier to
-	 * click on text rect items when zoomed out on a large scene.
-	 *
 	 * \sa boundingRect(), isValid()
 	 */
 	virtual QPainterPath shape() const;
-	
+
 	/*! \brief Return false if the item is degenerate, true otherwise.
 	 *
 	 * A text rect item is considered degenerate if the positions of all of its points
@@ -180,7 +178,7 @@ public:
 	 */
 	virtual bool isValid() const;
 
-	
+
 	/*! \brief Paints the contents of the text rect item into the scene.
 	 *
 	 * The text rect is painted in the scene based on properties set by the item's style().
@@ -188,15 +186,15 @@ public:
 	 * At the end of this function, the QPainter object is returned to the same state that it was
 	 * in when the function started.
 	 */
-	virtual void paint(QPainter* painter);
+	virtual void render(QPainter* painter);
 
-	
+protected:
 	/*! \brief Resizes the item within the scene.
 	 *
-	 * Before returning, this function also remaps the position of the item and all of its points 
-	 * such that the position of the text rect item's start point is at the origin of the item.
+	 * This function ensures that whenever the item is resized, all of the item's points are resized
+	 * to maintain position on the item's perimeter.
 	 */
-	virtual void resizeItem(DrawingItemPoint* itemPoint, const QPointF& scenePos);
+	virtual void resizeEvent(DrawingItemPoint* itemPoint, const QPointF& scenePos);
 
 private:
 	QRectF calculateTextRect(const QString& caption, const QFont& font) const;

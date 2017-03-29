@@ -1,8 +1,8 @@
 /* DrawingTextEllipseItem.cpp
  *
- * Copyright (C) 2013-2016 Jason Allen
+ * Copyright (C) 2013-2017 Jason Allen
  *
- * This file is part of the jade library.
+ * This file is part of the jade application.
  *
  * jade is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,14 +19,14 @@
  */
 
 #include "DrawingTextEllipseItem.h"
-#include "DrawingWidget.h"
 #include "DrawingItemPoint.h"
 #include "DrawingItemStyle.h"
-#include "DrawingUndo.h"
 
 DrawingTextEllipseItem::DrawingTextEllipseItem() : DrawingItem()
 {
 	mCaption = "Label";
+
+	setFlags(CanMove | CanResize | CanRotate | CanFlip | CanSelect | AdjustPositionOnResize);
 
 	DrawingItemPoint::Flags flags = (DrawingItemPoint::Control | DrawingItemPoint::Connection);
 	for(int i = 0; i < 8; i++) addPoint(new DrawingItemPoint(QPointF(0, 0), flags));
@@ -93,14 +93,14 @@ DrawingItem* DrawingTextEllipseItem::copy() const
 void DrawingTextEllipseItem::setEllipse(const QRectF& rect)
 {
 	QList<DrawingItemPoint*> points = DrawingTextEllipseItem::points();
-	points[0]->setPos(rect.left(), rect.top());
-	points[1]->setPos(rect.center().x(), rect.top());
-	points[2]->setPos(rect.right(), rect.top());
-	points[3]->setPos(rect.right(), rect.center().y());
-	points[4]->setPos(rect.right(), rect.bottom());
-	points[5]->setPos(rect.center().x(), rect.bottom());
-	points[6]->setPos(rect.left(), rect.bottom());
-	points[7]->setPos(rect.left(), rect.center().y());
+	points[TopLeft]->setPosition(rect.left(), rect.top());
+	points[TopMiddle]->setPosition(rect.center().x(), rect.top());
+	points[TopRight]->setPosition(rect.right(), rect.top());
+	points[MiddleRight]->setPosition(rect.right(), rect.center().y());
+	points[BottomRight]->setPosition(rect.right(), rect.bottom());
+	points[BottomMiddle]->setPosition(rect.center().x(), rect.bottom());
+	points[BottomLeft]->setPosition(rect.left(), rect.bottom());
+	points[MiddleLeft]->setPosition(rect.left(), rect.center().y());
 }
 
 void DrawingTextEllipseItem::setEllipse(qreal left, qreal top, qreal width, qreal height)
@@ -111,7 +111,7 @@ void DrawingTextEllipseItem::setEllipse(qreal left, qreal top, qreal width, qrea
 QRectF DrawingTextEllipseItem::ellipse() const
 {
 	QList<DrawingItemPoint*> points = DrawingTextEllipseItem::points();
-	return (points.size() >= 8) ? QRectF(points[0]->pos(), points[4]->pos()) : QRectF();
+	return (points.size() >= 8) ? QRectF(points[TopLeft]->position(), points[BottomRight]->position()) : QRectF();
 }
 
 //==================================================================================================
@@ -162,7 +162,6 @@ QPainterPath DrawingTextEllipseItem::shape() const
 		drawPath.addEllipse(ellipse().normalized());
 
 		// Determine outline path
-		pen.setWidthF(qMax(pen.widthF(), minimumPenWidth()));
 		shape = strokePath(drawPath, pen);
 
 		if (brush.color().alpha() > 0) shape.addPath(drawPath);
@@ -177,12 +176,12 @@ QPainterPath DrawingTextEllipseItem::shape() const
 bool DrawingTextEllipseItem::isValid() const
 {
 	QList<DrawingItemPoint*> points = DrawingTextEllipseItem::points();
-	return (points.size() >= 8 && points[0]->pos() != points[4]->pos() && !mCaption.isEmpty());
+	return (points.size() >= 8 && points[TopLeft]->position() != points[BottomRight]->position());
 }
 
 //==================================================================================================
 
-void DrawingTextEllipseItem::paint(QPainter* painter)
+void DrawingTextEllipseItem::render(QPainter* painter)
 {
 	if (isValid())
 	{
@@ -216,19 +215,12 @@ void DrawingTextEllipseItem::paint(QPainter* painter)
 		painter->setPen(scenePen);
 		painter->setFont(sceneFont);
 	}
-
-	// Draw shape (debug)
-	//painter->setBrush(QColor(255, 0, 255, 128));
-	//painter->setPen(QPen(painter->brush(), 1));
-	//painter->drawPath(shape());
-	//painter->drawRect(boundingRect());
 }
-
 //==================================================================================================
 
-void DrawingTextEllipseItem::resizeItem(DrawingItemPoint* itemPoint, const QPointF& scenePos)
+void DrawingTextEllipseItem::resizeEvent(DrawingItemPoint* itemPoint, const QPointF& scenePos)
 {
-	DrawingItem::resizeItem(itemPoint, scenePos);
+	DrawingItem::resizeEvent(itemPoint, scenePos);
 
 	QList<DrawingItemPoint*> points = DrawingTextEllipseItem::points();
 	if (points.size() >= 8)
@@ -240,36 +232,27 @@ void DrawingTextEllipseItem::resizeItem(DrawingItemPoint* itemPoint, const QPoin
 		{
 			switch (pointIndex)
 			{
-			case 0:	rect.setTopLeft(itemPoint->pos()); break;
-			case 1:	rect.setTop(itemPoint->y()); break;
-			case 2:	rect.setTopRight(itemPoint->pos()); break;
-			case 3:	rect.setRight(itemPoint->x()); break;
-			case 4:	rect.setBottomRight(itemPoint->pos()); break;
-			case 5:	rect.setBottom(itemPoint->y()); break;
-			case 6:	rect.setBottomLeft(itemPoint->pos()); break;
-			case 7:	rect.setLeft(itemPoint->x()); break;
+			case TopLeft: rect.setTopLeft(itemPoint->position()); break;
+			case TopMiddle:	rect.setTop(itemPoint->y()); break;
+			case TopRight: rect.setTopRight(itemPoint->position()); break;
+			case MiddleRight: rect.setRight(itemPoint->x()); break;
+			case BottomRight: rect.setBottomRight(itemPoint->position()); break;
+			case BottomMiddle: rect.setBottom(itemPoint->y()); break;
+			case BottomLeft: rect.setBottomLeft(itemPoint->position()); break;
+			case MiddleLeft: rect.setLeft(itemPoint->x()); break;
 			default: break;
 			}
 
-			points[0]->setPos(rect.left(), rect.top());
-			points[1]->setPos(rect.center().x(), rect.top());
-			points[2]->setPos(rect.right(), rect.top());
-			points[3]->setPos(rect.right(), rect.center().y());
-			points[4]->setPos(rect.right(), rect.bottom());
-			points[5]->setPos(rect.center().x(), rect.bottom());
-			points[6]->setPos(rect.left(), rect.bottom());
-			points[7]->setPos(rect.left(), rect.center().y());
+			points[TopLeft]->setPosition(rect.left(), rect.top());
+			points[TopMiddle]->setPosition(rect.center().x(), rect.top());
+			points[TopRight]->setPosition(rect.right(), rect.top());
+			points[MiddleRight]->setPosition(rect.right(), rect.center().y());
+			points[BottomRight]->setPosition(rect.right(), rect.bottom());
+			points[BottomMiddle]->setPosition(rect.center().x(), rect.bottom());
+			points[BottomLeft]->setPosition(rect.left(), rect.bottom());
+			points[MiddleLeft]->setPosition(rect.left(), rect.center().y());
 		}
 	}
-
-	// Adjust position of item and item points so that point(0)->pos() == QPointF(0, 0)
-	QPointF deltaPos = -points.first()->pos();
-	QPointF pointScenePos = mapToScene(points.first()->pos());
-
-	for(auto pointIter = points.begin(); pointIter != points.end(); pointIter++)
-		(*pointIter)->setPos((*pointIter)->pos() + deltaPos);
-
-	setPos(pointScenePos);
 }
 
 //==================================================================================================
@@ -292,4 +275,3 @@ QRectF DrawingTextEllipseItem::calculateTextRect(const QString& caption, const Q
 
 	return QRectF(-textWidth / 2, -textHeight / 2, textWidth, textHeight).translated(pointsRect.center());
 }
-

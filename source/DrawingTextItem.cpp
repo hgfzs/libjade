@@ -1,8 +1,8 @@
 /* DrawingTextItem.cpp
  *
- * Copyright (C) 2013-2016 Jason Allen
+ * Copyright (C) 2013-2017 Jason Allen
  *
- * This file is part of the jade library.
+ * This file is part of the jade application.
  *
  * jade is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,6 @@
  */
 
 #include "DrawingTextItem.h"
-#include "DrawingWidget.h"
 #include "DrawingItemPoint.h"
 #include "DrawingItemStyle.h"
 
@@ -114,7 +113,7 @@ bool DrawingTextItem::isValid() const
 
 //==================================================================================================
 
-void DrawingTextItem::paint(QPainter* painter)
+void DrawingTextItem::render(QPainter* painter)
 {
 	if (isValid())
 	{
@@ -142,11 +141,6 @@ void DrawingTextItem::paint(QPainter* painter)
 		painter->setPen(scenePen);
 		painter->setFont(sceneFont);
 	}
-
-	// Draw shape (debug)
-	//painter->setBrush(QColor(255, 0, 255, 128));
-	//painter->setPen(QPen(painter->brush(), 1));
-	//painter->drawPath(shape());
 }
 
 //==================================================================================================
