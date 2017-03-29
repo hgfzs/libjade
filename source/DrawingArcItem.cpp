@@ -1,8 +1,8 @@
 /* DrawingArcItem.cpp
  *
- * Copyright (C) 2013-2016 Jason Allen
+ * Copyright (C) 2013-2017 Jason Allen
  *
- * This file is part of the jade library.
+ * This file is part of the jade application.
  *
  * jade is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,12 +19,13 @@
  */
 
 #include "DrawingArcItem.h"
-#include "DrawingWidget.h"
 #include "DrawingItemPoint.h"
 #include "DrawingItemStyle.h"
 
 DrawingArcItem::DrawingArcItem() : DrawingItem()
 {
+	setFlags(CanMove | CanResize | CanRotate | CanFlip | CanSelect | PlaceByMousePressAndRelease | AdjustPositionOnResize);
+
 	DrawingItemPoint::Flags flags =
 		DrawingItemPoint::Control | DrawingItemPoint::Connection | DrawingItemPoint::Free;
 	addPoint(new DrawingItemPoint(QPointF(0, 0), flags));	// start point
@@ -70,8 +71,8 @@ void DrawingArcItem::setArc(const QLineF& line)
 {
 	QList<DrawingItemPoint*> points = DrawingArcItem::points();
 
-	points[0]->setPos(line.p1());
-	points[1]->setPos(line.p2());
+	points[0]->setPosition(line.p1());
+	points[1]->setPosition(line.p2());
 }
 
 void DrawingArcItem::setArc(qreal x1, qreal y1, qreal x2, qreal y2)
@@ -84,8 +85,8 @@ QLineF DrawingArcItem::arc() const
 	QLineF line;
 
 	QList<DrawingItemPoint*> points = DrawingArcItem::points();
-	line.setP1(points.first()->pos());
-	line.setP2(points.last()->pos());
+	line.setP1(points.first()->position());
+	line.setP2(points.last()->position());
 
 	return line;
 }
@@ -99,8 +100,8 @@ QRectF DrawingArcItem::boundingRect() const
 	if (isValid())
 	{
 		QList<DrawingItemPoint*> points = DrawingArcItem::points();
-		QPointF p1 = points.first()->pos();
-		QPointF p2 = points.last()->pos();
+		QPointF p1 = points.first()->position();
+		QPointF p2 = points.last()->position();
 		qreal penWidth = style()->valueLookup(DrawingItemStyle::PenWidth).toReal();
 
 		rect = QRectF(qMin(p1.x(), p2.x()), qMin(p1.y(), p2.y()), qAbs(p1.x() - p2.x()), qAbs(p1.y() - p2.y()));
@@ -119,8 +120,8 @@ QPainterPath DrawingArcItem::shape() const
 		QPainterPath drawPath;
 
 		QList<DrawingItemPoint*> points = DrawingArcItem::points();
-		QPointF p1 = points.first()->pos();
-		QPointF p2 = points.last()->pos();
+		QPointF p1 = points.first()->position();
+		QPointF p2 = points.last()->position();
 		qreal lineLength = qSqrt((p2.x() - p1.x()) * (p2.x() - p1.x()) + (p2.y() - p1.y()) * (p2.y() - p1.y()));
 		QRectF arcRect = DrawingArcItem::arcRect();
 		qreal arcStartAngle = DrawingArcItem::arcStartAngle();
@@ -131,7 +132,7 @@ QPainterPath DrawingArcItem::shape() const
 		DrawingItemStyle::ArrowStyle endArrowStyle = style->endArrowStyle();
 		qreal startArrowSize = style->startArrowSize();
 		qreal endArrowSize = style->endArrowSize();
-		
+
 		// Add arc
 		drawPath.arcMoveTo(arcRect, arcStartAngle);
 		drawPath.arcTo(arcRect, arcStartAngle, 90);
@@ -146,7 +147,6 @@ QPainterPath DrawingArcItem::shape() const
 		}
 
 		// Determine outline path
-		pen.setWidthF(qMax(pen.widthF(), minimumPenWidth()));
 		shape = strokePath(drawPath, pen);
 	}
 
@@ -156,12 +156,12 @@ QPainterPath DrawingArcItem::shape() const
 bool DrawingArcItem::isValid() const
 {
 	QList<DrawingItemPoint*> points = DrawingArcItem::points();
-	return (points.size() >= 2 && points.first()->pos() != points.last()->pos());
+	return (points.size() >= 2 && points.first()->position() != points.last()->position());
 }
 
 //==================================================================================================
 
-void DrawingArcItem::paint(QPainter* painter)
+void DrawingArcItem::render(QPainter* painter)
 {
 	if (isValid())
 	{
@@ -169,8 +169,8 @@ void DrawingArcItem::paint(QPainter* painter)
 		QPen scenePen = painter->pen();
 
 		QList<DrawingItemPoint*> points = DrawingArcItem::points();
-		QPointF p1 = points.first()->pos();
-		QPointF p2 = points.last()->pos();
+		QPointF p1 = points.first()->position();
+		QPointF p2 = points.last()->position();
 		qreal lineLength = qSqrt((p2.x() - p1.x()) * (p2.x() - p1.x()) + (p2.y() - p1.y()) * (p2.y() - p1.y()));
 		QRectF arcRect = DrawingArcItem::arcRect();
 		qreal arcStartAngle = DrawingArcItem::arcStartAngle();
@@ -203,62 +203,6 @@ void DrawingArcItem::paint(QPainter* painter)
 		painter->setBrush(sceneBrush);
 		painter->setPen(scenePen);
 	}
-
-	// Draw shape (debug)
-	//painter->setBrush(QColor(255, 0, 255, 128));
-	//painter->setPen(QPen(painter->brush(), 1));
-	//painter->drawPath(shape());
-}
-
-//==================================================================================================
-
-void DrawingArcItem::resizeItem(DrawingItemPoint* itemPoint, const QPointF& scenePos)
-{
-	DrawingItem::resizeItem(itemPoint, scenePos);
-
-	// Adjust position of item and item points so that point(0)->pos() == QPointF(0, 0)
-	QList<DrawingItemPoint*> points = DrawingArcItem::points();
-	QPointF deltaPos = -points.first()->pos();
-	QPointF pointScenePos = mapToScene(points.first()->pos());
-
-	for(auto pointIter = points.begin(); pointIter != points.end(); pointIter++)
-		(*pointIter)->setPos((*pointIter)->pos() + deltaPos);
-
-	setPos(pointScenePos);
-}
-
-//==================================================================================================
-
-bool DrawingArcItem::newItemCopyEvent()
-{
-	QList<DrawingItemPoint*> points = DrawingItem::points();
-
-	for(auto pointIter = points.begin(); pointIter != points.end(); pointIter++)
-		(*pointIter)->setPos(0, 0);
-
-	return true;
-}
-
-void DrawingArcItem::newMouseMoveEvent(DrawingMouseEvent* event)
-{
-	if (event->buttons() & Qt::LeftButton)
-	{
-		DrawingWidget* drawing = DrawingItem::drawing();
-		QList<DrawingItemPoint*> points = DrawingArcItem::points();
-		DrawingItemPoint* endPoint = points[1];
-
-		QPointF newPos = event->scenePos();
-		if (drawing) newPos = drawing->roundToGrid(newPos);
-
-		resizeItem(endPoint, newPos);
-	}
-	else DrawingItem::newMouseMoveEvent(event);
-}
-
-bool DrawingArcItem::newMouseReleaseEvent(DrawingMouseEvent* event)
-{
-	Q_UNUSED(event);
-	return isValid();
 }
 
 //==================================================================================================

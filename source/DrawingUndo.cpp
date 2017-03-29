@@ -1,6 +1,6 @@
 /* DrawingUndo.cpp
  *
- * Copyright (C) 2013-2016 Jason Allen
+ * Copyright (C) 2013-2017 Jason Allen
  *
  * This file is part of the jade library.
  *
@@ -19,7 +19,8 @@
  */
 
 #include "DrawingUndo.h"
-#include "DrawingWidget.h"
+#include "DrawingView.h"
+#include "DrawingScene.h"
 #include "DrawingItem.h"
 #include "DrawingItemPoint.h"
 
@@ -101,11 +102,11 @@ void DrawingUndoCommand::mergeChildren(const QUndoCommand* command)
 
 //==================================================================================================
 
-DrawingAddItemsCommand::DrawingAddItemsCommand(DrawingWidget* drawing, 
+DrawingAddItemsCommand::DrawingAddItemsCommand(DrawingView* view,
 	const QList<DrawingItem*>& items, QUndoCommand* parent)
 	: DrawingUndoCommand("Add Items", parent)
 {
-	mDrawing = drawing;
+	mView = view;
 	mItems = items;
 	mUndone = true;
 }
@@ -126,30 +127,30 @@ int DrawingAddItemsCommand::id() const
 void DrawingAddItemsCommand::redo()
 {
 	mUndone = false;
-	if (mDrawing) mDrawing->addItems(mItems);
+	if (mView) mView->addItems(mItems);
 	DrawingUndoCommand::redo();
 }
 
 void DrawingAddItemsCommand::undo()
 {
 	DrawingUndoCommand::undo();
-	if (mDrawing) mDrawing->removeItems(mItems);
+	if (mView) mView->removeItems(mItems);
 	mUndone = true;
 }
 
 //==================================================================================================
 
-DrawingRemoveItemsCommand::DrawingRemoveItemsCommand(DrawingWidget* drawing, 
+DrawingRemoveItemsCommand::DrawingRemoveItemsCommand(DrawingView* view,
 	const QList<DrawingItem*>& items, QUndoCommand* parent)
 	: DrawingUndoCommand("Remove Items", parent)
 {
-	mDrawing = drawing;
+	mView = view;
 	mItems = items;
 	mUndone = true;
 	
-	if (mDrawing)
+	if (mView && mView->scene())
 	{
-		QList<DrawingItem*> drawingItems = mDrawing->items();
+		QList<DrawingItem*> drawingItems = mView->scene()->items();
 		for(auto itemIter = mItems.begin(); itemIter != mItems.end(); itemIter++)
 			mItemIndex[*itemIter] = drawingItems.indexOf(*itemIter);
 	}
@@ -171,30 +172,30 @@ int DrawingRemoveItemsCommand::id() const
 void DrawingRemoveItemsCommand::redo()
 {
 	mUndone = false;
-	if (mDrawing) mDrawing->removeItems(mItems);
+	if (mView) mView->removeItems(mItems);
 	DrawingUndoCommand::redo();
 }
 
 void DrawingRemoveItemsCommand::undo()
 {
 	DrawingUndoCommand::undo();
-	if (mDrawing) mDrawing->insertItems(mItems, mItemIndex);
+	if (mView) mView->insertItems(mItems, mItemIndex);
 	mUndone = true;
 }
 
 //==================================================================================================
 
-DrawingMoveItemsCommand::DrawingMoveItemsCommand(DrawingWidget* drawing, 
+DrawingMoveItemsCommand::DrawingMoveItemsCommand(DrawingView* view,
 	const QList<DrawingItem*>& items, const QHash<DrawingItem*,QPointF>& newPos, bool finalMove,
 	QUndoCommand* parent) : DrawingUndoCommand("Move Items", parent)
 {
-	mDrawing = drawing;
+	mView = view;
 	mItems = items;
 	mScenePos = newPos;
 	mFinalMove = finalMove;
 	
 	for(auto itemIter = mItems.begin(); itemIter != mItems.end(); itemIter++)
-		mOriginalScenePos[*itemIter] = (*itemIter)->pos();
+		mOriginalScenePos[*itemIter] = (*itemIter)->position();
 }
 
 DrawingMoveItemsCommand::~DrawingMoveItemsCommand() { }
@@ -213,7 +214,7 @@ bool DrawingMoveItemsCommand::mergeWith(const QUndoCommand* command)
 		const DrawingMoveItemsCommand* moveCommand =
 			static_cast<const DrawingMoveItemsCommand*>(command);
 
-		if (moveCommand && mDrawing == moveCommand->mDrawing && mItems == moveCommand->mItems && !mFinalMove)
+		if (moveCommand && mView == moveCommand->mView && mItems == moveCommand->mItems && !mFinalMove)
 		{
 			mScenePos = moveCommand->mScenePos;
 			mFinalMove = moveCommand->mFinalMove;
@@ -227,34 +228,34 @@ bool DrawingMoveItemsCommand::mergeWith(const QUndoCommand* command)
 
 void DrawingMoveItemsCommand::redo()
 {
-	if (mDrawing) mDrawing->moveItems(mItems, mScenePos);
+	if (mView) mView->moveItems(mItems, mScenePos);
 	DrawingUndoCommand::redo();
 }
 
 void DrawingMoveItemsCommand::undo()
 {
 	DrawingUndoCommand::undo();
-	if (mDrawing) mDrawing->moveItems(mItems, mOriginalScenePos);
+	if (mView) mView->moveItems(mItems, mOriginalScenePos);
 }
 
 //==================================================================================================
 
-DrawingResizeItemCommand::DrawingResizeItemCommand(DrawingWidget* drawing, DrawingItemPoint* point, 
+DrawingResizeItemCommand::DrawingResizeItemCommand(DrawingView* view, DrawingItemPoint* point,
 	const QPointF& scenePos, bool finalResize, QUndoCommand* parent)
 	: DrawingUndoCommand("Resize Item", parent)
 {
-	mDrawing = drawing;
+	mView = view;
 	mPoint = point;
 	mScenePos = scenePos;
 	mFinalResize = finalResize;
 	
-	if (mPoint && mPoint->item()) mOriginalScenePos = mPoint->item()->mapToScene(mPoint->pos());
+	if (mPoint && mPoint->item()) mOriginalScenePos = mPoint->item()->mapToScene(mPoint->position());
 }
 
 DrawingResizeItemCommand::DrawingResizeItemCommand(const DrawingResizeItemCommand& command,
 	QUndoCommand* parent) : DrawingUndoCommand(command, parent)
 {
-	mDrawing = command.mDrawing;
+	mView = command.mView;
 	mPoint = command.mPoint;
 	mScenePos = command.mScenePos;
 	mOriginalScenePos = command.mOriginalScenePos;
@@ -277,7 +278,7 @@ bool DrawingResizeItemCommand::mergeWith(const QUndoCommand* command)
 		const DrawingResizeItemCommand* resizeCommand =
 			static_cast<const DrawingResizeItemCommand*>(command);
 
-		if (resizeCommand && mDrawing == resizeCommand->mDrawing && 
+		if (resizeCommand && mView == resizeCommand->mView &&
 			mPoint == resizeCommand->mPoint && !mFinalResize)
 		{
 			mScenePos = resizeCommand->mScenePos;
@@ -292,23 +293,23 @@ bool DrawingResizeItemCommand::mergeWith(const QUndoCommand* command)
 
 void DrawingResizeItemCommand::redo()
 {
-	if (mDrawing) mDrawing->resizeItem(mPoint, mScenePos);
+	if (mView) mView->resizeItem(mPoint, mScenePos);
 	DrawingUndoCommand::redo();
 }
 
 void DrawingResizeItemCommand::undo()
 {
 	DrawingUndoCommand::undo();
-	if (mDrawing) mDrawing->resizeItem(mPoint, mOriginalScenePos);
+	if (mView) mView->resizeItem(mPoint, mOriginalScenePos);
 }
 
 //==================================================================================================
 
-DrawingRotateItemsCommand::DrawingRotateItemsCommand(DrawingWidget* drawing, 
+DrawingRotateItemsCommand::DrawingRotateItemsCommand(DrawingView* view,
 	const QList<DrawingItem*>& items, const QPointF& scenePos, QUndoCommand* parent)
 	: DrawingUndoCommand("Rotate Items", parent)
 {
-	mDrawing = drawing;
+	mView = view;
 	mItems = items;
 	mScenePos = scenePos;
 }
@@ -322,23 +323,23 @@ int DrawingRotateItemsCommand::id() const
 
 void DrawingRotateItemsCommand::redo()
 {
-	if (mDrawing) mDrawing->rotateItems(mItems, mScenePos);
+	if (mView) mView->rotateItems(mItems, mScenePos);
 	DrawingUndoCommand::redo();
 }
 
 void DrawingRotateItemsCommand::undo()
 {
 	DrawingUndoCommand::undo();
-	if (mDrawing) mDrawing->rotateBackItems(mItems, mScenePos);
+	if (mView) mView->rotateBackItems(mItems, mScenePos);
 }
 
 //==================================================================================================
 
-DrawingRotateBackItemsCommand::DrawingRotateBackItemsCommand(DrawingWidget* drawing, 
+DrawingRotateBackItemsCommand::DrawingRotateBackItemsCommand(DrawingView* view,
 	const QList<DrawingItem*>& items, const QPointF& scenePos, QUndoCommand* parent)
 	: DrawingUndoCommand("Rotate Back Items", parent)
 {
-	mDrawing = drawing;
+	mView = view;
 	mItems = items;
 	mScenePos = scenePos;
 }
@@ -352,55 +353,85 @@ int DrawingRotateBackItemsCommand::id() const
 
 void DrawingRotateBackItemsCommand::redo()
 {
-	if (mDrawing) mDrawing->rotateBackItems(mItems, mScenePos);
+	if (mView) mView->rotateBackItems(mItems, mScenePos);
 	DrawingUndoCommand::redo();
 }
 
 void DrawingRotateBackItemsCommand::undo()
 {
 	DrawingUndoCommand::undo();
-	if (mDrawing) mDrawing->rotateItems(mItems, mScenePos);
+	if (mView) mView->rotateItems(mItems, mScenePos);
 }
 
 //==================================================================================================
 
-DrawingFlipItemsCommand::DrawingFlipItemsCommand(DrawingWidget* drawing, 
+DrawingFlipItemsHorizontalCommand::DrawingFlipItemsHorizontalCommand(DrawingView* view,
 	const QList<DrawingItem*>& items, const QPointF& scenePos, QUndoCommand* parent)
-	: DrawingUndoCommand("Flip Items", parent)
+	: DrawingUndoCommand("Flip Items Horizontal", parent)
 {
-	mDrawing = drawing;
+	mView = view;
 	mItems = items;
 	mScenePos = scenePos;
 }
 
-DrawingFlipItemsCommand::~DrawingFlipItemsCommand() { }
+DrawingFlipItemsHorizontalCommand::~DrawingFlipItemsHorizontalCommand() { }
 
-int DrawingFlipItemsCommand::id() const
+int DrawingFlipItemsHorizontalCommand::id() const
 {
-	return FlipItemsType;
+	return FlipItemsHorizontalType;
 }
 
-void DrawingFlipItemsCommand::redo()
+void DrawingFlipItemsHorizontalCommand::redo()
 {
-	if (mDrawing) mDrawing->flipItems(mItems, mScenePos);
+	if (mView) mView->flipItemsHorizontal(mItems, mScenePos);
 	DrawingUndoCommand::redo();
 }
 
-void DrawingFlipItemsCommand::undo()
+void DrawingFlipItemsHorizontalCommand::undo()
 {
 	DrawingUndoCommand::undo();
-	if (mDrawing) mDrawing->flipItems(mItems, mScenePos);
+	if (mView) mView->flipItemsHorizontal(mItems, mScenePos);
 }
 
 //==================================================================================================
 
-DrawingReorderItemsCommand::DrawingReorderItemsCommand(DrawingWidget* drawing,
+DrawingFlipItemsVerticalCommand::DrawingFlipItemsVerticalCommand(DrawingView* view,
+	const QList<DrawingItem*>& items, const QPointF& scenePos, QUndoCommand* parent)
+	: DrawingUndoCommand("Flip Items Vertical", parent)
+{
+	mView = view;
+	mItems = items;
+	mScenePos = scenePos;
+}
+
+DrawingFlipItemsVerticalCommand::~DrawingFlipItemsVerticalCommand() { }
+
+int DrawingFlipItemsVerticalCommand::id() const
+{
+	return FlipItemsVerticalType;
+}
+
+void DrawingFlipItemsVerticalCommand::redo()
+{
+	if (mView) mView->flipItemsVertical(mItems, mScenePos);
+	DrawingUndoCommand::redo();
+}
+
+void DrawingFlipItemsVerticalCommand::undo()
+{
+	DrawingUndoCommand::undo();
+	if (mView) mView->flipItemsVertical(mItems, mScenePos);
+}
+
+//==================================================================================================
+
+DrawingReorderItemsCommand::DrawingReorderItemsCommand(DrawingView* view,
 	const QList<DrawingItem*>& newItemOrder, QUndoCommand* parent)
 	: DrawingUndoCommand("Reorder Items", parent)
 {
-	mDrawing = drawing;
+	mView = view;
 	mNewItemOrder = newItemOrder;
-	if (mDrawing) mOriginalItemOrder = mDrawing->items();
+	if (mView && mView->scene()) mOriginalItemOrder = mView->scene()->items();
 }
 
 DrawingReorderItemsCommand::~DrawingReorderItemsCommand() { }
@@ -412,27 +443,27 @@ int DrawingReorderItemsCommand::id() const
 
 void DrawingReorderItemsCommand::redo()
 {
-	if (mDrawing) mDrawing->reorderItems(mNewItemOrder);
+	if (mView) mView->reorderItems(mNewItemOrder);
 	DrawingUndoCommand::redo();
 }
 
 void DrawingReorderItemsCommand::undo()
 {
 	DrawingUndoCommand::undo();
-	if (mDrawing) mDrawing->reorderItems(mOriginalItemOrder);
+	if (mView) mView->reorderItems(mOriginalItemOrder);
 }
 
 //==================================================================================================
 
-DrawingSelectItemsCommand::DrawingSelectItemsCommand(DrawingWidget* drawing, 
+DrawingSelectItemsCommand::DrawingSelectItemsCommand(DrawingView* view,
 	const QList<DrawingItem*>& newSelectedItems, bool finalSelect, QUndoCommand* parent)
 	: DrawingUndoCommand("Select Items", parent)
 {
-	mDrawing = drawing;
+	mView = view;
 	mSelectedItems = newSelectedItems;
 	mFinalSelect = finalSelect;
 	
-	if (mDrawing) mOriginalSelectedItems = mDrawing->selectedItems();
+	if (mView) mOriginalSelectedItems = mView->selectedItems();
 }
 
 DrawingSelectItemsCommand::~DrawingSelectItemsCommand() { }
@@ -451,7 +482,7 @@ bool DrawingSelectItemsCommand::mergeWith(const QUndoCommand* command)
 		const DrawingSelectItemsCommand* selectCommand =
 			static_cast<const DrawingSelectItemsCommand*>(command);
 
-		if (selectCommand && mDrawing == selectCommand->mDrawing && !mFinalSelect)
+		if (selectCommand && mView == selectCommand->mView && !mFinalSelect)
 		{
 			for(auto itemIter = selectCommand->mSelectedItems.begin();
 				itemIter != selectCommand->mSelectedItems.end(); itemIter++)
@@ -470,23 +501,23 @@ bool DrawingSelectItemsCommand::mergeWith(const QUndoCommand* command)
 
 void DrawingSelectItemsCommand::redo()
 {
-	if (mDrawing) mDrawing->selectItems(mSelectedItems);
+	if (mView) mView->selectItems(mSelectedItems);
 	DrawingUndoCommand::redo();
 }
 
 void DrawingSelectItemsCommand::undo()
 {
 	DrawingUndoCommand::undo();
-	if (mDrawing) mDrawing->selectItems(mOriginalSelectedItems);
+	if (mView) mView->selectItems(mOriginalSelectedItems);
 }
 
 //==================================================================================================
 
-DrawingItemInsertPointCommand::DrawingItemInsertPointCommand(DrawingWidget* drawing, 
+DrawingItemInsertPointCommand::DrawingItemInsertPointCommand(DrawingView* view,
 	DrawingItem* item, DrawingItemPoint* point, int pointIndex, QUndoCommand* parent) 
 	: DrawingUndoCommand("Insert Point", parent)
 {
-	mDrawing = drawing;
+	mView = view;
 	mItem = item;
 	mPoint = point;
 	mPointIndex = pointIndex;
@@ -506,24 +537,24 @@ int DrawingItemInsertPointCommand::id() const
 void DrawingItemInsertPointCommand::redo()
 {
 	mUndone = false;
-	if (mDrawing) mDrawing->insertItemPoint(mItem, mPoint, mPointIndex);
+	if (mView) mView->insertItemPoint(mItem, mPoint, mPointIndex);
 	DrawingUndoCommand::redo();
 }
 
 void DrawingItemInsertPointCommand::undo()
 {
 	DrawingUndoCommand::undo();
-	if (mDrawing) mDrawing->removeItemPoint(mItem, mPoint);
+	if (mView) mView->removeItemPoint(mItem, mPoint);
 	mUndone = true;
 }
 
 //==================================================================================================
 
-DrawingItemRemovePointCommand::DrawingItemRemovePointCommand(DrawingWidget* drawing, 
+DrawingItemRemovePointCommand::DrawingItemRemovePointCommand(DrawingView* view,
 	DrawingItem* item, DrawingItemPoint* point, QUndoCommand* parent) 
 	: DrawingUndoCommand("Remove Point", parent)
 {
-	mDrawing = drawing;
+	mView = view;
 	mItem = item;
 	mPoint = point;
 	mUndone = true;
@@ -544,24 +575,24 @@ int DrawingItemRemovePointCommand::id() const
 void DrawingItemRemovePointCommand::redo()
 {
 	mUndone = false;
-	if (mDrawing) mDrawing->removeItemPoint(mItem, mPoint);
+	if (mView) mView->removeItemPoint(mItem, mPoint);
 	DrawingUndoCommand::redo();
 }
 
 void DrawingItemRemovePointCommand::undo()
 {
 	DrawingUndoCommand::undo();
-	if (mDrawing) mDrawing->insertItemPoint(mItem, mPoint, mPointIndex);
+	if (mView) mView->insertItemPoint(mItem, mPoint, mPointIndex);
 	mUndone = true;
 }
 
 //==================================================================================================
 
-DrawingItemPointConnectCommand::DrawingItemPointConnectCommand(DrawingWidget* drawing, 
+DrawingItemPointConnectCommand::DrawingItemPointConnectCommand(DrawingView* view,
 	DrawingItemPoint* point1, DrawingItemPoint* point2, QUndoCommand* parent)
 	: DrawingUndoCommand("Connect Points", parent)
 {
-	mDrawing = drawing;
+	mView = view;
 	mPoint1 = point1;
 	mPoint2 = point2;
 }
@@ -570,7 +601,7 @@ DrawingItemPointConnectCommand::DrawingItemPointConnectCommand(
 	const DrawingItemPointConnectCommand& command, QUndoCommand* parent)
 	: DrawingUndoCommand(command, parent)
 {
-	mDrawing = command.mDrawing;
+	mView = command.mView;
 	mPoint1 = command.mPoint1;
 	mPoint2 = command.mPoint2;
 }
@@ -584,23 +615,23 @@ int DrawingItemPointConnectCommand::id() const
 
 void DrawingItemPointConnectCommand::redo()
 {
-	if (mDrawing) mDrawing->connectItemPoints(mPoint1, mPoint2);
+	if (mView) mView->connectItemPoints(mPoint1, mPoint2);
 	DrawingUndoCommand::redo();
 }
 
 void DrawingItemPointConnectCommand::undo()
 {
 	DrawingUndoCommand::undo();
-	if (mDrawing) mDrawing->disconnectItemPoints(mPoint1, mPoint2);
+	if (mView) mView->disconnectItemPoints(mPoint1, mPoint2);
 }
 
 //==================================================================================================
 
-DrawingItemPointDisconnectCommand::DrawingItemPointDisconnectCommand(DrawingWidget* drawing, 
+DrawingItemPointDisconnectCommand::DrawingItemPointDisconnectCommand(DrawingView* view,
 	DrawingItemPoint* point1, DrawingItemPoint* point2, QUndoCommand* parent)
 	: DrawingUndoCommand("Disconnect Points", parent)
 {
-	mDrawing = drawing;
+	mView = view;
 	mPoint1 = point1;
 	mPoint2 = point2;
 }
@@ -609,7 +640,7 @@ DrawingItemPointDisconnectCommand::DrawingItemPointDisconnectCommand(
 	const DrawingItemPointDisconnectCommand& command, QUndoCommand* parent)
 	: DrawingUndoCommand(command, parent)
 {
-	mDrawing = command.mDrawing;
+	mView = command.mView;
 	mPoint1 = command.mPoint1;
 	mPoint2 = command.mPoint2;
 }
@@ -623,12 +654,12 @@ int DrawingItemPointDisconnectCommand::id() const
 
 void DrawingItemPointDisconnectCommand::redo()
 {
-	if (mDrawing) mDrawing->disconnectItemPoints(mPoint1, mPoint2);
+	if (mView) mView->disconnectItemPoints(mPoint1, mPoint2);
 	DrawingUndoCommand::redo();
 }
 
 void DrawingItemPointDisconnectCommand::undo()
 {
 	DrawingUndoCommand::undo();
-	if (mDrawing) mDrawing->connectItemPoints(mPoint1, mPoint2);
+	if (mView) mView->connectItemPoints(mPoint1, mPoint2);
 }

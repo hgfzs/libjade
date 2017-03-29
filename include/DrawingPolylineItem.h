@@ -1,8 +1,8 @@
 /* DrawingPolylineItem.h
  *
- * Copyright (C) 2013-2016 Jason Allen
+ * Copyright (C) 2013-2017 Jason Allen
  *
- * This file is part of the jade library.
+ * This file is part of the jade application.
  *
  * jade is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,23 +23,17 @@
 
 #include <DrawingItem.h>
 
-/*! \brief Provides a polyline item that can be added to a DrawingWidget.
+/*! \brief Provides a polyline item that can be added to a DrawingScene.
  *
  * To set the item's polyline, call the setPolyline() function.  The polyline() function returns the
  * current polyline.  Both functions operate in local item coordinates.
- * 
+ *
  * Rendering options for the polyline can be controlled through properties of the item's style().
  * The polyline item supports all of the pen style properties as well as start arrow and end arrow
  * properties.
- * 
- * DrawingPolylineItem provides a reasonable implementation of boundingRect(), shape(), and isValid().
- * The paint() function draws the polyline using the item's associated pen.
  *
- * When their parent drawing() is in PlaceMode, polyline items are placed by clicking and dragging
- * within the scene.  A mouse press event sets the position of the item's start point and a mouse
- * release sets the position of the item's end point.  Mouse release events also 
- * cause the item to be placed in the drawing() if isValid() returns true. From there, a new 
- * polyline item can be placed by clicking and dragging again.
+ * DrawingPolylineItem provides a reasonable implementation of boundingRect(), shape(), and isValid().
+ * The render() function draws the polyline using the item's associated pen.
  */
 class DrawingPolylineItem : public DrawingItem
 {
@@ -65,19 +59,20 @@ public:
 	 * \li DrawingItemStyle::EndArrowSize
 	 */
 	DrawingPolylineItem();
-	
+
 	/*! \brief Create a new DrawingPolylineItem as a copy of an existing polyline item.
 	 *
 	 * Creates copies of all item points to the new polyline item, including the point's positions.
 	 * Also creates a new item style with all of the same properties as the existing item's style.
 	 */
 	DrawingPolylineItem(const DrawingPolylineItem& item);
-	
+
 	/*! \brief Delete an existing DrawingPolylineItem object.
 	 *
 	 * All of the item's points are also deleted.
 	 */
 	virtual ~DrawingPolylineItem();
+
 
 	/*! \brief Creates a copy of the DrawingPolylineItem and return it.
 	 *
@@ -85,7 +80,7 @@ public:
 	 */
 	virtual DrawingItem* copy() const;
 
-	
+
 	/*! \brief Sets the item's polyline to polygon, which is given in local item coordinates.
 	 *
 	 * Adds a DrawingItemPoint to the polyline representing each point in the specified polygon.
@@ -101,7 +96,7 @@ public:
 	 */
 	QPolygonF polyline() const;
 
-	
+
 	/*! \brief Returns an estimate of the area painted by the polyline item.
 	 *
 	 * Calculates the bounding rect of the polyline based on the position of its points.
@@ -111,21 +106,16 @@ public:
 	 * \sa shape(), isValid()
 	 */
 	virtual QRectF boundingRect() const;
-	
+
 	/*! \brief Returns an accurate outline of the item's shape.
 	 *
 	 * Calculates the shape of the polyline, including any arrows that may be set by the item's
 	 * style().
 	 *
-	 * Note that the stroke width used to determine the shape is either the actual width of the 
-	 * pen set by the item's style() or a reasonable minimum width as determined by the current
-	 * zoom scale of the item's drawing(), whichever is larger.  This is done to make it easier to
-	 * click on polyline items when zoomed out on a large scene.
-	 *
 	 * \sa boundingRect(), isValid()
 	 */
 	virtual QPainterPath shape() const;
-	
+
 	/*! \brief Return false if the item is degenerate, true otherwise.
 	 *
 	 * A polyline item is considered degenerate if the positions of all of its points
@@ -135,7 +125,7 @@ public:
 	 */
 	virtual bool isValid() const;
 
-	
+
 	/*! \brief Paints the contents of the polyline item into the scene.
 	 *
 	 * The polyline is painted in the scene based on properties set by the item's style(), including
@@ -144,66 +134,29 @@ public:
 	 * At the end of this function, the QPainter object is returned to the same state that it was
 	 * in when the function started.
 	 */
-	virtual void paint(QPainter* painter);
+	virtual void render(QPainter* painter);
 
-	
-	/*! \brief Resizes the item within the scene.
+
+	/*! \brief Creates a new DrawingItemPoint to be inserted in the item and determines the
+	 * appropriate location in the item's point list to insert the new point.
 	 *
-	 * Before returning, this function also remaps the position of the item and all of its points 
-	 * such that the position of the polyline item's start point is at the origin of the item.
-	 */
-	virtual void resizeItem(DrawingItemPoint* itemPoint, const QPointF& scenePos);
-	
-	/*! \brief Inserts a new DrawingItemPoint into the item at the specified position.
-	 *
-	 * The position of the new point is determined by scenePos.  The flags of the new point are:
+	 * The position of the new point is determined by itemPos.  The flags of the new point are:
 	 * DrawingItemPoint::Control.
 	 *
-	 * \sa removeItemPoint()
+	 * \sa itemPointToRemove()
 	 */
-	virtual void insertItemPoint(const QPointF& scenePos);
+	virtual DrawingItemPoint* itemPointToInsert(const QPointF& itemPos, int& index);
 
-	/*! \brief Removes an existing DrawingItemPoint from the item at the specified position.
+	/*! \brief Returns an existing DrawingItemPoint to be removed from the item at the specified
+	 * position.
 	 *
-	 * This function removes the DrawingItemPoint nearest to scenePos, as long as it is not the first or
+	 * This function removes the DrawingItemPoint nearest to itemPos, as long as it is not the first or
 	 * last point of the polyline.  Note that a polyline must always have a minimum of two points; if
-	 * the item only has two points, this function does nothing.
+	 * the item only has two points, this function returns nullptr.
 	 *
-	 * \sa insertItemPoint()
+	 * \sa itemPointToInsert()
 	 */
-	virtual void removeItemPoint(const QPointF& scenePos);
-
-protected:
-	/*! \brief Handles copy events for the polyline item when the parent drawing() is in
-	 * PlaceMode.
-	 *
-	 * This function ensures that the position of each of the polyline item's points is
-	 * at the item's origin before allowing the user to start placing it within the scene.
-	 *
-	 * \sa newMouseMoveEvent(), newMouseReleaseEvent()
-	 */
-	virtual bool newItemCopyEvent();
-	
-	/*! \brief Handles mouse move events for the polyline item when the parent drawing() is in
-	 * PlaceMode.
-	 *
-	 * When the mouse button is not down, this function sets the position of the polyline item's
-	 * start point within the scene.  When the user presses the mouse button, the start point 
-	 * is placed and this function sets ths position of the item's end point.
-	 *
-	 * \sa newMouseReleaseEvent(), newItemCopyEvent()
-	 */
-	virtual void newMouseMoveEvent(DrawingMouseEvent* event);
-	
-	/*! \brief Handles mouse release events for the polyline item when the parent drawing() is in
-	 * PlaceMode.
-	 *
-	 * This function sets the position of the polyline item's end point within the scene and, if
-	 * isValid() returns true, causes the polyline item to be placed within the scene.
-	 *
-	 * \sa newMouseMoveEvent(), newItemCopyEvent()
-	 */
-	virtual bool newMouseReleaseEvent(DrawingMouseEvent* event);
+	virtual DrawingItemPoint* itemPointToRemove(const QPointF& itemPos);
 
 private:
 	qreal distanceFromPointToLineSegment(const QPointF& point, const QLineF& line) const;

@@ -1,8 +1,8 @@
 /* DrawingItemStyle.h
  *
- * Copyright (C) 2013-2016 Jason Allen
+ * Copyright (C) 2013-2017 Jason Allen
  *
- * This file is part of the jade library.
+ * This file is part of the jade application.
  *
  * jade is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 #ifndef DRAWINGITEMSTYLE_H
 #define DRAWINGITEMSTYLE_H
 
-#include <DrawingTypes.h>
+#include <QtGui>
 
 /*! \brief Class for managing common item style properties.
  *
@@ -31,17 +31,17 @@
  * properties already.
  *
  * The list of supported item style properties is given by the DrawingItemStyle::Property enum.
- * Properties are stored as QVariant objects.  Each property is associated with a variant of a 
+ * Properties are stored as QVariant objects.  Each property is associated with a variant of a
  * specific data type.  DrawingItemStyle assumes that properties are set using the specific data
  * type; use of other data types will result in undefined behavior.
  *
- * DrawingItemStyle also supports a set of default style properties.  If a property is not set on 
+ * DrawingItemStyle also supports a set of default style properties.  If a property is not set on
  * a particular style, DrawingItemStyle will attempt to use the default property value.
  *
  * DrawingItem classes should use the valueLookup() functions to determine the property value using
  * default style properties.  If the style has a value() for the specified property, that value is
  * returned.  If not, then if the DrawingItemStyle has a defaultValue() for the specified property,
- * then that default value is returned.  It is recommended that each supported #Property have a 
+ * then that default value is returned.  It is recommended that each supported #Property have a
  * default value stored using setDefaultValue().  If neither a local value or default value is found
  * for the specified property, the behavior is not well defined.
  *
@@ -54,8 +54,8 @@ class DrawingItemStyle
 {
 public:
 	//! \brief Enum represents the supported item style properties.
-	enum Property 
-	{ 
+	enum Property
+	{
 		PenStyle,					//!< (Qt::PenStyle) Represents the style of the pen stroke
 		PenColor,					//!< (QColor) Represents the color of the pen stroke
 		PenOpacity,					//!< (qreal) Represents the opacity of the pen stroke (allowed range is 0.0 - 1.0)
@@ -82,7 +82,7 @@ public:
 		EndArrowSize,				//!< (qreal) Represents the size of the arrow at the end point of a line item
 		NumberOfProperties
 	};
-	
+
 	//! \brief Enum represents the supported arrow styles.
 	enum ArrowStyle
 	{
@@ -111,20 +111,20 @@ public:
 	 * The new style does not have any property values set on it.
 	 */
 	DrawingItemStyle();
-	
+
 	/*! \brief Create a new DrawingItemStyle based on the specified style.
 	 *
 	 * The new style has the same properties as the existing style.
 	 */
 	DrawingItemStyle(const DrawingItemStyle& style);
-	
+
 	/*! \brief Delete an existing DrawingItemStyle object.
 	 *
 	 * All style properties are cleared.
 	 */
 	~DrawingItemStyle();
 
-	
+
 	/*! \brief Set the style's properties and values.
 	 *
 	 * Existing properties and values are cleared to make way for the new values.
@@ -132,38 +132,38 @@ public:
 	 * \sa setValue(), values()
 	 */
 	void setValues(const QHash<Property,QVariant>& values);
-	
+
 	/*! \brief Return all of the style's properties and values.
 	 *
 	 * \sa setValues(), value()
 	 */
 	QHash<Property,QVariant> values() const;
 
-	
+
 	/*! \brief Set the value of the specified property to value.
 	 *
 	 * \sa setValues(), unsetValue(), value()
 	 */
 	void setValue(Property index, const QVariant& value);
-	
+
 	/*! \brief Unset the value of the specified property.
 	 *
 	 * \sa setValue(), clearValues()
 	 */
 	void unsetValue(Property index);
-	
+
 	/*! \brief Clear all property values from the style.
 	 *
 	 * \sa unsetValue()
 	 */
-	void clearValues();	
-	
+	void clearValues();
+
 	/*! \brief Returns true if the style has a value set for the specific property, false otherwise.
 	 *
 	 * \sa value()
 	 */
 	bool hasValue(Property index) const;
-	
+
 	/*! \brief Return the style's value for a specific property.
 	 *
 	 * If the style does not have a value for the property, an empty QVariant object is returned.
@@ -171,11 +171,11 @@ public:
 	 * \sa setValue(), valueLookup()
 	 */
 	QVariant value(Property index) const;
-	
-	
+
+
 	/*! \brief Return the value for a specific property based on the style's value or a default value.
 	 *
-	 * If the style has a value for the property, that value is returned.  If not, and the 
+	 * If the style has a value for the property, that value is returned.  If not, and the
 	 * DrawingItemStyle has a default value for the property, that value is returned.  If no
 	 * value is found in either the style's local properties or the class's default properties,
 	 * an empty QVariant object is returned.
@@ -183,10 +183,10 @@ public:
 	 * \sa value(), valueLookup(Property, const QVariant&)
 	 */
 	QVariant valueLookup(Property index) const;
-	
+
 	/*! \brief Return the value for a specific property based on the style's value or a default value.
 	 *
-	 * If the style has a value for the property, that value is returned.  If not, and the 
+	 * If the style has a value for the property, that value is returned.  If not, and the
 	 * DrawingItemStyle has a default value for the property, that value is returned.  If no
 	 * value is found in either the style's local properties or the class's default properties,
 	 * the specified fallback value is returned.
@@ -194,8 +194,8 @@ public:
 	 * \sa value(), valueLookup(Property, const QVariant&)
 	 */
 	QVariant valueLookup(Property index, const QVariant& fallbackValue) const;
-	
-	
+
+
 	/*! \brief Convenience function that creates a QPen object based upon the style's pen properties.
 	 *
 	 * This function uses valueLookup() to get the values of the #PenStyle, #PenColor, #PenOpacity,
@@ -203,66 +203,66 @@ public:
 	 * and returned.
 	 */
 	QPen pen() const;
-	
+
 	/*! \brief Convenience function that creates a QBrush object based upon the style's brush properties.
 	 *
-	 * This function uses valueLookup() to get the values of the #BrushStyle, #BrushColor, and 
+	 * This function uses valueLookup() to get the values of the #BrushStyle, #BrushColor, and
 	 * #BrushOpacity.  These values are combined in a QBrush object and returned.
 	 */
 	QBrush brush() const;
-	
+
 	/*! \brief Convenience function that creates a QFont object based upon the style's font properties.
 	 *
-	 * This function uses valueLookup() to get the values of the #FontName, #FontSize, #FontBold, 
-	 * #FontItalic, #FontUnderline, #FontOverline, and #FontStrikeThrough.  These values are 
+	 * This function uses valueLookup() to get the values of the #FontName, #FontSize, #FontBold,
+	 * #FontItalic, #FontUnderline, #FontOverline, and #FontStrikeThrough.  These values are
 	 * combined in a QFont object and returned.
 	 */
 	QFont font() const;
-	
-	/*! \brief Convenience function that creates a QBrush object based upon the style's text 
+
+	/*! \brief Convenience function that creates a QBrush object based upon the style's text
 	 * brush properties.
 	 *
 	 * This function uses valueLookup() to get the values of the #TextColor and #TextOpacity.
 	 * These values are combined in a QBrush object and returned.
 	 */
 	QBrush textBrush() const;
-	
-	/*! \brief Convenience function that creates a Qt::Alignment variable based upon the style's 
+
+	/*! \brief Convenience function that creates a Qt::Alignment variable based upon the style's
 	 * text alignment properties.
 	 *
-	 * This function uses valueLookup() to get the values of the #TextHorizontalAlignment and 
+	 * This function uses valueLookup() to get the values of the #TextHorizontalAlignment and
 	 * #TextVerticalAlignment. These values are combined and returned as a Qt::Alignment variable.
 	 */
 	Qt::Alignment textAlignment() const;
-	
-	/*! \brief Convenience function that determines the start arrow style based upon the 
+
+	/*! \brief Convenience function that determines the start arrow style based upon the
 	 * style's properties.
 	 *
-	 * This function uses valueLookup() to get the value of the #StartArrowStyle property. 
+	 * This function uses valueLookup() to get the value of the #StartArrowStyle property.
 	 * This value is returned as an #ArrowStyle variable.
 	 */
 	ArrowStyle startArrowStyle() const;
-	
-	/*! \brief Convenience function that determines the start arrow size based upon the 
+
+	/*! \brief Convenience function that determines the start arrow size based upon the
 	 * style's properties.
 	 *
-	 * This function uses valueLookup() to get the value of the #StartArrowSize property. 
+	 * This function uses valueLookup() to get the value of the #StartArrowSize property.
 	 * This value is returned as a double-precision floating-point variable.
 	 */
 	qreal startArrowSize() const;
-	
-	/*! \brief Convenience function that determines the end arrow style based upon the 
+
+	/*! \brief Convenience function that determines the end arrow style based upon the
 	 * style's properties.
 	 *
-	 * This function uses valueLookup() to get the value of the #EndArrowStyle property. 
+	 * This function uses valueLookup() to get the value of the #EndArrowStyle property.
 	 * This value is returned as an #ArrowStyle variable.
 	 */
 	ArrowStyle endArrowStyle() const;
-	
-	/*! \brief Convenience function that determines the end arrow size based upon the 
+
+	/*! \brief Convenience function that determines the end arrow size based upon the
 	 * style's properties.
 	 *
-	 * This function uses valueLookup() to get the value of the #EndArrowSize property. 
+	 * This function uses valueLookup() to get the value of the #EndArrowSize property.
 	 * This value is returned as a double-precision floating-point variable.
 	 */
 	qreal endArrowSize() const;
@@ -295,7 +295,7 @@ private:
 
 private:
 	static QHash<Property,QVariant> mDefaultProperties;
-	
+
 public:
 	/*! \brief Set the default properties and values for all DrawingItemStyle objects.
 	 *
@@ -304,43 +304,43 @@ public:
 	 * \sa setDefaultValue(), defaultValues()
 	 */
 	static void setDefaultValues(const QHash<Property,QVariant>& values);
-	
+
 	/*! \brief Return all of the DrawingItemStyle default properties and values.
 	 *
 	 * \sa setDefaultValues(), defaultValue()
 	 */
 	static QHash<Property,QVariant> defaultValues();
 
-	
+
 	/*! \brief Set the value of the specified default property to value.
 	 *
 	 * \sa setDefaultValue(), unsetDefaultValue(), defaultValue()
 	 */
 	static void setDefaultValue(Property index, const QVariant& value);
-	
+
 	/*! \brief Unset the value of the specified default property.
 	 *
 	 * \sa setDefaultValue(), clearDefaultValues()
 	 */
 	static void unsetDefaultValue(Property index);
-	
+
 	/*! \brief Clear all default property values for all DrawingItemStyle objects.
 	 *
 	 * \sa unsetDefaultValue()
 	 */
-	static void clearDefaultValues();	
-	
-	/*! \brief Returns true if the DrawingItemStyle has a default value set for the specific 
+	static void clearDefaultValues();
+
+	/*! \brief Returns true if the DrawingItemStyle has a default value set for the specific
 	* property, false otherwise.
 	 *
 	 * \sa defaultValue()
 	 */
 	static bool hasDefaultValue(Property index);
-	
-	/*! \brief Return the default value for a specific property used for all DrawingItemStyle 
+
+	/*! \brief Return the default value for a specific property used for all DrawingItemStyle
 	 * objects.
 	 *
-	 * If DrawingItemStyle does not have a default value for the property, an empty QVariant 
+	 * If DrawingItemStyle does not have a default value for the property, an empty QVariant
 	 * object is returned.
 	 *
 	 * \sa setValue(), valueLookup()

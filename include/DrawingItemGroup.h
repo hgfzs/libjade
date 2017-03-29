@@ -1,8 +1,8 @@
 /* DrawingItemGroup.h
  *
- * Copyright (C) 2013-2016 Jason Allen
+ * Copyright (C) 2013-2017 Jason Allen
  *
- * This file is part of the jade library.
+ * This file is part of the jade application.
  *
  * jade is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,13 +23,13 @@
 
 #include <DrawingItem.h>
 
-/*! \brief Provides a group item that can be added to a DrawingWidget.
+/*! \brief Provides a group item that can be added to a DrawingScene.
  *
  * To set the items of a group, call setItems().  Items in a group are treated as a single item
  * within the widget.
  *
  * DrawingItemGroup provides a reasonable implementation of boundingRect(), shape(), and isValid().
- * The paint() function draws the group by calling the paint() function of each item.
+ * The render() function draws the group by calling the paint() function of each item.
  */
 class DrawingItemGroup : public DrawingItem
 {
@@ -58,6 +58,7 @@ public:
 	 * All of the group's items are also deleted.
 	 */
 	~DrawingItemGroup();
+
 
 	/*! \brief Creates a copy of the DrawingItemGroup and return it.
 	 *
@@ -119,32 +120,8 @@ public:
 	 * At the end of this function, the QPainter object is returned to the same state that it was
 	 * in when the function started.
 	 */
-	virtual void paint(QPainter* painter);
+	virtual void render(QPainter* painter);
 
-
-	/*! \brief Rotates the item counter-clockwise within the scene.
-	 *
-	 * The group is painted by calling the rotateItem() function on each of the group's items().
-	 *
-	 * \sa rotateBackItem(), flipItem()
-	 */
-	virtual void rotateItem(const QPointF& scenePos);
-
-	/*! \brief Rotates the item clockwise within the scene.
-	 *
-	 * The group is painted by calling the rotateBackItem() function on each of the group's items().
-	 *
-	 * \sa rotateItem(), flipItem()
-	 */
-	virtual void rotateBackItem(const QPointF& scenePos);
-
-	/*! \brief Flips the item horizontally within the scene.
-	 *
-	 * The group is painted by calling the flipItem() function on each of the group's items().
-	 *
-	 * \sa rotateItem(), rotateBackItem()
-	 */
-	virtual void flipItem(const QPointF& scenePos);
 
 private:
 	void recalculateContentsRect();

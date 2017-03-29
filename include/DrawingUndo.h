@@ -1,6 +1,6 @@
 /* DrawingUndo.h
  *
- * Copyright (C) 2013-2016 Jason Allen
+ * Copyright (C) 2013-2017 Jason Allen
  *
  * This file is part of the jade library.
  *
@@ -21,14 +21,18 @@
 #ifndef DRAWINGUNDO_H
 #define DRAWINGUNDO_H
 
-#include <DrawingTypes.h>
+#include <QtWidgets>
+
+class DrawingView;
+class DrawingItem;
+class DrawingItemPoint;
 
 class DrawingUndoCommand : public QUndoCommand
 {
 public:
 	enum Type { AddItemsType, RemoveItemsType, MoveItemsType,
-		RotateItemsType, RotateBackItemsType, FlipItemsType, ItemResizeType,
-		ReorderItemsType, SelectItemsType,
+		RotateItemsType, RotateBackItemsType, FlipItemsHorizontalType, FlipItemsVerticalType,
+		ItemResizeType, ReorderItemsType, SelectItemsType,
 		InsertItemPointType, RemoveItemPointType,
 		PointConnectType, PointDisconnectType,
 		UpdateItemPropertiesType, UpdatePropertiesType, NumberOfCommands };
@@ -47,12 +51,12 @@ protected:
 class DrawingAddItemsCommand : public DrawingUndoCommand
 {
 private:
-	DrawingWidget* mDrawing;
+	DrawingView* mView;
 	QList<DrawingItem*> mItems;
 	bool mUndone;
 
 public:
-	DrawingAddItemsCommand(DrawingWidget* drawing, const QList<DrawingItem*>& items, QUndoCommand* parent = nullptr);
+	DrawingAddItemsCommand(DrawingView* view, const QList<DrawingItem*>& items, QUndoCommand* parent = nullptr);
 	~DrawingAddItemsCommand();
 
 	int id() const;
@@ -66,13 +70,13 @@ public:
 class DrawingRemoveItemsCommand : public DrawingUndoCommand
 {
 private:
-	DrawingWidget* mDrawing;
+	DrawingView* mView;
 	QList<DrawingItem*> mItems;
 	bool mUndone;
 	QHash<DrawingItem*,int> mItemIndex;
 
 public:
-	DrawingRemoveItemsCommand(DrawingWidget* drawing, const QList<DrawingItem*>& items, 
+	DrawingRemoveItemsCommand(DrawingView* view, const QList<DrawingItem*>& items,
 		QUndoCommand* parent = nullptr);
 	~DrawingRemoveItemsCommand();
 
@@ -87,14 +91,14 @@ public:
 class DrawingMoveItemsCommand : public DrawingUndoCommand
 {
 private:
-	DrawingWidget* mDrawing;
+	DrawingView* mView;
 	QList<DrawingItem*> mItems;
 	QHash<DrawingItem*,QPointF> mScenePos;
 	QHash<DrawingItem*,QPointF> mOriginalScenePos;
 	bool mFinalMove;
 
 public:
-	DrawingMoveItemsCommand(DrawingWidget* drawing, const QList<DrawingItem*>& items, 
+	DrawingMoveItemsCommand(DrawingView* view, const QList<DrawingItem*>& items,
 		const QHash<DrawingItem*,QPointF>& newPos, bool finalMove, QUndoCommand* parent = nullptr);
 	~DrawingMoveItemsCommand();
 
@@ -110,14 +114,14 @@ public:
 class DrawingResizeItemCommand : public DrawingUndoCommand
 {
 private:
-	DrawingWidget* mDrawing;
+	DrawingView* mView;
 	DrawingItemPoint* mPoint;
 	QPointF mScenePos;
 	QPointF mOriginalScenePos;
 	bool mFinalResize;
 
 public:
-	DrawingResizeItemCommand(DrawingWidget* drawing, DrawingItemPoint* point, 
+	DrawingResizeItemCommand(DrawingView* view, DrawingItemPoint* point,
 		const QPointF& scenePos, bool finalResize, QUndoCommand* parent = nullptr);
 	DrawingResizeItemCommand(const DrawingResizeItemCommand& command, QUndoCommand* parent = nullptr);
 	~DrawingResizeItemCommand();
@@ -134,12 +138,12 @@ public:
 class DrawingRotateItemsCommand : public DrawingUndoCommand
 {
 private:
-	DrawingWidget* mDrawing;
+	DrawingView* mView;
 	QList<DrawingItem*> mItems;
 	QPointF mScenePos;
 
 public:
-	DrawingRotateItemsCommand(DrawingWidget* drawing, const QList<DrawingItem*>& items,
+	DrawingRotateItemsCommand(DrawingView* view, const QList<DrawingItem*>& items,
 		const QPointF& scenePos, QUndoCommand* parent = nullptr);
 	~DrawingRotateItemsCommand();
 
@@ -154,12 +158,12 @@ public:
 class DrawingRotateBackItemsCommand : public DrawingUndoCommand
 {
 private:
-	DrawingWidget* mDrawing;
+	DrawingView* mView;
 	QList<DrawingItem*> mItems;
 	QPointF mScenePos;
 
 public:
-	DrawingRotateBackItemsCommand(DrawingWidget* drawing, const QList<DrawingItem*>& items,
+	DrawingRotateBackItemsCommand(DrawingView* view, const QList<DrawingItem*>& items,
 		const QPointF& scenePos, QUndoCommand* parent = nullptr);
 	~DrawingRotateBackItemsCommand();
 
@@ -171,17 +175,37 @@ public:
 
 //==================================================================================================
 
-class DrawingFlipItemsCommand : public DrawingUndoCommand
+class DrawingFlipItemsHorizontalCommand : public DrawingUndoCommand
 {
 private:
-	DrawingWidget* mDrawing;
+	DrawingView* mView;
 	QList<DrawingItem*> mItems;
 	QPointF mScenePos;
 
 public:
-	DrawingFlipItemsCommand(DrawingWidget* drawing, const QList<DrawingItem*>& items,
+	DrawingFlipItemsHorizontalCommand(DrawingView* view, const QList<DrawingItem*>& items,
 		const QPointF& scenePos, QUndoCommand* parent = nullptr);
-	~DrawingFlipItemsCommand();
+	~DrawingFlipItemsHorizontalCommand();
+
+	int id() const;
+
+	void redo();
+	void undo();
+};
+
+//==================================================================================================
+
+class DrawingFlipItemsVerticalCommand : public DrawingUndoCommand
+{
+private:
+	DrawingView* mView;
+	QList<DrawingItem*> mItems;
+	QPointF mScenePos;
+
+public:
+	DrawingFlipItemsVerticalCommand(DrawingView* view, const QList<DrawingItem*>& items,
+		const QPointF& scenePos, QUndoCommand* parent = nullptr);
+	~DrawingFlipItemsVerticalCommand();
 
 	int id() const;
 
@@ -194,12 +218,12 @@ public:
 class DrawingReorderItemsCommand : public DrawingUndoCommand
 {
 private:
-	DrawingWidget* mDrawing;
+	DrawingView* mView;
 	QList<DrawingItem*> mNewItemOrder;
 	QList<DrawingItem*> mOriginalItemOrder;
 
 public:
-	DrawingReorderItemsCommand(DrawingWidget* drawing,
+	DrawingReorderItemsCommand(DrawingView* view,
 		const QList<DrawingItem*>& newItemOrder, QUndoCommand* parent = nullptr);
 	~DrawingReorderItemsCommand();
 
@@ -214,13 +238,13 @@ public:
 class DrawingSelectItemsCommand : public DrawingUndoCommand
 {
 private:
-	DrawingWidget* mDrawing;
+	DrawingView* mView;
 	QList<DrawingItem*> mSelectedItems;
 	QList<DrawingItem*> mOriginalSelectedItems;
 	bool mFinalSelect;
 	
 public:
-	DrawingSelectItemsCommand(DrawingWidget* drawing, const QList<DrawingItem*>& newSelectedItems,
+	DrawingSelectItemsCommand(DrawingView* view, const QList<DrawingItem*>& newSelectedItems,
 		bool finalSelect, QUndoCommand* parent = nullptr);
 	~DrawingSelectItemsCommand();
 
@@ -236,14 +260,14 @@ public:
 class DrawingItemInsertPointCommand : public DrawingUndoCommand
 {
 private:
-	DrawingWidget* mDrawing;
+	DrawingView* mView;
 	DrawingItem* mItem;
 	DrawingItemPoint* mPoint;
 	int mPointIndex;
 	bool mUndone;
 
 public:
-	DrawingItemInsertPointCommand(DrawingWidget* drawing, DrawingItem* item, DrawingItemPoint* point,
+	DrawingItemInsertPointCommand(DrawingView* view, DrawingItem* item, DrawingItemPoint* point,
 		int pointIndex, QUndoCommand* parent = nullptr);
 	~DrawingItemInsertPointCommand();
 
@@ -258,14 +282,14 @@ public:
 class DrawingItemRemovePointCommand : public DrawingUndoCommand
 {
 private:
-	DrawingWidget* mDrawing;
+	DrawingView* mView;
 	DrawingItem* mItem;
 	DrawingItemPoint* mPoint;
 	int mPointIndex;
 	bool mUndone;
 
 public:
-	DrawingItemRemovePointCommand(DrawingWidget* drawing, DrawingItem* item, DrawingItemPoint* point,
+	DrawingItemRemovePointCommand(DrawingView* view, DrawingItem* item, DrawingItemPoint* point,
 		QUndoCommand* parent = nullptr);
 	~DrawingItemRemovePointCommand();
 
@@ -280,12 +304,12 @@ public:
 class DrawingItemPointConnectCommand : public DrawingUndoCommand
 {
 private:
-	DrawingWidget* mDrawing;
+	DrawingView* mView;
 	DrawingItemPoint* mPoint1;
 	DrawingItemPoint* mPoint2;
 
 public:
-	DrawingItemPointConnectCommand(DrawingWidget* drawing, DrawingItemPoint* point1,
+	DrawingItemPointConnectCommand(DrawingView* view, DrawingItemPoint* point1,
 		DrawingItemPoint* point2, QUndoCommand* parent = NULL);
 	DrawingItemPointConnectCommand(const DrawingItemPointConnectCommand& command,
 		QUndoCommand* parent = NULL);
@@ -302,12 +326,12 @@ public:
 class DrawingItemPointDisconnectCommand : public DrawingUndoCommand
 {
 private:
-	DrawingWidget* mDrawing;
+	DrawingView* mView;
 	DrawingItemPoint* mPoint1;
 	DrawingItemPoint* mPoint2;
 
 public:
-	DrawingItemPointDisconnectCommand(DrawingWidget* drawing, DrawingItemPoint* point1,
+	DrawingItemPointDisconnectCommand(DrawingView* view, DrawingItemPoint* point1,
 		DrawingItemPoint* point2, QUndoCommand* parent = NULL);
 	DrawingItemPointDisconnectCommand(const DrawingItemPointDisconnectCommand& command,
 		QUndoCommand* parent = NULL);

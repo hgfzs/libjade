@@ -1,8 +1,8 @@
 /* DrawingPolygonItem.cpp
  *
- * Copyright (C) 2013-2016 Jason Allen
+ * Copyright (C) 2013-2017 Jason Allen
  *
- * This file is part of the jade library.
+ * This file is part of the jade application.
  *
  * jade is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,14 +19,12 @@
  */
 
 #include "DrawingPolygonItem.h"
-#include "DrawingWidget.h"
 #include "DrawingItemPoint.h"
 #include "DrawingItemStyle.h"
-#include "DrawingUndo.h"
 
 DrawingPolygonItem::DrawingPolygonItem() : DrawingItem()
 {
-	setFlags(CanMove | CanResize | CanRotate | CanFlip | CanInsertPoints | CanRemovePoints | CanSelect);
+	setFlags(CanMove | CanResize | CanRotate | CanFlip | CanInsertPoints | CanRemovePoints | CanSelect | AdjustPositionOnResize);
 
 	DrawingItemPoint::Flags flags = DrawingItemPoint::Control | DrawingItemPoint::Connection;
 	addPoint(new DrawingItemPoint(QPointF(-200, -200), flags));
@@ -85,7 +83,7 @@ void DrawingPolygonItem::setPolygon(const QPolygonF& polygon)
 
 	QList<DrawingItemPoint*> points = DrawingPolygonItem::points();
 	for(int i = 0; i < polygon.size(); i++)
-		points[i]->setPos(polygon[i]);
+		points[i]->setPosition(polygon[i]);
 }
 
 QPolygonF DrawingPolygonItem::polygon() const
@@ -93,11 +91,10 @@ QPolygonF DrawingPolygonItem::polygon() const
 	QPolygonF polygon;
 
 	QList<DrawingItemPoint*> points = DrawingPolygonItem::points();
-	for(int i = 0; i < points.size(); i++) polygon.append(points[i]->pos());
+	for(int i = 0; i < points.size(); i++) polygon.append(points[i]->position());
 
 	return polygon;
 }
-
 
 //==================================================================================================
 
@@ -133,7 +130,6 @@ QPainterPath DrawingPolygonItem::shape() const
 		drawPath.closeSubpath();
 
 		// Determine outline path
-		pen.setWidthF(qMax(pen.widthF(), minimumPenWidth()));
 		shape = strokePath(drawPath, pen);
 
 		if (brush.color().alpha() > 0) shape = shape.united(drawPath);
@@ -147,17 +143,17 @@ bool DrawingPolygonItem::isValid() const
 	bool superfluous = true;
 
 	QList<DrawingItemPoint*> points = DrawingPolygonItem::points();
-	QPointF pos = points.first()->pos();
+	QPointF position = points.first()->position();
 
 	for(auto pointIter = points.begin() + 1; superfluous && pointIter != points.end(); pointIter++)
-		superfluous = (pos == (*pointIter)->pos());
+		superfluous = (position == (*pointIter)->position());
 
 	return !superfluous;
 }
 
 //==================================================================================================
 
-void DrawingPolygonItem::paint(QPainter* painter)
+void DrawingPolygonItem::render(QPainter* painter)
 {
 	if (isValid())
 	{
@@ -176,74 +172,50 @@ void DrawingPolygonItem::paint(QPainter* painter)
 		painter->setBrush(sceneBrush);
 		painter->setPen(scenePen);
 	}
-
-	// Draw shape (debug)
-	//painter->setBrush(QColor(255, 0, 255, 128));
-	//painter->setPen(QPen(painter->brush(), 1));
-	//painter->drawPath(shape());
 }
 
 //==================================================================================================
 
-void DrawingPolygonItem::resizeItem(DrawingItemPoint* itemPoint, const QPointF& scenePos)
+DrawingItemPoint* DrawingPolygonItem::itemPointToInsert(const QPointF& itemPos, int& index)
 {
-	DrawingItem::resizeItem(itemPoint, scenePos);
+	DrawingItemPoint* pointToInsert = new DrawingItemPoint(
+		itemPos, DrawingItemPoint::Control | DrawingItemPoint::Connection);
 
-	// Adjust position of item and item points so that point(0)->pos() == QPointF(0, 0)
 	QList<DrawingItemPoint*> points = DrawingPolygonItem::points();
-	QPointF deltaPos = -points.first()->pos();
-	QPointF pointScenePos = mapToScene(points.first()->pos());
+	qreal distance = 0;
+	qreal minimumDistance = distanceFromPointToLineSegment(pointToInsert->position(),
+		QLineF(points[points.size()-1]->position(), points[0]->position()));
 
-	for(auto pointIter = points.begin(); pointIter != points.end(); pointIter++)
-		(*pointIter)->setPos((*pointIter)->pos() + deltaPos);
+	index = points.size();
 
-	setPos(pointScenePos);
-}
-
-void DrawingPolygonItem::insertItemPoint(const QPointF& scenePos)
-{
-	DrawingWidget* drawing = DrawingPolygonItem::drawing();
-
-	if (drawing)
+	for(int i = 0; i < points.size() - 1; i++)
 	{
-		DrawingItemPoint* newPoint = new DrawingItemPoint(
-			mapFromScene(drawing->roundToGrid(scenePos)),
-		DrawingItemPoint::Control | DrawingItemPoint::Connection);
-
-		QList<DrawingItemPoint*> points = DrawingPolygonItem::points();
-		int index = 1;
-		qreal distance = 0;
-		qreal minimumDistance = distanceFromPointToLineSegment(newPoint->pos(),
-			QLineF(points[points.size()-1]->pos(), points[0]->pos()));
-
-		index = points.size();
-		for(int i = 0; i < points.size() - 1; i++)
+		distance = distanceFromPointToLineSegment(pointToInsert->position(),
+			QLineF(points[i]->position(), points[i+1]->position()));
+		if (distance < minimumDistance)
 		{
-			distance = distanceFromPointToLineSegment(newPoint->pos(),
-				QLineF(points[i]->pos(), points[i+1]->pos()));
-			if (distance < minimumDistance)
-			{
-				index = i+1;
-				minimumDistance = distance;
-			}
+			index = i+1;
+			minimumDistance = distance;
 		}
-
-		drawing->pushUndoCommand(new DrawingItemInsertPointCommand(drawing, this, newPoint, index));
 	}
+
+	return pointToInsert;
 }
 
-void DrawingPolygonItem::removeItemPoint(const QPointF& scenePos)
+DrawingItemPoint* DrawingPolygonItem::itemPointToRemove(const QPointF& itemPos)
 {
-	DrawingWidget* drawing = DrawingPolygonItem::drawing();
+	DrawingItemPoint* pointToRemove = nullptr;
+
 	QList<DrawingItemPoint*> points = DrawingPolygonItem::points();
-
-	if (drawing && points.size() > 3)
+	if (points.size() > 3)
 	{
-		DrawingItemPoint* pointToRemove = pointNearest(mapFromScene(scenePos));
+		DrawingItemPoint* pointToRemove = pointNearest(itemPos);
 
-		if (pointToRemove)
-			drawing->pushUndoCommand(new DrawingItemRemovePointCommand(drawing, this, pointToRemove));
+		if (pointToRemove && (pointToRemove == points.first() || pointToRemove == points.last()))
+			pointToRemove = nullptr;
 	}
+
+	return pointToRemove;
 }
 
 //==================================================================================================

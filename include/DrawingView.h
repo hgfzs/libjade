@@ -1,8 +1,8 @@
-/* DrawingWidget.h
+/* DrawingView.h
  *
- * Copyright (C) 2013-2016 Jason Allen
+ * Copyright (C) 2013-2017 Jason Allen
  *
- * This file is part of the jade library.
+ * This file is part of the jade application.
  *
  * jade is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,31 +18,25 @@
  * along with jade.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef DRAWINGWIDGET_H
-#define DRAWINGWIDGET_H
+#ifndef DRAWINGVIEW_H
+#define DRAWINGVIEW_H
 
-#include <DrawingTypes.h>
+#include <QtWidgets>
 
-/*! \brief Widget for managing a large number of two-dimensional DrawingItem objects.
+class DrawingScene;
+class DrawingItem;
+class DrawingItemPoint;
+
+/*! \brief Widget for viewing the contents of a DrawingScene.
  *
- * DrawingWidget serves as a container for DrawingItem objects.  Items can be added to the widget
- * using addItem() or insertItem() and removed using removeItem().
- *
- * DrawingWidget provides several ways to search for items within the scene.  The items() function
- * returns a list of all the items contained within the widget in the order they were added.  The
- * items(const QPointF&) const overload returns a list of all the items whose shape intersects with
- * the given location.  The items(const QRectF&) const overload returns a list of all the items
- * whose boundingRect is fully contained within the specified rect.  The itemAt() function is used
- * to determine which item (if any) was clicked on by the user.
- *
- * DrawingWidget maintains selection information for items within the widget. To select items, call
- * selectItem().  To clear the current selection, call clearSelection(). Call selectedItems() to
- * get the list of all currently selected items.
+ * When a new DrawingView object is created, it is associated with a default DrawingScene object.
+ * To set a different DrawingScene object, call setScene().  To return a pointer to the current
+ * scene, call scene().
  *
  * \section widget_viewport Viewport
  *
- * DrawingWidget visualizes a scene in a scrollable viewport.  The scrollable area of the scene is
- * determined by the sceneRect().
+ * DrawingView visualizes a scene in a scrollable viewport.  The scrollable area of the scene is
+ * determined by the scene's DrawingScene::sceneRect().
  *
  * Any position on the scene can be scrolled to by using the scroll bars or by calling centerOn().
  * The area that is currently visible can be obtained by calling visibleRect().
@@ -51,15 +45,9 @@
  * functions zoom in or out by a factor of sqrt(2).  The user can zoom out to fit the entire scene
  * in the viewport by calling zoomFit().
  *
- * DrawingWidget visualizes the scene by calling render().  First, the background is drawn by
- * calling drawBackground().  Then the items are drawn by calling drawItems().  Items are drawn in
- * the order they were added to the widget, starting with the first item added and ending with the
- * most recent item added.  Finally, the foreground is drawn by calling drawForeground().  Any of
- * these functions can be overridden in a derived class to modify the default rendering behavior.
- *
  * \section widget_events Event Handling
  *
- * DrawingWidget supports several modes of operation.  The current mode() affects how DrawingWidget
+ * DrawingView supports several modes of operation.  The current mode() affects how DrawingView
  * handles mouse and keyboard events.
  *
  * In #ScrollMode, the user can pan around the scene.  The cursor turns into a hand, which can
@@ -73,17 +61,16 @@
  * items in this mode.  By default, right-clicking or double clicking will bring the widget back
  * to #DefaultMode.
  *
- * #DefaultMode is the most common mode for using a DrawingWidget.  This mode allows full
+ * #DefaultMode is the most common mode for using a DrawingView.  This mode allows full
  * interaction with the items in the scene.  Users can click on items to select them or draw a
  * rubber band over an area to select all items in that area.  Selected items can be moved around
  * the scene.  A single selected item can be resized if the user clicks on a Control
  * DrawingItemPoint.  Clicking on empty space will clear the current selection.
  *
- * On a mouse press event, DrawingWidget updates the current mouseDownItem() to whatever item was
- * clicked.  At this time, DrawingWidget also updates the current focusItem() to match the new
- * mouseDownItem().  After a mouse release event, DrawingWidget sets the current mouseDownItem() to
- * nullptr since the mouse event is over.  Mouse events are forwarded to the mouseDownItem(), while
- * keyboard events are forwarded to the focusItem().
+ * On a mouse press event, DrawingView updates the current mouseDownItem() to whatever item was
+ * clicked.  At this time, DrawingView also updates the current focusItem() to match the new
+ * mouseDownItem().  After a mouse release event, DrawingView sets the current mouseDownItem() to
+ * nullptr since the mouse event is over.
  *
  * #PlaceMode is used to add new items to the widget.  By default, mouse move events move the
  * new items around the scene.  The new items are added to the scene on a
@@ -95,9 +82,13 @@
  * base implementation of the behavior described here.  These can be overloaded in a derived class
  * to modify their behavior as needed for the application.
  *
+ * DrawingView maintains selection information for items within the scene. To select items, call
+ * selectItem().  To clear the current selection, call clearSelection(). Call selectedItems() to
+ * get the list of all currently selected items.
+ *
  * \section widget_undo Undo Support
  *
- * DrawingWidget comes with full undo support.  The widget has an internal undo stack that is
+ * DrawingView comes with full undo support.  The widget has an internal undo stack that is
  * managed automatically.
  *
  * The following operations are undoable:
@@ -105,8 +96,8 @@
  * \li Deleting items using deleteSelection()
  * \li Moving items around the scene using mouse events or moveSelection()
  * \li Resizing items within the scene using mouse events or resizeSelection()
- * \li Rotating or flipping items in the scene using rotateSelection(), rotateBackSelection() and
- *     flipSelection().
+ * \li Rotating or flipping items in the scene using rotateSelection(), rotateBackSelection(),
+ *     flipSelectionHorizontal(), and flipSelectionVertical().
  * \li Cut/copy/paste of items using cut(), copy(), and paste()
  * \li Reordering the items in the scene using bringForward(), sendBackward(), bringToFront(), and
  *     sendToBack()
@@ -121,44 +112,36 @@
  *
  * Custom undo events may be pushed on to the internal undo stack by calling pushUndoCommand().
  */
-class DrawingWidget : public QAbstractScrollArea
+class DrawingView : public QAbstractScrollArea
 {
 	Q_OBJECT
 
-	friend class DrawingAddItemsCommand;
-	friend class DrawingRemoveItemsCommand;
-	friend class DrawingMoveItemsCommand;
-	friend class DrawingResizeItemCommand;
-	friend class DrawingRotateItemsCommand;
-	friend class DrawingRotateBackItemsCommand;
-	friend class DrawingFlipItemsCommand;
 	friend class DrawingReorderItemsCommand;
-	friend class DrawingSelectItemsCommand;
-	friend class DrawingItemInsertPointCommand;
-	friend class DrawingItemRemovePointCommand;
-	friend class DrawingItemPointConnectCommand;
-	friend class DrawingItemPointDisconnectCommand;
 
 public:
-	/*! \brief Enum used to set the current mode of the DrawingWidget.  See the \ref widget_events
+	/*! \brief Enum used to set the current mode of the DrawingView.  See the \ref widget_events
 	 * section above for more information.
 	 */
 	enum Mode
 	{
-		DefaultMode,	//!< The normal mode for interacting with items in a DrawingWidget.
+		DefaultMode,	//!< The normal mode for interacting with items in a DrawingView.
 		ScrollMode,		//!< Mode for the user to pan around the scene.  No interaction with items.
 		ZoomMode,		//!< Mode for the user to zoom in on an area of the scene.  No interaction
 						//!< with items.
-		PlaceMode		//!< Mode for placing new items into a DrawingWidget.
+		PlaceMode		//!< Mode for placing new items into a DrawingView.
 	};
 
-	/*! \brief Enum used to modify the default behavior of DrawingWidget.
+	/*! \brief Enum used to modify the default behavior of DrawingView.
 	 */
 	enum Flag
 	{
-		UndoableSelectCommands = 0x0001,	//!< Selecting and deselecting items are commands that
+		ViewOwnsScene = 0x0001,				//!< The scene() will be deleted when the view is
+											//!< deleted.  If this flag is not set, then the
+											//!< application must manage the memory allocation
+											//!< for the scene.
+		UndoableSelectCommands = 0x0002,	//!< Selecting and deselecting items are commands that
 											//!< the user can undo() and redo().
-		SendsMouseMoveInfo = 0x0002			//!< Emits the mouseInfoChanged() signal when the mouse
+		SendsMouseMoveInfo = 0x0004			//!< Emits the mouseInfoChanged() signal when the mouse
 											//!< is moved within the scene.
 	};
 	Q_DECLARE_FLAGS(Flags, Flag)
@@ -167,102 +150,121 @@ private:
 	enum MouseState { MouseReady, MouseSelect, MouseMoveItems, MouseResizeItem, MouseRubberBand };
 
 private:
-	QRectF mSceneRect;
-	qreal mGrid;
-	QBrush mBackgroundBrush;
-
-	QList<DrawingItem*> mItems;
-	QList<DrawingItem*> mSelectedItems;
-	DrawingItemPoint* mSelectedItemPoint;
-	DrawingItem* mNewItem;
-	DrawingItem* mMouseDownItem;
-	DrawingItem* mFocusItem;
+	DrawingScene* mScene;
 
 	Flags mFlags;
 	Qt::ItemSelectionMode mItemSelectionMode;
+	qreal mGrid;
+
+	QUndoStack mUndoStack;
 
 	Mode mMode;
 	qreal mScale;
 
-	// Internal variables
+	QList<DrawingItem*> mSelectedItems;
+	DrawingItemPoint* mSelectedItemPoint;
+	QPointF mSelectionCenter;
+
+	QList<DrawingItem*> mNewItems;
+	DrawingItem* mMouseDownItem;
+	DrawingItem* mFocusItem;
+	QList<DrawingItem*> mClipboardItems;
+
 	QTransform mViewportTransform;
 	QTransform mSceneTransform;
 
-	QUndoStack mUndoStack;
-	QList<DrawingItem*> mClipboardItems;
-	DrawingMouseEvent mMouseEvent;
-	MouseState mMouseState;
-	QHash<DrawingItem*,QPointF> mInitialPositions;
-	QPointF mSelectedItemPointOriginalPos;
+	QPoint mButtonDownPos;
+	QPointF mButtonDownScenePos, mScenePos;
+	bool mDragged;
 	QRect mRubberBandRect;
+
+	MouseState mDefaultMouseState;
+	QHash<DrawingItem*,QPointF> mDefaultInitialPositions;
+	QPointF mDefaultSelectedItemPointOriginalPos;
+
 	int mScrollButtonDownHorizontalScrollValue;
 	int mScrollButtonDownVerticalScrollValue;
+
 	QPoint mPanStartPos;
 	QPoint mPanCurrentPos;
 	QTimer mPanTimer;
-	int mConsecutivePastes;
-	QPointF mSelectionCenter;
 
 public:
-	/*! \brief Create a new DrawingWidget with default settings.
+	/*! \brief Create a new DrawingView with default settings.
 	 *
-	 * The new widget does not contain any items.  Items can be added by calling addItem() or
-	 * insertItem().
+	 * A default DrawingScene object is created.  To set a different DrawingScene object, call
+	 * setScene().
 	 */
-	DrawingWidget();
+	DrawingView();
 
-	/*! \brief Delete an existing DrawingWidget object.
+	/*! \brief Delete an existing DrawingView object.
 	 *
-	 * Also deletes all items contained in the widget.
+	 * If the #ViewOwnsScene flag is set, this also deletes the scene.
 	 */
-	~DrawingWidget();
+	virtual ~DrawingView();
 
 
-	/*! \brief Sets the bounding rectangle of the scene.
+	/*! \brief Sets the current scene of the view.
 	 *
-	 * The scene rectangle defines the extent of the scene.  It is used by DrawingWidget to
-	 * determine the scrollable area of the viewport.
-	 *
-	 * The scene rectangle must be set to a valid QRectF.  The behavior of DrawingWidget is
-	 * undefined if its sceneRect is invalid.
-	 *
-	 * The default scene rectangle is set to QRectF(-5000, -3750, 10000, 7500).
-	 *
-	 * \sa sceneRect()
+	 * \sa scene()
 	 */
-	void setSceneRect(const QRectF& rect);
+	void setScene(DrawingScene* scene);
 
-	/*! \brief Sets the bounding rectangle of the scene.
+	/*! \brief Sets the scene associated with the view.
 	 *
-	 * This convenience function is equivalent to calling setSceneRect(QRectF(left, top, width, height)).
-	 *
-	 * \sa sceneRect(), width(), height()
+	 * \sa setScene()
 	 */
-	void setSceneRect(qreal left, qreal top, qreal width, qreal height);
+	DrawingScene* scene() const;
 
-	/*! \brief Returns the widget's bounding rectangle.
+
+	/*! \brief Modifies the default behavior of DrawingView through a combination of flags.
 	 *
-	 * \sa setSceneRect(), width(), height()
-	 */
-	QRectF sceneRect() const;
-
-	/*! \brief Returns the width of the widget's bounding rectangle.
+	 * The default flags are set to (#ViewOwnsScene | #UndoableSelectCommands | #SendsMouseMoveInfo).
+	 * Applications can set any combination of flags to set the desired behavior of DrawingView.
 	 *
-	 * \sa setSceneRect(), sceneRect(), height()
+	 * \sa flags()
 	 */
-	qreal width() const;
+	void setFlags(Flags flags);
 
-	/*! \brief Returns the height of the widget's bounding rectangle.
+	/*! \brief Returns any modifications to DrawingView's default behavior represented as a
+	 * combination of flags.
 	 *
-	 * \sa setSceneRect(), sceneRect(), width()
+	 * \sa setFlags()
 	 */
-	qreal height() const;
+	Flags flags() const;
 
 
-	/*! \brief Sets the widget's grid.
+	/*! \brief Sets the view's item selection mode.
+	 *
+	 * The item selection mode affects how items are selected with a rubber band select box:
+	 * \li Qt::ContainsItemBoundingRect - only items whose bounding rectangle is fully contained
+	 * inside the selection area are selected
+	 * \li Qt::ContainsItemShape - only items whose shape is fully contained inside the
+	 * selection area are selected
+	 * \li Qt::IntersectsItemBoundingRect - all items whose bounding rectangle intersects with the
+	 * selection area are selected
+	 * \li Qt::IntersectsItemShape - all items whose shape intersects with the selection area are
+	 * selected
+	 *
+	 * This also affects which items are returned by items(const QRectF&) const.
+	 *
+	 * The default mode is set to Qt::ContainsItemBoundingRect.
+	 *
+	 * \sa itemSelectionMode()
+	 */
+	void setItemSelectionMode(Qt::ItemSelectionMode mode);
+
+	/*! \brief Returns the view's item selection mode.
+	 *
+	 * \sa setItemSelectionMode()
+	 */
+	Qt::ItemSelectionMode itemSelectionMode() const;
+
+
+	/*! \brief Sets the view's grid.
 	 *
 	 * Snap to grid is enabled when the grid is set to a value greater than 0.  With snap to grid,
-	 * DrawingWidget will force items to be aligned on a grid when moved around the scene or
+	 * DrawingView will force items to be aligned on a grid when moved around the scene or
 	 * resized.
 	 *
 	 * Set the grid to 0 (or a negative number) to disable snap to grid.
@@ -273,7 +275,7 @@ public:
 	 */
 	void setGrid(qreal grid);
 
-	/*! \brief Returns the widget's grid.
+	/*! \brief Returns the view's grid.
 	 *
 	 * \sa setGrid(), roundToGrid()
 	 */
@@ -296,26 +298,7 @@ public:
 	QPointF roundToGrid(const QPointF& scenePos) const;
 
 
-	/*! \brief Sets the widget's background brush.
-	 *
-	 * The background brush is used to fill the background of the widget by the default
-	 * implementation of drawBackground().  It is also used to determine the outline color when
-	 * rendering DrawingItemPoint objects.
-	 *
-	 * The default background brush is set to white.
-	 *
-	 * \sa backgroundBrush()
-	 */
-	void setBackgroundBrush(const QBrush& brush);
-
-	/*! \brief Returns the widget's background brush.
-	 *
-	 * \sa setBackgroundBrush()
-	 */
-	QBrush backgroundBrush() const;
-
-
-	/*! \brief Set the maximum depth of the internal undo stack of the widget.
+	/*! \brief Set the maximum depth of the internal undo stack of the view.
 	 *
 	 * When the number of commands on the stack exceeds the undo limit, commands are deleted from
 	 * the bottom of the stack.
@@ -344,13 +327,13 @@ public:
 	 */
 	void pushUndoCommand(QUndoCommand* command);
 
-	/*! \brief Returns the maximum number of undo commands that can be stored in the widget.
+	/*! \brief Returns the maximum number of undo commands that can be stored in the view.
 	 *
 	 * \sa setUndoLimit()
 	 */
 	int undoLimit() const;
 
-	/*! \brief Returns true if the widget's internal undo stack is in a clean state, false
+	/*! \brief Returns true if the view's internal undo stack is in a clean state, false
 	 * otherwise.
 	 *
 	 * \sa setClean()
@@ -382,50 +365,7 @@ public:
 	QString redoText() const;
 
 
-	/*! \brief Modifies the default behavior of DrawingWidget through a combination of flags.
-	 *
-	 * The default flags are set to 0.  Applications can set any combination of flags to set the
-	 * desired behavior of DrawingWidget.
-	 *
-	 * \sa flags()
-	 */
-	void setFlags(Flags flags);
-
-	/*! \brief Sets the widget's item selection mode.
-	 *
-	 * The item selection mode affects how items are selected with a rubber band select box:
-	 * \li Qt::ContainsItemBoundingRect - only items whose bounding rectangle is fully contained
-	 * inside the selection area are selected
-	 * \li Qt::ContainsItemShape - only items whose shape is fully contained inside the
-	 * selection area are selected
-	 * \li Qt::IntersectsItemBoundingRect - all items whose bounding rectangle intersects with the
-	 * selection area are selected
-	 * \li Qt::IntersectsItemShape - all items whose shape intersects with the selection area are
-	 * selected
-	 *
-	 * This also affects which items are returned by items(const QRectF&) const.
-	 *
-	 * The default mode is set to Qt::ContainsItemBoundingRect.
-	 *
-	 * \sa itemSelectionMode()
-	 */
-	void setItemSelectionMode(Qt::ItemSelectionMode mode);
-
-	/*! \brief Returns any modifications to DrawingWidget's default behavior represented as a
-	 * combination of flags.
-	 *
-	 * \sa setFlags()
-	 */
-	Flags flags() const;
-
-	/*! \brief Returns the widget's item selection mode.
-	 *
-	 * \sa setItemSelectionMode()
-	 */
-	Qt::ItemSelectionMode itemSelectionMode() const;
-
-
-	/*! \brief Returns the widget's current operating mode.
+	/*! \brief Returns the view's current operating mode.
 	 *
 	 * The default operating mode is #DefaultMode.
 	 *
@@ -442,106 +382,13 @@ public:
 	qreal scale() const;
 
 
-	/*! \brief Adds an existing item to the widget.
-	 *
-	 * This convenience function is equivalent to calling #insertItem(items().size(), item).
-	 *
-	 * \sa removeItem()
-	 */
-	void addItem(DrawingItem* item);
-
-	/*! \brief Inserts an existing item to the widget at the specified index.
-	 *
-	 * If a valid item is passed to this function, DrawingWidget will insert it into its list of
-	 * items() at the specified index.  DrawingItem takes ownership of the item and will
-	 * delete it as necessary.
-	 *
-	 * It is safe to pass a nullptr to this function; if a nullptr is received, this function
-	 * does nothing.  This function also does nothing if the item is already one of the widget's
-	 * items().
-	 *
-	 * \sa addItem(), removeItem()
-	 */
-	void insertItem(int index, DrawingItem* item);
-
-	/*! \brief Removes an existing item from the widget.
-	 *
-	 * If a valid item is passed to this function, DrawingWidget will remove it from its list of
-	 * items().  DrawingWidget relinquishes ownership of the item and does not delete the
-	 * item from memory.
-	 *
-	 * It is safe to pass a nullptr to this function; if a nullptr is received, this function
-	 * does nothing.  This function also does nothing if the item is not one of the widget's
-	 * items().
-	 *
-	 * \sa addPoint(), insertPoint(), clearPoints()
-	 */
-	void removeItem(DrawingItem* item);
-
-	/*! \brief Removes and deletes all items from the widget.
-	 *
-	 * This function removes and deletes all of the widgets's items() from memory.
-	 *
-	 * \sa removeItem()
-	 */
-	void clearItems();
-
-	/*! \brief Returns a list of all items added to the widget.
-	 *
-	 * \sa addItem(), insertItem(), removeItem()
-	 */
-	QList<DrawingItem*> items() const;
-
-	/*! \brief Returns a list of all visible items added to the widget that are at the specified
-	 * position.
-	 *
-	 * This function uses DrawingItem::shape() to determine the exact shape of each item to test
-	 * against the specified position.
-	 *
-	 * \sa items(const QRectF&) const, itemAt()
-	 */
-	QList<DrawingItem*> items(const QPointF& scenePos) const;
-
-	/*! \brief Returns a list of all visible items added to the widget that are inside the
-	 * specified rectangle.
-	 *
-	 * This function uses the current itemSelectionMode() to affect how it matches items to the rect:
-	 * \li Qt::ContainsItemBoundingRect - only items whose bounding rectangle is fully contained
-	 * inside the specified rect are included in the list
-	 * \li Qt::ContainsItemShape - only items whose shape is fully contained inside the
-	 * specified rect are included in the list
-	 * \li Qt::IntersectsItemBoundingRect - all items whose bounding rectangle intersects with the
-	 * specified rect are included in the list
-	 * \li Qt::IntersectsItemShape - all items whose shape intersects with the specified rect are
-	 * included in the list
-	 *
-	 * \sa items(const QPointF&) const
-	 */
-	QList<DrawingItem*> items(const QRectF& sceneRect) const;
-
-	/*! \brief Returns the topmost visible item at the specified position, or nulltr if there are
-	 * no items at this position.
-	 *
-	 * This function favors already selected items in its search.  First it searches through all
-	 * of the selected items for a match.  If none of the selected items is at the specified
-	 * position, then this function searches through all of the widget items.
-	 *
-	 * This function uses DrawingItem::shape() to determine the exact shape of each item to test
-	 * against the specified position.  It returns immediately once it finds the first item that
-	 * matches the specified position.
-	 *
-	 * \sa items(const QPointF&) const
-	 */
-	DrawingItem* itemAt(const QPointF& scenePos) const;
-
-
 	/*! \brief Adds the specified item to the selection.
 	 *
-	 * If a valid item is passed to this function, DrawingWidget will set it as selected and
+	 * If a valid item is passed to this function, DrawingView will set it as selected and
 	 * append it into its list of selectedItems() at the specified index.
 	 *
 	 * It is safe to pass a nullptr to this function; if a nullptr is received, this function
-	 * does nothing.  This function also does nothing if the item is already one of the widget's
+	 * does nothing.  This function also does nothing if the item is already one of the view's
 	 * selectedItems().
 	 *
 	 * \sa selectItems(), deselectItem()
@@ -550,11 +397,11 @@ public:
 
 	/*! \brief Removes the specified item from the selection.
 	 *
-	 * If a valid item is passed to this function, DrawingWidget will set it as unselected and
+	 * If a valid item is passed to this function, DrawingView will set it as unselected and
 	 * remove it from its list of selectedItems().
 	 *
 	 * It is safe to pass a nullptr to this function; if a nullptr is received, this function
-	 * does nothing.  This function also does nothing if the item is not one of the widget's
+	 * does nothing.  This function also does nothing if the item is not one of the view's
 	 * selectedItems().
 	 *
 	 * \sa selectItem(), clearSelection()
@@ -568,23 +415,23 @@ public:
 	 */
 	void clearSelection();
 
-	/*! \brief Returns a list of all currently selected items in the widget.
+	/*! \brief Returns a list of all currently selected items in the view.
 	 *
 	 * \sa addItem(), insertItem(), removeItem()
 	 */
 	QList<DrawingItem*> selectedItems() const;
 
 
-	/*! \brief Returns the widget's new item, or nullptr if no new item is set.
+	/*! \brief Returns the view's new items, or an empty list if no new items are set.
 	 *
-	 * The new item is set when entering #PlaceMode.  It is used to place new items within the
-	 * widget's scene.
+	 * The new items are set when entering #PlaceMode.  It is used to place new items within the
+	 * scene.
 	 *
 	 * \sa setPlaceMode()
 	 */
-	DrawingItem* newItem() const;
+	QList<DrawingItem*> newItems() const;
 
-	/*! \brief Returns the widget's mouse down item, or nullpty if no mouse down item is set.
+	/*! \brief Returns the view's mouse down item, or nullptr if no mouse down item is set.
 	 *
 	 * The mouse down item is the item that receives all mouse events sent to the scene.
 	 *
@@ -593,7 +440,7 @@ public:
 	 */
 	DrawingItem* mouseDownItem() const;
 
-	/*! \brief Returns the widget's focus item, or nullpty if no focus item is set.
+	/*! \brief Returns the view's focus item, or nullptr if no focus item is set.
 	 *
 	 * The focus item is the item that receives all keyboard events sent to the scene.
 	 *
@@ -601,22 +448,6 @@ public:
 	 * the mouse down until the next mouse press event.
 	 */
 	DrawingItem* focusItem() const;
-
-
-	/*! \brief Returns the size to use when rendering DrawingItemPoint objects in the scene.
-	 *
-	 * The default width and height are both set to 8 * devicePixelRatio().
-	 *
-	 * \sa pointRect()
-	 */
-	virtual QSize pointSizeHint() const;
-
-	/*! \brief Returns the screen rect used to render a DrawingItemPoint in the scene.
-	 *
-	 * The rect will be centered on the item point's position and have size as set by the
-	 * pointSizeHint().
-	 */
-	QRect pointRect(DrawingItemPoint* point) const;
 
 
 	/*! \brief Scrolls the contents of the viewport to ensure that specified scenePos is centered
@@ -700,19 +531,95 @@ public:
 
 	/*! \brief Returns a rect representing the scrollable area of the scene.
 	 *
-	 * Normally this function returns the widget's sceneRect().  However, if the viewport is zoomed
-	 * out enough that more of the scene can be seen than the sceneRect(), this function will
-	 * return a rect representing the entire area.
+	 * Normally this function returns the scene's DrawingScene::sceneRect().  However, if the
+	 * viewport is zoomed out enough that more of the scene can be seen than the
+	 * DrawingScene::sceneRect(), this function will return a rect representing the entire area.
 	 *
 	 * \sa visibleRect()
 	 */
 	QRectF scrollBarDefinedRect() const;
 
 
+	/*! \brief Returns a list of all visible items added to the scene that are at the specified
+	 * position.
+	 *
+	 * This function uses DrawingItem::shape() to determine the exact shape of each item to test
+	 * against the specified position.
+	 *
+	 * \sa items(const QRectF&) const, itemAt()
+	 */
+	QList<DrawingItem*> items(const QPointF& scenePos) const;
+
+	/*! \brief Returns a list of all visible items added to the scene that are inside the
+	 * specified rectangle.
+	 *
+	 * This function uses the current itemSelectionMode() to affect how it matches items to the rect:
+	 * \li Qt::ContainsItemBoundingRect - only items whose bounding rectangle is fully contained
+	 * inside the specified rect are included in the list
+	 * \li Qt::ContainsItemShape - only items whose shape is fully contained inside the
+	 * specified rect are included in the list
+	 * \li Qt::IntersectsItemBoundingRect - all items whose bounding rectangle intersects with the
+	 * specified rect are included in the list
+	 * \li Qt::IntersectsItemShape - all items whose shape intersects with the specified rect are
+	 * included in the list
+	 *
+	 * \sa items(const QPointF&) const
+	 */
+	QList<DrawingItem*> items(const QRectF& sceneRect) const;
+
+	/*! \brief Returns a list of all visible items added to the scene that are inside the
+	 * specified path.
+	 *
+	 * This function uses the current itemSelectionMode() to affect how it matches items to the rect:
+	 * \li Qt::ContainsItemBoundingRect - only items whose bounding rectangle is fully contained
+	 * inside the specified path are included in the list
+	 * \li Qt::ContainsItemShape - only items whose shape is fully contained inside the
+	 * specified path are included in the list
+	 * \li Qt::IntersectsItemBoundingRect - all items whose bounding rectangle intersects with the
+	 * specified path are included in the list
+	 * \li Qt::IntersectsItemShape - all items whose shape intersects with the specified path are
+	 * included in the list
+	 *
+	 * \sa items(const QPointF&) const
+	 */
+	QList<DrawingItem*> items(const QPainterPath& scenePath) const;
+
+	/*! \brief Returns the topmost visible item at the specified position, or nulltr if there are
+	 * no items at this position.
+	 *
+	 * This function favors already selected items in its search.  First it searches through all
+	 * of the selected items for a match.  If none of the selected items is at the specified
+	 * position, then this function searches through all of the scene items.
+	 *
+	 * This function uses DrawingItem::shape() to determine the exact shape of each item to test
+	 * against the specified position.  It returns immediately once it finds the first item that
+	 * matches the specified position.
+	 *
+	 * \sa items(const QPointF&) const
+	 */
+	DrawingItem* itemAt(const QPointF& scenePos) const;
+
+
+	/*! \brief Returns the item point located at the specified position, or nullptr if no match is
+	 * found.
+	 *
+	 * For each point in the specified item, this function determines the bounding rect of the
+	 * point, then maps it to local item coordinates.  If the specified itemPos
+	 * is contained within the point's boundingRect, the point is returned immediately.  If no
+	 * match is found after searching through all of the item's points, nullptr is returned.
+	 * The itemPos is given in the local item coordinates.
+	 *
+	 * This function is used to determine if any of the item's points were
+	 * clicked on by the user.
+	 *
+	 * \sa pointNearest()
+	 */
+	DrawingItemPoint* pointAt(DrawingItem* item, const QPointF& itemPos) const;
+
+
 	/*! \brief Renders the scene using the specified painter.
 	 *
-	 * This function simply calls drawBackground(), drawItems(), and drawForeground() in succession
-	 * using the specified painter.
+	 * The default implementation simply calls DrawingScene::render().
 	 */
 	virtual void render(QPainter* painter);
 
@@ -735,10 +642,11 @@ public slots:
 	 */
 	void zoomOut();
 
-	/*! \brief Zooms to fit the entire sceneRect() within the view.
+	/*! \brief Zooms to fit the entire scene's DrawingScene::sceneRect() within the view.
 	 *
-	 * Scales the view and scrolls the scroll bars to ensure that the sceneRect() fits inside
-	 * the viewport, then sends the scaleChanged() signal to indicate the new scale factor.
+	 * Scales the view and scrolls the scroll bars to ensure that the DrawingScene::sceneRect()
+	 * fits inside the viewport, then sends the scaleChanged() signal to indicate the new scale
+	 * factor.
 	 *
 	 * \sa zoomOut(), zoomFit(), scaleBy()
 	 */
@@ -786,23 +694,20 @@ public slots:
 
 	/*! \brief Sets the current operating mode to #ScrollMode.
 	 *
-	 * #PlaceMode is used to add new items to the widget.  By default, mouse move events move the
-	 * new item around the scene.  The new item is added to the scene on a
-	 * mouse release event.  Copies of the new item can continue to be placed until the user
+	 * #PlaceMode is used to add new items to the scene.  By default, mouse move events move the
+	 * new items around the scene.  The new items are added to the scene on a
+	 * mouse release event.  Copies of the new itesm can continue to be placed until the user
 	 * right-clicks or until the user enters a different mode.
 	 *
-	 * DrawingWidget is expecting to receive a pointer to a DrawingItem that is not already
-	 * one of the widget's items().  DrawingWidget takes ownership of the item and will delete
-	 * it upon exiting #PlaceMode.
-	 *
-	 * It is safe to pass a nullptr to this function; if a nullptr is received, this function
-	 * sets the operating mode to #DefaultMode.
+	 * DrawingView is expecting to receive a list of DrawingItem objects that are not already
+	 * added to a sce().  DrawingView takes ownership of the items and will delete
+	 * them upon exiting #PlaceMode.
 	 *
 	 * This slot emits the modeChanged() signal to indicate that the mode has changed.
 	 *
 	 * \sa setDefaultMode(), setScrollMode(), setZoomMode()
 	 */
-	void setPlaceMode(DrawingItem* newItem);
+	void setPlaceMode(const QList<DrawingItem*>& newItems);
 
 
 	/*! \brief Undoes the previous command.
@@ -850,8 +755,8 @@ public slots:
 	/*! \brief Copies the selected items to an internal clipboard, then deletes them from the scene.
 	 *
 	 * This function does not use the standard clipboard (i.e. QApplication::clipboard()).  Instead,
-	 * DrawingWidget maintains its own internal list of items.  This means that items cannot be
-	 * copied between two different DrawingWidget objects.
+	 * DrawingView maintains its own internal list of items.  This means that items cannot be
+	 * copied between two different DrawingView objects.
 	 *
 	 * The cut operation is only performed if the mode() is #DefaultMode.  If the mode() is any
 	 * other mode, this function does nothing.
@@ -863,8 +768,8 @@ public slots:
 	/*! \brief Copies the selected items to an internal clipboard.
 	 *
 	 * This function does not use the standard clipboard (i.e. QApplication::clipboard()).  Instead,
-	 * DrawingWidget maintains its own internal list of items.  This means that items cannot be
-	 * copied between two different DrawingWidget objects.
+	 * DrawingView maintains its own internal list of items.  This means that items cannot be
+	 * copied between two different DrawingView objects.
 	 *
 	 * The cut operation is only performed if the mode() is #DefaultMode.  If the mode() is any
 	 * other mode, this function does nothing.
@@ -883,8 +788,8 @@ public slots:
 	 * selection has changed.
 	 *
 	 * This function does not use the standard clipboard (i.e. QApplication::clipboard()).  Instead,
-	 * DrawingWidget maintains its own internal list of items.  This means that items cannot be
-	 * pasted between two different DrawingWidget objects.
+	 * DrawingView maintains its own internal list of items.  This means that items cannot be
+	 * pasted between two different DrawingView objects.
 	 *
 	 * The cut operation is only performed if the mode() is #DefaultMode.  If the mode() is any
 	 * other mode, this function does nothing.
@@ -920,13 +825,13 @@ public slots:
 	 */
 	void selectAll();
 
-	/*! \brief Sets the selection to all visible items added to the widget that are inside the
+	/*! \brief Sets the selection to all visible items added to the scene that are inside the
 	 * specified rectangle.
 	 *
 	 * This function first clears the current selection, then searches for items that match
 	 * the specified rect.
 	 *
-	 * This function uses the widget's itemSelectionMode() to affect how it matches items to the rect:
+	 * This function uses the view's itemSelectionMode() to affect how it matches items to the rect:
 	 * \li Qt::ContainsItemBoundingRect - only items whose bounding rectangle is fully contained
 	 * inside the specified rect are included in the selection
 	 * \li Qt::ContainsItemShape - only items whose shape is fully contained inside the
@@ -945,13 +850,13 @@ public slots:
 	 */
 	void selectArea(const QRectF& rect);
 
-	/*! \brief Sets the selection to all visible items added to the widget that are inside the
+	/*! \brief Sets the selection to all visible items added to the scene that are inside the
 	 * specified path.
 	 *
 	 * This function first clears the current selection, then searches for items that match
 	 * the specified path.
 	 *
-	 * This function uses the widget's itemSelectionMode() to affect how it matches items to the path:
+	 * This function uses the view's itemSelectionMode() to affect how it matches items to the path:
 	 * \li Qt::ContainsItemBoundingRect - only items whose bounding rectangle is fully contained
 	 * inside the specified path are included in the selection
 	 * \li Qt::ContainsItemShape - only items whose shape is fully contained inside the
@@ -989,7 +894,7 @@ public slots:
 	 * If multiple items are selected, this function sets the position of the first item to newPos,
 	 * then moves the remaining items such that the change in position for all items is the same.
 	 *
-	 * Only items with the CanMove flag set are moved.  If no items are movable, or if no items 
+	 * Only items with the CanMove flag set are moved.  If no items are movable, or if no items
 	 * are selected, this function does nothing.
 	 *
 	 * The move operation is only performed if the mode() is #DefaultMode.  If the mode() is any
@@ -998,7 +903,7 @@ public slots:
 	 * \sa resizeSelection()
 	 */
 	void moveSelection(const QPointF& newPos);
-	
+
 	/*! \brief Resizes the selected item by moving the itemPoint to the specified position.
 	 *
 	 * This function emits the itemsGeometryChanged() signal after the item has been resized.
@@ -1012,7 +917,7 @@ public slots:
 	 * \sa moveSelection()
 	 */
 	void resizeSelection(DrawingItemPoint* itemPoint, const QPointF& scenePos);
-	
+
 	/*! \brief Rotates the selected items 90 degrees counter-clockwise.
 	 *
 	 * This function emits the itemsGeometryChanged() signal after the items have been rotated.
@@ -1020,16 +925,16 @@ public slots:
 	 * Items are rotated about the center of the selection, which is calculated by taking the
 	 * average of each selected item's centerPos().
 	 *
-	 * Only items with the CanRotate flag set are rotated.  If no items can be rotated, or if 
+	 * Only items with the CanRotate flag set are rotated.  If no items can be rotated, or if
 	 * no items are selected, this function does nothing.
 	 *
 	 * The rotate operation is only performed if the mode() is #DefaultMode.  If the mode() is any
 	 * other mode, this function does nothing.
 	 *
-	 * \sa rotateBackSelection(), flipSelection()
+	 * \sa rotateBackSelection()
 	 */
 	void rotateSelection();
-	
+
 	/*! \brief Rotates the selected items 90 degrees clockwise.
 	 *
 	 * This function emits the itemsGeometryChanged() signal after the items have been rotated.
@@ -1037,16 +942,16 @@ public slots:
 	 * Items are rotated about the center of the selection, which is calculated by taking the
 	 * average of each selected item's centerPos().
 	 *
-	 * Only items with the CanRotate flag set are rotated.  If no items can be rotated, or if 
+	 * Only items with the CanRotate flag set are rotated.  If no items can be rotated, or if
 	 * no items are selected, this function does nothing.
 	 *
 	 * The rotate operation is only performed if the mode() is #DefaultMode.  If the mode() is any
 	 * other mode, this function does nothing.
 	 *
-	 * \sa rotateSelection(), flipSelection()
+	 * \sa rotateSelection()
 	 */
 	void rotateBackSelection();
-	
+
 	/*! \brief Flips the selected items horizontally.
 	 *
 	 * This function emits the itemsGeometryChanged() signal after the items have been flipped.
@@ -1054,65 +959,82 @@ public slots:
 	 * Items are flipped over the center of the selection, which is calculated by taking the
 	 * average of each selected item's centerPos().
 	 *
-	 * Only items with the CanFlip flag set are rotated.  If no items can be flipped, or if 
+	 * Only items with the CanFlip flag set are rotated.  If no items can be flipped, or if
 	 * no items are selected, this function does nothing.
 	 *
 	 * The flip operation is only performed if the mode() is #DefaultMode.  If the mode() is any
 	 * other mode, this function does nothing.
 	 *
-	 * \sa rotateSelection(), rotateBackSelection()
+	 * \sa flipSelectionVertical()
 	 */
-	void flipSelection();
+	void flipSelectionHorizontal();
 
-	
-	/*! \brief Brings each selected item forward in the widget's stacking order.
+	/*! \brief Flips the selected items vertically.
+	 *
+	 * This function emits the itemsGeometryChanged() signal after the items have been flipped.
+	 *
+	 * Items are flipped over the center of the selection, which is calculated by taking the
+	 * average of each selected item's centerPos().
+	 *
+	 * Only items with the CanFlip flag set are rotated.  If no items can be flipped, or if
+	 * no items are selected, this function does nothing.
+	 *
+	 * The flip operation is only performed if the mode() is #DefaultMode.  If the mode() is any
+	 * other mode, this function does nothing.
+	 *
+	 * \sa flipSelectionHorizontal()
+	 */
+	void flipSelectionVertical();
+
+
+	/*! \brief Brings each selected item forward in the scene's stacking order.
 	 *
 	 * If no items are selected, this function does nothing.
 	 *
-	 * The reordering operation is only performed if the mode() is #DefaultMode.  If the mode() is 
+	 * The reordering operation is only performed if the mode() is #DefaultMode.  If the mode() is
 	 * any other mode, this function does nothing.
 	 *
 	 * \sa sendBackward(), bringToFront(), sendToBack()
 	 */
 	void bringForward();
-	
-	/*! \brief Sends each selected item backward in the widget's stacking order.
+
+	/*! \brief Sends each selected item backward in the scene's stacking order.
 	 *
 	 * If no items are selected, this function does nothing.
 	 *
-	 * The reordering operation is only performed if the mode() is #DefaultMode.  If the mode() is 
+	 * The reordering operation is only performed if the mode() is #DefaultMode.  If the mode() is
 	 * any other mode, this function does nothing.
 	 *
 	 * \sa bringForward(), bringToFront(), sendToBack()
 	 */
 	void sendBackward();
-	
-	/*! \brief Brings all of the selected items to the front of the widget's stacking order.
+
+	/*! \brief Brings all of the selected items to the front of the scene's stacking order.
 	 *
 	 * If no items are selected, this function does nothing.
 	 *
-	 * The reordering operation is only performed if the mode() is #DefaultMode.  If the mode() is 
+	 * The reordering operation is only performed if the mode() is #DefaultMode.  If the mode() is
 	 * any other mode, this function does nothing.
 	 *
 	 * \sa bringForward(), sendBackward(), sendToBack()
 	 */
 	void bringToFront();
-	
-	/*! \brief Sends all of the selected items to the back of the widget's stacking order.
+
+	/*! \brief Sends all of the selected items to the back of the scene's stacking order.
 	 *
 	 * If no items are selected, this function does nothing.
 	 *
-	 * The reordering operation is only performed if the mode() is #DefaultMode.  If the mode() is 
+	 * The reordering operation is only performed if the mode() is #DefaultMode.  If the mode() is
 	 * any other mode, this function does nothing.
 	 *
 	 * \sa bringForward(), sendBackward(), bringToFront()
 	 */
 	void sendToBack();
 
-	
+
 	/*! \brief Inserts a new DrawingItemPoint into an item at the specified position.
 	 *
-	 * This function emits the itemsGeometryChanged() signal after the new item point has been 
+	 * This function emits the itemsGeometryChanged() signal after the new item point has been
 	 * added.
 	 *
 	 * Exactly one item must be selected; if multiple items or no items are selected, this function
@@ -1124,10 +1046,10 @@ public slots:
 	 * \sa removeItemPoint()
 	 */
 	void insertItemPoint();
-	
+
 	/*! \brief Removes an existing DrawingItemPoint from an item at the specified position.
 	 *
-	 * This function emits the itemsGeometryChanged() signal after the new item point has been 
+	 * This function emits the itemsGeometryChanged() signal after the new item point has been
 	 * removed.
 	 *
 	 * Exactly one item must be selected; if multiple items or no items are selected, this function
@@ -1139,9 +1061,9 @@ public slots:
 	 * \sa insertItemPoint()
 	 */
 	void removeItemPoint();
-	
 
-	/*! \brief Combines all selected items into a new DrawingItemGroup and adds it to the widget.
+
+	/*! \brief Combines all selected items into a new DrawingItemGroup and adds it to the scene.
 	 *
 	 * This function emits the numberOfItemsChanged() signal after the group operation is complete.
 	 *
@@ -1154,11 +1076,11 @@ public slots:
 	 * \sa removeItemPoint()
 	 */
 	void group();
-	
+
 	/*! \brief Splits the selected DrawingItemGroup into its constituent items and adds them to
-	 * the widget.
+	 * the scene.
 	 *
-	 * This function emits the numberOfItemsChanged() signal after the ungroup operation is 
+	 * This function emits the numberOfItemsChanged() signal after the ungroup operation is
 	 * complete.
 	 *
 	 * Exactly one item must be selected and it must be a DrawingItemGroup, otherwise this function
@@ -1171,6 +1093,128 @@ public slots:
 	 */
 	void ungroup();
 
+public slots:
+	/*! \brief Adds the specified items to the scene.
+	 *
+	 * This function calls DrawingScene::addItem() for each of the specified items.  It emits the
+	 * numberOfItemsChanged() signal when complete.
+	 *
+	 * \sa insertItems(), removeItems()
+	 */
+	void addItems(const QList<DrawingItem*>& items);
+
+	/*! \brief Inserts the specified items in the scene at the specified indices.
+	 *
+	 * This function calls DrawingScene::insertItem() for each of the specified items.  It emits the
+	 * numberOfItemsChanged() signal when complete.
+	 *
+	 * \sa addItems(), removeItems()
+	 */
+	void insertItems(const QList<DrawingItem*>& items, const QHash<DrawingItem*,int>& indices);
+
+	/*! \brief Removes the specified items from the scene.
+	 *
+	 * This function calls DrawingScene::removeItem() for each of the specified items.  It emits the
+	 * numberOfItemsChanged() signal when complete.
+	 *
+	 * \sa addItems(), insertItems()
+	 */
+	void removeItems(const QList<DrawingItem*>& items);
+
+	/*! \brief Moves each of the specified items within the scene.
+	 *
+	 * This function calls DrawingItem::moveEvent() for each of the specified items.  It emits the
+	 * itemsGeometryChanged() signal when all moves are complete.
+	 *
+	 * \sa resizeItem()
+	 */
+	void moveItems(const QList<DrawingItem*>& items, const QHash<DrawingItem*,QPointF>& scenePos);
+
+	/*! \brief Resizes an item within the scene by moving one of its item points.
+	 *
+	 * This function calls DrawingItem::resizeEvent() for each of the specified items.  It emits the
+	 * itemsGeometryChanged() signal when all moves are complete.
+	 *
+	 * \sa moveItems()
+	 */
+	void resizeItem(DrawingItemPoint* point, const QPointF& scenePos);
+
+	/*! \brief Rotates each of the specified items within the scene about the specified position.
+	 *
+	 * This function calls DrawingItem::rotateEvent() for each of the specified items.  It emits the
+	 * itemsGeometryChanged() signal when all transformations are complete.
+	 *
+	 * \sa rotateBackItems()
+	 */
+	void rotateItems(const QList<DrawingItem*>& items, const QPointF& scenePos);
+
+	/*! \brief Rotates each of the specified items within the scene about the specified position.
+	 *
+	 * This function calls DrawingItem::rotateBackEvent() for each of the specified items.  It emits the
+	 * itemsGeometryChanged() signal when all transformations are complete.
+	 *
+	 * \sa rotateItems()
+	 */
+	void rotateBackItems(const QList<DrawingItem*>& items, const QPointF& scenePos);
+
+	/*! \brief Flips each of the specified items horizontally within the scene about the specified
+	 * position.
+	 *
+	 * This function calls DrawingItem::flipHorizontalEvent() for each of the specified items.  It
+	 * emits the itemsGeometryChanged() signal when all transformations are complete.
+	 *
+	 * \sa flipItemsVertical()
+	 */
+	void flipItemsHorizontal(const QList<DrawingItem*>& items, const QPointF& scenePos);
+
+	/*! \brief Flips each of the specified items horizontally within the scene about the specified
+	 * position.
+	 *
+	 * This function calls DrawingItem::flipVerticalEvent() for each of the specified items.  It
+	 * emits the itemsGeometryChanged() signal when all transformations are complete.
+	 *
+	 * \sa flipItemsHorizontal()
+	 */
+	void flipItemsVertical(const QList<DrawingItem*>& items, const QPointF& scenePos);
+
+	/*! \brief Sets the view's selected items to items.
+	 *
+	 * This function first deselects any currently selected items, then selects each of the
+	 * specified items.  It emits the selectionChanged() signal when all moves are complete.
+	 */
+	void selectItems(const QList<DrawingItem*>& items);
+
+	/*! \brief Inserts the item point into the item at the specified index.
+	 *
+	 * This function emits the itemsGeometryChanged() signal when the insertion is complete.
+	 *
+	 * \sa removeItemPoint()
+	 */
+	void insertItemPoint(DrawingItem* item, DrawingItemPoint* point, int index);
+
+	/*! \brief Removes the item point from the item.
+	 *
+	 * This function emits the itemsGeometryChanged() signal when the removal is complete.
+	 *
+	 * \sa insertItemPoint()
+	 */
+	void removeItemPoint(DrawingItem* item, DrawingItemPoint* point);
+
+	/*! \brief Connects the specified points together.
+	 *
+	 * \sa disconnectItemPoints()
+	 */
+	void connectItemPoints(DrawingItemPoint* point1, DrawingItemPoint* point2);
+
+	/*! \brief Disconnects the specified points from each other.
+	 *
+	 * \sa connectItemPoints()
+	 */
+	void disconnectItemPoints(DrawingItemPoint* point1, DrawingItemPoint* point2);
+
+private:
+	void reorderItems(const QList<DrawingItem*>& items);
+
 signals:
 	/*! \brief Emitted whenever the scale of the viewport changes.
 	 *
@@ -1182,13 +1226,13 @@ signals:
 	 */
 	void scaleChanged(qreal scale);
 
-	/*! \brief Emitted whenever the operating mode of the widget changes.
+	/*! \brief Emitted whenever the operating mode of the view changes.
 	 *
 	 * This signal is emitted whenever the mode is changed using the setDefaultMode(),
 	 * setScrollMode(), setZoomMode(), and setPlaceMode() slots.  It is also emitted in when
 	 * exiting other operating modes by right-clicking or double-clicking.
 	 */
-	void modeChanged(DrawingWidget::Mode mode);
+	void modeChanged(DrawingView::Mode mode);
 
 	/*! \brief Emitted whenever the stack enters or leaves the clean state.
 	 *
@@ -1201,35 +1245,35 @@ signals:
 
 	/*! \brief Emitted whenever the value of canUndo() changes.
 	 *
-	 * This signal may be used to enable or disable an undo action associated with this widget.
+	 * This signal may be used to enable or disable an undo action associated with this view.
 	 */
 	void canUndoChanged(bool canUndo);
 
 	/*! \brief Emitted whenever the value of canRedo() changes.
 	 *
-	 * This signal may be used to enable or disable a redo action associated with this widget.
+	 * This signal may be used to enable or disable a redo action associated with this view.
 	 */
 	void canRedoChanged(bool canRedo);
 
-	/*! \brief Emitted whenever the number of items in the widget changes.
+	/*! \brief Emitted whenever the number of items in the scene changes.
 	 *
 	 * This signal is emitted whenever the user adds items using mouse events in #PlaceMode,
 	 * as well as when the user removes items using deleteSelection().  It is also emitted
 	 * when performing cut() and paste() operations as well as group() and ungroup() operations.
 	 *
-	 * This signal is not emitted when using the addItem(), removeItem(), or clearItems() 
+	 * This signal is not emitted when using the addItem(), removeItem(), or clearItems()
 	 * functions directly.
 	 */
 	void numberOfItemsChanged(int itemCount);
-	
+
 	/*! \brief Emitted whenever items' geometry changes.
 	 *
-	 * This signal is emitted whenever the user moves, resizes, rotates, or flips items using 
+	 * This signal is emitted whenever the user moves, resizes, rotates, or flips items using
 	 * mouse events in #DefaultMode, as well as when using moveSelection(), resizeSelection(),
-	 * rotateSelection(), rotateBackSelection(), and flipSelection().  It is also emitted when
-	 * new DrawingItemPoint objects are inserted or removed from items that support it using
-	 * insertItemPoint() and removeItemPoint().
-	 
+	 * rotateSelection(), rotateBackSelection(), flipSelectionHorizontal(), and
+	 * flipSelectionVertical().  It is also emitted when new DrawingItemPoint objects are inserted
+	 * or removed from items that support it using insertItemPoint() and removeItemPoint().
+
 	 * This signal is emitted whenever the newItem() is moved, resized, rotated, or flipped using
 	 * mouse events in #PlaceMode.
 	 *
@@ -1237,28 +1281,28 @@ signals:
 	 * position, geometry, or transform of the item.
 	 */
 	void itemsGeometryChanged(const QList<DrawingItem*>& items);
-	
-	/*! \brief Emitted whenever the widget's list of selectedItems() changes.
+
+	/*! \brief Emitted whenever the view's list of selectedItems() changes.
 	 *
-	 * This signal is emitted whenever the user selects or deselects items using mouse events in 
-	 * #DefaultMode, as well as when the user selects items using selectAll(), 
-	 * selectArea(const QRectF&), selectArea(const QPainterPath&), and selectNone().  It is also 
-	 * emitted when performing cut(), paste(), and deleteSelection() operations as well as 
+	 * This signal is emitted whenever the user selects or deselects items using mouse events in
+	 * #DefaultMode, as well as when the user selects items using selectAll(),
+	 * selectArea(const QRectF&), selectArea(const QPainterPath&), and selectNone().  It is also
+	 * emitted when performing cut(), paste(), and deleteSelection() operations as well as
 	 * group() and ungroup() operations.
 	 *
 	 * This signal is not emitted when using the selectItem(), deselectItem(), or clearSelection()
 	 * functions directly.
 	 */
 	void selectionChanged(const QList<DrawingItem*>& items);
-	
-	/*! \brief Emitted whenever the widget's newItem() changes.
+
+	/*! \brief Emitted whenever the view's newItems() change.
 	 *
-	 * This signal is emitted whenever a different newItem() is set on the widget, either through
+	 * This signal is emitted whenever different newItems() are set on the view, either through
 	 * mouse events in #PlaceMode or using setPlaceMode() directly.  This signal is also emitted
-	 * when the newItem() is deleted when switching modes using setScrollMode(), setZoomMode(),
-	 * and setDefaultMode(), so the item pointer returned could be nullptr.
+	 * when the newItems() are deleted when switching modes using setScrollMode(), setZoomMode(),
+	 * and setDefaultMode().
 	 */
-	void newItemChanged(DrawingItem* item);
+	void newItemsChanged(const QList<DrawingItem*>& items);
 
 	/*! \brief Emitted whenever the mouse position changes in the scene.
 	 *
@@ -1270,79 +1314,61 @@ signals:
 	void mouseInfoChanged(const QString& mouseInfo);
 
 protected:
-	/*! \brief Handles mouse press events for the widget.
+	/*! \brief Handles paint events for the view.
+	 *
+	 * The default implementation calls drawBackground(), drawItems(), and drawForeground() in
+	 * succession.
+	 */
+	virtual void paintEvent(QPaintEvent* event);
+
+	/*! \brief Handles resize events for the view.
+	 *
+	 * The default implementation updates the scroll bars to reflect the new size of the viewport.
+	 */
+	virtual void resizeEvent(QResizeEvent* event);
+
+
+	/*! \brief Handles mouse press events for the view.
 	 *
 	 * The default implementation handles mouse press events differently based on the current
 	 * mode() of operation.  This event handler can be reimplemented in a derived class to
 	 * modify the default behavior.
-	 *
-	 * In #DefaultMode, the widget updates its mouseDownItem() and focusItem().  The mouse press
-	 * event is forwarded to the mouseDownItem() if it is the only selected item.
-	 *
-	 * In #PlaceMode, the mouse press event is forwarded to the widget's newItem().  Since the
-	 * geometry of the newItem() may have changed, the itemsGeometryChanged() signal is sent.
 	 *
 	 * \sa mouseMoveEvent(), mouseReleaseEvent(), mouseDoubleClickEvent(), wheelEvent()
 	 */
 	virtual void mousePressEvent(QMouseEvent* event);
-	
-	/*! \brief Handles mouse move events for the widget.
+
+	/*! \brief Handles mouse move events for the view.
 	 *
 	 * The default implementation handles mouse press events differently based on the current
 	 * mode() of operation.  This event handler can be reimplemented in a derived class to
 	 * modify the default behavior.
-	 *
-	 * In #DefaultMode, the widget determines whether to move, resize, or select items based on
-	 * where the mouse was clicked.
-	 *
-	 * In #PlaceMode, the mouse move event is forwarded to the widget's newItem().  Since the
-	 * geometry of the newItem() may have changed, the itemsGeometryChanged() signal is sent.
 	 *
 	 * \sa mousePressEvent(), mouseReleaseEvent(), mouseDoubleClickEvent(), wheelEvent()
 	 */
 	virtual void mouseMoveEvent(QMouseEvent* event);
-	
-	/*! \brief Handles mouse release events for the widget.
+
+	/*! \brief Handles mouse release events for the view.
 	 *
 	 * The default implementation handles mouse press events differently based on the current
 	 * mode() of operation.  This event handler can be reimplemented in a derived class to
 	 * modify the default behavior.
 	 *
-	 * In #DefaultMode, the widget finishes moving, resizing, or selecting items based on
-	 * where the mouse was clicked and how much it has moved.
-	 *
-	 * In #PlaceMode, the mouse move event is forwarded to the widget's newItem().  If the
-	 * newItem() accepts the event by returning true, then the item is added to the widget and 
-	 * placed in the scene.  Then a copy of the item is set as the newItem() and the newItemChanged() 
-	 * signal is sent.  The new newItem() is forwarded a newItemCopyEvent().  If true is returned
-	 * from this event, the widget continues in #PlaceMode; otherwise, the widget is returned to 
-	 * #DefaultMode.
-	 *
 	 * \sa mousePressEvent(), mouseMoveEvent(), mouseDoubleClickEvent(), wheelEvent()
 	 */
 	virtual void mouseReleaseEvent(QMouseEvent* event);
-	
-	/*! \brief Handles mouse double-click events for the widget.
+
+	/*! \brief Handles mouse double-click events for the view.
 	 *
 	 * The default implementation handles mouse double-click events differently based on the current
 	 * mode() of operation.  This event handler can be reimplemented in a derived class to
 	 * modify the default behavior.
 	 *
-	 * In #DefaultMode, the widget updates its mouseDownItem() and focusItem().  The mouse 
-	 * double-click event is forwarded to the mouseDownItem() if it is the only selected item.
-	 *
-	 * In #PlaceMode, the mouse double-click event is forwarded to the widget's newItem().  If the
-	 * newItem() accepts the event by returning true, then the item is added to the widget and 
-	 * placed in the scene.  Then a copy of the item is set as the newItem() and the newItemChanged() 
-	 * signal is sent.  The new newItem() is forwarded a newItemCopyEvent().  If true is returned
-	 * from this event, the widget continues in #PlaceMode; otherwise, the widget is returned to 
-	 * #DefaultMode.
-	 *
 	 * \sa mouseMoveEvent(), mouseMoveEvent(), mouseReleaseEvent(), wheelEvent()
 	 */
 	virtual void mouseDoubleClickEvent(QMouseEvent* event);
-	
-	/*! \brief Handles mouse wheel events for the widget.
+
+	/*! \brief Handles mouse wheel events for the view.
 	 *
 	 * The default implementation zooms in on the scene if the scroll wheel is moved up with
 	 * the Control key held down and zooms out on the scene if the scroll wheel is moved down with
@@ -1352,15 +1378,16 @@ protected:
 	 */
 	virtual void wheelEvent(QWheelEvent* event);
 
-	/*! \brief Handles key press events for the widget.
+
+	/*! \brief Handles key press events for the view.
 	 *
 	 * The default implementation forwards the key press event to the current focusItem().
 	 *
 	 * \sa keyReleaseEvent()
 	 */
 	virtual void keyPressEvent(QKeyEvent* event);
-	
-	/*! \brief Handles key release events for the widget.
+
+	/*! \brief Handles key release events for the view.
 	 *
 	 * The default implementation forwards the key release event to the current focusItem().
 	 *
@@ -1368,36 +1395,25 @@ protected:
 	 */
 	virtual void keyReleaseEvent(QKeyEvent* event);
 
-	
-	/*! \brief Handles paint events for the widget.
-	 *
-	 * The default implementation paints the scene by calling drawBackground(), drawItems(), 
-	 * and drawForeground() in order.
-	 */
-	virtual void paintEvent(QPaintEvent* event);
-	
+
 	/*! \brief Renders the background of the scene using the specified painter.
 	 *
-	 * The default implementation fills the background of the scene using the current 
-	 * backgroundBrush().  This function may be overridden in a derived class to provide a 
-	 * custom background for the scene.
+	 * The default implementation fills the background of the scene using the current
+	 * DrawingScene::backgroundBrush().  This function may be overridden in a derived class to
+	 * provide a custom background for the scene.
 	 *
 	 * This function is called before rendering the widget's items.
 	 *
 	 * \sa drawItems(), drawForeground()
 	 */
 	virtual void drawBackground(QPainter* painter);
-	
+
 	/*! \brief Renders the widget's items into the scene using the specified painter.
 	 *
-	 * The default implementation renders items the order they were added to the widget, starting 
-	 * with the first item added and ending with the most recent item added.  Any newItem() is
-	 * rendered last.
+	 * The default implementation renders items the order they were added to the widget, starting
+	 * with the first item added and ending with the most recent item added.
 	 *
-	 * DrawingWidget handles all rendering of item's points.  The default implementation is to draw
-	 * item points only when the associated item is selected.
-	 
-	 * This function may be overridden in a derived class to provide a custom rendering 
+	 * This function may be overridden in a derived class to provide a custom rendering
 	 * implementation for items in the scene.
 	 *
 	 * This function is called after rendering the background of the scene and before rendering
@@ -1406,11 +1422,11 @@ protected:
 	 * \sa drawBackground(), drawForeground()
 	 */
 	virtual void drawItems(QPainter* painter);
-	
+
 	/*! \brief Renders the foreground of the scene using the specified painter.
 	 *
-	 * The default implementation does nothing.  This function may be overridden in a derived
-	 * class to provide a custom foreground for the scene.
+	 * This function handles rendering of any newItems() set on the view, the points of any item
+	 * that is selected, and the rubber band selection rect.
 	 *
 	 * This function is called after rendering the widget's items.
 	 *
@@ -1418,30 +1434,11 @@ protected:
 	 */
 	virtual void drawForeground(QPainter* painter);
 
-	
-	/*! \brief Handles resize events for the widget.
-	 *
-	 * The default implementation updates the scroll bars to reflect the new size of the viewport.
-	 */
-	virtual void resizeEvent(QResizeEvent* event);
-
-private:
-	void defaultMousePressEvent(DrawingMouseEvent* event);
-	void defaultMouseMoveEvent(DrawingMouseEvent* event);
-	void defaultMouseReleaseEvent(DrawingMouseEvent* event);
-	void defaultMouseDoubleClickEvent(DrawingMouseEvent* event);
-
-	void placeModeMousePressEvent(DrawingMouseEvent* event);
-	void placeModeMouseMoveEvent(DrawingMouseEvent* event);
-	void placeModeMouseReleaseEvent(DrawingMouseEvent* event);
-	void placeModeMouseDoubleClickEvent(DrawingMouseEvent* event);
-
 private slots:
 	void updateSelectionCenter();
 	void mousePanEvent();
 
-protected:
-	// Functions that generate undo commands
+private:
 	void addItemsCommand(const QList<DrawingItem*>& items, bool place, QUndoCommand* command = nullptr);
 	void removeItemsCommand(const QList<DrawingItem*>& items, QUndoCommand* command = nullptr);
 	void moveItemsCommand(const QList<DrawingItem*>& items, const QHash<DrawingItem*,QPointF>& newPos,
@@ -1450,7 +1447,8 @@ protected:
 		bool place, bool disconnect, QUndoCommand* command = nullptr);
 	void rotateItemsCommand(const QList<DrawingItem*>& items, const QPointF& scenePos, QUndoCommand* command = nullptr);
 	void rotateBackItemsCommand(const QList<DrawingItem*>& items, const QPointF& scenePos, QUndoCommand* command = nullptr);
-	void flipItemsCommand(const QList<DrawingItem*>& items, const QPointF& scenePos, QUndoCommand* command = nullptr);
+	void flipItemsHorizontalCommand(const QList<DrawingItem*>& items, const QPointF& scenePos, QUndoCommand* command = nullptr);
+	void flipItemsVerticalCommand(const QList<DrawingItem*>& items, const QPointF& scenePos, QUndoCommand* command = nullptr);
 	void reorderItemsCommand(const QList<DrawingItem*>& itemsOrdered, QUndoCommand* command = nullptr);
 	void selectItemsCommand(const QList<DrawingItem*>& items, bool finalSelect = true, QUndoCommand* command = nullptr);
 	void connectItemPointsCommand(DrawingItemPoint* point1, DrawingItemPoint* point2, QUndoCommand* command = nullptr);
@@ -1461,38 +1459,23 @@ protected:
 	void tryToMaintainConnections(const QList<DrawingItem*>& items, bool allowResize,
 		bool checkControlPoints, DrawingItemPoint* pointToSkip, QUndoCommand* command);
 	void disconnectAll(DrawingItemPoint* itemPoint, QUndoCommand* command);
-	
-private:
-	// Functions called by undo command classes
-	void addItems(const QList<DrawingItem*>& items);
-	void insertItems(const QList<DrawingItem*>& items, const QHash<DrawingItem*,int>& index);
-	void removeItems(const QList<DrawingItem*>& items);
-	void moveItems(const QList<DrawingItem*>& items, const QHash<DrawingItem*,QPointF>& scenePos);
-	void resizeItem(DrawingItemPoint* itemPoint, const QPointF& scenePos);
-	void rotateItems(const QList<DrawingItem*>& items, const QPointF& scenePos);
-	void rotateBackItems(const QList<DrawingItem*>& items, const QPointF& scenePos);
-	void flipItems(const QList<DrawingItem*>& items, const QPointF& scenePos);
-	void reorderItems(const QList<DrawingItem*>& items);
-	void selectItems(const QList<DrawingItem*>& items);
-	void insertItemPoint(DrawingItem* item, DrawingItemPoint* itemPoint, int pointIndex);
-	void removeItemPoint(DrawingItem* item, DrawingItemPoint* itemPoint);
-	void connectItemPoints(DrawingItemPoint* point1, DrawingItemPoint* point2);
-	void disconnectItemPoints(DrawingItemPoint* point1, DrawingItemPoint* point2);
 
-	// Miscellaneous helper functions
+private:
+	void recalculateContentSize(const QRectF& targetSceneRect = QRectF());
+
 	bool itemMatchesPoint(DrawingItem* item, const QPointF& scenePos) const;
-	bool itemMatchesRect(DrawingItem* item, const QRectF& rect, Qt::ItemSelectionMode mode) const;
-	bool itemMatchesPath(DrawingItem* item, const QPainterPath& path, Qt::ItemSelectionMode mode) const;
+	bool itemMatchesRect(DrawingItem* item, const QRectF& sceneRect, Qt::ItemSelectionMode mode) const;
+	bool itemMatchesPath(DrawingItem* item, const QPainterPath& scenePath, Qt::ItemSelectionMode mode) const;
+	QPainterPath itemAdjustedShape(DrawingItem* item) const;
+	QRect pointRect(DrawingItemPoint* point) const;
 
 	bool shouldConnect(DrawingItemPoint* point1, DrawingItemPoint* point2) const;
 	bool shouldDisconnect(DrawingItemPoint* point1, DrawingItemPoint* point2) const;
 
-	void recalculateContentSize(const QRectF& targetSceneRect = QRectF());
-	
 	void sendMouseInfoText(const QPointF& pos);
 	void sendMouseInfoText(const QPointF& p1, const QPointF& p2);
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(DrawingWidget::Flags)
+Q_DECLARE_OPERATORS_FOR_FLAGS(DrawingView::Flags)
 
 #endif

@@ -1,8 +1,8 @@
 /* DrawingTextItem.h
  *
- * Copyright (C) 2013-2016 Jason Allen
+ * Copyright (C) 2013-2017 Jason Allen
  *
- * This file is part of the jade library.
+ * This file is part of the jade application.
  *
  * jade is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 
 #include <DrawingItem.h>
 
-/*! \brief Provides a text item that can be added to a DrawingWidget.
+/*! \brief Provides a text item that can be added to a DrawingScene.
  *
  * To set the item's text, call the setCaption() function.  The caption() function returns the
  * current text.
@@ -32,7 +32,7 @@
  * The text item supports all of the font, text brush, and text alignment style properties.
  *
  * DrawingTextItem provides a reasonable implementation of boundingRect(), shape(), and isValid().
- * The paint() function draws the text using the item's associated pen and brush.
+ * The render() function draws the text using the item's associated pen and brush.
  */
 class DrawingTextItem : public DrawingItem
 {
@@ -72,6 +72,7 @@ public:
 	 * The item's point is also deleted.
 	 */
 	virtual ~DrawingTextItem();
+
 
 	/*! \brief Creates a copy of the DrawingTextItem and return it.
 	 *
@@ -135,7 +136,7 @@ public:
 	 * At the end of this function, the QPainter object is returned to the same state that it was
 	 * in when the function started.
 	 */
-	virtual void paint(QPainter* painter);
+	virtual void render(QPainter* painter);
 
 private:
 	QRectF calculateTextRect(const QString& caption, const QFont& font,

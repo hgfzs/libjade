@@ -1,8 +1,8 @@
 /* DrawingItemStyle.cpp
  *
- * Copyright (C) 2013-2016 Jason Allen
+ * Copyright (C) 2013-2017 Jason Allen
  *
- * This file is part of the jade library.
+ * This file is part of the jade application.
  *
  * jade is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -75,23 +75,23 @@ QVariant DrawingItemStyle::value(Property index) const
 QVariant DrawingItemStyle::valueLookup(Property index) const
 {
 	QVariant value;
-	
+
 	value = mDefaultProperties.value(index, value);
 	value = mProperties.value(index, value);
-	
+
 	return value;
 }
-	
+
 QVariant DrawingItemStyle::valueLookup(Property index, const QVariant& fallbackValue) const
 {
 	QVariant value = fallbackValue;
-	
+
 	value = mDefaultProperties.value(index, value);
 	value = mProperties.value(index, value);
-	
+
 	return value;
 }
-	
+
 //==================================================================================================
 
 QPen DrawingItemStyle::pen() const
@@ -102,9 +102,9 @@ QPen DrawingItemStyle::pen() const
 	qreal width = valueLookup(PenWidth, QVariant(1.0)).toReal();
 	Qt::PenCapStyle capStyle = (Qt::PenCapStyle)valueLookup(PenCapStyle, QVariant((uint)Qt::RoundCap)).toUInt();
 	Qt::PenJoinStyle joinStyle = (Qt::PenJoinStyle)valueLookup(PenJoinStyle, QVariant((uint)Qt::RoundJoin)).toUInt();
-	
+
 	color.setAlphaF(opacity);
-	
+
 	return QPen(QBrush(color), width, style, capStyle, joinStyle);
 }
 
@@ -113,9 +113,9 @@ QBrush DrawingItemStyle::brush() const
 	Qt::BrushStyle style = (Qt::BrushStyle)valueLookup(BrushStyle, QVariant((uint)Qt::SolidPattern)).toUInt();
 	QColor color = valueLookup(BrushColor, QVariant(QColor(255, 255, 255))).value<QColor>();
 	qreal opacity = valueLookup(BrushOpacity, QVariant(1.0)).toReal();
-	
+
 	color.setAlphaF(opacity);
-	
+
 	return QBrush(color, style);
 }
 
@@ -145,19 +145,19 @@ QBrush DrawingItemStyle::textBrush() const
 {
 	QColor color = valueLookup(TextColor, QVariant(QColor(0, 0, 0))).value<QColor>();
 	qreal opacity = valueLookup(TextOpacity, QVariant(1.0)).toReal();
-	
+
 	color.setAlphaF(opacity);
-	
+
 	return QBrush(color);
 }
 
 Qt::Alignment DrawingItemStyle::textAlignment() const
-{	
+{
 	Qt::Alignment horizontalAlignment =
 		(Qt::Alignment)valueLookup(TextHorizontalAlignment, QVariant((uint)Qt::AlignHCenter)).toUInt();
 	Qt::Alignment verticalAlignment =
 		(Qt::Alignment)valueLookup(TextVerticalAlignment, QVariant((uint)Qt::AlignVCenter)).toUInt();
-	
+
 	return ((horizontalAlignment & Qt::AlignHorizontal_Mask) | (verticalAlignment & Qt::AlignVertical_Mask));
 }
 

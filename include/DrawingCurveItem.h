@@ -1,8 +1,8 @@
 /* DrawingCurveItem.h
  *
- * Copyright (C) 2013-2016 Jason Allen
+ * Copyright (C) 2013-2017 Jason Allen
  *
- * This file is part of the jade library.
+ * This file is part of the jade application.
  *
  * jade is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,18 +23,18 @@
 
 #include <DrawingItem.h>
 
-/*! \brief Provides a curve item that can be added to a DrawingWidget.
+/*! \brief Provides a curve item that can be added to a DrawingScene.
  *
  * To set the item's curve, call the setCurve() function.  The curveStartPos(), curveEndPos(),
  * curveStartControlPos(), and curveEndControlPos() functions return the current curve points.
  * All functions operate in local item coordinates.
- * 
+ *
  * Rendering options for the curve can be controlled through properties of the item's style().
  * The curve item supports all of the pen style properties as well as start arrow and end arrow
  * properties.
- * 
+ *
  * DrawingCurveItem provides a reasonable implementation of boundingRect(), shape(), and isValid().
- * The paint() function draws the curve using the item's associated pen.
+ * The render() function draws the curve using the item's associated pen.
  */
 class DrawingCurveItem : public DrawingItem
 {
@@ -60,19 +60,20 @@ public:
 	 * \li DrawingItemStyle::EndArrowSize
 	 */
 	DrawingCurveItem();
-	
+
 	/*! \brief Create a new DrawingCurveItem as a copy of an existing curve item.
 	 *
 	 * Creates copies of all item points to the new curve item, including the point's positions.
 	 * Also creates a new item style with all of the same properties as the existing item's style.
 	 */
 	DrawingCurveItem(const DrawingCurveItem& item);
-	
+
 	/*! \brief Delete an existing DrawingCurveItem object.
 	 *
 	 * All of the item's points are also deleted.
 	 */
 	virtual ~DrawingCurveItem();
+
 
 	/*! \brief Creates a copy of the DrawingCurveItem and return it.
 	 *
@@ -80,7 +81,7 @@ public:
 	 */
 	virtual DrawingItem* copy() const;
 
-	
+
 	/*! \brief Sets the item's curve, which is given in local item coordinates.
 	 *
 	 * Sets the positions of the item's points so that:
@@ -117,7 +118,7 @@ public:
 	 */
 	QPointF curveEndControlPos() const;
 
-	
+
 	/*! \brief Returns an estimate of the area painted by the curve item.
 	 *
 	 * Calculates the bounding rect of the curve based on the position of its points.
@@ -127,21 +128,16 @@ public:
 	 * \sa shape(), isValid()
 	 */
 	virtual QRectF boundingRect() const;
-	
+
 	/*! \brief Returns an accurate outline of the item's shape.
 	 *
 	 * Calculates the shape of the curve, including any arrows that may be set by the item's
 	 * style().
 	 *
-	 * Note that the stroke width used to determine the shape is either the actual width of the 
-	 * pen set by the item's style() or a reasonable minimum width as determined by the current
-	 * zoom scale of the item's drawing(), whichever is larger.  This is done to make it easier to
-	 * click on curve items when zoomed out on a large scene.
-	 *
 	 * \sa boundingRect(), isValid()
 	 */
 	virtual QPainterPath shape() const;
-	
+
 	/*! \brief Return false if the item is degenerate, true otherwise.
 	 *
 	 * A curve item is considered degenerate if its boundingRect() has zero width and height.
@@ -150,7 +146,7 @@ public:
 	 */
 	virtual bool isValid() const;
 
-	
+
 	/*! \brief Paints the contents of the curve item into the scene.
 	 *
 	 * The curve is painted in the scene based on properties set by the item's style(), including
@@ -159,15 +155,16 @@ public:
 	 * At the end of this function, the QPainter object is returned to the same state that it was
 	 * in when the function started.
 	 */
-	virtual void paint(QPainter* painter);
+	virtual void render(QPainter* painter);
 
-	
+protected:
 	/*! \brief Resizes the item within the scene.
 	 *
-	 * Before returning, this function also remaps the position of the item and all of its points 
-	 * such that the position of the curve item's start point is at the origin of the item.
+	 * This function adds behavior to the default DrawingItem::resizeEvent() implemenation.  This
+	 * behavior is that if itemPoint is the start or end point, the corresponding control point is
+	 * moved by the same amount when the item is resized.
 	 */
-	virtual void resizeItem(DrawingItemPoint* itemPoint, const QPointF& scenePos);
+	virtual void resizeEvent(DrawingItemPoint* itemPoint, const QPointF& scenePos);
 
 private:
 	QPointF pointFromRatio(qreal ratio) const;

@@ -1,6 +1,6 @@
 /* DrawingItemPoint.cpp
  *
- * Copyright (C) 2013-2016 Jason Allen
+ * Copyright (C) 2013-2017 Jason Allen
  *
  * This file is part of the jade library.
  *
@@ -20,7 +20,6 @@
 
 #include "DrawingItemPoint.h"
 #include "DrawingItem.h"
-#include "DrawingWidget.h"
 
 DrawingItemPoint::DrawingItemPoint(const QPointF& position, Flags flags)
 {
@@ -50,12 +49,12 @@ DrawingItem* DrawingItemPoint::item() const
 
 //==================================================================================================
 
-void DrawingItemPoint::setPos(const QPointF& pos)
+void DrawingItemPoint::setPosition(const QPointF& pos)
 {
 	mPosition = pos;
 }
 
-void DrawingItemPoint::setPos(qreal x, qreal y)
+void DrawingItemPoint::setPosition(qreal x, qreal y)
 {
 	mPosition.setX(x);
 	mPosition.setY(y);
@@ -71,7 +70,7 @@ void DrawingItemPoint::setY(qreal y)
 	mPosition.setY(y);
 }
 
-QPointF DrawingItemPoint::pos() const
+QPointF DrawingItemPoint::position() const
 {
 	return mPosition;
 }
@@ -98,26 +97,11 @@ DrawingItemPoint::Flags DrawingItemPoint::flags() const
 	return mFlags;
 }
 
-bool DrawingItemPoint::isControlPoint() const
-{
-	return (mFlags & Control);
-}
-
-bool DrawingItemPoint::isConnectionPoint() const
-{
-	return (mFlags & Connection);
-}
-
-bool DrawingItemPoint::isFree() const
-{
-	return (mFlags & Free);
-}
-
 //==================================================================================================
 
 void DrawingItemPoint::addConnection(DrawingItemPoint* point)
 {
-	if (point && !isConnected(point)) mConnections.append(point);
+	if (point) mConnections.append(point);
 }
 
 void DrawingItemPoint::removeConnection(DrawingItemPoint* point)

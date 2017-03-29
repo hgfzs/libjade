@@ -1,8 +1,8 @@
 /* DrawingItemGroup.cpp
  *
- * Copyright (C) 2013-2016 Jason Allen
+ * Copyright (C) 2013-2017 Jason Allen
  *
- * This file is part of the jade library.
+ * This file is part of the jade application.
  *
  * jade is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -91,50 +91,19 @@ bool DrawingItemGroup::isValid() const
 
 //==================================================================================================
 
-void DrawingItemGroup::paint(QPainter* painter)
+void DrawingItemGroup::render(QPainter* painter)
 {
 	for(auto itemIter = mItems.begin(); itemIter != mItems.end(); itemIter++)
 	{
 		if ((*itemIter)->isVisible())
 		{
-			painter->translate((*itemIter)->pos());
-			painter->setTransform((*itemIter)->transform().inverted(), true);
-			(*itemIter)->paint(painter);
+			painter->translate((*itemIter)->position());
+			painter->setTransform((*itemIter)->transformInverted(), true);
+			(*itemIter)->render(painter);
 			painter->setTransform((*itemIter)->transform(), true);
-			painter->translate(-(*itemIter)->pos());
+			painter->translate(-(*itemIter)->position());
 		}
 	}
-
-	// Draw shape (debug)
-	//painter->setBrush(QColor(255, 0, 255, 128));
-	//painter->setPen(QPen(painter->brush(), 1));
-	//painter->drawPath(shape());
-}
-
-//==================================================================================================
-
-void DrawingItemGroup::rotateItem(const QPointF& scenePos)
-{
-	for(auto itemIter = mItems.begin(); itemIter != mItems.end(); itemIter++)
-		(*itemIter)->rotateItem(scenePos - pos());
-
-	recalculateContentsRect();
-}
-
-void DrawingItemGroup::rotateBackItem(const QPointF& scenePos)
-{
-	for(auto itemIter = mItems.begin(); itemIter != mItems.end(); itemIter++)
-		(*itemIter)->rotateBackItem(scenePos - pos());
-
-	recalculateContentsRect();
-}
-
-void DrawingItemGroup::flipItem(const QPointF& scenePos)
-{
-	for(auto itemIter = mItems.begin(); itemIter != mItems.end(); itemIter++)
-		(*itemIter)->flipItem(scenePos - pos());
-
-	recalculateContentsRect();
 }
 
 //==================================================================================================
@@ -149,7 +118,7 @@ void DrawingItemGroup::recalculateContentsRect()
 	{
 		if ((*itemIter)->isVisible())
 		{
-			itemRect = (*itemIter)->mapToScene((*itemIter)->boundingRect());
+			itemRect = (*itemIter)->mapToScene((*itemIter)->boundingRect()).boundingRect();
 
 			if (!mItemsRect.isValid()) mItemsRect = itemRect;
 			else mItemsRect = mItemsRect.united(itemRect);
@@ -160,13 +129,13 @@ void DrawingItemGroup::recalculateContentsRect()
 	QList<DrawingItemPoint*> points = DrawingItemGroup::points();
 	if (points.size() >= 8)
 	{
-		points[0]->setPos(mItemsRect.left(), mItemsRect.top());
-		points[1]->setPos(mItemsRect.center().x(), mItemsRect.top());
-		points[2]->setPos(mItemsRect.right(), mItemsRect.top());
-		points[3]->setPos(mItemsRect.right(), mItemsRect.center().y());
-		points[4]->setPos(mItemsRect.right(), mItemsRect.bottom());
-		points[5]->setPos(mItemsRect.center().x(), mItemsRect.bottom());
-		points[6]->setPos(mItemsRect.left(), mItemsRect.bottom());
-		points[7]->setPos(mItemsRect.left(), mItemsRect.center().y());
+		points[0]->setPosition(mItemsRect.left(), mItemsRect.top());
+		points[1]->setPosition(mItemsRect.center().x(), mItemsRect.top());
+		points[2]->setPosition(mItemsRect.right(), mItemsRect.top());
+		points[3]->setPosition(mItemsRect.right(), mItemsRect.center().y());
+		points[4]->setPosition(mItemsRect.right(), mItemsRect.bottom());
+		points[5]->setPosition(mItemsRect.center().x(), mItemsRect.bottom());
+		points[6]->setPosition(mItemsRect.left(), mItemsRect.bottom());
+		points[7]->setPosition(mItemsRect.left(), mItemsRect.center().y());
 	}
 }

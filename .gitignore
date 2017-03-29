@@ -36,3 +36,11 @@ Makefile*
 # QtCtreator CMake
 CMakeLists.txt.user
 
+/release
+/debug
+/lib
+/todo.txt
+/libjade.pro.user
+/Makefile
+/Makefile.Debug
+/Makefile.Release

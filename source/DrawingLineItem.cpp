@@ -1,8 +1,8 @@
 /* DrawingLineItem.cpp
  *
- * Copyright (C) 2013-2016 Jason Allen
+ * Copyright (C) 2013-2017 Jason Allen
  *
- * This file is part of the jade library.
+ * This file is part of the jade application.
  *
  * jade is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,17 +19,18 @@
  */
 
 #include "DrawingLineItem.h"
-#include "DrawingWidget.h"
 #include "DrawingItemPoint.h"
 #include "DrawingItemStyle.h"
 
 DrawingLineItem::DrawingLineItem() : DrawingItem()
 {
+	setFlags(CanMove | CanResize | CanRotate | CanFlip | CanSelect | PlaceByMousePressAndRelease | AdjustPositionOnResize);
+
 	DrawingItemPoint::Flags flags =
 		DrawingItemPoint::Control | DrawingItemPoint::Connection | DrawingItemPoint::Free;
 	addPoint(new DrawingItemPoint(QPointF(0, 0), flags));	// start point
-	addPoint(new DrawingItemPoint(QPointF(0, 0), DrawingItemPoint::Connection));	// mid point
 	addPoint(new DrawingItemPoint(QPointF(0, 0), flags));	// end point
+	addPoint(new DrawingItemPoint(QPointF(0, 0), DrawingItemPoint::Connection));	// mid point
 
 	DrawingItemStyle* style = DrawingItem::style();
 	style->setValue(DrawingItemStyle::PenStyle,
@@ -71,9 +72,9 @@ void DrawingLineItem::setLine(const QLineF& line)
 {
 	QList<DrawingItemPoint*> points = DrawingLineItem::points();
 
-	points[0]->setPos(line.p1());
-	points[1]->setPos((line.p1() + line.p2()) / 2);
-	points[2]->setPos(line.p2());
+	points[0]->setPosition(line.p1());
+	points[1]->setPosition(line.p2());
+	points[2]->setPosition((line.p1() + line.p2()) / 2);
 }
 
 void DrawingLineItem::setLine(qreal x1, qreal y1, qreal x2, qreal y2)
@@ -86,8 +87,8 @@ QLineF DrawingLineItem::line() const
 	QLineF line;
 
 	QList<DrawingItemPoint*> points = DrawingLineItem::points();
-	line.setP1(points.first()->pos());
-	line.setP2(points.last()->pos());
+	line.setP1(points[0]->position());
+	line.setP2(points[1]->position());
 
 	return line;
 }
@@ -101,8 +102,8 @@ QRectF DrawingLineItem::boundingRect() const
 	if (isValid())
 	{
 		QList<DrawingItemPoint*> points = DrawingLineItem::points();
-		QPointF p1 = points.first()->pos();
-		QPointF p2 = points.last()->pos();
+		QPointF p1 = points[0]->position();
+		QPointF p2 = points[1]->position();
 		qreal penWidth = style()->valueLookup(DrawingItemStyle::PenWidth).toReal();
 
 		rect = QRectF(qMin(p1.x(), p2.x()), qMin(p1.y(), p2.y()), qAbs(p1.x() - p2.x()), qAbs(p1.y() - p2.y()));
@@ -121,18 +122,18 @@ QPainterPath DrawingLineItem::shape() const
 		QPainterPath drawPath;
 
 		QList<DrawingItemPoint*> points = DrawingLineItem::points();
-		QPointF p1 = points.first()->pos();
-		QPointF p2 = points.last()->pos();
+		QPointF p1 = points[0]->position();
+		QPointF p2 = points[1]->position();
 		qreal lineLength = qSqrt((p2.x() - p1.x()) * (p2.x() - p1.x()) + (p2.y() - p1.y()) * (p2.y() - p1.y()));
 		qreal lineAngle = 180 * qAtan2(p2.y() - p1.y(), p2.x() - p1.x()) / 3.141592654;
-		
+
 		DrawingItemStyle* style = DrawingItem::style();
 		QPen pen = style->pen();
 		DrawingItemStyle::ArrowStyle startArrowStyle = style->startArrowStyle();
 		DrawingItemStyle::ArrowStyle endArrowStyle = style->endArrowStyle();
 		qreal startArrowSize = style->startArrowSize();
 		qreal endArrowSize = style->endArrowSize();
-		
+
 		// Add line
 		drawPath.moveTo(p1);
 		drawPath.lineTo(p2);
@@ -147,7 +148,6 @@ QPainterPath DrawingLineItem::shape() const
 		}
 
 		// Determine outline path
-		pen.setWidthF(qMax(pen.widthF(), minimumPenWidth()));
 		shape = strokePath(drawPath, pen);
 	}
 
@@ -157,12 +157,12 @@ QPainterPath DrawingLineItem::shape() const
 bool DrawingLineItem::isValid() const
 {
 	QList<DrawingItemPoint*> points = DrawingLineItem::points();
-	return (points.size() >= 2 && points.first()->pos() != points.last()->pos());
+	return (points.size() >= 2 && points[0]->position() != points[1]->position());
 }
 
 //==================================================================================================
 
-void DrawingLineItem::paint(QPainter* painter)
+void DrawingLineItem::render(QPainter* painter)
 {
 	if (isValid())
 	{
@@ -170,11 +170,11 @@ void DrawingLineItem::paint(QPainter* painter)
 		QPen scenePen = painter->pen();
 
 		QList<DrawingItemPoint*> points = DrawingLineItem::points();
-		QPointF p1 = points.first()->pos();
-		QPointF p2 = points.last()->pos();
+		QPointF p1 = points[0]->position();
+		QPointF p2 = points[1]->position();
 		qreal lineLength = qSqrt((p2.x() - p1.x()) * (p2.x() - p1.x()) + (p2.y() - p1.y()) * (p2.y() - p1.y()));
 		qreal lineAngle = 180 * qAtan2(p2.y() - p1.y(), p2.x() - p1.x()) / 3.141592654;
-		
+
 		DrawingItemStyle* style = DrawingItem::style();
 		QPen pen = style->pen();
 		DrawingItemStyle::ArrowStyle startArrowStyle = style->startArrowStyle();
@@ -199,66 +199,18 @@ void DrawingLineItem::paint(QPainter* painter)
 		painter->setBrush(sceneBrush);
 		painter->setPen(scenePen);
 	}
-
-	// Draw shape (debug)
-	//painter->setBrush(QColor(255, 0, 255, 128));
-	//painter->setPen(QPen(painter->brush(), 1));
-	//painter->drawPath(shape());
 }
 
 //==================================================================================================
 
-void DrawingLineItem::resizeItem(DrawingItemPoint* itemPoint, const QPointF& scenePos)
+void DrawingLineItem::resizeEvent(DrawingItemPoint* itemPoint, const QPointF& scenePos)
 {
+	DrawingItem::resizeEvent(itemPoint, scenePos);
+
 	QList<DrawingItemPoint*> points = DrawingLineItem::points();
 	DrawingItemPoint* startPoint = points[0];
-	DrawingItemPoint* midPoint = points[1];
-	DrawingItemPoint* endPoint = points[2];
+	DrawingItemPoint* endPoint = points[1];
+	DrawingItemPoint* midPoint = points[2];
 
-	DrawingItem::resizeItem(itemPoint, scenePos);
-
-	midPoint->setPos((startPoint->pos() + endPoint->pos()) / 2);
-
-	// Adjust position of item and item points so that point(0)->pos() == QPointF(0, 0)
-	QPointF deltaPos = -points.first()->pos();
-	QPointF pointScenePos = mapToScene(points.first()->pos());
-
-	for(auto pointIter = points.begin(); pointIter != points.end(); pointIter++)
-		(*pointIter)->setPos((*pointIter)->pos() + deltaPos);
-
-	setPos(pointScenePos);
-}
-
-//==================================================================================================
-
-bool DrawingLineItem::newItemCopyEvent()
-{
-	QList<DrawingItemPoint*> points = DrawingItem::points();
-
-	for(auto pointIter = points.begin(); pointIter != points.end(); pointIter++)
-		(*pointIter)->setPos(0, 0);
-
-	return true;
-}
-
-void DrawingLineItem::newMouseMoveEvent(DrawingMouseEvent* event)
-{
-	if (event->buttons() & Qt::LeftButton)
-	{
-		DrawingWidget* drawing = DrawingItem::drawing();
-		QList<DrawingItemPoint*> points = DrawingLineItem::points();
-		DrawingItemPoint* endPoint = points[2];
-
-		QPointF newPos = event->scenePos();
-		if (drawing) newPos = drawing->roundToGrid(newPos);
-
-		resizeItem(endPoint, newPos);
-	}
-	else DrawingItem::newMouseMoveEvent(event);
-}
-
-bool DrawingLineItem::newMouseReleaseEvent(DrawingMouseEvent* event)
-{
-	Q_UNUSED(event);
-	return isValid();
+	midPoint->setPosition((startPoint->position() + endPoint->position()) / 2);
 }
