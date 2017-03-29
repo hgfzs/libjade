@@ -23,6 +23,22 @@
 
 #include <DrawingItem.h>
 
+/*! \brief Provides a path item that can be added to a DrawingScene.
+ *
+ * To set the item's rect, call the setRect() function.  The rect() function returns the
+ * current rect.  Both functions operate in local item coordinates.
+ *
+ * A DrawingPathItem can draw an arbitrary QPainterPath, which can be set using setPath().  The path
+ * is given in local path coordinates as specified by the pathRect(); path coordinates are mapped to
+ * item coordinates using mapToPath() and mapFromPath().  These functions scale coordinates between
+ * the rect() and the pathRect().
+ *
+ * Rendering options for the path can be controlled through properties of the item's style().
+ * The path item supports all of the pen and brush style properties.
+ *
+ * DrawingPathItem provides a reasonable implementation of boundingRect(), shape(), and isValid().
+ * The render() function draws the path using the item's associated pen and brush.
+ */
 class DrawingPathItem : public DrawingItem
 {
 private:
