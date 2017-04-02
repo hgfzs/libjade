@@ -77,7 +77,7 @@ QPainterPath DrawingItemGroup::shape() const
 		for(auto itemIter = mItems.begin(); itemIter != mItems.end(); itemIter++)
 		{
 			if ((*itemIter)->isVisible())
-				shape = shape.united((*itemIter)->mapToScene((*itemIter)->shape()));
+				shape = shape.united((*itemIter)->mapToParent((*itemIter)->shape()));
 		}
 	}
 
@@ -118,7 +118,7 @@ void DrawingItemGroup::recalculateContentsRect()
 	{
 		if ((*itemIter)->isVisible())
 		{
-			itemRect = (*itemIter)->mapToScene((*itemIter)->boundingRect()).boundingRect();
+			itemRect = (*itemIter)->mapToParent((*itemIter)->boundingRect()).boundingRect();
 
 			if (!mItemsRect.isValid()) mItemsRect = itemRect;
 			else mItemsRect = mItemsRect.united(itemRect);

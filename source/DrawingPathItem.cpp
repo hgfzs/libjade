@@ -275,9 +275,9 @@ void DrawingPathItem::render(QPainter* painter)
 
 //==================================================================================================
 
-void DrawingPathItem::resizeEvent(DrawingItemPoint* itemPoint, const QPointF& scenePos)
+void DrawingPathItem::resizeEvent(DrawingItemPoint* itemPoint, const QPointF& parentPos)
 {
-	DrawingItem::resizeEvent(itemPoint, scenePos);
+	DrawingItem::resizeEvent(itemPoint, parentPos);
 
 	QList<DrawingItemPoint*> points = DrawingPathItem::points();
 	if (points.size() >= 8)

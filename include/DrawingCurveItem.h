@@ -164,7 +164,7 @@ protected:
 	 * behavior is that if itemPoint is the start or end point, the corresponding control point is
 	 * moved by the same amount when the item is resized.
 	 */
-	virtual void resizeEvent(DrawingItemPoint* itemPoint, const QPointF& scenePos);
+	virtual void resizeEvent(DrawingItemPoint* itemPoint, const QPointF& parentPos);
 
 private:
 	QPointF pointFromRatio(qreal ratio) const;
