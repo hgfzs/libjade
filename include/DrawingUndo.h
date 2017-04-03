@@ -34,7 +34,7 @@ public:
 		RotateItemsType, RotateBackItemsType, FlipItemsHorizontalType, FlipItemsVerticalType,
 		ItemResizeType, ReorderItemsType, SelectItemsType,
 		InsertItemPointType, RemoveItemPointType,
-		PointConnectType, PointDisconnectType,
+		PointConnectType, PointDisconnectType, SetItemsVisibilityType,
 		UpdateItemPropertiesType, UpdatePropertiesType, NumberOfCommands };
 
 public:
@@ -116,8 +116,8 @@ class DrawingResizeItemCommand : public DrawingUndoCommand
 private:
 	DrawingView* mView;
 	DrawingItemPoint* mPoint;
-	QPointF mScenePos;
-	QPointF mOriginalScenePos;
+	QPointF mNewPos;
+	QPointF mOriginalPos;
 	bool mFinalResize;
 
 public:
@@ -140,7 +140,7 @@ class DrawingRotateItemsCommand : public DrawingUndoCommand
 private:
 	DrawingView* mView;
 	QList<DrawingItem*> mItems;
-	QPointF mScenePos;
+	QHash<DrawingItem*,QPointF> mParentPos;
 
 public:
 	DrawingRotateItemsCommand(DrawingView* view, const QList<DrawingItem*>& items,
@@ -160,7 +160,7 @@ class DrawingRotateBackItemsCommand : public DrawingUndoCommand
 private:
 	DrawingView* mView;
 	QList<DrawingItem*> mItems;
-	QPointF mScenePos;
+	QHash<DrawingItem*,QPointF> mParentPos;
 
 public:
 	DrawingRotateBackItemsCommand(DrawingView* view, const QList<DrawingItem*>& items,
@@ -180,7 +180,7 @@ class DrawingFlipItemsHorizontalCommand : public DrawingUndoCommand
 private:
 	DrawingView* mView;
 	QList<DrawingItem*> mItems;
-	QPointF mScenePos;
+	QHash<DrawingItem*,QPointF> mParentPos;
 
 public:
 	DrawingFlipItemsHorizontalCommand(DrawingView* view, const QList<DrawingItem*>& items,
@@ -200,7 +200,7 @@ class DrawingFlipItemsVerticalCommand : public DrawingUndoCommand
 private:
 	DrawingView* mView;
 	QList<DrawingItem*> mItems;
-	QPointF mScenePos;
+	QHash<DrawingItem*,QPointF> mParentPos;
 
 public:
 	DrawingFlipItemsVerticalCommand(DrawingView* view, const QList<DrawingItem*>& items,
@@ -336,6 +336,27 @@ public:
 	DrawingItemPointDisconnectCommand(const DrawingItemPointDisconnectCommand& command,
 		QUndoCommand* parent = NULL);
 	~DrawingItemPointDisconnectCommand();
+
+	int id() const;
+
+	void redo();
+	void undo();
+};
+
+//==================================================================================================
+
+class DrawingItemSetVisibilityCommand : public DrawingUndoCommand
+{
+private:
+	DrawingView* mView;
+	QList<DrawingItem*> mItems;
+	QHash<DrawingItem*,bool> mVisibility;
+	QHash<DrawingItem*,bool> mOriginalVisibility;
+
+public:
+	DrawingItemSetVisibilityCommand(DrawingView* view, const QList<DrawingItem*>& items,
+		bool visible, QUndoCommand* parent = NULL);
+	~DrawingItemSetVisibilityCommand();
 
 	int id() const;
 

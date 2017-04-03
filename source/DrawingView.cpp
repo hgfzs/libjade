@@ -367,37 +367,12 @@ QRectF DrawingView::scrollBarDefinedRect() const
 
 QList<DrawingItem*> DrawingView::items(const QPointF& scenePos) const
 {
-	QList<DrawingItem*> items;
-
-	if (mScene)
-	{
-		QList<DrawingItem*> sceneItems = mScene->items();
-
-		for(auto itemIter = sceneItems.begin(); itemIter != sceneItems.end(); itemIter++)
-		{
-			if (itemMatchesPoint(*itemIter, scenePos)) items.append(*itemIter);
-		}
-	}
-
-	return items;
+	return (mScene) ? findItems(mScene->mItems, scenePos) : QList<DrawingItem*>();
 }
 
 QList<DrawingItem*> DrawingView::items(const QRectF& sceneRect) const
 {
-	QList<DrawingItem*> items;
-
-	if (mScene)
-	{
-		QList<DrawingItem*> sceneItems = mScene->items();
-
-		for(auto itemIter = sceneItems.begin(); itemIter != sceneItems.end(); itemIter++)
-		{
-			if (itemMatchesRect(*itemIter, sceneRect, mItemSelectionMode))
-				items.append(*itemIter);
-		}
-	}
-
-	return items;
+	return (mScene) ? findItems(mScene->mItems, sceneRect, mItemSelectionMode) : QList<DrawingItem*>();
 }
 
 QList<DrawingItem*> DrawingView::items(const QPainterPath& scenePath) const
@@ -406,9 +381,7 @@ QList<DrawingItem*> DrawingView::items(const QPainterPath& scenePath) const
 
 	if (mScene)
 	{
-		QList<DrawingItem*> sceneItems = mScene->items();
-
-		for(auto itemIter = sceneItems.begin(); itemIter != sceneItems.end(); itemIter++)
+		for(auto itemIter = mScene->mItems.begin(); itemIter != mScene->mItems.end(); itemIter++)
 		{
 			if (itemMatchesPath(*itemIter, scenePath, mItemSelectionMode))
 				items.append(*itemIter);
@@ -424,8 +397,6 @@ DrawingItem* DrawingView::itemAt(const QPointF& scenePos) const
 
 	if (mScene)
 	{
-		QList<DrawingItem*> sceneItems = mScene->items();
-
 		// Favor selected items
 		auto itemIter = mSelectedItems.end();
 		while (item == nullptr && itemIter != mSelectedItems.begin())
@@ -435,12 +406,7 @@ DrawingItem* DrawingView::itemAt(const QPointF& scenePos) const
 		}
 
 		// Search all items
-		itemIter = sceneItems.end();
-		while (item == nullptr && itemIter != sceneItems.begin())
-		{
-			itemIter--;
-			if (itemMatchesPoint(*itemIter, scenePos)) item = *itemIter;
-		}
+		if (item == nullptr) item = findItemReverse(mScene->mItems, scenePos);
 	}
 
 	return item;
@@ -664,14 +630,21 @@ void DrawingView::deleteSelection()
 {
 	if (mMode == DefaultMode && mScene)
 	{
-		QList<DrawingItem*> itemsToRemove = mSelectedItems;
+		QList<DrawingItem*> itemsToRemove, itemsToHide;
 
-		if (!itemsToRemove.isEmpty())
+		for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
+		{
+			if ((*itemIter)->parent() == nullptr) itemsToRemove.append(*itemIter);
+			else itemsToHide.append(*itemIter);
+		}
+
+		if (!itemsToRemove.isEmpty() || !itemsToHide.isEmpty())
 		{
 			QUndoCommand* deleteCommand = new QUndoCommand("Delete Items");
 
 			selectItemsCommand(QList<DrawingItem*>(), deleteCommand);
-			removeItemsCommand(itemsToRemove, deleteCommand);
+			if (!itemsToHide.isEmpty()) hideItemsCommand(itemsToHide, deleteCommand);
+			if (!itemsToRemove.isEmpty()) removeItemsCommand(itemsToRemove, deleteCommand);
 
 			mUndoStack.push(deleteCommand);
 
@@ -687,10 +660,9 @@ void DrawingView::selectAll()
 {
 	if (mMode == DefaultMode && mScene)
 	{
-		QList<DrawingItem*> sceneItems = mScene->items();
 		QList<DrawingItem*> itemsToSelect;
 
-		for(auto itemIter = sceneItems.begin(); itemIter != sceneItems.end(); itemIter++)
+		for(auto itemIter = mScene->mItems.begin(); itemIter != mScene->mItems.end(); itemIter++)
 		{
 			if ((*itemIter)->flags() & DrawingItem::CanSelect) itemsToSelect.append(*itemIter);
 		}
@@ -705,15 +677,14 @@ void DrawingView::selectAll()
 
 void DrawingView::selectArea(const QRectF& rect)
 {
-	if (mMode == DefaultMode && mScene && rect.isValid())
+	if (mMode == DefaultMode)
 	{
-		QList<DrawingItem*> sceneItems = mScene->items();
+		QList<DrawingItem*> foundItems = items(rect);
 		QList<DrawingItem*> itemsToSelect;
 
-		for(auto itemIter = sceneItems.begin(); itemIter != sceneItems.end(); itemIter++)
+		for(auto itemIter = foundItems.begin(); itemIter != foundItems.end(); itemIter++)
 		{
-			if (itemMatchesRect(*itemIter, rect, mItemSelectionMode) &&
-				((*itemIter)->flags() & DrawingItem::CanSelect)) itemsToSelect.append(*itemIter);
+			if ((*itemIter)->flags() & DrawingItem::CanSelect) itemsToSelect.append(*itemIter);
 		}
 
 		if (mSelectedItems != itemsToSelect)
@@ -726,15 +697,14 @@ void DrawingView::selectArea(const QRectF& rect)
 
 void DrawingView::selectArea(const QPainterPath& path)
 {
-	if (mMode == DefaultMode && mScene && !path.isEmpty())
+	if (mMode == DefaultMode)
 	{
-		QList<DrawingItem*> sceneItems = mScene->items();
+		QList<DrawingItem*> foundItems = items(path);
 		QList<DrawingItem*> itemsToSelect;
 
-		for(auto itemIter = sceneItems.begin(); itemIter != sceneItems.end(); itemIter++)
+		for(auto itemIter = foundItems.begin(); itemIter != foundItems.end(); itemIter++)
 		{
-			if (itemMatchesPath(*itemIter, path, mItemSelectionMode) &&
-				((*itemIter)->flags() & DrawingItem::CanSelect)) itemsToSelect.append(*itemIter);
+			if ((*itemIter)->flags() & DrawingItem::CanSelect) itemsToSelect.append(*itemIter);
 		}
 
 		if (mSelectedItems != itemsToSelect)
@@ -756,17 +726,21 @@ void DrawingView::selectNone()
 
 //==================================================================================================
 
-void DrawingView::moveSelection(const QPointF& newPos)
+void DrawingView::moveSelection(const QPointF& scenePos)
 {
 	if (mMode == DefaultMode && mScene && !mSelectedItems.isEmpty())
 	{
 		QHash<DrawingItem*,QPointF> newPositions;
-		QPointF deltaPos = newPos - mSelectedItems.first()->position();
+		QPointF deltaPos = scenePos - mSelectedItems.first()->mapToScene(
+			mSelectedItems.first()->mapFromParent(mSelectedItems.first()->position()));
 
 		for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
 		{
 			if ((*itemIter)->flags() & DrawingItem::CanMove)
-				newPositions[*itemIter] = (*itemIter)->position() + deltaPos;
+			{
+				newPositions[*itemIter] = (*itemIter)->position() +
+					(*itemIter)->mapToParent((*itemIter)->mapFromScene(deltaPos));
+			}
 		}
 
 		if (!newPositions.isEmpty())
@@ -814,7 +788,13 @@ void DrawingView::rotateSelection()
 
 		if (!itemsToRotate.isEmpty())
 		{
-			rotateItems(itemsToRotate, roundToGrid(mapToScene(mapFromGlobal(QCursor::pos()))));
+			QPointF scenePos = roundToGrid(mapToScene(mapFromGlobal(QCursor::pos())));
+			QHash<DrawingItem*,QPointF> parentPos;
+
+			for(auto itemIter = itemsToRotate.begin(); itemIter != itemsToRotate.end(); itemIter++)
+				parentPos[*itemIter] = (*itemIter)->mapToParent((*itemIter)->mapFromScene(scenePos));
+
+			rotateItems(itemsToRotate, parentPos);
 			viewport()->update();
 		}
 	}
@@ -846,7 +826,13 @@ void DrawingView::rotateBackSelection()
 
 		if (!itemsToRotate.isEmpty())
 		{
-			rotateBackItemsCommand(itemsToRotate, roundToGrid(mapToScene(mapFromGlobal(QCursor::pos()))));
+			QPointF scenePos = roundToGrid(mapToScene(mapFromGlobal(QCursor::pos())));
+			QHash<DrawingItem*,QPointF> parentPos;
+
+			for(auto itemIter = itemsToRotate.begin(); itemIter != itemsToRotate.end(); itemIter++)
+				parentPos[*itemIter] = (*itemIter)->mapToParent((*itemIter)->mapFromScene(scenePos));
+
+			rotateBackItems(itemsToRotate, parentPos);
 			viewport()->update();
 		}
 	}
@@ -878,7 +864,13 @@ void DrawingView::flipSelectionHorizontal()
 
 		if (!itemsToFlip.isEmpty())
 		{
-			flipItemsHorizontalCommand(itemsToFlip, roundToGrid(mapToScene(mapFromGlobal(QCursor::pos()))));
+			QPointF scenePos = roundToGrid(mapToScene(mapFromGlobal(QCursor::pos())));
+			QHash<DrawingItem*,QPointF> parentPos;
+
+			for(auto itemIter = itemsToFlip.begin(); itemIter != itemsToFlip.end(); itemIter++)
+				parentPos[*itemIter] = (*itemIter)->mapToParent((*itemIter)->mapFromScene(scenePos));
+
+			flipItemsHorizontal(itemsToFlip, parentPos);
 			viewport()->update();
 		}
 	}
@@ -910,7 +902,13 @@ void DrawingView::flipSelectionVertical()
 
 		if (!itemsToFlip.isEmpty())
 		{
-			flipItemsHorizontalCommand(itemsToFlip, roundToGrid(mapToScene(mapFromGlobal(QCursor::pos()))));
+			QPointF scenePos = roundToGrid(mapToScene(mapFromGlobal(QCursor::pos())));
+			QHash<DrawingItem*,QPointF> parentPos;
+
+			for(auto itemIter = itemsToFlip.begin(); itemIter != itemsToFlip.end(); itemIter++)
+				parentPos[*itemIter] = (*itemIter)->mapToParent((*itemIter)->mapFromScene(scenePos));
+
+			flipItemsVertical(itemsToFlip, parentPos);
 			viewport()->update();
 		}
 	}
@@ -922,25 +920,34 @@ void DrawingView::bringForward()
 {
 	if (mMode == DefaultMode && mScene && !mSelectedItems.isEmpty())
 	{
-		QList<DrawingItem*> itemsToReorder = mSelectedItems;
-		QList<DrawingItem*> itemsOrdered = mScene->items();
-		DrawingItem* item;
-		int itemIndex;
+		QList<DrawingItem*> itemsToReorder;
 
-		while (!itemsToReorder.empty())
+		for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
 		{
-			item = itemsToReorder.takeLast();
-
-			itemIndex = itemsOrdered.indexOf(item);
-			if (itemIndex >= 0)
-			{
-				itemsOrdered.removeAll(item);
-				itemsOrdered.insert(itemIndex + 1, item);
-			}
+			if ((*itemIter)->parent() == nullptr) itemsToReorder.append(*itemIter);
 		}
 
-		reorderItemsCommand(itemsOrdered);
-		viewport()->update();
+		if (!itemsToReorder.isEmpty())
+		{
+			QList<DrawingItem*> itemsOrdered = mScene->mItems;
+			DrawingItem* item;
+			int itemIndex;
+
+			while (!itemsToReorder.empty())
+			{
+				item = itemsToReorder.takeLast();
+
+				itemIndex = itemsOrdered.indexOf(item);
+				if (itemIndex >= 0)
+				{
+					itemsOrdered.removeAll(item);
+					itemsOrdered.insert(itemIndex + 1, item);
+				}
+			}
+
+			reorderItemsCommand(itemsOrdered);
+			viewport()->update();
+		}
 	}
 }
 
@@ -948,25 +955,34 @@ void DrawingView::sendBackward()
 {
 	if (mMode == DefaultMode && mScene && !mSelectedItems.isEmpty())
 	{
-		QList<DrawingItem*> itemsToReorder = mSelectedItems;
-		QList<DrawingItem*> itemsOrdered = mScene->items();
-		DrawingItem* item;
-		int itemIndex;
+		QList<DrawingItem*> itemsToReorder;
 
-		while (!itemsToReorder.empty())
+		for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
 		{
-			item = itemsToReorder.takeLast();
-
-			itemIndex = itemsOrdered.indexOf(item);
-			if (itemIndex >= 0)
-			{
-				itemsOrdered.removeAll(item);
-				itemsOrdered.insert(itemIndex - 1, item);
-			}
+			if ((*itemIter)->parent() == nullptr) itemsToReorder.append(*itemIter);
 		}
 
-		reorderItemsCommand(itemsOrdered);
-		viewport()->update();
+		if (!itemsToReorder.isEmpty())
+		{
+			QList<DrawingItem*> itemsOrdered = mScene->mItems;
+			DrawingItem* item;
+			int itemIndex;
+
+			while (!itemsToReorder.empty())
+			{
+				item = itemsToReorder.takeLast();
+
+				itemIndex = itemsOrdered.indexOf(item);
+				if (itemIndex >= 0)
+				{
+					itemsOrdered.removeAll(item);
+					itemsOrdered.insert(itemIndex - 1, item);
+				}
+			}
+
+			reorderItemsCommand(itemsOrdered);
+			viewport()->update();
+		}
 	}
 }
 
@@ -974,25 +990,34 @@ void DrawingView::bringToFront()
 {
 	if (mMode == DefaultMode && mScene && !mSelectedItems.isEmpty())
 	{
-		QList<DrawingItem*> itemsToReorder = mSelectedItems;
-		QList<DrawingItem*> itemsOrdered = mScene->items();
-		DrawingItem* item;
-		int itemIndex;
+		QList<DrawingItem*> itemsToReorder;
 
-		while (!itemsToReorder.empty())
+		for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
 		{
-			item = itemsToReorder.takeLast();
-
-			itemIndex = itemsOrdered.indexOf(item);
-			if (itemIndex >= 0)
-			{
-				itemsOrdered.removeAll(item);
-				itemsOrdered.append(item);
-			}
+			if ((*itemIter)->parent() == nullptr) itemsToReorder.append(*itemIter);
 		}
 
-		reorderItemsCommand(itemsOrdered);
-		viewport()->update();
+		if (!itemsToReorder.isEmpty())
+		{
+			QList<DrawingItem*> itemsOrdered = mScene->mItems;
+			DrawingItem* item;
+			int itemIndex;
+
+			while (!itemsToReorder.empty())
+			{
+				item = itemsToReorder.takeLast();
+
+				itemIndex = itemsOrdered.indexOf(item);
+				if (itemIndex >= 0)
+				{
+					itemsOrdered.removeAll(item);
+					itemsOrdered.append(item);
+				}
+			}
+
+			reorderItemsCommand(itemsOrdered);
+			viewport()->update();
+		}
 	}
 }
 
@@ -1000,25 +1025,34 @@ void DrawingView::sendToBack()
 {
 	if (mMode == DefaultMode && mScene && !mSelectedItems.isEmpty())
 	{
-		QList<DrawingItem*> itemsToReorder = mSelectedItems;
-		QList<DrawingItem*> itemsOrdered = mScene->items();
-		DrawingItem* item;
-		int itemIndex;
+		QList<DrawingItem*> itemsToReorder;
 
-		while (!itemsToReorder.empty())
+		for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
 		{
-			item = itemsToReorder.takeLast();
-
-			itemIndex = itemsOrdered.indexOf(item);
-			if (itemIndex >= 0)
-			{
-				itemsOrdered.removeAll(item);
-				itemsOrdered.prepend(item);
-			}
+			if ((*itemIter)->parent() == nullptr) itemsToReorder.append(*itemIter);
 		}
 
-		reorderItemsCommand(itemsOrdered);
-		viewport()->update();
+		if (!itemsToReorder.isEmpty())
+		{
+			QList<DrawingItem*> itemsOrdered = mScene->mItems;
+			DrawingItem* item;
+			int itemIndex;
+
+			while (!itemsToReorder.empty())
+			{
+				item = itemsToReorder.takeLast();
+
+				itemIndex = itemsOrdered.indexOf(item);
+				if (itemIndex >= 0)
+				{
+					itemsOrdered.removeAll(item);
+					itemsOrdered.prepend(item);
+				}
+			}
+
+			reorderItemsCommand(itemsOrdered);
+			viewport()->update();
+		}
 	}
 }
 
@@ -1071,24 +1105,34 @@ void DrawingView::group()
 	{
 		QUndoCommand* command = new QUndoCommand("Group Items");
 
-		QList<DrawingItem*> itemsToGroup = mSelectedItems;
-		QList<DrawingItem*> items = DrawingItem::copyItems(itemsToGroup);
-		DrawingItemGroup* itemGroup = new DrawingItemGroup();
-		QList<DrawingItem*> itemsToAdd;
+		QList<DrawingItem*> itemsToGroup;
 
-		itemGroup->setPosition(items.first()->position());
-		for(auto iter = items.begin(); iter != items.end(); iter++)
-			(*iter)->setPosition(itemGroup->mapFromScene((*iter)->position()));
-		itemGroup->setItems(items);
-		itemsToAdd.append(itemGroup);
+		for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
+		{
+			if ((*itemIter)->parent() == nullptr) itemsToGroup.append(*itemIter);
+		}
 
-		selectItemsCommand(QList<DrawingItem*>(), true, command);
-		removeItemsCommand(itemsToGroup, command);
-		addItemsCommand(itemsToAdd, false, command);
-		selectItemsCommand(itemsToAdd, true, command);
+		if (itemsToGroup.size() > 1)
+		{
+			QList<DrawingItem*> items = DrawingItem::copyItems(itemsToGroup);
+			DrawingItemGroup* itemGroup = new DrawingItemGroup();
+			QList<DrawingItem*> itemsToAdd;
 
-		mUndoStack.push(command);
-		viewport()->update();
+
+			itemGroup->setPosition(items.first()->position());
+			for(auto iter = items.begin(); iter != items.end(); iter++)
+				(*iter)->setPosition(itemGroup->mapFromScene((*iter)->position()));
+			itemGroup->setItems(items);
+			itemsToAdd.append(itemGroup);
+
+			selectItemsCommand(QList<DrawingItem*>(), true, command);
+			removeItemsCommand(itemsToGroup, command);
+			addItemsCommand(itemsToAdd, false, command);
+			selectItemsCommand(itemsToAdd, true, command);
+
+			mUndoStack.push(command);
+			viewport()->update();
+		}
 	}
 }
 
@@ -1130,7 +1174,7 @@ void DrawingView::addItems(const QList<DrawingItem*>& items)
 		for(auto itemIter = items.begin(); itemIter != items.end(); itemIter++)
 			mScene->addItem(*itemIter);
 
-		emit numberOfItemsChanged(mScene->items().size());
+		emit numberOfItemsChanged(mScene->mItems.size());
 	}
 }
 
@@ -1141,7 +1185,7 @@ void DrawingView::insertItems(const QList<DrawingItem*>& items, const QHash<Draw
 		for(auto itemIter = items.begin(); itemIter != items.end(); itemIter++)
 			mScene->insertItem(index[*itemIter], *itemIter);
 
-		emit numberOfItemsChanged(mScene->items().size());
+		emit numberOfItemsChanged(mScene->mItems.size());
 	}
 }
 
@@ -1152,59 +1196,59 @@ void DrawingView::removeItems(const QList<DrawingItem*>& items)
 		for(auto itemIter = items.begin(); itemIter != items.end(); itemIter++)
 			mScene->removeItem(*itemIter);
 
-		emit numberOfItemsChanged(mScene->items().size());
+		emit numberOfItemsChanged(mScene->mItems.size());
 	}
 }
 
-void DrawingView::moveItems(const QList<DrawingItem*>& items, const QHash<DrawingItem*,QPointF>& scenePos)
+void DrawingView::moveItems(const QList<DrawingItem*>& items, const QHash<DrawingItem*,QPointF>& parentPos)
 {
 	for(auto itemIter = items.begin(); itemIter != items.end(); itemIter++)
-		(*itemIter)->moveEvent(scenePos[*itemIter]);
+		(*itemIter)->moveEvent(parentPos[*itemIter]);
 
 	emit itemsGeometryChanged(items);
 }
 
-void DrawingView::resizeItem(DrawingItemPoint* itemPoint, const QPointF& scenePos)
+void DrawingView::resizeItem(DrawingItemPoint* itemPoint, const QPointF& parentPos)
 {
 	if (itemPoint && itemPoint->item())
 	{
 		QList<DrawingItem*> items;
 		items.append(itemPoint->item());
 
-		itemPoint->item()->resizeEvent(itemPoint, scenePos);
+		itemPoint->item()->resizeEvent(itemPoint, parentPos);
 
 		emit itemsGeometryChanged(items);
 	}
 }
 
-void DrawingView::rotateItems(const QList<DrawingItem*>& items, const QPointF& scenePos)
+void DrawingView::rotateItems(const QList<DrawingItem*>& items, const QHash<DrawingItem*,QPointF>& parentPos)
 {
 	for(auto itemIter = items.begin(); itemIter != items.end(); itemIter++)
-		(*itemIter)->rotateEvent(scenePos);
+		(*itemIter)->rotateEvent(parentPos[*itemIter]);
 
 	emit itemsGeometryChanged(items);
 }
 
-void DrawingView::rotateBackItems(const QList<DrawingItem*>& items, const QPointF& scenePos)
+void DrawingView::rotateBackItems(const QList<DrawingItem*>& items, const QHash<DrawingItem*,QPointF>& parentPos)
 {
 	for(auto itemIter = items.begin(); itemIter != items.end(); itemIter++)
-		(*itemIter)->rotateBackEvent(scenePos);
+		(*itemIter)->rotateBackEvent(parentPos[*itemIter]);
 
 	emit itemsGeometryChanged(items);
 }
 
-void DrawingView::flipItemsHorizontal(const QList<DrawingItem*>& items, const QPointF& scenePos)
+void DrawingView::flipItemsHorizontal(const QList<DrawingItem*>& items, const QHash<DrawingItem*,QPointF>& parentPos)
 {
 	for(auto itemIter = items.begin(); itemIter != items.end(); itemIter++)
-		(*itemIter)->flipHorizontalEvent(scenePos);
+		(*itemIter)->flipHorizontalEvent(parentPos[*itemIter]);
 
 	emit itemsGeometryChanged(items);
 }
 
-void DrawingView::flipItemsVertical(const QList<DrawingItem*>& items, const QPointF& scenePos)
+void DrawingView::flipItemsVertical(const QList<DrawingItem*>& items, const QHash<DrawingItem*,QPointF>& parentPos)
 {
 	for(auto itemIter = items.begin(); itemIter != items.end(); itemIter++)
-		(*itemIter)->flipVerticalEvent(scenePos);
+		(*itemIter)->flipVerticalEvent(parentPos[*itemIter]);
 
 	emit itemsGeometryChanged(items);
 }
@@ -1264,6 +1308,14 @@ void DrawingView::disconnectItemPoints(DrawingItemPoint* point1, DrawingItemPoin
 		point1->removeConnection(point2);
 		point2->removeConnection(point1);
 	}
+}
+
+void DrawingView::setItemsVisibility(const QList<DrawingItem*>& items, const QHash<DrawingItem*,bool>& visibility)
+{
+	for(auto itemIter = items.begin(); itemIter != items.end(); itemIter++)
+		(*itemIter)->setVisible(visibility[*itemIter]);
+
+	emit itemsGeometryChanged(items);
 }
 
 //==================================================================================================
@@ -1551,7 +1603,6 @@ void DrawingView::mouseReleaseEvent(QMouseEvent* event)
 				QList<DrawingItem*> newSelection = (controlDown) ? mSelectedItems : QList<DrawingItem*>();
 				QHash<DrawingItem*,QPointF> newPositions;
 				QRectF rubberBandSceneRect;
-				QList<DrawingItem*> sceneItems = mScene->items();
 
 				switch (mDefaultMouseState)
 				{
@@ -1584,7 +1635,7 @@ void DrawingView::mouseReleaseEvent(QMouseEvent* event)
 
 				case MouseRubberBand:
 					rubberBandSceneRect = mapToScene(mRubberBandRect);
-					for(auto itemIter = sceneItems.begin(); itemIter != sceneItems.end(); itemIter++)
+					for(auto itemIter = mScene->mItems.begin(); itemIter != mScene->mItems.end(); itemIter++)
 					{
 						if (itemMatchesRect(*itemIter, rubberBandSceneRect, mItemSelectionMode) &&
 							((*itemIter)->flags() & DrawingItem::CanSelect) && !newSelection.contains(*itemIter))
@@ -1714,31 +1765,7 @@ void DrawingView::drawBackground(QPainter* painter)
 
 void DrawingView::drawItems(QPainter* painter)
 {
-	if (mScene)
-	{
-		QList<DrawingItem*> items = mScene->items();
-
-		for(auto itemIter = items.begin(); itemIter != items.end(); itemIter++)
-		{
-			if ((*itemIter)->isVisible())
-			{
-				painter->translate((*itemIter)->position());
-				painter->setTransform((*itemIter)->transformInverted(), true);
-
-				(*itemIter)->render(painter);
-
-				//painter->save();
-				//painter->setBrush(QColor(255, 0, 255, 128));
-				//painter->setPen(QPen(QColor(255, 0, 255, 128), 1));
-				//painter->drawPath(itemAdjustedShape(*itemIter));
-				//painter->restore();
-
-				painter->setTransform((*itemIter)->transform(), true);
-				painter->translate(-(*itemIter)->position());
-
-			}
-		}
-	}
+	if (mScene) drawItems(painter, mScene->mItems);
 }
 
 void DrawingView::drawForeground(QPainter* painter)
@@ -1746,17 +1773,7 @@ void DrawingView::drawForeground(QPainter* painter)
 	if (mScene)
 	{
 		// Draw new items
-		for(auto itemIter = mNewItems.begin(); itemIter != mNewItems.end(); itemIter++)
-		{
-			if ((*itemIter)->isVisible())
-			{
-				painter->translate((*itemIter)->position());
-				painter->setTransform((*itemIter)->transformInverted(), true);
-				(*itemIter)->render(painter);
-				painter->setTransform((*itemIter)->transform(), true);
-				painter->translate(-(*itemIter)->position());
-			}
-		}
+		drawItems(painter, mNewItems);
 
 		// Draw item points
 		QColor color = mScene->backgroundBrush().color();
@@ -1803,7 +1820,6 @@ void DrawingView::drawForeground(QPainter* painter)
 		painter->restore();
 
 		// Draw hotpoints
-		QList<DrawingItem*> sceneItems = mScene->items();
 		QList<DrawingItem*> items = mNewItems + mSelectedItems;
 
 		painter->save();
@@ -1819,9 +1835,9 @@ void DrawingView::drawForeground(QPainter* painter)
 
 			for(auto pointIter = itemPoints.begin(); pointIter != itemPoints.end(); pointIter++)
 			{
-				for(auto otherItemIter = sceneItems.begin(); otherItemIter != sceneItems.end(); otherItemIter++)
+				for(auto otherItemIter = mScene->mItems.begin(); otherItemIter != mScene->mItems.end(); otherItemIter++)
 				{
-					if ((*itemIter) != (*otherItemIter))
+					if ((*itemIter)->parent() == nullptr && (*itemIter) != (*otherItemIter))
 					{
 						QList<DrawingItemPoint*> otherItemPoints = (*otherItemIter)->points();
 
@@ -2106,6 +2122,14 @@ void DrawingView::disconnectItemPointsCommand(DrawingItemPoint* point1, DrawingI
 	if (!command) mUndoStack.push(disconnectCommand);
 }
 
+void DrawingView::hideItemsCommand(const QList<DrawingItem*>& items, QUndoCommand* command)
+{
+	DrawingItemSetVisibilityCommand* visibilityCommand =
+		new DrawingItemSetVisibilityCommand(this, items, false, command);
+
+	if (!command) mUndoStack.push(visibilityCommand);
+}
+
 //==================================================================================================
 
 void DrawingView::placeItems(const QList<DrawingItem*>& items, QUndoCommand* command)
@@ -2114,13 +2138,11 @@ void DrawingView::placeItems(const QList<DrawingItem*>& items, QUndoCommand* com
 
 	if (mScene)
 	{
-		QList<DrawingItem*> sceneItems = mScene->items();
-
 		for(auto itemIter = items.begin(); itemIter != items.end(); itemIter++)
 		{
-			for(auto otherItemIter = sceneItems.begin(); otherItemIter != sceneItems.end(); otherItemIter++)
+			for(auto otherItemIter = mScene->mItems.begin(); otherItemIter != mScene->mItems.end(); otherItemIter++)
 			{
-				if (!items.contains(*otherItemIter) && !mNewItems.contains(*otherItemIter))
+				if ((*itemIter)->parent() == nullptr && !items.contains(*otherItemIter) && !mNewItems.contains(*otherItemIter))
 				{
 					itemPoints = (*itemIter)->points();
 					otherItemPoints = (*otherItemIter)->points();
@@ -2285,6 +2307,79 @@ void DrawingView::recalculateContentSize(const QRectF& targetSceneRect)
 	mViewportTransform.scale(mScale, mScale);
 
 	mSceneTransform = mViewportTransform.inverted();
+}
+
+//==================================================================================================
+
+QList<DrawingItem*> DrawingView::findItems(const QList<DrawingItem*>& items,
+	const QPointF& scenePos) const
+{
+	QList<DrawingItem*> foundItems;
+
+	for(auto itemIter = items.begin(); itemIter != items.end(); itemIter++)
+	{
+		if (itemMatchesPoint(*itemIter, scenePos))
+			foundItems.append(*itemIter);
+
+		if (!(*itemIter)->mChildren.isEmpty())
+			foundItems.append(findItems((*itemIter)->mChildren, scenePos));
+	}
+
+	return foundItems;
+}
+
+QList<DrawingItem*> DrawingView::findItems(const QList<DrawingItem*>& items,
+	const QRectF& sceneRect, Qt::ItemSelectionMode mode) const
+{
+	QList<DrawingItem*> foundItems;
+
+	for(auto itemIter = items.begin(); itemIter != items.end(); itemIter++)
+	{
+		if (itemMatchesRect(*itemIter, sceneRect, mode))
+			foundItems.append(*itemIter);
+
+		if (!(*itemIter)->mChildren.isEmpty())
+			foundItems.append(findItems((*itemIter)->mChildren, sceneRect, mode));
+	}
+
+	return foundItems;
+}
+
+QList<DrawingItem*> DrawingView::findItems(const QList<DrawingItem*>& items,
+	const QPainterPath& scenePath, Qt::ItemSelectionMode mode) const
+{
+	QList<DrawingItem*> foundItems;
+
+	for(auto itemIter = items.begin(); itemIter != items.end(); itemIter++)
+	{
+		if (itemMatchesPath(*itemIter, scenePath, mode))
+			foundItems.append(*itemIter);
+
+		if (!(*itemIter)->mChildren.isEmpty())
+			foundItems.append(findItems((*itemIter)->mChildren, scenePath, mode));
+	}
+
+	return foundItems;
+}
+
+DrawingItem* DrawingView::findItemReverse(const QList<DrawingItem*>& items,
+	const QPointF& scenePos) const
+{
+	DrawingItem* foundItem = nullptr;
+
+	auto itemIter = items.end();
+	while (foundItem == nullptr && itemIter != items.begin())
+	{
+		itemIter--;
+
+		if (itemMatchesPoint(*itemIter, scenePos))
+			foundItem = *itemIter;
+
+		if (foundItem == nullptr && !(*itemIter)->mChildren.isEmpty())
+			foundItem = findItemReverse((*itemIter)->mChildren, scenePos);
+	}
+
+	return foundItem;
 }
 
 //==================================================================================================
@@ -2494,6 +2589,34 @@ bool DrawingView::shouldDisconnect(DrawingItemPoint* point1, DrawingItemPoint* p
 	}
 
 	return shouldDisconnect;
+}
+
+//==================================================================================================
+
+void DrawingView::drawItems(QPainter* painter, const QList<DrawingItem*>& items)
+{
+	for(auto itemIter = items.begin(); itemIter != items.end(); itemIter++)
+	{
+		if ((*itemIter)->isVisible())
+		{
+			painter->translate((*itemIter)->position());
+			painter->setTransform((*itemIter)->transformInverted(), true);
+
+			(*itemIter)->render(painter);
+
+			//painter->save();
+			//painter->setBrush(QColor(255, 0, 255, 128));
+			//painter->setPen(QPen(QColor(255, 0, 255, 128), 1));
+			//painter->drawPath(itemAdjustedShape(*itemIter));
+			//painter->restore();
+
+			if (!(*itemIter)->mChildren.isEmpty())
+				drawItems(painter, (*itemIter)->mChildren);
+
+			painter->setTransform((*itemIter)->transform(), true);
+			painter->translate(-(*itemIter)->position());
+		}
+	}
 }
 
 //==================================================================================================
