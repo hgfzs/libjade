@@ -27,18 +27,6 @@ class DrawingScene;
 class DrawingItem;
 class DrawingItemPoint;
 
-//Need to change to accommodate hierarchical items:
-//- Make DrawingView a friend of DrawingScene to speed up item access (done)
-//- DrawingView::items() (3x overloads), DrawingView::itemAt(), DrawingView::pointAt()
-//- deleteSelection()
-//- selectAll(), selectArea()
-//- bringForward(), sendBackward(), bringToFront(), sendToBack()
-//- group()
-//- moveItems(), resizeItem(), rotateItems(), etc need to work in parentPos, not scenePos
-//- drawItems(), drawForeground()
-//- placeItems()
-//- Update documentation
-
 /*! \brief Widget for viewing the contents of a DrawingScene.
  *
  * When a new DrawingView object is created, it is associated with a default DrawingScene object.
@@ -911,12 +899,9 @@ public slots:
 	void selectNone();
 
 
-	/*! \brief Moves the selected items to the specified position.
+	/*! \brief Moves the selected items by the specified position.
 	 *
 	 * This function emits the itemsGeometryChanged() signal after the items have been moved.
-	 *
-	 * If multiple items are selected, this function sets the position of the first item to newPos,
-	 * then moves the remaining items such that the change in position for all items is the same.
 	 *
 	 * Only items with the CanMove flag set are moved.  If no items are movable, or if no items
 	 * are selected, this function does nothing.
@@ -926,7 +911,7 @@ public slots:
 	 *
 	 * \sa resizeSelection()
 	 */
-	void moveSelection(const QPointF& scenePos);
+	void moveSelection(const QPointF& deltaScenePos);
 
 	/*! \brief Resizes the selected item by moving the itemPoint to the specified position.
 	 *
@@ -1510,6 +1495,7 @@ private:
 private:
 	void recalculateContentSize(const QRectF& targetSceneRect = QRectF());
 
+	QList<DrawingItem*> findItems(const QList<DrawingItem*>& items) const;
 	QList<DrawingItem*> findItems(const QList<DrawingItem*>& items, const QPointF& scenePos) const;
 	QList<DrawingItem*> findItems(const QList<DrawingItem*>& items, const QRectF& sceneRect, Qt::ItemSelectionMode mode) const;
 	QList<DrawingItem*> findItems(const QList<DrawingItem*>& items, const QPainterPath& scenePath, Qt::ItemSelectionMode mode) const;

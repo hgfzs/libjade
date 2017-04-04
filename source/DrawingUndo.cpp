@@ -251,7 +251,7 @@ DrawingResizeItemCommand::DrawingResizeItemCommand(DrawingView* view, DrawingIte
 	if (mPoint && mPoint->item())
 	{
 		mNewPos = mPoint->item()->mapToParent(mPoint->item()->mapFromScene(scenePos));
-		mOriginalPos = mPoint->position();
+		mOriginalPos = mPoint->item()->mapToParent(mPoint->position());
 	}
 }
 

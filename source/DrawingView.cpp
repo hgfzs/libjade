@@ -377,18 +377,7 @@ QList<DrawingItem*> DrawingView::items(const QRectF& sceneRect) const
 
 QList<DrawingItem*> DrawingView::items(const QPainterPath& scenePath) const
 {
-	QList<DrawingItem*> items;
-
-	if (mScene)
-	{
-		for(auto itemIter = mScene->mItems.begin(); itemIter != mScene->mItems.end(); itemIter++)
-		{
-			if (itemMatchesPath(*itemIter, scenePath, mItemSelectionMode))
-				items.append(*itemIter);
-		}
-	}
-
-	return items;
+	return (mScene) ? findItems(mScene->mItems, scenePath, mItemSelectionMode) : QList<DrawingItem*>();
 }
 
 DrawingItem* DrawingView::itemAt(const QPointF& scenePos) const
@@ -604,8 +593,15 @@ void DrawingView::copy()
 {
 	if (mMode == DefaultMode && mScene)
 	{
+		QList<DrawingItem*> itemsToCopy;
+
+		for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
+		{
+			if ((*itemIter)->parent() == nullptr) itemsToCopy.append(*itemIter);
+		}
+
 		while (!mClipboardItems.isEmpty()) delete mClipboardItems.takeFirst();
-		mClipboardItems = DrawingItem::copyItems(mSelectedItems);
+		mClipboardItems = DrawingItem::copyItems(itemsToCopy);
 	}
 }
 
@@ -660,13 +656,13 @@ void DrawingView::selectAll()
 {
 	if (mMode == DefaultMode && mScene)
 	{
+		QList<DrawingItem*> foundItems = findItems(mScene->mItems);
 		QList<DrawingItem*> itemsToSelect;
 
-		for(auto itemIter = mScene->mItems.begin(); itemIter != mScene->mItems.end(); itemIter++)
+		for(auto itemIter = foundItems.begin(); itemIter != foundItems.end(); itemIter++)
 		{
 			if ((*itemIter)->flags() & DrawingItem::CanSelect) itemsToSelect.append(*itemIter);
 		}
-
 		if (mSelectedItems != itemsToSelect)
 		{
 			selectItemsCommand(itemsToSelect, true);
@@ -726,26 +722,33 @@ void DrawingView::selectNone()
 
 //==================================================================================================
 
-void DrawingView::moveSelection(const QPointF& scenePos)
+void DrawingView::moveSelection(const QPointF& deltaScenePos)
 {
 	if (mMode == DefaultMode && mScene && !mSelectedItems.isEmpty())
 	{
-		QHash<DrawingItem*,QPointF> newPositions;
-		QPointF deltaPos = scenePos - mSelectedItems.first()->mapToScene(
-			mSelectedItems.first()->mapFromParent(mSelectedItems.first()->position()));
+		QList<DrawingItem*> itemsToMove;
+		QHash<DrawingItem*,QPointF> originalPositions, newPositions;
+
+		for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
+			originalPositions[*itemIter] = (*itemIter)->position();
 
 		for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
 		{
 			if ((*itemIter)->flags() & DrawingItem::CanMove)
 			{
-				newPositions[*itemIter] = (*itemIter)->position() +
-					(*itemIter)->mapToParent((*itemIter)->mapFromScene(deltaPos));
+				itemsToMove.append(*itemIter);
+				newPositions[*itemIter] = (*itemIter)->mapToParent((*itemIter)->mapFromScene(
+					(*itemIter)->mapToScene((*itemIter)->mapFromParent((*itemIter)->position())) + deltaScenePos));
+				(*itemIter)->setPosition(newPositions[*itemIter]);
 			}
 		}
 
-		if (!newPositions.isEmpty())
+		for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
+			(*itemIter)->setPosition(originalPositions[*itemIter]);
+
+		if (!itemsToMove.isEmpty())
 		{
-			moveItemsCommand(newPositions.keys(), newPositions, true);
+			moveItemsCommand(itemsToMove, newPositions, true);
 			viewport()->update();
 		}
 	}
@@ -1205,6 +1208,7 @@ void DrawingView::moveItems(const QList<DrawingItem*>& items, const QHash<Drawin
 	for(auto itemIter = items.begin(); itemIter != items.end(); itemIter++)
 		(*itemIter)->moveEvent(parentPos[*itemIter]);
 
+	updateSelectionCenter();
 	emit itemsGeometryChanged(items);
 }
 
@@ -1217,6 +1221,7 @@ void DrawingView::resizeItem(DrawingItemPoint* itemPoint, const QPointF& parentP
 
 		itemPoint->item()->resizeEvent(itemPoint, parentPos);
 
+		updateSelectionCenter();
 		emit itemsGeometryChanged(items);
 	}
 }
@@ -1385,7 +1390,7 @@ void DrawingView::mousePressEvent(QMouseEvent* event)
 				{
 					mDefaultInitialPositions.clear();
 					for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
-						mDefaultInitialPositions[*itemIter] = (*itemIter)->position();
+						mDefaultInitialPositions[*itemIter] = (*itemIter)->mapToScene((*itemIter)->mapFromParent((*itemIter)->position()));
 
 					if (mMouseDownItem->isSelected() && mSelectedItems.size() == 1)
 					{
@@ -1486,7 +1491,9 @@ void DrawingView::mouseMoveEvent(QMouseEvent* event)
 		{
 			if (event->buttons() & Qt::LeftButton)
 			{
-				QHash<DrawingItem*,QPointF> newPositions;
+				QPointF deltaScenePos;
+				QList<DrawingItem*> itemsToMove;
+				QHash<DrawingItem*,QPointF> originalPositions, newPositions;
 
 				switch (mDefaultMouseState)
 				{
@@ -1507,16 +1514,27 @@ void DrawingView::mouseMoveEvent(QMouseEvent* event)
 
 				case MouseMoveItems:
 					for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
+						originalPositions[*itemIter] = (*itemIter)->position();
+
+					deltaScenePos = roundToGrid(mScenePos - mButtonDownScenePos);
+					for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
 					{
 						if ((*itemIter)->flags() & DrawingItem::CanMove)
 						{
-							newPositions[*itemIter] = mDefaultInitialPositions[*itemIter] +
-								roundToGrid(mScenePos - mButtonDownScenePos);
+							itemsToMove.append(*itemIter);
+							newPositions[*itemIter] = (*itemIter)->mapToParent((*itemIter)->mapFromScene(mDefaultInitialPositions[*itemIter] + deltaScenePos));
+							(*itemIter)->setPosition(newPositions[*itemIter]);
 						}
 					}
 
-					if (!newPositions.isEmpty())
-						moveItemsCommand(newPositions.keys(), newPositions, false);
+					for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
+						(*itemIter)->setPosition(originalPositions[*itemIter]);
+
+					if (!itemsToMove.isEmpty())
+					{
+						moveItemsCommand(itemsToMove, newPositions, false);
+						viewport()->update();
+					}
 
 					sendMouseInfoText(mDefaultInitialPositions[mMouseDownItem],
 						mDefaultInitialPositions[mMouseDownItem] + roundToGrid(mScenePos - mButtonDownScenePos));
@@ -1601,32 +1619,64 @@ void DrawingView::mouseReleaseEvent(QMouseEvent* event)
 			{
 				bool controlDown = ((event->modifiers() & Qt::ControlModifier) != 0);
 				QList<DrawingItem*> newSelection = (controlDown) ? mSelectedItems : QList<DrawingItem*>();
-				QHash<DrawingItem*,QPointF> newPositions;
-				QRectF rubberBandSceneRect;
+				QList<DrawingItem*> children;
+				QPointF deltaScenePos;
+				QList<DrawingItem*> itemsToMove;
+				QHash<DrawingItem*,QPointF> originalPositions, newPositions;
 
 				switch (mDefaultMouseState)
 				{
 				case MouseSelect:
 					if (mMouseDownItem)
 					{
-						if (controlDown && mMouseDownItem->isSelected()) newSelection.removeAll(mMouseDownItem);
-						else if (mMouseDownItem->flags() & DrawingItem::CanSelect) newSelection.append(mMouseDownItem);
+						if (controlDown && mMouseDownItem->isSelected())
+						{
+							newSelection.removeAll(mMouseDownItem);
+
+							// if mMouseDownItem has children, recursively unselect all as well
+							children = findItems(mMouseDownItem->mChildren);
+							for(auto itemIter = children.begin(); itemIter != children.end(); itemIter++)
+								newSelection.removeAll(*itemIter);
+						}
+						else if (mMouseDownItem->flags() & DrawingItem::CanSelect)
+						{
+							newSelection.append(mMouseDownItem);
+
+							// if mMouseDownItem has children, recursively select all as well
+							children = findItems(mMouseDownItem->mChildren);
+							for(auto itemIter = children.begin(); itemIter != children.end(); itemIter++)
+							{
+								if (!newSelection.contains(*itemIter))
+									newSelection.append(*itemIter);
+							}
+						}
 					}
-					if (mSelectedItems != newSelection) selectItemsCommand(newSelection, !controlDown);
+					if (mSelectedItems != newSelection) selectItemsCommand(newSelection, true);
 					break;
 
 				case MouseMoveItems:
 					for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
+						originalPositions[*itemIter] = (*itemIter)->position();
+
+					deltaScenePos = roundToGrid(mScenePos - mButtonDownScenePos);
+					for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
 					{
 						if ((*itemIter)->flags() & DrawingItem::CanMove)
 						{
-							newPositions[*itemIter] = mDefaultInitialPositions[*itemIter] +
-								roundToGrid(mScenePos - mButtonDownScenePos);
+							itemsToMove.append(*itemIter);
+							newPositions[*itemIter] = (*itemIter)->mapToParent((*itemIter)->mapFromScene(mDefaultInitialPositions[*itemIter] + deltaScenePos));
+							(*itemIter)->setPosition(newPositions[*itemIter]);
 						}
 					}
 
-					if (!newPositions.isEmpty())
-						moveItemsCommand(newPositions.keys(), newPositions, true);
+					for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
+						(*itemIter)->setPosition(originalPositions[*itemIter]);
+
+					if (!itemsToMove.isEmpty())
+					{
+						moveItemsCommand(itemsToMove, newPositions, true);
+						viewport()->update();
+					}
 					break;
 
 				case MouseResizeItem:
@@ -1634,16 +1684,7 @@ void DrawingView::mouseReleaseEvent(QMouseEvent* event)
 					break;
 
 				case MouseRubberBand:
-					rubberBandSceneRect = mapToScene(mRubberBandRect);
-					for(auto itemIter = mScene->mItems.begin(); itemIter != mScene->mItems.end(); itemIter++)
-					{
-						if (itemMatchesRect(*itemIter, rubberBandSceneRect, mItemSelectionMode) &&
-							((*itemIter)->flags() & DrawingItem::CanSelect) && !newSelection.contains(*itemIter))
-						{
-							newSelection.append(*itemIter);
-						}
-					}
-					if (mSelectedItems != newSelection) selectItemsCommand(newSelection, true);
+					selectArea(mapToScene(mRubberBandRect));
 					mRubberBandRect = QRect();
 					break;
 
@@ -1694,7 +1735,7 @@ void DrawingView::mouseDoubleClickEvent(QMouseEvent* event)
 				{
 					mDefaultInitialPositions.clear();
 					for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
-						mDefaultInitialPositions[*itemIter] = (*itemIter)->position();
+						mDefaultInitialPositions[*itemIter] = (*itemIter)->mapToScene((*itemIter)->mapFromParent((*itemIter)->position()));
 
 					if (mMouseDownItem->isSelected() && mSelectedItems.size() == 1)
 					{
@@ -2310,6 +2351,21 @@ void DrawingView::recalculateContentSize(const QRectF& targetSceneRect)
 }
 
 //==================================================================================================
+
+QList<DrawingItem*> DrawingView::findItems(const QList<DrawingItem*>& items) const
+{
+	QList<DrawingItem*> foundItems;
+
+	for(auto itemIter = items.begin(); itemIter != items.end(); itemIter++)
+	{
+		foundItems.append(*itemIter);
+
+		if (!(*itemIter)->mChildren.isEmpty())
+			foundItems.append(findItems((*itemIter)->mChildren));
+	}
+
+	return foundItems;
+}
 
 QList<DrawingItem*> DrawingView::findItems(const QList<DrawingItem*>& items,
 	const QPointF& scenePos) const

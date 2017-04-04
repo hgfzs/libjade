@@ -452,7 +452,16 @@ bool DrawingItem::isValid() const
 
 void DrawingItem::moveEvent(const QPointF& parentPos)
 {
+	QHash<DrawingItem*,QPointF> originalScenePos;
+
+	for(auto childIter = mChildren.begin(); childIter != mChildren.end(); childIter++)
+		originalScenePos[*childIter] = (*childIter)->mapToScene((*childIter)->mapFromParent((*childIter)->position()));
+
 	mPosition = parentPos;
+
+	// Don't move children
+	for(auto childIter = mChildren.begin(); childIter != mChildren.end(); childIter++)
+		(*childIter)->moveEvent((*childIter)->mapToParent((*childIter)->mapFromScene(originalScenePos[*childIter])));
 }
 
 void DrawingItem::resizeEvent(DrawingItemPoint* itemPoint, const QPointF& parentPos)
@@ -465,7 +474,7 @@ void DrawingItem::resizeEvent(DrawingItemPoint* itemPoint, const QPointF& parent
 		{
 			// Adjust position of item and item points so that point(0)->position() == QPointF(0, 0)
 			QPointF deltaPos = -mPoints.first()->position();
-			QPointF pointParentPos = mapFromParent(mPoints.first()->position());
+			QPointF pointParentPos = mapToParent(mPoints.first()->position());
 
 			for(auto pointIter = mPoints.begin(); pointIter != mPoints.end(); pointIter++)
 				(*pointIter)->setPosition((*pointIter)->position() + deltaPos);
@@ -488,6 +497,10 @@ void DrawingItem::rotateEvent(const QPointF& parentPos)
 	// Update orientation
 	mTransform.rotate(90);
 	mTransformInverse = mTransform.inverted();
+
+	// Don't apply rotation to children
+	for(auto childIter = mChildren.begin(); childIter != mChildren.end(); childIter++)
+		(*childIter)->rotateBackEvent(mapFromParent(parentPos));
 }
 
 void DrawingItem::rotateBackEvent(const QPointF& parentPos)
@@ -500,6 +513,10 @@ void DrawingItem::rotateBackEvent(const QPointF& parentPos)
 	// Update orientation
 	mTransform.rotate(-90);
 	mTransformInverse = mTransform.inverted();
+
+	// Don't apply rotation to children
+	for(auto childIter = mChildren.begin(); childIter != mChildren.end(); childIter++)
+		(*childIter)->rotateEvent(mapFromParent(parentPos));
 }
 
 void DrawingItem::flipHorizontalEvent(const QPointF& parentPos)
@@ -510,6 +527,10 @@ void DrawingItem::flipHorizontalEvent(const QPointF& parentPos)
 	// Update orientation
 	mTransform.scale(-1, 1);
 	mTransformInverse = mTransform.inverted();
+
+	// Don't apply flip to children
+	for(auto childIter = mChildren.begin(); childIter != mChildren.end(); childIter++)
+		(*childIter)->flipHorizontalEvent(mapFromParent(parentPos));
 }
 
 void DrawingItem::flipVerticalEvent(const QPointF& parentPos)
@@ -520,6 +541,10 @@ void DrawingItem::flipVerticalEvent(const QPointF& parentPos)
 	// Update orientation
 	mTransform.scale(1, -1);
 	mTransformInverse = mTransform.inverted();
+
+	// Don't apply flip to children
+	for(auto childIter = mChildren.begin(); childIter != mChildren.end(); childIter++)
+		(*childIter)->flipVerticalEvent(mapFromParent(parentPos));
 }
 
 void DrawingItem::keyPressEvent(QKeyEvent* event)

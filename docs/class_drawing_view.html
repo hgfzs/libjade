@@ -196,8 +196,8 @@ Public Slots</h2></td></tr>
 <tr class="separator:a1460905681e62175fc1cca0ea56419f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1857ada3839110df794c91ec0809e4bd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_view.html#a1857ada3839110df794c91ec0809e4bd">moveItems</a> (const QList&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *&gt; &amp;<a class="el" href="class_drawing_view.html#a9ddfa504ab20fefa160721f2fe13b418">items</a>, const QHash&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *, QPointF &gt; &amp;parentPos)</td></tr>
 <tr class="separator:a1857ada3839110df794c91ec0809e4bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad8e38897d67fbaa081592523194efba0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_view.html#ad8e38897d67fbaa081592523194efba0">moveSelection</a> (const QPointF &amp;scenePos)</td></tr>
-<tr class="separator:ad8e38897d67fbaa081592523194efba0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2fd0c30d1874873f6bfe49e4873cc0c9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_view.html#a2fd0c30d1874873f6bfe49e4873cc0c9">moveSelection</a> (const QPointF &amp;deltaScenePos)</td></tr>
+<tr class="separator:a2fd0c30d1874873f6bfe49e4873cc0c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a41376f3c1da5f3763a8361b521e66d75"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_view.html#a41376f3c1da5f3763a8361b521e66d75">paste</a> ()</td></tr>
 <tr class="separator:a41376f3c1da5f3763a8361b521e66d75"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad4f9a06bfb7464d4695955f7e7550eb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_view.html#aad4f9a06bfb7464d4695955f7e7550eb">redo</a> ()</td></tr>
@@ -331,7 +331,7 @@ Undo Support</h1>
 <p>The following operations are undoable: </p><ul>
 <li>Adding items to the widget using <a class="el" href="class_drawing_view.html#a829956a2d6ea8f3fe9ca0e7bef09d327a4d3777a7c20972b2fb7bcebba236b0f7" title="Mode for placing new items into a DrawingView. ">PlaceMode</a> </li>
 <li>Deleting items using <a class="el" href="class_drawing_view.html#a2da548f3956173e5189b543121731905" title="Deletes the selected items from the scene. ">deleteSelection()</a> </li>
-<li>Moving items around the scene using mouse events or <a class="el" href="class_drawing_view.html#ad8e38897d67fbaa081592523194efba0" title="Moves the selected items to the specified position. ">moveSelection()</a> </li>
+<li>Moving items around the scene using mouse events or <a class="el" href="class_drawing_view.html#a2fd0c30d1874873f6bfe49e4873cc0c9" title="Moves the selected items by the specified position. ">moveSelection()</a> </li>
 <li>Resizing items within the scene using mouse events or <a class="el" href="class_drawing_view.html#a906d2cebc5a9f9c5e4a2ba11434d28d0" title="Resizes the selected item by moving the itemPoint to the specified position. ">resizeSelection()</a> </li>
 <li>Rotating or flipping items in the scene using <a class="el" href="class_drawing_view.html#a5ef3da03eee1631c4025b2eaa24f973b" title="Rotates the selected items 90 degrees counter-clockwise. ">rotateSelection()</a>, <a class="el" href="class_drawing_view.html#a6740067f3d340b4266dc9af34d1cfabd" title="Rotates the selected items 90 degrees clockwise. ">rotateBackSelection()</a>, <a class="el" href="class_drawing_view.html#a0dbd0dc63f868ad823732267daad6f5c" title="Flips the selected items horizontally. ">flipSelectionHorizontal()</a>, and <a class="el" href="class_drawing_view.html#ae590e18be9c07b44766947942af74859" title="Flips the selected items vertically. ">flipSelectionVertical()</a>. </li>
 <li>Cut/copy/paste of items using <a class="el" href="class_drawing_view.html#a54f6a224b0c47b7a8f02a53862ed6b24" title="Copies the selected items to an internal clipboard, then deletes them from the scene. ">cut()</a>, <a class="el" href="class_drawing_view.html#a4daaed3ab29efcfca4d703c13e440f54" title="Copies the selected items to an internal clipboard. ">copy()</a>, and <a class="el" href="class_drawing_view.html#a41376f3c1da5f3763a8361b521e66d75" title="Pastes copies of any items on the clipboard into the scene. ">paste()</a> </li>
@@ -1560,7 +1560,7 @@ Undo Support</h1>
 </div><div class="memdoc">
 
 <p>Emitted whenever items' geometry changes. </p>
-<p>This signal is emitted whenever the user moves, resizes, rotates, or flips items using mouse events in <a class="el" href="class_drawing_view.html#a829956a2d6ea8f3fe9ca0e7bef09d327a4f93908635c890f90741e48794ca8f3e" title="The normal mode for interacting with items in a DrawingView. ">DefaultMode</a>, as well as when using <a class="el" href="class_drawing_view.html#ad8e38897d67fbaa081592523194efba0" title="Moves the selected items to the specified position. ">moveSelection()</a>, <a class="el" href="class_drawing_view.html#a906d2cebc5a9f9c5e4a2ba11434d28d0" title="Resizes the selected item by moving the itemPoint to the specified position. ">resizeSelection()</a>, <a class="el" href="class_drawing_view.html#a5ef3da03eee1631c4025b2eaa24f973b" title="Rotates the selected items 90 degrees counter-clockwise. ">rotateSelection()</a>, <a class="el" href="class_drawing_view.html#a6740067f3d340b4266dc9af34d1cfabd" title="Rotates the selected items 90 degrees clockwise. ">rotateBackSelection()</a>, <a class="el" href="class_drawing_view.html#a0dbd0dc63f868ad823732267daad6f5c" title="Flips the selected items horizontally. ">flipSelectionHorizontal()</a>, and <a class="el" href="class_drawing_view.html#ae590e18be9c07b44766947942af74859" title="Flips the selected items vertically. ">flipSelectionVertical()</a>. It is also emitted when new <a class="el" href="class_drawing_item_point.html" title="Represents an interaction point within a DrawingItem through which the user can resize the item or co...">DrawingItemPoint</a> objects are inserted or removed from items that support it using <a class="el" href="class_drawing_view.html#a5879f0d3db7ac9693cea31f3aac87820" title="Inserts a new DrawingItemPoint into an item at the specified position. ">insertItemPoint()</a> and <a class="el" href="class_drawing_view.html#ae29307523e5978a18d518120150d7899" title="Removes an existing DrawingItemPoint from an item at the specified position. ">removeItemPoint()</a>.</p>
+<p>This signal is emitted whenever the user moves, resizes, rotates, or flips items using mouse events in <a class="el" href="class_drawing_view.html#a829956a2d6ea8f3fe9ca0e7bef09d327a4f93908635c890f90741e48794ca8f3e" title="The normal mode for interacting with items in a DrawingView. ">DefaultMode</a>, as well as when using <a class="el" href="class_drawing_view.html#a2fd0c30d1874873f6bfe49e4873cc0c9" title="Moves the selected items by the specified position. ">moveSelection()</a>, <a class="el" href="class_drawing_view.html#a906d2cebc5a9f9c5e4a2ba11434d28d0" title="Resizes the selected item by moving the itemPoint to the specified position. ">resizeSelection()</a>, <a class="el" href="class_drawing_view.html#a5ef3da03eee1631c4025b2eaa24f973b" title="Rotates the selected items 90 degrees counter-clockwise. ">rotateSelection()</a>, <a class="el" href="class_drawing_view.html#a6740067f3d340b4266dc9af34d1cfabd" title="Rotates the selected items 90 degrees clockwise. ">rotateBackSelection()</a>, <a class="el" href="class_drawing_view.html#a0dbd0dc63f868ad823732267daad6f5c" title="Flips the selected items horizontally. ">flipSelectionHorizontal()</a>, and <a class="el" href="class_drawing_view.html#ae590e18be9c07b44766947942af74859" title="Flips the selected items vertically. ">flipSelectionVertical()</a>. It is also emitted when new <a class="el" href="class_drawing_item_point.html" title="Represents an interaction point within a DrawingItem through which the user can resize the item or co...">DrawingItemPoint</a> objects are inserted or removed from items that support it using <a class="el" href="class_drawing_view.html#a5879f0d3db7ac9693cea31f3aac87820" title="Inserts a new DrawingItemPoint into an item at the specified position. ">insertItemPoint()</a> and <a class="el" href="class_drawing_view.html#ae29307523e5978a18d518120150d7899" title="Removes an existing DrawingItemPoint from an item at the specified position. ">removeItemPoint()</a>.</p>
 <p>This signal is emitted whenever the newItem() is moved, resized, rotated, or flipped using mouse events in <a class="el" href="class_drawing_view.html#a829956a2d6ea8f3fe9ca0e7bef09d327a4d3777a7c20972b2fb7bcebba236b0f7" title="Mode for placing new items into a DrawingView. ">PlaceMode</a>.</p>
 <p>This signal is not emitted when using functions in <a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene. ">DrawingItem</a> to directly manipulate the position, geometry, or transform of the item. </p>
 
@@ -1971,8 +1971,8 @@ Undo Support</h1>
 
 </div>
 </div>
-<a id="ad8e38897d67fbaa081592523194efba0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad8e38897d67fbaa081592523194efba0">&sect;&nbsp;</a></span>moveSelection</h2>
+<a id="a2fd0c30d1874873f6bfe49e4873cc0c9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2fd0c30d1874873f6bfe49e4873cc0c9">&sect;&nbsp;</a></span>moveSelection</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1984,7 +1984,7 @@ Undo Support</h1>
           <td class="memname">void DrawingView::moveSelection </td>
           <td>(</td>
           <td class="paramtype">const QPointF &amp;&#160;</td>
-          <td class="paramname"><em>scenePos</em></td><td>)</td>
+          <td class="paramname"><em>deltaScenePos</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1995,9 +1995,8 @@ Undo Support</h1>
 </table>
 </div><div class="memdoc">
 
-<p>Moves the selected items to the specified position. </p>
+<p>Moves the selected items by the specified position. </p>
 <p>This function emits the <a class="el" href="class_drawing_view.html#aa77fab43457a602455f3a358cafb8065" title="Emitted whenever items&#39; geometry changes. ">itemsGeometryChanged()</a> signal after the items have been moved.</p>
-<p>If multiple items are selected, this function sets the position of the first item to newPos, then moves the remaining items such that the change in position for all items is the same.</p>
 <p>Only items with the CanMove flag set are moved. If no items are movable, or if no items are selected, this function does nothing.</p>
 <p>The move operation is only performed if the <a class="el" href="class_drawing_view.html#a5280523d1892b03e7f49f6cb5f2033c5" title="Returns the view&#39;s current operating mode. ">mode()</a> is <a class="el" href="class_drawing_view.html#a829956a2d6ea8f3fe9ca0e7bef09d327a4f93908635c890f90741e48794ca8f3e" title="The normal mode for interacting with items in a DrawingView. ">DefaultMode</a>. If the <a class="el" href="class_drawing_view.html#a5280523d1892b03e7f49f6cb5f2033c5" title="Returns the view&#39;s current operating mode. ">mode()</a> is any other mode, this function does nothing.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_view.html#a906d2cebc5a9f9c5e4a2ba11434d28d0" title="Resizes the selected item by moving the itemPoint to the specified position. ">resizeSelection()</a> </dd></dl>
@@ -2489,7 +2488,7 @@ Undo Support</h1>
 <p>This function emits the <a class="el" href="class_drawing_view.html#aa77fab43457a602455f3a358cafb8065" title="Emitted whenever items&#39; geometry changes. ">itemsGeometryChanged()</a> signal after the item has been resized.</p>
 <p>Exactly one item must be selected; if multiple items or no items are selected, this function does nothing. The item must have the CanResize flag set.</p>
 <p>The resize operation is only performed if the <a class="el" href="class_drawing_view.html#a5280523d1892b03e7f49f6cb5f2033c5" title="Returns the view&#39;s current operating mode. ">mode()</a> is <a class="el" href="class_drawing_view.html#a829956a2d6ea8f3fe9ca0e7bef09d327a4f93908635c890f90741e48794ca8f3e" title="The normal mode for interacting with items in a DrawingView. ">DefaultMode</a>. If the <a class="el" href="class_drawing_view.html#a5280523d1892b03e7f49f6cb5f2033c5" title="Returns the view&#39;s current operating mode. ">mode()</a> is any other mode, this function does nothing.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_view.html#ad8e38897d67fbaa081592523194efba0" title="Moves the selected items to the specified position. ">moveSelection()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_view.html#a2fd0c30d1874873f6bfe49e4873cc0c9" title="Moves the selected items by the specified position. ">moveSelection()</a> </dd></dl>
 
 </div>
 </div>
