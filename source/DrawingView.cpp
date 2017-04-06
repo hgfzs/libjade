@@ -365,22 +365,22 @@ QRectF DrawingView::scrollBarDefinedRect() const
 
 //==================================================================================================
 
-QList<DrawingItem*> DrawingView::items(const QPointF& scenePos) const
+QList<DrawingItem*> DrawingView::visibleItems(const QPointF& scenePos) const
 {
-	return (mScene) ? findItems(mScene->mItems, scenePos) : QList<DrawingItem*>();
+	return (mScene) ? mScene->visibleItems(this, scenePos) : QList<DrawingItem*>();
 }
 
-QList<DrawingItem*> DrawingView::items(const QRectF& sceneRect) const
+QList<DrawingItem*> DrawingView::visibleItems(const QRectF& sceneRect) const
 {
-	return (mScene) ? findItems(mScene->mItems, sceneRect, mItemSelectionMode) : QList<DrawingItem*>();
+	return (mScene) ? mScene->visibleItems(this, sceneRect, mItemSelectionMode) : QList<DrawingItem*>();
 }
 
-QList<DrawingItem*> DrawingView::items(const QPainterPath& scenePath) const
+QList<DrawingItem*> DrawingView::visibleItems(const QPainterPath& scenePath) const
 {
-	return (mScene) ? findItems(mScene->mItems, scenePath, mItemSelectionMode) : QList<DrawingItem*>();
+	return (mScene) ? mScene->visibleItems(this, scenePath, mItemSelectionMode) : QList<DrawingItem*>();
 }
 
-DrawingItem* DrawingView::itemAt(const QPointF& scenePos) const
+DrawingItem* DrawingView::visibleItemAt(const QPointF& scenePos) const
 {
 	DrawingItem* item = nullptr;
 
@@ -391,35 +391,14 @@ DrawingItem* DrawingView::itemAt(const QPointF& scenePos) const
 		while (item == nullptr && itemIter != mSelectedItems.begin())
 		{
 			itemIter--;
-			if (itemMatchesPoint(*itemIter, scenePos)) item = *itemIter;
+			if (mScene->itemMatchesPoint(this, *itemIter, scenePos)) item = *itemIter;
 		}
 
 		// Search all items
-		if (item == nullptr) item = findItemReverse(mScene->mItems, scenePos);
+		if (item == nullptr) item = mScene->visibleItemAt(this, scenePos);
 	}
 
 	return item;
-}
-
-//==================================================================================================
-
-DrawingItemPoint* DrawingView::pointAt(DrawingItem* item, const QPointF& itemPos) const
-{
-	DrawingItemPoint* itemPoint = nullptr;
-
-	if (item)
-	{
-		QList<DrawingItemPoint*> itemPoints = item->points();
-		QRectF pointItemRect;
-
-		for(auto pointIter = itemPoints.begin(); itemPoint == nullptr && pointIter != itemPoints.end(); pointIter++)
-		{
-			pointItemRect = item->mapFromScene(mapToScene(pointRect(*pointIter))).boundingRect();
-			if (pointItemRect.contains(itemPos)) itemPoint = *pointIter;
-		}
-	}
-
-	return itemPoint;
 }
 
 //==================================================================================================
@@ -656,7 +635,7 @@ void DrawingView::selectAll()
 {
 	if (mMode == DefaultMode && mScene)
 	{
-		QList<DrawingItem*> foundItems = findItems(mScene->mItems);
+		QList<DrawingItem*> foundItems = mScene->visibleItems();
 		QList<DrawingItem*> itemsToSelect;
 
 		for(auto itemIter = foundItems.begin(); itemIter != foundItems.end(); itemIter++)
@@ -675,7 +654,7 @@ void DrawingView::selectArea(const QRectF& rect)
 {
 	if (mMode == DefaultMode)
 	{
-		QList<DrawingItem*> foundItems = items(rect);
+		QList<DrawingItem*> foundItems = visibleItems(rect);
 		QList<DrawingItem*> itemsToSelect;
 
 		for(auto itemIter = foundItems.begin(); itemIter != foundItems.end(); itemIter++)
@@ -695,7 +674,7 @@ void DrawingView::selectArea(const QPainterPath& path)
 {
 	if (mMode == DefaultMode)
 	{
-		QList<DrawingItem*> foundItems = items(path);
+		QList<DrawingItem*> foundItems = visibleItems(path);
 		QList<DrawingItem*> itemsToSelect;
 
 		for(auto itemIter = foundItems.begin(); itemIter != foundItems.end(); itemIter++)
@@ -1385,7 +1364,7 @@ void DrawingView::mousePressEvent(QMouseEvent* event)
 			{
 				mDefaultMouseState = MouseSelect;
 
-				mMouseDownItem = itemAt(mButtonDownScenePos);
+				mMouseDownItem = visibleItemAt(mButtonDownScenePos);
 				if (mMouseDownItem)
 				{
 					mDefaultInitialPositions.clear();
@@ -1634,7 +1613,7 @@ void DrawingView::mouseReleaseEvent(QMouseEvent* event)
 							newSelection.removeAll(mMouseDownItem);
 
 							// if mMouseDownItem has children, recursively unselect all as well
-							children = findItems(mMouseDownItem->mChildren);
+							mScene->findItems(mMouseDownItem->mChildren, children);
 							for(auto itemIter = children.begin(); itemIter != children.end(); itemIter++)
 								newSelection.removeAll(*itemIter);
 						}
@@ -1643,7 +1622,7 @@ void DrawingView::mouseReleaseEvent(QMouseEvent* event)
 							newSelection.append(mMouseDownItem);
 
 							// if mMouseDownItem has children, recursively select all as well
-							children = findItems(mMouseDownItem->mChildren);
+							mScene->findItems(mMouseDownItem->mChildren, children);
 							for(auto itemIter = children.begin(); itemIter != children.end(); itemIter++)
 							{
 								if (!newSelection.contains(*itemIter))
@@ -1730,7 +1709,7 @@ void DrawingView::mouseDoubleClickEvent(QMouseEvent* event)
 			{
 				mDefaultMouseState = MouseSelect;
 
-				mMouseDownItem = itemAt(mButtonDownScenePos);
+				mMouseDownItem = visibleItemAt(mButtonDownScenePos);
 				if (mMouseDownItem)
 				{
 					mDefaultInitialPositions.clear();
@@ -2352,245 +2331,21 @@ void DrawingView::recalculateContentSize(const QRectF& targetSceneRect)
 
 //==================================================================================================
 
-QList<DrawingItem*> DrawingView::findItems(const QList<DrawingItem*>& items) const
-{
-	QList<DrawingItem*> foundItems;
-
-	for(auto itemIter = items.begin(); itemIter != items.end(); itemIter++)
-	{
-		foundItems.append(*itemIter);
-
-		if (!(*itemIter)->mChildren.isEmpty())
-			foundItems.append(findItems((*itemIter)->mChildren));
-	}
-
-	return foundItems;
-}
-
-QList<DrawingItem*> DrawingView::findItems(const QList<DrawingItem*>& items,
-	const QPointF& scenePos) const
-{
-	QList<DrawingItem*> foundItems;
-
-	for(auto itemIter = items.begin(); itemIter != items.end(); itemIter++)
-	{
-		if (itemMatchesPoint(*itemIter, scenePos))
-			foundItems.append(*itemIter);
-
-		if (!(*itemIter)->mChildren.isEmpty())
-			foundItems.append(findItems((*itemIter)->mChildren, scenePos));
-	}
-
-	return foundItems;
-}
-
-QList<DrawingItem*> DrawingView::findItems(const QList<DrawingItem*>& items,
-	const QRectF& sceneRect, Qt::ItemSelectionMode mode) const
-{
-	QList<DrawingItem*> foundItems;
-
-	for(auto itemIter = items.begin(); itemIter != items.end(); itemIter++)
-	{
-		if (itemMatchesRect(*itemIter, sceneRect, mode))
-			foundItems.append(*itemIter);
-
-		if (!(*itemIter)->mChildren.isEmpty())
-			foundItems.append(findItems((*itemIter)->mChildren, sceneRect, mode));
-	}
-
-	return foundItems;
-}
-
-QList<DrawingItem*> DrawingView::findItems(const QList<DrawingItem*>& items,
-	const QPainterPath& scenePath, Qt::ItemSelectionMode mode) const
-{
-	QList<DrawingItem*> foundItems;
-
-	for(auto itemIter = items.begin(); itemIter != items.end(); itemIter++)
-	{
-		if (itemMatchesPath(*itemIter, scenePath, mode))
-			foundItems.append(*itemIter);
-
-		if (!(*itemIter)->mChildren.isEmpty())
-			foundItems.append(findItems((*itemIter)->mChildren, scenePath, mode));
-	}
-
-	return foundItems;
-}
-
-DrawingItem* DrawingView::findItemReverse(const QList<DrawingItem*>& items,
-	const QPointF& scenePos) const
-{
-	DrawingItem* foundItem = nullptr;
-
-	auto itemIter = items.end();
-	while (foundItem == nullptr && itemIter != items.begin())
-	{
-		itemIter--;
-
-		if (itemMatchesPoint(*itemIter, scenePos))
-			foundItem = *itemIter;
-
-		if (foundItem == nullptr && !(*itemIter)->mChildren.isEmpty())
-			foundItem = findItemReverse((*itemIter)->mChildren, scenePos);
-	}
-
-	return foundItem;
-}
-
-//==================================================================================================
-
-bool DrawingView::itemMatchesPoint(DrawingItem* item, const QPointF& scenePos) const
-{
-	bool match = false;
-
-	if (item && item->isVisible())
-	{
-		// Check item shape
-		match = itemAdjustedShape(item).contains(item->mapFromScene(scenePos));
-
-		// Check item points
-		if (!match && item->isSelected())
-		{
-			QList<DrawingItemPoint*> itemPoints = item->points();
-			QRectF pointSceneRect;
-
-			for(auto pointIter = itemPoints.begin(); !match && pointIter != itemPoints.end(); pointIter++)
-			{
-				pointSceneRect = mapToScene(pointRect(*pointIter));
-				match = pointSceneRect.contains(scenePos);
-			}
-		}
-	}
-
-	return match;
-}
-
-bool DrawingView::itemMatchesRect(DrawingItem* item, const QRectF& sceneRect, Qt::ItemSelectionMode mode) const
-{
-	bool match = false;
-
-	if (item && item->isVisible())
-	{
-		// Check item boundingRect or shape
-		switch (mode)
-		{
-		case Qt::IntersectsItemShape:
-			match = item->shape().intersects(item->mapFromScene(sceneRect).boundingRect());
-			break;
-		case Qt::ContainsItemShape:
-			match = sceneRect.contains(item->mapToScene(item->shape().boundingRect()).boundingRect());
-			break;
-		case Qt::IntersectsItemBoundingRect:
-			match = sceneRect.intersects(item->mapToScene(item->boundingRect()).boundingRect());
-			break;
-		default:	// Qt::ContainsItemBoundingRect
-			match = sceneRect.contains(item->mapToScene(item->boundingRect()).boundingRect());
-			break;
-		}
-
-		// Check item points
-		if (!match && item->isSelected())
-		{
-			QList<DrawingItemPoint*> itemPoints = item->points();
-			QRectF pointSceneRect;
-
-			for(auto pointIter = itemPoints.begin(); !match && pointIter != itemPoints.end(); pointIter++)
-			{
-				pointSceneRect = mapToScene(pointRect(*pointIter));
-
-				if (mode == Qt::IntersectsItemBoundingRect || mode == Qt::IntersectsItemShape)
-					match = sceneRect.intersects(pointSceneRect);
-				else
-					match = sceneRect.contains(pointSceneRect);
-			}
-		}
-	}
-
-	return match;
-}
-
-bool DrawingView::itemMatchesPath(DrawingItem* item, const QPainterPath& scenePath, Qt::ItemSelectionMode mode) const
-{
-	bool match = false;
-
-	if (item && item->isVisible())
-	{
-		// Check item boundingRect or shape
-		switch (mode)
-		{
-		case Qt::IntersectsItemShape:
-			match = item->shape().intersects(item->mapFromScene(scenePath));
-			break;
-		case Qt::ContainsItemShape:
-			match = scenePath.contains(item->mapToScene(item->shape().boundingRect()).boundingRect());
-			break;
-		case Qt::IntersectsItemBoundingRect:
-			match = scenePath.intersects(item->mapToScene(item->boundingRect()).boundingRect());
-			break;
-		default:	// Qt::ContainsItemBoundingRect
-			match = scenePath.contains(item->mapToScene(item->boundingRect()).boundingRect());
-			break;
-		}
-
-		// Check item points
-		if (!match && item->isSelected())
-		{
-			QList<DrawingItemPoint*> itemPoints = item->points();
-			QRectF pointSceneRect;
-
-			for(auto pointIter = itemPoints.begin(); !match && pointIter != itemPoints.end(); pointIter++)
-			{
-				pointSceneRect = mapToScene(pointRect(*pointIter));
-
-				if (mode == Qt::IntersectsItemBoundingRect || mode == Qt::IntersectsItemShape)
-					match = scenePath.intersects(pointSceneRect);
-				else
-					match = scenePath.contains(pointSceneRect);
-			}
-		}
-	}
-
-	return match;
-}
-
-QPainterPath DrawingView::itemAdjustedShape(DrawingItem* item) const
+qreal DrawingView::minimumPenWidth(DrawingItem* item) const
 {
 	const qreal penWidthHint = 8;
 
-	QPainterPath adjustedShape;
+	qreal minimumPenWidth = 0;
 
-	DrawingItemStyle* style = item->style();
-	if (style)
+	if (item)
 	{
-		qreal penWidth = 0;
-
-		// Determine existing item's pen width
-		QVariant value = style->valueLookup(DrawingItemStyle::PenWidth);
-		if (value.isValid()) penWidth = value.toDouble();
-
-		// Determine minimum pen width
 		QPointF mappedPenSize = item->mapFromScene(item->position() +
 			mapToScene(QPoint(penWidthHint, penWidthHint)) - mapToScene(QPoint(0, 0)));
-		qreal minimumPenWidth = qMax(qAbs(mappedPenSize.x()), qAbs(mappedPenSize.y()));
 
-		if (0 < penWidth && penWidth < minimumPenWidth)
-		{
-			// Make it easier to select items when zoomed out by increasing pen width
-			bool styleHadPenWidth = style->hasValue(DrawingItemStyle::PenWidth);
-			if (styleHadPenWidth) penWidth = style->value(DrawingItemStyle::PenWidth).toDouble();
-
-			style->setValue(DrawingItemStyle::PenWidth, QVariant(minimumPenWidth));
-			adjustedShape = item->shape();
-
-			if (styleHadPenWidth) style->setValue(DrawingItemStyle::PenWidth, QVariant(penWidth));
-			else style->unsetValue(DrawingItemStyle::PenWidth);
-		}
-		else adjustedShape = item->shape();
+		minimumPenWidth = qMax(qAbs(mappedPenSize.x()), qAbs(mappedPenSize.y()));
 	}
-	else adjustedShape = item->shape();
 
-	return adjustedShape;
+	return minimumPenWidth;
 }
 
 QRect DrawingView::pointRect(DrawingItemPoint* point) const
@@ -2611,6 +2366,25 @@ QRect DrawingView::pointRect(DrawingItemPoint* point) const
 	}
 
 	return viewRect;
+}
+
+DrawingItemPoint* DrawingView::pointAt(DrawingItem* item, const QPointF& itemPos) const
+{
+	DrawingItemPoint* itemPoint = nullptr;
+
+	if (item)
+	{
+		QList<DrawingItemPoint*> itemPoints = item->points();
+		QRectF pointItemRect;
+
+		for(auto pointIter = itemPoints.begin(); itemPoint == nullptr && pointIter != itemPoints.end(); pointIter++)
+		{
+			pointItemRect = item->mapFromScene(mapToScene(pointRect(*pointIter))).boundingRect();
+			if (pointItemRect.contains(itemPos)) itemPoint = *pointIter;
+		}
+	}
+
+	return itemPoint;
 }
 
 //==================================================================================================

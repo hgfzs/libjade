@@ -23,6 +23,7 @@
 
 #include <QtGui>
 
+class DrawingView;
 class DrawingItem;
 
 /*! \brief Surface for managing a large number of two-dimensional DrawingItem objects.
@@ -30,12 +31,22 @@ class DrawingItem;
  * DrawingScene serves as a container for DrawingItem objects.  Items can be added to the widget
  * using addItem() or insertItem() and removed using removeItem().
  *
- * DrawingScene provides several ways to search for items within the scene.  The items() function
- * returns a list of all the items contained within the widget in the order they were added.  The
- * items(const QPointF&) const overload returns a list of all the items whose shape intersects with
- * the given location.  The items(const QRectF&) const overload returns a list of all the items
- * whose boundingRect is fully contained within the specified rect.  The itemAt() function is used
- * to determine which item (if any) was clicked on by the user.
+ * DrawingScene provides several ways to search for items within the scene.
+ * \li The items() function returns a list of all the top-level items contained within the widget
+ * in the order they were added.
+ * \li The visibleItems(const DrawingView*, const QPointF&) const function searches recursively to
+ * find all items whose shape intersects with the given location.  The items may be top-level items,
+ * or may be child items.
+ * \li The visibleItems(const DrawingView*, const QRectF&, Qt::ItemSelectionMode) const function
+ * searches recursively to find all items whose shape intersects with or is contained in the given
+ * rect, depending on the item selection mode.  The items may be top-level items, or may be child
+ * items.
+ * \li The visibleItems(const DrawingView*, const QPainterPath&, Qt::ItemSelectionMode) const function
+ * searches recursively to find all items whose shape intersects with or is contained in the given
+ * path, depending on the item selection mode.  The items may be top-level items, or may be child
+ * items.
+ * \li The visibleItemAt(const DrawingView*, const QPointF&) const function is used to determine which
+ * item (if any) was clicked on by the user.
  *
  * The contents of the scene are painted using the render() function.
  */
@@ -85,19 +96,7 @@ public:
 	 *
 	 * \sa setSceneRect(), width(), height()
 	 */
-	QRectF sceneRect() const;
-
-	/*! \brief Returns the width of the scene's bounding rectangle.
-	 *
-	 * \sa setSceneRect(), sceneRect(), height()
-	 */
-	qreal sceneWidth() const;
-
-	/*! \brief Returns the height of the scene's bounding rectangle.
-	 *
-	 * \sa setSceneRect(), sceneRect(), width()
-	 */
-	qreal sceneHeight() const;
+	virtual QRectF sceneRect() const;
 
 
 	/*! \brief Sets the scene's background brush.
@@ -162,24 +161,36 @@ public:
 	 */
 	void clearItems();
 
-	/*! \brief Returns a list of all items added to the scene.
+	/*! \brief Returns a list of all top-level items added to the scene.
 	 *
 	 * \sa addItem(), insertItem(), removeItem()
 	 */
 	QList<DrawingItem*> items() const;
 
 
-	/*! \brief Returns a list of all visible items added to the scene that are at the specified
+	/*! \brief Returns a list of all currently visible items in the scene.
+	 *
+	 * Unlike the items() function, this functions searches recursively and may include items and
+	 * their children.
+	 *
+	 * \sa visibleItems(const QPointF&) const, visibleItems(const QRectF&, Qt::ItemSelectionMode) const
+	 */
+	virtual QList<DrawingItem*> visibleItems() const;
+
+	/*! \brief Returns a list of all currently visible items in the scene that are at the specified
 	 * position.
 	 *
 	 * This function uses DrawingItem::shape() to determine the exact shape of each item to test
 	 * against the specified position.
 	 *
-	 * \sa items(const QRectF&) const, itemAt()
+	 * This function searches recursively through all top-level items in the scene.  Therefore it
+	 * may include items and their children that match the specified pos.
+	 *
+	 * \sa visibleItems(const QRectF&, Qt::ItemSelectionMode) const, visibleItemAt()
 	 */
-	QList<DrawingItem*> items(const QPointF& pos) const;
+	virtual QList<DrawingItem*> visibleItems(const DrawingView* view, const QPointF& pos) const;
 
-	/*! \brief Returns a list of all visible items added to the scene that are inside the
+	/*! \brief Returns a list of all visible items in the scene that are inside the
 	 * specified rectangle.
 	 *
 	 * This function uses the selectMode parameter to affect how it matches items to the rect:
@@ -192,11 +203,14 @@ public:
 	 * \li Qt::IntersectsItemShape - all items whose shape intersects with the specified rect are
 	 * included in the list
 	 *
-	 * \sa items(const QPointF&) const
+	 * This function searches recursively through all top-level items in the scene.  Therefore it
+	 * may include items and their children that match the specified pos.
+	 *
+	 * \sa visibleItems(const QPointF&) const
 	 */
-	QList<DrawingItem*> items(const QRectF& rect, Qt::ItemSelectionMode selectMode) const;
+	virtual QList<DrawingItem*> visibleItems(const DrawingView* view, const QRectF& rect, Qt::ItemSelectionMode selectMode) const;
 
-	/*! \brief Returns a list of all visible items added to the scene that are inside the
+	/*! \brief Returns a list of all visible items in the scene that are inside the
 	 * specified path.
 	 *
 	 * This function uses the selectMode parameter to affect how it matches items to the rect:
@@ -209,20 +223,29 @@ public:
 	 * \li Qt::IntersectsItemShape - all items whose shape intersects with the specified path are
 	 * included in the list
 	 *
-	 * \sa items(const QPointF&) const
+	 * This function searches recursively through all top-level items in the scene.  Therefore it
+	 * may include items and their children that match the specified pos.
+	 *
+	 * \sa visibleItems(const QPointF&) const
 	 */
-	QList<DrawingItem*> items(const QPainterPath& path, Qt::ItemSelectionMode selectMode) const;
+	virtual QList<DrawingItem*> visibleItems(const DrawingView* view, const QPainterPath& path, Qt::ItemSelectionMode selectMode) const;
 
-	/*! \brief Returns the topmost visible item at the specified position, or nulltr if there are
+	/*! \brief Returns the topmost visible item at the specified position, or nullptr if there are
 	 * no items at this position.
+	 *
+	 * To get the topmost item, this function searches backwards through the scene's items.
 	 *
 	 * This function uses DrawingItem::shape() to determine the exact shape of each item to test
 	 * against the specified position.  It returns immediately once it finds the first item that
 	 * matches the specified position.
 	 *
-	 * \sa items(const QPointF&) const
+	 * This function searches recursively through all top-level items in the scene.  Therefore it
+	 * will stop at the first item or child item that matches the specified pos.
+	 *
+	 * \sa visibleItems(const QPointF&) const
 	 */
-	DrawingItem* itemAt(const QPointF& scenePos) const;
+	virtual DrawingItem* visibleItemAt(const DrawingView* view, const QPointF& scenePos) const;
+
 
 	/*! \brief Paints the scene using the specified painter object.
 	 *
@@ -233,9 +256,11 @@ public:
 	virtual void render(QPainter* painter);
 
 private:
-	bool itemMatchesPoint(DrawingItem* item, const QPointF& scenePos) const;
-	bool itemMatchesRect(DrawingItem* item, const QRectF& rect, Qt::ItemSelectionMode mode) const;
-	bool itemMatchesPath(DrawingItem* item, const QPainterPath& path, Qt::ItemSelectionMode mode) const;
+	void findItems(const QList<DrawingItem*>& items, QList<DrawingItem*>& foundItems) const;
+	bool itemMatchesPoint(const DrawingView* view, DrawingItem* item, const QPointF& scenePos) const;
+	bool itemMatchesRect(const DrawingView* view, DrawingItem* item, const QRectF& rect, Qt::ItemSelectionMode mode) const;
+	bool itemMatchesPath(const DrawingView* view, DrawingItem* item, const QPainterPath& path, Qt::ItemSelectionMode mode) const;
+	QPainterPath itemAdjustedShape(const DrawingView* view, DrawingItem* item) const;
 };
 
 #endif

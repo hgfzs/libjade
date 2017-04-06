@@ -27,6 +27,20 @@ class DrawingScene;
 class DrawingItem;
 class DrawingItemPoint;
 
+//Bring back DrawingMouseEvent?
+//mousePressEvent, mouseDoubleClickEvent, mouseMoveEvent, mouseReleaseEvent are pretty long, break these into smaller functions
+//Delete DrawingView::Flags?
+//Split DrawingView into view widget and editor widget, to help reduce file size?
+//	- view modes are: not-interactive, scroll mode, zoom mode
+//	- edit modes are: view only, select mode, place mode
+//Move functions to DrawingScene
+//	- DrawingView::items(), DrawingView::itemAt() to DrawingScene as virtual functions
+//	- DrawingView::pointAt() as virtual function
+//	- DrawingView::addItems(), DrawingView::insertItems(), DrawingView::removeItems() as virtual functions
+//	- DrawingView::moveItems(), DrawingView::resizeItem(), DrawingView::rotateItems(), etc? as virtual functions
+//	- numberOfItemsChanged(), itemsGeometryChanged() signals?
+//	- DrawingView::drawItems()
+
 /*! \brief Widget for viewing the contents of a DrawingScene.
  *
  * When a new DrawingView object is created, it is associated with a default DrawingScene object.
@@ -116,6 +130,7 @@ class DrawingView : public QAbstractScrollArea
 {
 	Q_OBJECT
 
+	friend class DrawingScene;
 	friend class DrawingReorderItemsCommand;
 
 public:
@@ -540,90 +555,47 @@ public:
 	QRectF scrollBarDefinedRect() const;
 
 
-	/*! \brief Returns a list of all visible items added to the scene that are at the specified
+	/*! \brief Returns a list of all currently visible items in the scene that are at the specified
 	 * position.
 	 *
+	 * This convenience function is equivalent to calling scene()->visibleItems(this, scenePos).
 	 *
-	 * This function searches recursively through each item and its children to determine which
-	 * ones match the specified scenePos.  DrawingItem::shape() is used to determine the exact
-	 * shape of each item to test against the specified position.
-	 *
-	 * \sa items(const QRectF&) const, itemAt()
+	 * \sa DrawingScene::visibleItems(const DrawingView*, const QPointF&) const
 	 */
-	QList<DrawingItem*> items(const QPointF& scenePos) const;
+	QList<DrawingItem*> visibleItems(const QPointF& scenePos) const;
 
-	/*! \brief Returns a list of all visible items added to the scene that are inside the
+	/*! \brief Returns a list of all currently visible items in the scene that are inside the
 	 * specified rectangle.
 	 *
-	 * This function searches recursively through each item and its children to determine which
-	 * ones match the specified sceneRect.
+	 * This convenience function is equivalent to calling scene()->visibleItems(this, sceneRect, itemSelectionMode()).
 	 *
-	 * This function uses the current itemSelectionMode() to affect how it matches items to the rect:
-	 * \li Qt::ContainsItemBoundingRect - only items whose bounding rectangle is fully contained
-	 * inside the specified rect are included in the list
-	 * \li Qt::ContainsItemShape - only items whose shape is fully contained inside the
-	 * specified rect are included in the list
-	 * \li Qt::IntersectsItemBoundingRect - all items whose bounding rectangle intersects with the
-	 * specified rect are included in the list
-	 * \li Qt::IntersectsItemShape - all items whose shape intersects with the specified rect are
-	 * included in the list
-	 *
-	 * \sa items(const QPointF&) const
+	 * \sa DrawingScene::visibleItems(const DrawingView*, const QRectF&, Qt::ItemSelectionMode) const
 	 */
-	QList<DrawingItem*> items(const QRectF& sceneRect) const;
+	QList<DrawingItem*> visibleItems(const QRectF& sceneRect) const;
 
-	/*! \brief Returns a list of all visible items added to the scene that are inside the
+	/*! \brief Returns a list of all currently visible items in the scene that are inside the
 	 * specified path.
 	 *
-	 * This function searches recursively through each item and its children to determine which
-	 * ones match the specified scenePath.
+	 * This convenience function is equivalent to calling scene()->visibleItems(this, sceneRect, itemSelectionMode()).
 	 *
-	 * This function uses the current itemSelectionMode() to affect how it matches items to the rect:
-	 * \li Qt::ContainsItemBoundingRect - only items whose bounding rectangle is fully contained
-	 * inside the specified path are included in the list
-	 * \li Qt::ContainsItemShape - only items whose shape is fully contained inside the
-	 * specified path are included in the list
-	 * \li Qt::IntersectsItemBoundingRect - all items whose bounding rectangle intersects with the
-	 * specified path are included in the list
-	 * \li Qt::IntersectsItemShape - all items whose shape intersects with the specified path are
-	 * included in the list
-	 *
-	 * \sa items(const QPointF&) const
+	 * \sa DrawingScene::visibleItems(const DrawingView*, const QPainterPath&, Qt::ItemSelectionMode) const
 	 */
-	QList<DrawingItem*> items(const QPainterPath& scenePath) const;
+	QList<DrawingItem*> visibleItems(const QPainterPath& scenePath) const;
 
-	/*! \brief Returns the topmost visible item at the specified position, or nulltr if there are
-	 * no items at this position.
+	/*! \brief Returns the topmost currently visible item at the specified position, or nullptr if
+	 * there are no items at this position.
 	 *
 	 * This function favors already selected items in its search.  First it searches through all
 	 * of the selected items for a match.  If none of the selected items is at the specified
 	 * position, then this function searches recursively through all of the scene items and their
 	 * children.
 	 *
-	 * This function uses DrawingItem::shape() to determine the exact shape of each item to test
-	 * against the specified position.  It returns immediately once it finds the first item that
-	 * matches the specified position.
+	 * If no items are selected, or if none of the selected items are at the specified position,
+	 * this function returns the result of calling scene()->visibleItemAt(this, scenePos).
 	 *
-	 * \sa items(const QPointF&) const
+	 * \sa DrawingScene::visibleItemAt(const DrawingView*, const QPointF&) const
 	 */
-	DrawingItem* itemAt(const QPointF& scenePos) const;
-
-
-	/*! \brief Returns the item point located at the specified position, or nullptr if no match is
-	 * found.
-	 *
-	 * For each point in the specified item, this function determines the bounding rect of the
-	 * point, then maps it to local item coordinates.  If the specified itemPos
-	 * is contained within the point's boundingRect, the point is returned immediately.  If no
-	 * match is found after searching through all of the item's points, nullptr is returned.
-	 * The itemPos is given in the local item coordinates.
-	 *
-	 * This function is used to determine if any of the item's points were
-	 * clicked on by the user.
-	 *
-	 * \sa pointNearest()
-	 */
-	DrawingItemPoint* pointAt(DrawingItem* item, const QPointF& itemPos) const;
+	DrawingItem* visibleItemAt(const QPointF& scenePos) const;
 
 
 	/*! \brief Renders the scene using the specified painter.
@@ -1495,17 +1467,9 @@ private:
 private:
 	void recalculateContentSize(const QRectF& targetSceneRect = QRectF());
 
-	QList<DrawingItem*> findItems(const QList<DrawingItem*>& items) const;
-	QList<DrawingItem*> findItems(const QList<DrawingItem*>& items, const QPointF& scenePos) const;
-	QList<DrawingItem*> findItems(const QList<DrawingItem*>& items, const QRectF& sceneRect, Qt::ItemSelectionMode mode) const;
-	QList<DrawingItem*> findItems(const QList<DrawingItem*>& items, const QPainterPath& scenePath, Qt::ItemSelectionMode mode) const;
-	DrawingItem* findItemReverse(const QList<DrawingItem*>& items, const QPointF& scenePos) const;
-
-	bool itemMatchesPoint(DrawingItem* item, const QPointF& scenePos) const;
-	bool itemMatchesRect(DrawingItem* item, const QRectF& sceneRect, Qt::ItemSelectionMode mode) const;
-	bool itemMatchesPath(DrawingItem* item, const QPainterPath& scenePath, Qt::ItemSelectionMode mode) const;
-	QPainterPath itemAdjustedShape(DrawingItem* item) const;
+	qreal minimumPenWidth(DrawingItem* item) const;
 	QRect pointRect(DrawingItemPoint* point) const;
+	DrawingItemPoint* pointAt(DrawingItem* item, const QPointF& itemPos) const;
 
 	bool shouldConnect(DrawingItemPoint* point1, DrawingItemPoint* point2) const;
 	bool shouldDisconnect(DrawingItemPoint* point1, DrawingItemPoint* point2) const;

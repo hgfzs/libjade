@@ -19,7 +19,9 @@
  */
 
 #include "DrawingScene.h"
+#include "DrawingView.h"
 #include "DrawingItem.h"
+#include "DrawingItemStyle.h"
 
 DrawingScene::DrawingScene() : QObject()
 {
@@ -47,16 +49,6 @@ void DrawingScene::setSceneRect(qreal left, qreal top, qreal width, qreal height
 QRectF DrawingScene::sceneRect() const
 {
 	return mSceneRect;
-}
-
-qreal DrawingScene::sceneWidth() const
-{
-	return mSceneRect.width();
-}
-
-qreal DrawingScene::sceneHeight() const
-{
-	return mSceneRect.height();
 }
 
 //==================================================================================================
@@ -120,53 +112,64 @@ QList<DrawingItem*> DrawingScene::items() const
 
 //==================================================================================================
 
-QList<DrawingItem*> DrawingScene::items(const QPointF& pos) const
+QList<DrawingItem*> DrawingScene::visibleItems() const
+{
+	QList<DrawingItem*> foundItems;
+	findItems(mItems, foundItems);
+	return foundItems;
+}
+
+QList<DrawingItem*> DrawingScene::visibleItems(const DrawingView* view, const QPointF& pos) const
 {
 	QList<DrawingItem*> items;
+	QList<DrawingItem*> visibleItems = DrawingScene::visibleItems();
 
-	for(auto itemIter = mItems.begin(); itemIter != mItems.end(); itemIter++)
+	for(auto itemIter = visibleItems.begin(); itemIter != visibleItems.end(); itemIter++)
 	{
-		if (itemMatchesPoint(*itemIter, pos)) items.append(*itemIter);
+		if (itemMatchesPoint(view, *itemIter, pos)) items.append(*itemIter);
 	}
 
 	return items;
 }
 
-QList<DrawingItem*> DrawingScene::items(const QRectF& rect, Qt::ItemSelectionMode selectMode) const
+QList<DrawingItem*> DrawingScene::visibleItems(const DrawingView* view, const QRectF& rect, Qt::ItemSelectionMode selectMode) const
 {
 	QList<DrawingItem*> items;
+	QList<DrawingItem*> visibleItems = DrawingScene::visibleItems();
 
-	for(auto itemIter = mItems.begin(); itemIter != mItems.end(); itemIter++)
+	for(auto itemIter = visibleItems.begin(); itemIter != visibleItems.end(); itemIter++)
 	{
-		if (itemMatchesRect(*itemIter, rect, selectMode))
+		if (itemMatchesRect(view, *itemIter, rect, selectMode))
 			items.append(*itemIter);
 	}
 
 	return items;
 }
 
-QList<DrawingItem*> DrawingScene::items(const QPainterPath& path, Qt::ItemSelectionMode selectMode) const
+QList<DrawingItem*> DrawingScene::visibleItems(const DrawingView* view, const QPainterPath& path, Qt::ItemSelectionMode selectMode) const
 {
 	QList<DrawingItem*> items;
+	QList<DrawingItem*> visibleItems = DrawingScene::visibleItems();
 
-	for(auto itemIter = mItems.begin(); itemIter != mItems.end(); itemIter++)
+	for(auto itemIter = visibleItems.begin(); itemIter != visibleItems.end(); itemIter++)
 	{
-		if (itemMatchesPath(*itemIter, path, selectMode))
+		if (itemMatchesPath(view, *itemIter, path, selectMode))
 			items.append(*itemIter);
 	}
 
 	return items;
 }
 
-DrawingItem* DrawingScene::itemAt(const QPointF& pos) const
+DrawingItem* DrawingScene::visibleItemAt(const DrawingView* view, const QPointF& pos) const
 {
 	DrawingItem* item = nullptr;
+	QList<DrawingItem*> visibleItems = DrawingScene::visibleItems();
 
-	auto itemIter = mItems.end();
-	while (item == nullptr && itemIter != mItems.begin())
+	auto itemIter = visibleItems.end();
+	while (item == nullptr && itemIter != visibleItems.begin())
 	{
 		itemIter--;
-		if (itemMatchesPoint(*itemIter, pos)) item = *itemIter;
+		if (itemMatchesPoint(view, *itemIter, pos)) item = *itemIter;
 	}
 
 	return item;
@@ -207,17 +210,47 @@ void DrawingScene::render(QPainter* painter)
 
 //==================================================================================================
 
-bool DrawingScene::itemMatchesPoint(DrawingItem* item, const QPointF& scenePos) const
+void DrawingScene::findItems(const QList<DrawingItem*>& items, QList<DrawingItem*>& foundItems) const
+{
+	for(auto itemIter = items.begin(); itemIter != items.end(); itemIter++)
+	{
+		if ((*itemIter)->isVisible())
+		{
+			foundItems.append(*itemIter);
+
+			if (!(*itemIter)->mChildren.isEmpty())
+				findItems((*itemIter)->mChildren, foundItems);
+		}
+	}
+}
+
+bool DrawingScene::itemMatchesPoint(const DrawingView* view, DrawingItem* item, const QPointF& scenePos) const
 {
 	bool match = false;
 
-	if (item && item->isVisible())
-		match = item->shape().contains(item->mapFromScene(scenePos));
+	if (view && item && item->isVisible())
+	{
+		// Check item shape
+		match = itemAdjustedShape(view, item).contains(item->mapFromScene(scenePos));
+
+		// Check item points
+		if (!match && item->isSelected())
+		{
+			QList<DrawingItemPoint*> itemPoints = item->points();
+			QRectF pointSceneRect;
+
+			for(auto pointIter = itemPoints.begin(); !match && pointIter != itemPoints.end(); pointIter++)
+			{
+				pointSceneRect = view->mapToScene(view->pointRect(*pointIter));
+				match = pointSceneRect.contains(scenePos);
+			}
+		}
+	}
 
 	return match;
 }
 
-bool DrawingScene::itemMatchesRect(DrawingItem* item, const QRectF& rect, Qt::ItemSelectionMode mode) const
+bool DrawingScene::itemMatchesRect(const DrawingView* view, DrawingItem* item, const QRectF& rect, Qt::ItemSelectionMode mode) const
 {
 	bool match = false;
 
@@ -239,12 +272,29 @@ bool DrawingScene::itemMatchesRect(DrawingItem* item, const QRectF& rect, Qt::It
 			match = rect.contains(item->mapToScene(item->boundingRect()).boundingRect());
 			break;
 		}
+
+		// Check item points
+		if (!match && item->isSelected())
+		{
+			QList<DrawingItemPoint*> itemPoints = item->points();
+			QRectF pointSceneRect;
+
+			for(auto pointIter = itemPoints.begin(); !match && pointIter != itemPoints.end(); pointIter++)
+			{
+				pointSceneRect = view->mapToScene(view->pointRect(*pointIter));
+
+				if (mode == Qt::IntersectsItemBoundingRect || mode == Qt::IntersectsItemShape)
+					match = rect.intersects(pointSceneRect);
+				else
+					match = rect.contains(pointSceneRect);
+			}
+		}
 	}
 
 	return match;
 }
 
-bool DrawingScene::itemMatchesPath(DrawingItem* item, const QPainterPath& path, Qt::ItemSelectionMode mode) const
+bool DrawingScene::itemMatchesPath(const DrawingView* view, DrawingItem* item, const QPainterPath& path, Qt::ItemSelectionMode mode) const
 {
 	bool match = false;
 
@@ -266,7 +316,62 @@ bool DrawingScene::itemMatchesPath(DrawingItem* item, const QPainterPath& path, 
 			match = path.contains(item->mapToScene(item->boundingRect()).boundingRect());
 			break;
 		}
+
+		// Check item points
+		if (!match && item->isSelected())
+		{
+			QList<DrawingItemPoint*> itemPoints = item->points();
+			QRectF pointSceneRect;
+
+			for(auto pointIter = itemPoints.begin(); !match && pointIter != itemPoints.end(); pointIter++)
+			{
+				pointSceneRect = view->mapToScene(view->pointRect(*pointIter));
+
+				if (mode == Qt::IntersectsItemBoundingRect || mode == Qt::IntersectsItemShape)
+					match = path.intersects(pointSceneRect);
+				else
+					match = path.contains(pointSceneRect);
+			}
+		}
 	}
 
 	return match;
+}
+
+QPainterPath DrawingScene::itemAdjustedShape(const DrawingView* view, DrawingItem* item) const
+{
+	QPainterPath adjustedShape;
+
+	if (view && item)
+	{
+		DrawingItemStyle* style = item->style();
+		if (style)
+		{
+			qreal penWidth = 0;
+
+			// Determine existing item's pen width
+			QVariant value = style->valueLookup(DrawingItemStyle::PenWidth);
+			if (value.isValid()) penWidth = value.toDouble();
+
+			// Determine minimum pen width
+			qreal minimumPenWidth = view->minimumPenWidth(item);
+
+			if (0 < penWidth && penWidth < minimumPenWidth)
+			{
+				// Make it easier to select items when zoomed out by increasing pen width
+				bool styleHadPenWidth = style->hasValue(DrawingItemStyle::PenWidth);
+				if (styleHadPenWidth) penWidth = style->value(DrawingItemStyle::PenWidth).toDouble();
+
+				style->setValue(DrawingItemStyle::PenWidth, QVariant(minimumPenWidth));
+				adjustedShape = item->shape();
+
+				if (styleHadPenWidth) style->setValue(DrawingItemStyle::PenWidth, QVariant(penWidth));
+				else style->unsetValue(DrawingItemStyle::PenWidth);
+			}
+			else adjustedShape = item->shape();
+		}
+		else adjustedShape = item->shape();
+	}
+
+	return adjustedShape;
 }
