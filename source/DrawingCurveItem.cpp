@@ -29,9 +29,9 @@ DrawingCurveItem::DrawingCurveItem() : DrawingItem()
 	DrawingItemPoint::Flags flags =
 		DrawingItemPoint::Control | DrawingItemPoint::Connection | DrawingItemPoint::Free;
 	addPoint(new DrawingItemPoint(QPointF(0, 0), flags));						// start point
-	addPoint(new DrawingItemPoint(QPointF(0, 0), flags));						// end point
 	addPoint(new DrawingItemPoint(QPointF(0, 0), DrawingItemPoint::Control));	// control point for start
 	addPoint(new DrawingItemPoint(QPointF(0, 0), DrawingItemPoint::Control));	// control point for end
+	addPoint(new DrawingItemPoint(QPointF(0, 0), flags));						// end point
 	setCurve(QPointF(-200, -200), QPointF(0, -200), QPointF(0, 200), QPointF(200, 200));
 
 	DrawingItemStyle* style = DrawingItem::style();
