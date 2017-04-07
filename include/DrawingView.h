@@ -27,14 +27,6 @@ class DrawingScene;
 class DrawingItem;
 class DrawingItemPoint;
 
-//Bring back DrawingMouseEvent?
-//mousePressEvent, mouseDoubleClickEvent, mouseMoveEvent, mouseReleaseEvent are pretty long, break these into smaller functions
-//Delete DrawingView::Flags?
-//Split DrawingView into view widget and editor widget, to help reduce file size?
-//	- view modes are: not-interactive, scroll mode, zoom mode
-//	- edit modes are: view only, select mode, place mode
-
-
 /*! \brief Widget for viewing the contents of a DrawingScene.
  *
  * When a new DrawingView object is created, it is associated with a default DrawingScene object.
