@@ -22,6 +22,7 @@
 #include "DrawingView.h"
 #include "DrawingItem.h"
 #include "DrawingItemStyle.h"
+#include "DrawingItemPoint.h"
 
 DrawingScene::DrawingScene() : QObject()
 {
@@ -105,6 +106,20 @@ void DrawingScene::clearItems()
 	}
 }
 
+void DrawingScene::setItems(const QList<DrawingItem*>& items)
+{
+	for(auto itemIter = mItems.begin(); itemIter != mItems.end(); itemIter++)
+	{
+		(*itemIter)->mScene = nullptr;
+		if (!items.contains(*itemIter)) delete *itemIter;
+	}
+
+	mItems = items;
+
+	for(auto itemIter = mItems.begin(); itemIter != mItems.end(); itemIter++)
+		(*itemIter)->mScene = this;
+}
+
 QList<DrawingItem*> DrawingScene::items() const
 {
 	return mItems;
@@ -179,33 +194,179 @@ DrawingItem* DrawingScene::visibleItemAt(const DrawingView* view, const QPointF&
 
 void DrawingScene::render(QPainter* painter)
 {
+	drawBackground(painter);
+	drawItems(painter);
+	drawForeground(painter);
+}
+
+//==================================================================================================
+
+void DrawingScene::addItems(const QList<DrawingItem*>& items)
+{
+	for(auto itemIter = items.begin(); itemIter != items.end(); itemIter++)
+		addItem(*itemIter);
+
+	emit numberOfItemsChanged(mItems.size());
+}
+
+void DrawingScene::insertItems(const QList<DrawingItem*>& items, const QHash<DrawingItem*,int>& index)
+{
+	for(auto itemIter = items.begin(); itemIter != items.end(); itemIter++)
+		insertItem(index[*itemIter], *itemIter);
+
+	emit numberOfItemsChanged(mItems.size());
+}
+
+void DrawingScene::removeItems(const QList<DrawingItem*>& items)
+{
+	for(auto itemIter = items.begin(); itemIter != items.end(); itemIter++)
+		removeItem(*itemIter);
+
+	emit numberOfItemsChanged(mItems.size());
+}
+
+//==================================================================================================
+
+void DrawingScene::setItemsVisibility(const QList<DrawingItem*>& items, const QHash<DrawingItem*,bool>& visibility)
+{
+	for(auto itemIter = items.begin(); itemIter != items.end(); itemIter++)
+		(*itemIter)->setVisible(visibility[*itemIter]);
+
+	emit itemsVisibilityChanged(items);
+}
+
+//==================================================================================================
+
+void DrawingScene::moveItems(const QList<DrawingItem*>& items, const QHash<DrawingItem*,QPointF>& parentPos)
+{
+	for(auto itemIter = items.begin(); itemIter != items.end(); itemIter++)
+		(*itemIter)->moveEvent(parentPos[*itemIter]);
+
+	emit itemsPositionChanged(items);
+}
+
+void DrawingScene::resizeItem(DrawingItemPoint* itemPoint, const QPointF& parentPos)
+{
+	if (itemPoint && itemPoint->item())
+	{
+		QList<DrawingItem*> items;
+		items.append(itemPoint->item());
+
+		itemPoint->item()->resizeEvent(itemPoint, parentPos);
+
+		emit itemsGeometryChanged(items);
+	}
+}
+
+//==================================================================================================
+
+void DrawingScene::rotateItems(const QList<DrawingItem*>& items, const QHash<DrawingItem*,QPointF>& parentPos)
+{
+	for(auto itemIter = items.begin(); itemIter != items.end(); itemIter++)
+		(*itemIter)->rotateEvent(parentPos[*itemIter]);
+
+	emit itemsTransformChanged(items);
+}
+
+void DrawingScene::rotateBackItems(const QList<DrawingItem*>& items, const QHash<DrawingItem*,QPointF>& parentPos)
+{
+	for(auto itemIter = items.begin(); itemIter != items.end(); itemIter++)
+		(*itemIter)->rotateBackEvent(parentPos[*itemIter]);
+
+	emit itemsTransformChanged(items);
+}
+
+void DrawingScene::flipItemsHorizontal(const QList<DrawingItem*>& items, const QHash<DrawingItem*,QPointF>& parentPos)
+{
+	for(auto itemIter = items.begin(); itemIter != items.end(); itemIter++)
+		(*itemIter)->flipHorizontalEvent(parentPos[*itemIter]);
+
+	emit itemsTransformChanged(items);
+}
+
+void DrawingScene::flipItemsVertical(const QList<DrawingItem*>& items, const QHash<DrawingItem*,QPointF>& parentPos)
+{
+	for(auto itemIter = items.begin(); itemIter != items.end(); itemIter++)
+		(*itemIter)->flipVerticalEvent(parentPos[*itemIter]);
+
+	emit itemsTransformChanged(items);
+}
+
+//==================================================================================================
+
+void DrawingScene::insertItemPoint(DrawingItem* item, DrawingItemPoint* itemPoint, int pointIndex)
+{
+	if (item && itemPoint)
+	{
+		QList<DrawingItem*> items;
+		items.append(item);
+
+		item->insertPoint(pointIndex, itemPoint);
+
+		emit itemsGeometryChanged(items);
+	}
+}
+
+void DrawingScene::removeItemPoint(DrawingItem* item, DrawingItemPoint* itemPoint)
+{
+	if (item && itemPoint)
+	{
+		QList<DrawingItem*> items;
+		items.append(item);
+
+		item->removePoint(itemPoint);
+
+		emit itemsGeometryChanged(items);
+	}
+}
+
+//==================================================================================================
+
+void DrawingScene::connectItemPoints(DrawingItemPoint* point1, DrawingItemPoint* point2)
+{
+	if (point1 && point2)
+	{
+		point1->addConnection(point2);
+		point2->addConnection(point1);
+	}
+}
+
+void DrawingScene::disconnectItemPoints(DrawingItemPoint* point1, DrawingItemPoint* point2)
+{
+	if (point1 && point2)
+	{
+		point1->removeConnection(point2);
+		point2->removeConnection(point1);
+	}
+}
+
+//==================================================================================================
+
+void DrawingScene::drawBackground(QPainter* painter)
+{
+	QPainter::RenderHints hints = painter->renderHints();
+
 	QColor backgroundColor = mBackgroundBrush.color();
 	QColor borderColor(255 - backgroundColor.red(), 255 - backgroundColor.green(),
 		255 - backgroundColor.blue());
 	QPen borderPen(borderColor, 1);
 	borderPen.setCosmetic(true);
 
-	// Draw background
-	QPainter::RenderHints hints = painter->renderHints();
-
 	painter->setRenderHints(hints, false);
 	painter->setBrush(mBackgroundBrush);
 	painter->setPen(borderPen);
 	painter->drawRect(mSceneRect);
 	painter->setRenderHints(hints, true);
+}
 
-	// Draw items
-	for(auto itemIter = mItems.begin(); itemIter != mItems.end(); itemIter++)
-	{
-		if ((*itemIter)->isVisible())
-		{
-			painter->translate((*itemIter)->position());
-			painter->setTransform((*itemIter)->transformInverted(), true);
-			(*itemIter)->render(painter);
-			painter->setTransform((*itemIter)->transform(), true);
-			painter->translate(-(*itemIter)->position());
-		}
-	}
+void DrawingScene::drawItems(QPainter* painter)
+{
+	drawItems(painter, mItems);
+}
+
+void DrawingScene::drawForeground(QPainter* painter)
+{
+	Q_UNUSED(painter);
 }
 
 //==================================================================================================
@@ -223,6 +384,34 @@ void DrawingScene::findItems(const QList<DrawingItem*>& items, QList<DrawingItem
 		}
 	}
 }
+
+void DrawingScene::drawItems(QPainter* painter, const QList<DrawingItem*>& items)
+{
+	for(auto itemIter = items.begin(); itemIter != items.end(); itemIter++)
+	{
+		if ((*itemIter)->isVisible())
+		{
+			painter->translate((*itemIter)->position());
+			painter->setTransform((*itemIter)->transformInverted(), true);
+
+			(*itemIter)->render(painter);
+
+			//painter->save();
+			//painter->setBrush(QColor(255, 0, 255, 128));
+			//painter->setPen(QPen(QColor(255, 0, 255, 128), 1));
+			//painter->drawPath(itemAdjustedShape(*itemIter));
+			//painter->restore();
+
+			if (!(*itemIter)->mChildren.isEmpty())
+				drawItems(painter, (*itemIter)->mChildren);
+
+			painter->setTransform((*itemIter)->transform(), true);
+			painter->translate(-(*itemIter)->position());
+		}
+	}
+}
+
+//==================================================================================================
 
 bool DrawingScene::itemMatchesPoint(const DrawingView* view, DrawingItem* item, const QPointF& scenePos) const
 {

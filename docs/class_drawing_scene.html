@@ -39,6 +39,9 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-slots">Public Slots</a> &#124;
+<a href="#signals">Signals</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="class_drawing_scene-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">DrawingScene Class Reference</div>  </div>
@@ -74,6 +77,8 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <tr class="separator:a7bc8f811e994303e939fe210702ca04a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac050407f317cdb55854860baa62b7961"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_scene.html#ac050407f317cdb55854860baa62b7961">setBackgroundBrush</a> (const QBrush &amp;brush)</td></tr>
 <tr class="separator:ac050407f317cdb55854860baa62b7961"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aceefa5f38494ab3b2e9e360ea64c3ca9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_scene.html#aceefa5f38494ab3b2e9e360ea64c3ca9">setItems</a> (const QList&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *&gt; &amp;<a class="el" href="class_drawing_scene.html#abad6f51897ff6f327ac324a281024558">items</a>)</td></tr>
+<tr class="separator:aceefa5f38494ab3b2e9e360ea64c3ca9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e37c18e2c73f668cb5eee81887072cc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_scene.html#a3e37c18e2c73f668cb5eee81887072cc">setSceneRect</a> (const QRectF &amp;rect)</td></tr>
 <tr class="separator:a3e37c18e2c73f668cb5eee81887072cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a81c56b73cd3c2ba8f1c62e4b689d9da7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_scene.html#a81c56b73cd3c2ba8f1c62e4b689d9da7">setSceneRect</a> (qreal left, qreal top, qreal width, qreal height)</td></tr>
@@ -88,6 +93,59 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <tr class="separator:a4d369e674a6475d7d0a4a8cfdc5f29d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ade63e4039303d3c90cbe3f21d2b549db"><td class="memItemLeft" align="right" valign="top">virtual QList&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_scene.html#ade63e4039303d3c90cbe3f21d2b549db">visibleItems</a> (const <a class="el" href="class_drawing_view.html">DrawingView</a> *view, const QPainterPath &amp;path, Qt::ItemSelectionMode selectMode) const</td></tr>
 <tr class="separator:ade63e4039303d3c90cbe3f21d2b549db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-slots"></a>
+Public Slots</h2></td></tr>
+<tr class="memitem:a28cd280d7ab6219f0901fd78883d50ad"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_scene.html#a28cd280d7ab6219f0901fd78883d50ad">addItems</a> (const QList&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *&gt; &amp;<a class="el" href="class_drawing_scene.html#abad6f51897ff6f327ac324a281024558">items</a>)</td></tr>
+<tr class="separator:a28cd280d7ab6219f0901fd78883d50ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef1162b3f8c6a14de6e250b5f8399118"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_scene.html#aef1162b3f8c6a14de6e250b5f8399118">connectItemPoints</a> (<a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *point1, <a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *point2)</td></tr>
+<tr class="separator:aef1162b3f8c6a14de6e250b5f8399118"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abedfef33dae1b1f3c2a8bd179957781f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_scene.html#abedfef33dae1b1f3c2a8bd179957781f">disconnectItemPoints</a> (<a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *point1, <a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *point2)</td></tr>
+<tr class="separator:abedfef33dae1b1f3c2a8bd179957781f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adba583ce1887531037d17c4484b302ae"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_scene.html#adba583ce1887531037d17c4484b302ae">flipItemsHorizontal</a> (const QList&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *&gt; &amp;<a class="el" href="class_drawing_scene.html#abad6f51897ff6f327ac324a281024558">items</a>, const QHash&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *, QPointF &gt; &amp;parentPos)</td></tr>
+<tr class="separator:adba583ce1887531037d17c4484b302ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e40f3189c9a6e3c24148edfe98493ac"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_scene.html#a9e40f3189c9a6e3c24148edfe98493ac">flipItemsVertical</a> (const QList&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *&gt; &amp;<a class="el" href="class_drawing_scene.html#abad6f51897ff6f327ac324a281024558">items</a>, const QHash&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *, QPointF &gt; &amp;parentPos)</td></tr>
+<tr class="separator:a9e40f3189c9a6e3c24148edfe98493ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa040063ae34abb8c45258d00a2a54c17"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_scene.html#aa040063ae34abb8c45258d00a2a54c17">insertItemPoint</a> (<a class="el" href="class_drawing_item.html">DrawingItem</a> *item, <a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *point, int index)</td></tr>
+<tr class="separator:aa040063ae34abb8c45258d00a2a54c17"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71ea2f3b51100619bf543425d4f3e2ce"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_scene.html#a71ea2f3b51100619bf543425d4f3e2ce">insertItems</a> (const QList&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *&gt; &amp;<a class="el" href="class_drawing_scene.html#abad6f51897ff6f327ac324a281024558">items</a>, const QHash&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *, int &gt; &amp;indices)</td></tr>
+<tr class="separator:a71ea2f3b51100619bf543425d4f3e2ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78275c1e8dac5723dacd5e28054b6c09"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_scene.html#a78275c1e8dac5723dacd5e28054b6c09">moveItems</a> (const QList&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *&gt; &amp;<a class="el" href="class_drawing_scene.html#abad6f51897ff6f327ac324a281024558">items</a>, const QHash&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *, QPointF &gt; &amp;parentPos)</td></tr>
+<tr class="separator:a78275c1e8dac5723dacd5e28054b6c09"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9202120d943151509c8402b04a27d1ff"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_scene.html#a9202120d943151509c8402b04a27d1ff">removeItemPoint</a> (<a class="el" href="class_drawing_item.html">DrawingItem</a> *item, <a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *point)</td></tr>
+<tr class="separator:a9202120d943151509c8402b04a27d1ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a167e2bf692259008fce49e245b31e34b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_scene.html#a167e2bf692259008fce49e245b31e34b">removeItems</a> (const QList&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *&gt; &amp;<a class="el" href="class_drawing_scene.html#abad6f51897ff6f327ac324a281024558">items</a>)</td></tr>
+<tr class="separator:a167e2bf692259008fce49e245b31e34b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10c18de57aa0008f0b83dbcda816feb8"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_scene.html#a10c18de57aa0008f0b83dbcda816feb8">resizeItem</a> (<a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *point, const QPointF &amp;parentPos)</td></tr>
+<tr class="separator:a10c18de57aa0008f0b83dbcda816feb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1cd53b75a1e222b39d4e933feb8e37a9"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_scene.html#a1cd53b75a1e222b39d4e933feb8e37a9">rotateBackItems</a> (const QList&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *&gt; &amp;<a class="el" href="class_drawing_scene.html#abad6f51897ff6f327ac324a281024558">items</a>, const QHash&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *, QPointF &gt; &amp;parentPos)</td></tr>
+<tr class="separator:a1cd53b75a1e222b39d4e933feb8e37a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a79d55c226806b726ad8aafbebd4505c1"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_scene.html#a79d55c226806b726ad8aafbebd4505c1">rotateItems</a> (const QList&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *&gt; &amp;<a class="el" href="class_drawing_scene.html#abad6f51897ff6f327ac324a281024558">items</a>, const QHash&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *, QPointF &gt; &amp;parentPos)</td></tr>
+<tr class="separator:a79d55c226806b726ad8aafbebd4505c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a153edd9a7ccca7bc56358177d8da2bff"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_scene.html#a153edd9a7ccca7bc56358177d8da2bff">setItemsVisibility</a> (const QList&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *&gt; &amp;<a class="el" href="class_drawing_scene.html#abad6f51897ff6f327ac324a281024558">items</a>, const QHash&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *, bool &gt; &amp;visibility)</td></tr>
+<tr class="separator:a153edd9a7ccca7bc56358177d8da2bff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="signals"></a>
+Signals</h2></td></tr>
+<tr class="memitem:ae307430bf158b5205cbcaf0b419ce895"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_scene.html#ae307430bf158b5205cbcaf0b419ce895">itemsGeometryChanged</a> (const QList&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *&gt; &amp;<a class="el" href="class_drawing_scene.html#abad6f51897ff6f327ac324a281024558">items</a>)</td></tr>
+<tr class="separator:ae307430bf158b5205cbcaf0b419ce895"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e7deb62eaaeff602a81bc86d60a043d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_scene.html#a3e7deb62eaaeff602a81bc86d60a043d">itemsPositionChanged</a> (const QList&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *&gt; &amp;<a class="el" href="class_drawing_scene.html#abad6f51897ff6f327ac324a281024558">items</a>)</td></tr>
+<tr class="separator:a3e7deb62eaaeff602a81bc86d60a043d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf2d40fb07ceb9235570b863244781b7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_scene.html#aaf2d40fb07ceb9235570b863244781b7">itemsTransformChanged</a> (const QList&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *&gt; &amp;<a class="el" href="class_drawing_scene.html#abad6f51897ff6f327ac324a281024558">items</a>)</td></tr>
+<tr class="separator:aaf2d40fb07ceb9235570b863244781b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae148d4c4d47146ac214bdd6128e5ec9c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_scene.html#ae148d4c4d47146ac214bdd6128e5ec9c">itemsVisibilityChanged</a> (const QList&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *&gt; &amp;<a class="el" href="class_drawing_scene.html#abad6f51897ff6f327ac324a281024558">items</a>)</td></tr>
+<tr class="separator:ae148d4c4d47146ac214bdd6128e5ec9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f0b8d56ac87c79f60b2288666eda64d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_scene.html#a9f0b8d56ac87c79f60b2288666eda64d">numberOfItemsChanged</a> (int itemCount)</td></tr>
+<tr class="separator:a9f0b8d56ac87c79f60b2288666eda64d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:a52daffc984b62ec784d23eb763206329"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_scene.html#a52daffc984b62ec784d23eb763206329">drawBackground</a> (QPainter *painter)</td></tr>
+<tr class="separator:a52daffc984b62ec784d23eb763206329"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a14c1503a0718b264470d69c356a712ac"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_scene.html#a14c1503a0718b264470d69c356a712ac">drawForeground</a> (QPainter *painter)</td></tr>
+<tr class="separator:a14c1503a0718b264470d69c356a712ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1789fd1653166b8a9f837e626fdbc9ae"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_scene.html#a1789fd1653166b8a9f837e626fdbc9ae">drawItems</a> (QPainter *painter)</td></tr>
+<tr class="separator:a1789fd1653166b8a9f837e626fdbc9ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Surface for managing a large number of two-dimensional <a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene. ">DrawingItem</a> objects. </p>
@@ -144,6 +202,36 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 
 </div>
 </div>
+<a id="a28cd280d7ab6219f0901fd78883d50ad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a28cd280d7ab6219f0901fd78883d50ad">&sect;&nbsp;</a></span>addItems</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void DrawingScene::addItems </td>
+          <td>(</td>
+          <td class="paramtype">const QList&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *&gt; &amp;&#160;</td>
+          <td class="paramname"><em>items</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">slot</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Adds the specified items to the scene. </p>
+<p>This function calls <a class="el" href="class_drawing_scene.html#a2c3293113126bbe4c9c6b7b494c8c28b" title="Adds an existing item to the scene. ">addItem()</a> for each of the specified items. It emits the <a class="el" href="class_drawing_scene.html#a9f0b8d56ac87c79f60b2288666eda64d" title="Emitted whenever the number of items in the scene changes. ">numberOfItemsChanged()</a> signal when complete.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_scene.html#a71ea2f3b51100619bf543425d4f3e2ce" title="Inserts the specified items in the scene at the specified indices. ">insertItems()</a>, <a class="el" href="class_drawing_scene.html#a167e2bf692259008fce49e245b31e34b" title="Removes the specified items from the scene. ">removeItems()</a> </dd></dl>
+
+</div>
+</div>
 <a id="ada774a5163965511220d3e49be964b21"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ada774a5163965511220d3e49be964b21">&sect;&nbsp;</a></span>backgroundBrush()</h2>
 
@@ -185,6 +273,257 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 
 </div>
 </div>
+<a id="aef1162b3f8c6a14de6e250b5f8399118"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef1162b3f8c6a14de6e250b5f8399118">&sect;&nbsp;</a></span>connectItemPoints</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void DrawingScene::connectItemPoints </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *&#160;</td>
+          <td class="paramname"><em>point1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *&#160;</td>
+          <td class="paramname"><em>point2</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">slot</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Connects the specified points together. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_scene.html#abedfef33dae1b1f3c2a8bd179957781f" title="Disconnects the specified points from each other. ">disconnectItemPoints()</a> </dd></dl>
+
+</div>
+</div>
+<a id="abedfef33dae1b1f3c2a8bd179957781f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abedfef33dae1b1f3c2a8bd179957781f">&sect;&nbsp;</a></span>disconnectItemPoints</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void DrawingScene::disconnectItemPoints </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *&#160;</td>
+          <td class="paramname"><em>point1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *&#160;</td>
+          <td class="paramname"><em>point2</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">slot</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Disconnects the specified points from each other. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_scene.html#aef1162b3f8c6a14de6e250b5f8399118" title="Connects the specified points together. ">connectItemPoints()</a> </dd></dl>
+
+</div>
+</div>
+<a id="a52daffc984b62ec784d23eb763206329"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a52daffc984b62ec784d23eb763206329">&sect;&nbsp;</a></span>drawBackground()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void DrawingScene::drawBackground </td>
+          <td>(</td>
+          <td class="paramtype">QPainter *&#160;</td>
+          <td class="paramname"><em>painter</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Renders the background of the scene using the specified painter. </p>
+<p>The default implementation fills the background of the scene using the current <a class="el" href="class_drawing_scene.html#ada774a5163965511220d3e49be964b21" title="Returns the scene&#39;s background brush. ">backgroundBrush()</a>.</p>
+<p>This function may be overridden in a derived class to provide a custom background for the scene.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_scene.html#a1789fd1653166b8a9f837e626fdbc9ae" title="Renders the widget&#39;s items into the scene using the specified painter. ">drawItems()</a>, <a class="el" href="class_drawing_scene.html#a14c1503a0718b264470d69c356a712ac" title="Renders the foreground of the scene using the specified painter. ">drawForeground()</a> </dd></dl>
+
+</div>
+</div>
+<a id="a14c1503a0718b264470d69c356a712ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a14c1503a0718b264470d69c356a712ac">&sect;&nbsp;</a></span>drawForeground()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void DrawingScene::drawForeground </td>
+          <td>(</td>
+          <td class="paramtype">QPainter *&#160;</td>
+          <td class="paramname"><em>painter</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Renders the foreground of the scene using the specified painter. </p>
+<p>The default implementation of this function does nothing.</p>
+<p>This function may be overridden in a derived class to provide a custom foreground for the scene.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_scene.html#a52daffc984b62ec784d23eb763206329" title="Renders the background of the scene using the specified painter. ">drawBackground()</a>, <a class="el" href="class_drawing_scene.html#a1789fd1653166b8a9f837e626fdbc9ae" title="Renders the widget&#39;s items into the scene using the specified painter. ">drawItems()</a> </dd></dl>
+
+</div>
+</div>
+<a id="a1789fd1653166b8a9f837e626fdbc9ae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1789fd1653166b8a9f837e626fdbc9ae">&sect;&nbsp;</a></span>drawItems()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void DrawingScene::drawItems </td>
+          <td>(</td>
+          <td class="paramtype">QPainter *&#160;</td>
+          <td class="paramname"><em>painter</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Renders the widget's items into the scene using the specified painter. </p>
+<p>The default implementation renders items the order they were added to the scene, starting with the first item added and ending with the most recent item added.</p>
+<p>This function may be overridden in a derived class to provide a custom rendering implementation for items in the scene.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_scene.html#a52daffc984b62ec784d23eb763206329" title="Renders the background of the scene using the specified painter. ">drawBackground()</a>, <a class="el" href="class_drawing_scene.html#a14c1503a0718b264470d69c356a712ac" title="Renders the foreground of the scene using the specified painter. ">drawForeground()</a> </dd></dl>
+
+</div>
+</div>
+<a id="adba583ce1887531037d17c4484b302ae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adba583ce1887531037d17c4484b302ae">&sect;&nbsp;</a></span>flipItemsHorizontal</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void DrawingScene::flipItemsHorizontal </td>
+          <td>(</td>
+          <td class="paramtype">const QList&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *&gt; &amp;&#160;</td>
+          <td class="paramname"><em>items</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QHash&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *, QPointF &gt; &amp;&#160;</td>
+          <td class="paramname"><em>parentPos</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">slot</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Flips each of the specified items horizontally within the scene about the specified position. </p>
+<p>This function calls <a class="el" href="class_drawing_item.html#abeb9ec1bfe7099fad04a9d1770c40086" title="Flips the item horizontally within the scene. ">DrawingItem::flipHorizontalEvent()</a> for each of the specified items. It emits the <a class="el" href="class_drawing_scene.html#ae307430bf158b5205cbcaf0b419ce895" title="Emitted whenever items&#39; geometry changes. ">itemsGeometryChanged()</a> signal when all transformations are complete.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_scene.html#a9e40f3189c9a6e3c24148edfe98493ac" title="Flips each of the specified items horizontally within the scene about the specified position...">flipItemsVertical()</a> </dd></dl>
+
+</div>
+</div>
+<a id="a9e40f3189c9a6e3c24148edfe98493ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e40f3189c9a6e3c24148edfe98493ac">&sect;&nbsp;</a></span>flipItemsVertical</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void DrawingScene::flipItemsVertical </td>
+          <td>(</td>
+          <td class="paramtype">const QList&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *&gt; &amp;&#160;</td>
+          <td class="paramname"><em>items</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QHash&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *, QPointF &gt; &amp;&#160;</td>
+          <td class="paramname"><em>parentPos</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">slot</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Flips each of the specified items horizontally within the scene about the specified position. </p>
+<p>This function calls <a class="el" href="class_drawing_item.html#a2cdaad75d76fc1a71102bdd2bd9ffdf2" title="Flips the item vertically within the scene. ">DrawingItem::flipVerticalEvent()</a> for each of the specified items. It emits the <a class="el" href="class_drawing_scene.html#ae307430bf158b5205cbcaf0b419ce895" title="Emitted whenever items&#39; geometry changes. ">itemsGeometryChanged()</a> signal when all transformations are complete.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_scene.html#adba583ce1887531037d17c4484b302ae" title="Flips each of the specified items horizontally within the scene about the specified position...">flipItemsHorizontal()</a> </dd></dl>
+
+</div>
+</div>
 <a id="ada0c2a54900ca6d4c22e29779a3dd783"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ada0c2a54900ca6d4c22e29779a3dd783">&sect;&nbsp;</a></span>insertItem()</h2>
 
@@ -218,6 +557,92 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 
 </div>
 </div>
+<a id="aa040063ae34abb8c45258d00a2a54c17"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa040063ae34abb8c45258d00a2a54c17">&sect;&nbsp;</a></span>insertItemPoint</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void DrawingScene::insertItemPoint </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_drawing_item.html">DrawingItem</a> *&#160;</td>
+          <td class="paramname"><em>item</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *&#160;</td>
+          <td class="paramname"><em>point</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">slot</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Inserts the item point into the item at the specified index. </p>
+<p>This function emits the <a class="el" href="class_drawing_scene.html#ae307430bf158b5205cbcaf0b419ce895" title="Emitted whenever items&#39; geometry changes. ">itemsGeometryChanged()</a> signal when the insertion is complete.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_scene.html#a9202120d943151509c8402b04a27d1ff" title="Removes the item point from the item. ">removeItemPoint()</a> </dd></dl>
+
+</div>
+</div>
+<a id="a71ea2f3b51100619bf543425d4f3e2ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a71ea2f3b51100619bf543425d4f3e2ce">&sect;&nbsp;</a></span>insertItems</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void DrawingScene::insertItems </td>
+          <td>(</td>
+          <td class="paramtype">const QList&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *&gt; &amp;&#160;</td>
+          <td class="paramname"><em>items</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QHash&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *, int &gt; &amp;&#160;</td>
+          <td class="paramname"><em>indices</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">slot</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Inserts the specified items in the scene at the specified indices. </p>
+<p>This function calls <a class="el" href="class_drawing_scene.html#ada0c2a54900ca6d4c22e29779a3dd783" title="Inserts an existing item to the scene at the specified index. ">insertItem()</a> for each of the specified items. It emits the <a class="el" href="class_drawing_scene.html#a9f0b8d56ac87c79f60b2288666eda64d" title="Emitted whenever the number of items in the scene changes. ">numberOfItemsChanged()</a> signal when complete.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_scene.html#a28cd280d7ab6219f0901fd78883d50ad" title="Adds the specified items to the scene. ">addItems()</a>, <a class="el" href="class_drawing_scene.html#a167e2bf692259008fce49e245b31e34b" title="Removes the specified items from the scene. ">removeItems()</a> </dd></dl>
+
+</div>
+</div>
 <a id="abad6f51897ff6f327ac324a281024558"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abad6f51897ff6f327ac324a281024558">&sect;&nbsp;</a></span>items()</h2>
 
@@ -235,6 +660,196 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 
 <p>Returns a list of all top-level items added to the scene. </p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_scene.html#a2c3293113126bbe4c9c6b7b494c8c28b" title="Adds an existing item to the scene. ">addItem()</a>, <a class="el" href="class_drawing_scene.html#ada0c2a54900ca6d4c22e29779a3dd783" title="Inserts an existing item to the scene at the specified index. ">insertItem()</a>, <a class="el" href="class_drawing_scene.html#af28b5a62acf9d52d06150c9bb1257df1" title="Removes an existing item from the scene. ">removeItem()</a> </dd></dl>
+
+</div>
+</div>
+<a id="ae307430bf158b5205cbcaf0b419ce895"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae307430bf158b5205cbcaf0b419ce895">&sect;&nbsp;</a></span>itemsGeometryChanged</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DrawingScene::itemsGeometryChanged </td>
+          <td>(</td>
+          <td class="paramtype">const QList&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *&gt; &amp;&#160;</td>
+          <td class="paramname"><em>items</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">signal</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Emitted whenever items' geometry changes. </p>
+<p>This signal is emitted whenever the user changes the geometry of items using <a class="el" href="class_drawing_scene.html#a10c18de57aa0008f0b83dbcda816feb8" title="Resizes an item within the scene by moving one of its item points. ">resizeItem()</a>, <a class="el" href="class_drawing_scene.html#aa040063ae34abb8c45258d00a2a54c17" title="Inserts the item point into the item at the specified index. ">insertItemPoint()</a>, and <a class="el" href="class_drawing_scene.html#a9202120d943151509c8402b04a27d1ff" title="Removes the item point from the item. ">removeItemPoint()</a>.</p>
+<p>This signal is not emitted when using functions in <a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene. ">DrawingItem</a> to directly manipulate the geometry of the item. </p>
+
+</div>
+</div>
+<a id="a3e7deb62eaaeff602a81bc86d60a043d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e7deb62eaaeff602a81bc86d60a043d">&sect;&nbsp;</a></span>itemsPositionChanged</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DrawingScene::itemsPositionChanged </td>
+          <td>(</td>
+          <td class="paramtype">const QList&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *&gt; &amp;&#160;</td>
+          <td class="paramname"><em>items</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">signal</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Emitted whenever any items' position changes. </p>
+<p>This signal is emitted whenever the user changes the position of items using <a class="el" href="class_drawing_scene.html#a78275c1e8dac5723dacd5e28054b6c09" title="Moves each of the specified items within the scene. ">moveItems()</a>.</p>
+<p>This signal is not emitted when using functions in <a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene. ">DrawingItem</a> to directly manipulate the position of the item. </p>
+
+</div>
+</div>
+<a id="aaf2d40fb07ceb9235570b863244781b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf2d40fb07ceb9235570b863244781b7">&sect;&nbsp;</a></span>itemsTransformChanged</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DrawingScene::itemsTransformChanged </td>
+          <td>(</td>
+          <td class="paramtype">const QList&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *&gt; &amp;&#160;</td>
+          <td class="paramname"><em>items</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">signal</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Emitted whenever any items' transformation changes. </p>
+<p>This signal is emitted whenever the user changes the position of items using <a class="el" href="class_drawing_scene.html#a79d55c226806b726ad8aafbebd4505c1" title="Rotates each of the specified items within the scene about the specified position. ">rotateItems()</a>, <a class="el" href="class_drawing_scene.html#a1cd53b75a1e222b39d4e933feb8e37a9" title="Rotates each of the specified items within the scene about the specified position. ">rotateBackItems()</a>, <a class="el" href="class_drawing_scene.html#adba583ce1887531037d17c4484b302ae" title="Flips each of the specified items horizontally within the scene about the specified position...">flipItemsHorizontal()</a>, or <a class="el" href="class_drawing_scene.html#a9e40f3189c9a6e3c24148edfe98493ac" title="Flips each of the specified items horizontally within the scene about the specified position...">flipItemsVertical()</a>.</p>
+<p>This signal is not emitted when using functions in <a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene. ">DrawingItem</a> to directly manipulate the item's transform. </p>
+
+</div>
+</div>
+<a id="ae148d4c4d47146ac214bdd6128e5ec9c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae148d4c4d47146ac214bdd6128e5ec9c">&sect;&nbsp;</a></span>itemsVisibilityChanged</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DrawingScene::itemsVisibilityChanged </td>
+          <td>(</td>
+          <td class="paramtype">const QList&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *&gt; &amp;&#160;</td>
+          <td class="paramname"><em>items</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">signal</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Emitted whenever any items' visibility changes. </p>
+<p>This signal is emitted whenever the user changes the position of items using <a class="el" href="class_drawing_scene.html#a153edd9a7ccca7bc56358177d8da2bff" title="Shows or hides each of the specified items within the scene. ">setItemsVisibility()</a>.</p>
+<p>This signal is not emitted when using functions in <a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene. ">DrawingItem</a> to directly manipulate the visibility of the item. </p>
+
+</div>
+</div>
+<a id="a78275c1e8dac5723dacd5e28054b6c09"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78275c1e8dac5723dacd5e28054b6c09">&sect;&nbsp;</a></span>moveItems</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void DrawingScene::moveItems </td>
+          <td>(</td>
+          <td class="paramtype">const QList&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *&gt; &amp;&#160;</td>
+          <td class="paramname"><em>items</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QHash&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *, QPointF &gt; &amp;&#160;</td>
+          <td class="paramname"><em>parentPos</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">slot</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Moves each of the specified items within the scene. </p>
+<p>This function calls <a class="el" href="class_drawing_item.html#aa971acd6e184397cb021400420de7fd8" title="Moves the item within the scene. ">DrawingItem::moveEvent()</a> for each of the specified items. It emits the <a class="el" href="class_drawing_scene.html#ae307430bf158b5205cbcaf0b419ce895" title="Emitted whenever items&#39; geometry changes. ">itemsGeometryChanged()</a> signal when all moves are complete.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_scene.html#a10c18de57aa0008f0b83dbcda816feb8" title="Resizes an item within the scene by moving one of its item points. ">resizeItem()</a> </dd></dl>
+
+</div>
+</div>
+<a id="a9f0b8d56ac87c79f60b2288666eda64d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f0b8d56ac87c79f60b2288666eda64d">&sect;&nbsp;</a></span>numberOfItemsChanged</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DrawingScene::numberOfItemsChanged </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>itemCount</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">signal</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Emitted whenever the number of items in the scene changes. </p>
+<p>This signal is emitted whenever the user adds or removes items using <a class="el" href="class_drawing_scene.html#a28cd280d7ab6219f0901fd78883d50ad" title="Adds the specified items to the scene. ">addItems()</a>, <a class="el" href="class_drawing_scene.html#a71ea2f3b51100619bf543425d4f3e2ce" title="Inserts the specified items in the scene at the specified indices. ">insertItems()</a>, or <a class="el" href="class_drawing_scene.html#a167e2bf692259008fce49e245b31e34b" title="Removes the specified items from the scene. ">removeItems()</a>.</p>
+<p>This signal is not emitted when using the <a class="el" href="class_drawing_scene.html#a2c3293113126bbe4c9c6b7b494c8c28b" title="Adds an existing item to the scene. ">addItem()</a>, <a class="el" href="class_drawing_scene.html#af28b5a62acf9d52d06150c9bb1257df1" title="Removes an existing item from the scene. ">removeItem()</a>, or <a class="el" href="class_drawing_scene.html#a49876e38ca75454ba5a87aa8c910275c" title="Removes and deletes all items from the scene. ">clearItems()</a> functions directly. </p>
 
 </div>
 </div>
@@ -258,6 +873,76 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <p>If a valid item is passed to this function, <a class="el" href="class_drawing_scene.html" title="Surface for managing a large number of two-dimensional DrawingItem objects. ">DrawingScene</a> will remove it from its list of <a class="el" href="class_drawing_scene.html#abad6f51897ff6f327ac324a281024558" title="Returns a list of all top-level items added to the scene. ">items()</a>. <a class="el" href="class_drawing_scene.html" title="Surface for managing a large number of two-dimensional DrawingItem objects. ">DrawingScene</a> relinquishes ownership of the item and does not delete the item from memory.</p>
 <p>It is safe to pass a nullptr to this function; if a nullptr is received, this function does nothing. This function also does nothing if the item is not one of the scene's <a class="el" href="class_drawing_scene.html#abad6f51897ff6f327ac324a281024558" title="Returns a list of all top-level items added to the scene. ">items()</a>.</p>
 <dl class="section see"><dt>See also</dt><dd>addPoint(), insertPoint(), clearPoints() </dd></dl>
+
+</div>
+</div>
+<a id="a9202120d943151509c8402b04a27d1ff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9202120d943151509c8402b04a27d1ff">&sect;&nbsp;</a></span>removeItemPoint</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void DrawingScene::removeItemPoint </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_drawing_item.html">DrawingItem</a> *&#160;</td>
+          <td class="paramname"><em>item</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *&#160;</td>
+          <td class="paramname"><em>point</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">slot</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Removes the item point from the item. </p>
+<p>This function emits the <a class="el" href="class_drawing_scene.html#ae307430bf158b5205cbcaf0b419ce895" title="Emitted whenever items&#39; geometry changes. ">itemsGeometryChanged()</a> signal when the removal is complete.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_scene.html#aa040063ae34abb8c45258d00a2a54c17" title="Inserts the item point into the item at the specified index. ">insertItemPoint()</a> </dd></dl>
+
+</div>
+</div>
+<a id="a167e2bf692259008fce49e245b31e34b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a167e2bf692259008fce49e245b31e34b">&sect;&nbsp;</a></span>removeItems</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void DrawingScene::removeItems </td>
+          <td>(</td>
+          <td class="paramtype">const QList&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *&gt; &amp;&#160;</td>
+          <td class="paramname"><em>items</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">slot</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Removes the specified items from the scene. </p>
+<p>This function calls <a class="el" href="class_drawing_scene.html#af28b5a62acf9d52d06150c9bb1257df1" title="Removes an existing item from the scene. ">removeItem()</a> for each of the specified items. It emits the <a class="el" href="class_drawing_scene.html#a9f0b8d56ac87c79f60b2288666eda64d" title="Emitted whenever the number of items in the scene changes. ">numberOfItemsChanged()</a> signal when complete.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_scene.html#a28cd280d7ab6219f0901fd78883d50ad" title="Adds the specified items to the scene. ">addItems()</a>, <a class="el" href="class_drawing_scene.html#a71ea2f3b51100619bf543425d4f3e2ce" title="Inserts the specified items in the scene at the specified indices. ">insertItems()</a> </dd></dl>
 
 </div>
 </div>
@@ -287,6 +972,126 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 
 <p>Paints the scene using the specified painter object. </p>
 <p>The default implementation is to first paint the <a class="el" href="class_drawing_scene.html#a7bc8f811e994303e939fe210702ca04a" title="Returns the scene&#39;s bounding rectangle. ">sceneRect()</a> using the scene's <a class="el" href="class_drawing_scene.html#ada774a5163965511220d3e49be964b21" title="Returns the scene&#39;s background brush. ">backgroundBrush()</a>. Then, all visible items are painted by calling <a class="el" href="class_drawing_item.html#a0ba79b50ff212298409dd53079c1ded2" title="Paints the contents of the item into the scene. ">DrawingItem::render()</a> on each visible item in the scene. </p>
+
+</div>
+</div>
+<a id="a10c18de57aa0008f0b83dbcda816feb8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10c18de57aa0008f0b83dbcda816feb8">&sect;&nbsp;</a></span>resizeItem</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void DrawingScene::resizeItem </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *&#160;</td>
+          <td class="paramname"><em>point</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QPointF &amp;&#160;</td>
+          <td class="paramname"><em>parentPos</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">slot</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Resizes an item within the scene by moving one of its item points. </p>
+<p>This function calls <a class="el" href="class_drawing_item.html#ac7355c993973166c1fdb4c3c8f6f579c" title="Resizes the item within the scene. ">DrawingItem::resizeEvent()</a> for each of the specified items. It emits the <a class="el" href="class_drawing_scene.html#ae307430bf158b5205cbcaf0b419ce895" title="Emitted whenever items&#39; geometry changes. ">itemsGeometryChanged()</a> signal when all moves are complete.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_scene.html#a78275c1e8dac5723dacd5e28054b6c09" title="Moves each of the specified items within the scene. ">moveItems()</a> </dd></dl>
+
+</div>
+</div>
+<a id="a1cd53b75a1e222b39d4e933feb8e37a9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1cd53b75a1e222b39d4e933feb8e37a9">&sect;&nbsp;</a></span>rotateBackItems</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void DrawingScene::rotateBackItems </td>
+          <td>(</td>
+          <td class="paramtype">const QList&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *&gt; &amp;&#160;</td>
+          <td class="paramname"><em>items</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QHash&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *, QPointF &gt; &amp;&#160;</td>
+          <td class="paramname"><em>parentPos</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">slot</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Rotates each of the specified items within the scene about the specified position. </p>
+<p>This function calls <a class="el" href="class_drawing_item.html#ac60915e7dffcc720011fc764d67501bc" title="Rotates the item clockwise within the scene. ">DrawingItem::rotateBackEvent()</a> for each of the specified items. It emits the <a class="el" href="class_drawing_scene.html#ae307430bf158b5205cbcaf0b419ce895" title="Emitted whenever items&#39; geometry changes. ">itemsGeometryChanged()</a> signal when all transformations are complete.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_scene.html#a79d55c226806b726ad8aafbebd4505c1" title="Rotates each of the specified items within the scene about the specified position. ">rotateItems()</a> </dd></dl>
+
+</div>
+</div>
+<a id="a79d55c226806b726ad8aafbebd4505c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a79d55c226806b726ad8aafbebd4505c1">&sect;&nbsp;</a></span>rotateItems</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void DrawingScene::rotateItems </td>
+          <td>(</td>
+          <td class="paramtype">const QList&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *&gt; &amp;&#160;</td>
+          <td class="paramname"><em>items</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QHash&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *, QPointF &gt; &amp;&#160;</td>
+          <td class="paramname"><em>parentPos</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">slot</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Rotates each of the specified items within the scene about the specified position. </p>
+<p>This function calls <a class="el" href="class_drawing_item.html#a41b9b8fbe5aef12d5fd9ef59a34f71d7" title="Rotates the item counter-clockwise within the scene. ">DrawingItem::rotateEvent()</a> for each of the specified items. It emits the <a class="el" href="class_drawing_scene.html#ae307430bf158b5205cbcaf0b419ce895" title="Emitted whenever items&#39; geometry changes. ">itemsGeometryChanged()</a> signal when all transformations are complete.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_scene.html#a1cd53b75a1e222b39d4e933feb8e37a9" title="Rotates each of the specified items within the scene about the specified position. ">rotateBackItems()</a> </dd></dl>
 
 </div>
 </div>
@@ -338,6 +1143,68 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <p>The background brush is used to fill the background of the scene by the default implementation of <a class="el" href="class_drawing_scene.html#ab0073f348157985a1c90de0507ddac34" title="Paints the scene using the specified painter object. ">render()</a>.</p>
 <p>The default background brush is set to white.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_scene.html#ada774a5163965511220d3e49be964b21" title="Returns the scene&#39;s background brush. ">backgroundBrush()</a> </dd></dl>
+
+</div>
+</div>
+<a id="aceefa5f38494ab3b2e9e360ea64c3ca9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aceefa5f38494ab3b2e9e360ea64c3ca9">&sect;&nbsp;</a></span>setItems()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DrawingScene::setItems </td>
+          <td>(</td>
+          <td class="paramtype">const QList&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *&gt; &amp;&#160;</td>
+          <td class="paramname"><em>items</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sets the top-level items of the scene. </p>
+<p><a class="el" href="class_drawing_scene.html" title="Surface for managing a large number of two-dimensional DrawingItem objects. ">DrawingScene</a> will replace its list of top-level items with the specified list. <a class="el" href="class_drawing_scene.html" title="Surface for managing a large number of two-dimensional DrawingItem objects. ">DrawingScene</a> takes ownership of the items and will delete them as necessary.</p>
+<p>This function will delete any items in the existing item list that are not in the new item list.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_scene.html#a2c3293113126bbe4c9c6b7b494c8c28b" title="Adds an existing item to the scene. ">addItem()</a>, <a class="el" href="class_drawing_scene.html#af28b5a62acf9d52d06150c9bb1257df1" title="Removes an existing item from the scene. ">removeItem()</a> </dd></dl>
+
+</div>
+</div>
+<a id="a153edd9a7ccca7bc56358177d8da2bff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a153edd9a7ccca7bc56358177d8da2bff">&sect;&nbsp;</a></span>setItemsVisibility</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void DrawingScene::setItemsVisibility </td>
+          <td>(</td>
+          <td class="paramtype">const QList&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *&gt; &amp;&#160;</td>
+          <td class="paramname"><em>items</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QHash&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> *, bool &gt; &amp;&#160;</td>
+          <td class="paramname"><em>visibility</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">slot</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Shows or hides each of the specified items within the scene. </p>
+<p>This function calls <a class="el" href="class_drawing_item.html#a6db3865450d5bb89ca54491b18e0bd4b" title="Sets whether the item is currently visible within the scene or not. ">DrawingItem::setVisible()</a> for each of the specified items. It emits the <a class="el" href="class_drawing_scene.html#ae307430bf158b5205cbcaf0b419ce895" title="Emitted whenever items&#39; geometry changes. ">itemsGeometryChanged()</a> signal when all changes are complete. </p>
 
 </div>
 </div>
