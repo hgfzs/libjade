@@ -78,14 +78,14 @@ DrawingItem* DrawingPathItem::copy() const
 void DrawingPathItem::setRect(const QRectF& rect)
 {
 	QList<DrawingItemPoint*> points = DrawingPathItem::points();
-	points[0]->setPosition(rect.left(), rect.top());
-	points[1]->setPosition(rect.center().x(), rect.top());
-	points[2]->setPosition(rect.right(), rect.top());
-	points[3]->setPosition(rect.right(), rect.center().y());
-	points[4]->setPosition(rect.right(), rect.bottom());
-	points[5]->setPosition(rect.center().x(), rect.bottom());
-	points[6]->setPosition(rect.left(), rect.bottom());
-	points[7]->setPosition(rect.left(), rect.center().y());
+	points[TopLeft]->setPosition(rect.left(), rect.top());
+	points[TopMiddle]->setPosition(rect.center().x(), rect.top());
+	points[TopRight]->setPosition(rect.right(), rect.top());
+	points[MiddleRight]->setPosition(rect.right(), rect.center().y());
+	points[BottomRight]->setPosition(rect.right(), rect.bottom());
+	points[BottomMiddle]->setPosition(rect.center().x(), rect.bottom());
+	points[BottomLeft]->setPosition(rect.left(), rect.bottom());
+	points[MiddleLeft]->setPosition(rect.left(), rect.center().y());
 }
 
 void DrawingPathItem::setRect(qreal left, qreal top, qreal width, qreal height)
@@ -96,7 +96,7 @@ void DrawingPathItem::setRect(qreal left, qreal top, qreal width, qreal height)
 QRectF DrawingPathItem::rect() const
 {
 	QList<DrawingItemPoint*> points = DrawingPathItem::points();
-	return (points.size() >= 8) ? QRectF(points[0]->position(), points[4]->position()) : QRectF();
+	return (points.size() >= 8) ? QRectF(points[TopLeft]->position(), points[BottomRight]->position()) : QRectF();
 }
 
 //==================================================================================================
@@ -246,7 +246,7 @@ QPainterPath DrawingPathItem::shape() const
 bool DrawingPathItem::isValid() const
 {
 	QList<DrawingItemPoint*> points = DrawingPathItem::points();
-	return (points.size() >= 8 && points[0]->position() != points[4]->position() &&
+	return (points.size() >= 8 && points[TopLeft]->position() != points[BottomRight]->position() &&
 		!mPathRect.isNull() && !mPath.isEmpty());
 }
 

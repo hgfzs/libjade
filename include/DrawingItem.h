@@ -23,6 +23,7 @@
 
 #include <QtGui>
 
+class DrawingScene;
 class DrawingItemPoint;
 class DrawingItemStyle;
 

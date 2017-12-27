@@ -1473,6 +1473,7 @@ void DrawingView::mouseReleaseEvent(QMouseEvent* event)
 				QList<DrawingItem*> children;
 				QPointF deltaScenePos;
 				QList<DrawingItem*> itemsToMove;
+				QList<DrawingItem*> foundItems;
 				QHash<DrawingItem*,QPointF> originalPositions, newPositions;
 
 				switch (mDefaultMouseState)
@@ -1535,7 +1536,17 @@ void DrawingView::mouseReleaseEvent(QMouseEvent* event)
 					break;
 
 				case MouseRubberBand:
-					selectArea(mapToScene(mRubberBandRect));
+					//selectArea(mapToScene(mRubberBandRect));
+					foundItems = visibleItems(mapToScene(mRubberBandRect));
+
+					for(auto itemIter = foundItems.begin(); itemIter != foundItems.end(); itemIter++)
+					{
+						if (!newSelection.contains((*itemIter)) &&
+							(*itemIter)->flags() & DrawingItem::CanSelect) newSelection.append(*itemIter);
+					}
+
+					if (mSelectedItems != newSelection) selectItemsCommand(newSelection, true);
+
 					mRubberBandRect = QRect();
 					break;
 
