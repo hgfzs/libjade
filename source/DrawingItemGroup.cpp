@@ -74,11 +74,13 @@ QPainterPath DrawingItemGroup::shape() const
 
 	if (isValid())
 	{
-		for(auto itemIter = mItems.begin(); itemIter != mItems.end(); itemIter++)
+		/*for(auto itemIter = mItems.begin(); itemIter != mItems.end(); itemIter++)
 		{
 			if ((*itemIter)->isVisible())
 				shape = shape.united((*itemIter)->mapToParent((*itemIter)->shape()));
-		}
+		}*/
+
+		shape.addRect(mItemsRect);
 	}
 
 	return shape;
