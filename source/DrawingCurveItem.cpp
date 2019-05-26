@@ -29,9 +29,9 @@ DrawingCurveItem::DrawingCurveItem() : DrawingItem()
 	DrawingItemPoint::Flags flags =
 		DrawingItemPoint::Control | DrawingItemPoint::Connection | DrawingItemPoint::Free;
 	addPoint(new DrawingItemPoint(QPointF(0, 0), flags));						// start point
-	addPoint(new DrawingItemPoint(QPointF(0, 0), flags));						// end point
 	addPoint(new DrawingItemPoint(QPointF(0, 0), DrawingItemPoint::Control));	// control point for start
 	addPoint(new DrawingItemPoint(QPointF(0, 0), DrawingItemPoint::Control));	// control point for end
+	addPoint(new DrawingItemPoint(QPointF(0, 0), flags));						// end point
 	setCurve(QPointF(-200, -200), QPointF(0, -200), QPointF(0, 200), QPointF(200, 200));
 
 	DrawingItemStyle* style = DrawingItem::style();
@@ -218,7 +218,7 @@ void DrawingCurveItem::render(QPainter* painter)
 
 //==================================================================================================
 
-void DrawingCurveItem::resizeEvent(DrawingItemPoint* itemPoint, const QPointF& scenePos)
+void DrawingCurveItem::resizeEvent(DrawingItemPoint* itemPoint, const QPointF& parentPos)
 {
 	QList<DrawingItemPoint*> points = DrawingCurveItem::points();
 
@@ -227,16 +227,16 @@ void DrawingCurveItem::resizeEvent(DrawingItemPoint* itemPoint, const QPointF& s
 	if (pointIndex == 0)
 	{
 		QPointF difference = points[1]->position() - points[0]->position();
-		points[1]->setPosition(mapFromScene(scenePos) + difference);
+		points[1]->setPosition(mapFromParent(parentPos) + difference);
 
 	}
 	else if (pointIndex == 3)
 	{
 		QPointF difference = points[2]->position() - points[3]->position();
-		points[2]->setPosition(mapFromScene(scenePos) + difference);
+		points[2]->setPosition(mapFromParent(parentPos) + difference);
 	}
 
-	DrawingItem::resizeEvent(itemPoint, scenePos);
+	DrawingItem::resizeEvent(itemPoint, parentPos);
 }
 
 //==================================================================================================

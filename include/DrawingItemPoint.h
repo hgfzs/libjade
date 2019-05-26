@@ -23,6 +23,8 @@
 
 #include <QtCore>
 
+class DrawingItem;
+
 /*! \brief Represents an interaction point within a DrawingItem through which the user can
  * resize the item or connect the item to another item.
  *

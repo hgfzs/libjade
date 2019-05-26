@@ -265,7 +265,7 @@ DrawingItemPoint* DrawingPolylineItem::itemPointToRemove(const QPointF& itemPos)
 	QList<DrawingItemPoint*> points = DrawingPolylineItem::points();
 	if (points.size() > 2)
 	{
-		DrawingItemPoint* pointToRemove = pointNearest(itemPos);
+		pointToRemove = pointNearest(itemPos);
 
 		if (pointToRemove && (pointToRemove == points.first() || pointToRemove == points.last()))
 			pointToRemove = nullptr;

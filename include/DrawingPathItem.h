@@ -246,7 +246,7 @@ protected:
 	 * This function ensures that whenever the item is resized, all of the item's points are resized
 	 * to maintain position on the item's perimeter.
 	 */
-	virtual void resizeEvent(DrawingItemPoint* itemPoint, const QPointF& scenePos);
+	virtual void resizeEvent(DrawingItemPoint* itemPoint, const QPointF& parentPos);
 
 private:
 	QPainterPath transformedPath() const;

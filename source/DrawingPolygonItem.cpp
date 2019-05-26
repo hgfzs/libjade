@@ -209,7 +209,7 @@ DrawingItemPoint* DrawingPolygonItem::itemPointToRemove(const QPointF& itemPos)
 	QList<DrawingItemPoint*> points = DrawingPolygonItem::points();
 	if (points.size() > 3)
 	{
-		DrawingItemPoint* pointToRemove = pointNearest(itemPos);
+		pointToRemove = pointNearest(itemPos);
 
 		if (pointToRemove && (pointToRemove == points.first() || pointToRemove == points.last()))
 			pointToRemove = nullptr;
