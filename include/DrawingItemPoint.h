@@ -1,21 +1,21 @@
 /* DrawingItemPoint.h
  *
- * Copyright (C) 2013-2017 Jason Allen
+ * Copyright (C) 2013-2020 Jason Allen
  *
- * This file is part of the jade library.
+ * This file is part of the libjade library.
  *
- * jade is free software: you can redistribute it and/or modify
+ * libjade is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * jade is distributed in the hope that it will be useful,
+ * libjade is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with jade.  If not, see <http://www.gnu.org/licenses/>
+ * along with libjade.  If not, see <http://www.gnu.org/licenses/>
  */
 
 #ifndef DRAWINGITEMPOINT_H
@@ -26,27 +26,28 @@
 class DrawingItem;
 
 /*! \brief Represents an interaction point within a DrawingItem through which the user can
- * resize the item or connect the item to another item.
+ * resize the item or connect to another item.
  *
  * Each DrawingItemPoint object is associated with a specific item().  The item point has a
- * position (position()) that is given in the local coordinate system of that item.
+ * position() that is given in the local coordinate system of its item.
  *
  * When a DrawingItem is selected in a DrawingView, its item points are shown.  If the user clicks
- * and drags on a #Control point, DrawingView will move just the item point around the canvas
+ * and drags on a #Control point, DrawingView will move just the item point around the scene
  * instead of the whole item.  This provides a method for resizing items whose geometry is
  * determined by the location of their item points.
  *
  * Additionally, if the user moves or resizes and item such that two #Connection points
  * overlap, DrawingView will connect the two items together.  If the user then moves one of the
  * two items, DrawingView will attempt to maintain the connection by resizing the other item.
+ * The other item's connection point must have the #Free flag set.
  *
  * DrawingItemPoint objects can be both #Control and #Connection points.
  *
  * All rendering of item points is handled by DrawingView.  Item points remain hidden until their
- * parent item is selected.  #Control points are rendered as green squares that the user can
- * then click on to move.  #Connection points are rendered as X's; the user can drag the
- * connecting item over the X to create the connection.  Item points that are both #Control
- * and #Connection points are rendered as green squares with X's inside them.
+ * parent item is selected.  #Control points (and points that are both #Control and #Connection
+ * points) are rendered as green squares that the user can then click on to move.  #Connection
+ * points are rendered as yellow squares; the user can drag the connecting item over the yellow
+ * square to create the connection.
  */
 class DrawingItemPoint
 {
@@ -72,6 +73,12 @@ public:
 								//!< DrawingView is free to resize the associated item to try to
 								//!< maintain the connection.
 	};
+
+	/*! \brief Logical OR of various #Flag values.  Valid combinations are listed in the description
+	 * for the setFlags() function.
+	 *
+	 * \sa setFlags(), flags()
+	 */
 	Q_DECLARE_FLAGS(Flags, Flag)
 
 private:
@@ -83,13 +90,12 @@ private:
 	QList<DrawingItemPoint*> mConnections;
 
 public:
-	/*! \brief Create a new DrawingItemPoint with the specified settings.
+	/*! \brief Create a new DrawingItemPoint with the specified position and flags.
 	 *
-	 * Initializes the new DrawingItemPoint object with the specified position and flags. The new
-	 * item point is not associated with a DrawingItem and does not have any connections to
+	 * The new item point is not associated with a DrawingItem and does not have any connections to
 	 * any other item points.
 	 *
-	 * \sa setPos(), setFlags(), item()
+	 * \sa setPosition(), setFlags(), item()
 	 */
 	DrawingItemPoint(const QPointF& pos = QPointF(), Flags flags = Control);
 
@@ -99,7 +105,7 @@ public:
 	 * item point is not associated with a DrawingItem and does not have any connections to
 	 * any other item points.
 	 *
-	 * \sa setPos(), setFlags(), item()
+	 * \sa setPosition(), setFlags(), item()
 	 */
 	DrawingItemPoint(const DrawingItemPoint& point);
 
@@ -127,7 +133,7 @@ public:
 	 * parent item.
 	 *
 	 * To move an item point around the scene as if the user clicked on it, call
-	 * DrawingView::resizeSelection() or DrawingView::resizeItem().
+	 * DrawingView::resizeSelection().
 	 *
 	 * \sa position()
 	 */
@@ -135,7 +141,7 @@ public:
 
 	/*! \brief Sets the position of the item point.
 	 *
-	 * This convenience function is equivalent to calling setPosition(QPointF(x,y)).
+	 * This convenience function is equivalent to calling \link setPosition(const QPointF& pos) setPosition(QPointF(x,y)) \endlink .
 	 *
 	 * \sa position(), x(), y()
 	 */
@@ -143,7 +149,7 @@ public:
 
 	/*! \brief Sets the x-coordinate of the item point's position.
 	 *
-	 * This convenience function is equivalent to calling setPosition(QPointF(x,y())).
+	 * This convenience function is equivalent to calling \link setPosition(const QPointF& pos) setPosition(QPointF(x,y())) \endlink .
 	 *
 	 * \sa setPosition(), x()
 	 */
@@ -151,7 +157,7 @@ public:
 
 	/*! \brief Sets the y-coordinate of the item point's position.
 	 *
-	 * This convenience function is equivalent to calling setPosition(QPointF(x(),y)).
+	 * This convenience function is equivalent to calling \link setPosition(const QPointF& pos) setPosition(QPointF(x(),y)) \endlink .
 	 *
 	 * \sa setPosition(), y()
 	 */
@@ -197,7 +203,7 @@ public:
 
 	/*! \brief Returns the type of the item point.
 	 *
-	 * \sa setFlags(), isControlPoint(), isConnectionPoint(), isFree()
+	 * \sa setFlags()
 	 */
 	Flags flags() const;
 
@@ -233,9 +239,7 @@ public:
 
 	/*! \brief Returns a list of all item points connected to this point.
 	 *
-	 * This function does not delete any DrawingItemPoint objects from memory.
-	 *
-	 * \sa removeConnection(), connections()
+	 * \sa addConnection(), removeConnection()
 	 */
 	QList<DrawingItemPoint*> connections() const;
 

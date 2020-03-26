@@ -1675,32 +1675,29 @@ void DrawingView::drawForeground(QPainter* painter)
 		painter->resetTransform();
 		painter->setRenderHints(QPainter::Antialiasing, false);
 		painter->setPen(QPen(color, 1));
-		painter->setBrush(QColor(0, 224, 0));
 
-		for(auto itemIter = mSelectedItems.begin(); itemIter != mSelectedItems.end(); itemIter++)
+		for(auto itemIter = mSelectedItems.begin(), itemEnd = mSelectedItems.end(); itemIter != itemEnd; itemIter++)
 		{
 			if ((*itemIter)->isVisible())
 			{
 				QList<DrawingItemPoint*> itemPoints = (*itemIter)->points();
 
-				for(auto pointIter = itemPoints.begin(); pointIter != itemPoints.end(); pointIter++)
+				for(auto pointIter = itemPoints.begin(), pointEnd = itemPoints.end(); pointIter != pointEnd; pointIter++)
 				{
-					QRect pointRect = DrawingView::pointRect(*pointIter).adjusted(0, 0, -1, -1);
+					bool controlPoint = (((*pointIter)->flags() & DrawingItemPoint::Control) ||
+						((*pointIter)->flags() == DrawingItemPoint::NoFlags));
+					bool connectionPoint = ((*pointIter)->flags() & DrawingItemPoint::Connection);
 
-					if (((*pointIter)->flags() & DrawingItemPoint::Control) ||
-						((*pointIter)->flags() == DrawingItemPoint::NoFlags))
+					if (controlPoint || connectionPoint)
 					{
-						pointRect.adjust(1, 1, -1, -1);
+						QRect pointRect = DrawingView::pointRect(*pointIter).adjusted(1, 1, -2, -2);
+
+						if (connectionPoint && !controlPoint)
+							painter->setBrush(QColor(255, 255, 0));
+						else
+							painter->setBrush(QColor(0, 224, 0));
+
 						painter->drawRect(pointRect);
-					}
-
-					if ((*pointIter)->flags() & DrawingItemPoint::Connection)
-					{
-						for(int x = 0; x <= pointRect.width(); x++)
-						{
-							painter->drawPoint(pointRect.left() + x, pointRect.bottom() + 1 - x);
-							painter->drawPoint(pointRect.left() + x, pointRect.top() + x);
-						}
 					}
 				}
 			}
