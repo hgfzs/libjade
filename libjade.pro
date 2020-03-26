@@ -6,7 +6,11 @@ INCLUDEPATH += include
 
 CONFIG += release warn_on embed_manifest_dll c++11 qt staticlib
 CONFIG -= debug
-QT += widgets
+
+QT += core gui
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
+DEFINES += QT_DEPRECATED_WARNINGS
 
 !win32:MOC_DIR = release
 !win32:OBJECTS_DIR = release
@@ -56,3 +60,10 @@ HEADERS += \
 	include/DrawingUndo.h \
 	include/DrawingView.h \
     include/Drawing.h
+
+# --------------------------------------------------------------------------------------------------
+
+# Default rules for deployment.
+qnx: target.path = /tmp/$${TARGET}/bin
+else: unix:!android: target.path = /opt/$${TARGET}/bin
+!isEmpty(target.path): INSTALLS += target
