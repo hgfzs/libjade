@@ -24,7 +24,7 @@
 
 DrawingCurveItem::DrawingCurveItem() : DrawingItem()
 {
-	setFlags(CanMove | CanResize | CanRotate | CanFlip | CanSelect | CanDelete | AdjustPositionOnResize);
+	setFlags(CanMove | CanResize | CanRotate | CanFlip | CanSelect | CanDelete);
 
 	DrawingItemPoint::Flags flags =
 		DrawingItemPoint::Control | DrawingItemPoint::Connection | DrawingItemPoint::Free;

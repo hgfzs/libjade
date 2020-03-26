@@ -186,6 +186,8 @@ private:
 	int mScrollButtonDownHorizontalScrollValue;
 	int mScrollButtonDownVerticalScrollValue;
 
+	bool mPlaceByMousePressAndRelease;
+
 	QPoint mPanStartPos;
 	QPoint mPanCurrentPos;
 	QTimer mPanTimer;

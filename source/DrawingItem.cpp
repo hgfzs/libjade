@@ -1,21 +1,21 @@
 /* DrawingItem.cpp
  *
- * Copyright (C) 2013-2017 Jason Allen
+ * Copyright (C) 2013-2020 Jason Allen
  *
- * This file is part of the jade application.
+ * This file is part of the libjade library.
  *
- * jade is free software: you can redistribute it and/or modify
+ * libjade is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * jade is distributed in the hope that it will be useful,
+ * libjade is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with jade.  If not, see <http://www.gnu.org/licenses/>
+ * along with libjade.  If not, see <http://www.gnu.org/licenses/>
  */
 
 #include "DrawingItem.h"
@@ -45,7 +45,7 @@ DrawingItem::DrawingItem(const DrawingItem& item)
 
 	mStyle = new DrawingItemStyle(*item.mStyle);
 
-	for(auto pointIter = item.mPoints.begin(); pointIter != item.mPoints.end(); pointIter++)
+	for(auto pointIter = item.mPoints.begin(), pointEnd = item.mPoints.end(); pointIter != pointEnd; pointIter++)
 		addPoint(new DrawingItemPoint(**pointIter));
 
 	mSelected = false;
@@ -360,17 +360,14 @@ void DrawingItem::resizeEvent(DrawingItemPoint* itemPoint, const QPointF& sceneP
 	{
 		itemPoint->setPosition(mapFromScene(scenePos));
 
-		if (mFlags & AdjustPositionOnResize)
-		{
-			// Adjust position of item and item points so that point(0)->position() == QPointF(0, 0)
-			QPointF deltaPos = -mPoints.first()->position();
-			QPointF pointParentPos = mapToScene(mPoints.first()->position());
+		// Adjust position of item and item points so that point(0)->position() == QPointF(0, 0)
+		QPointF deltaPos = -mPoints.first()->position();
+		QPointF pointParentPos = mapToScene(mPoints.first()->position());
 
-			for(auto pointIter = mPoints.begin(); pointIter != mPoints.end(); pointIter++)
-				(*pointIter)->setPosition((*pointIter)->position() + deltaPos);
+		for(auto pointIter = mPoints.begin(); pointIter != mPoints.end(); pointIter++)
+			(*pointIter)->setPosition((*pointIter)->position() + deltaPos);
 
-			setPosition(pointParentPos);
-		}
+		setPosition(pointParentPos);
 	}
 }
 

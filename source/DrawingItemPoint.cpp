@@ -140,8 +140,8 @@ bool DrawingItemPoint::isConnected(DrawingItem* item) const
 
 	if (item)
 	{
-		for(auto pointIter = mConnections.begin(), pointEnd = mConnections.end();
-			!connected && pointIter != pointEnd; pointIter++)
+		for(auto pointIter = mConnections.begin();
+			!connected && pointIter != mConnections.end(); pointIter++)
 		{
 			connected = ((*pointIter)->item() == item);
 		}

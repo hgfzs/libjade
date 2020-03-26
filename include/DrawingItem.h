@@ -1,21 +1,21 @@
 /* DrawingItem.h
  *
- * Copyright (C) 2013-2017 Jason Allen
+ * Copyright (C) 2013-2020 Jason Allen
  *
- * This file is part of the jade application.
+ * This file is part of the libjade library.
  *
- * jade is free software: you can redistribute it and/or modify
+ * libjade is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * jade is distributed in the hope that it will be useful,
+ * libjade is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with jade.  If not, see <http://www.gnu.org/licenses/>
+ * along with libjade.  If not, see <http://www.gnu.org/licenses/>
  */
 
 #ifndef DRAWINGITEM_H
@@ -151,33 +151,28 @@ public:
 	//! \brief Enum used to affect the behavior of the DrawingItem within the scene.
 	enum Flag
 	{
-		CanMove = 0x01,							//!< Indicates that the item can be moved around the scene.
+		CanMove = 0x0001,						//!< Indicates that the item can be moved around the scene.
 												//!< See also moveItem().
-		CanResize = 0x02,						//!< Indicates that the item can be resized within the
+		CanResize = 0x0002,						//!< Indicates that the item can be resized within the
 												//!< scene.  See also resizeItem().
-		CanRotate = 0x04,						//!< Indicates that the item can be rotated within the
+		CanRotate = 0x0004,						//!< Indicates that the item can be rotated within the
 												//!< scene.  See also rotateItem() and rotateBackItem().
-		CanFlip = 0x08,							//!< Indicates that the item can be flipped horizontally
+		CanFlip = 0x0008,						//!< Indicates that the item can be flipped horizontally
 												//!< within the scene.  See also flipItem().
-		CanSelect = 0x10,						//!< Indicates that the item can be selected by the user
+		CanSelect = 0x0010,						//!< Indicates that the item can be selected by the user
 												//!< within the scene.
-		CanInsertPoints = 0x20,					//!< Indicates that item points can be added
+		CanHide = 0x0020,
+		CanDelete = 0x0040,
+		CanInsertPoints = 0x0080,				//!< Indicates that item points can be added
 												//!< to the item.  See also insertItemPoint().
-		CanRemovePoints = 0x40,					//!< Indicates that item points can be removed
+		CanRemovePoints = 0x0100				//!< Indicates that item points can be removed
 												//!< from the item.  See also removeItemPoint().
-		PlaceByMousePressAndRelease = 0x1000,	//!< Indicates that the item is placed by setting its first
-												//!< item point (points()[0]) when the mouse is pressed and
-												//!< by setting the second item point (points()[1]) when the
-												//!< mouse is released.  If unset, items are placed
-												//!< when the mouse is released with no changes to
-												//!< the item's geometry.
-		AdjustPositionOnResize = 0x2000,		//!< Indicates that when the item is resized, its
-												//!< position() is changed so that the position of
-												//!< the first item point is the origin (i.e.
-												//!< point(0)->position() == QPointF(0, 0)).
-		CanDelete = 0x80,
-		CanHide = 0x100
 	};
+
+	/*! \brief Logical OR of various #Flag values.
+	 *
+	 * \sa setFlags(), flags()
+	 */
 	Q_DECLARE_FLAGS(Flags, Flag)
 
 private:

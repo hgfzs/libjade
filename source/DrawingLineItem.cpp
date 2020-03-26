@@ -24,7 +24,7 @@
 
 DrawingLineItem::DrawingLineItem() : DrawingItem()
 {
-	setFlags(CanMove | CanResize | CanRotate | CanFlip | CanSelect | CanDelete | PlaceByMousePressAndRelease | AdjustPositionOnResize);
+	setFlags(CanMove | CanResize | CanRotate | CanFlip | CanSelect | CanDelete);
 
 	DrawingItemPoint::Flags flags =
 		DrawingItemPoint::Control | DrawingItemPoint::Connection | DrawingItemPoint::Free;

@@ -60,6 +60,8 @@ DrawingView::DrawingView() : QAbstractScrollArea()
 	mScrollButtonDownHorizontalScrollValue = 0;
 	mScrollButtonDownVerticalScrollValue = 0;
 
+	mPlaceByMousePressAndRelease = false;
+
 	mPanTimer.setInterval(16);
 	connect(&mPanTimer, SIGNAL(timeout()), this, SLOT(mousePanEvent()));
 }
@@ -526,6 +528,8 @@ void DrawingView::setPlaceMode(const QList<DrawingItem*>& items)
 		while (!mNewItems.isEmpty()) delete mNewItems.takeFirst();
 		mNewItems = items;
 
+		mPlaceByMousePressAndRelease = (mNewItems.size() == 1 && !mNewItems.first()->isValid());
+
 		for(auto itemIter = mNewItems.begin(); itemIter != mNewItems.end(); itemIter++)
 			centerPos += (*itemIter)->mapToScene((*itemIter)->centerPos());
 		centerPos /= mNewItems.size();
@@ -606,9 +610,6 @@ void DrawingView::paste()
 
 		if (!newItems.isEmpty())
 		{
-			for(auto itemIter = newItems.begin(); itemIter != newItems.end(); itemIter++)
-				(*itemIter)->setFlags((*itemIter)->flags() & (~DrawingItem::PlaceByMousePressAndRelease));
-
 			selectNone();
 			setPlaceMode(newItems);
 		}
@@ -1264,9 +1265,8 @@ void DrawingView::mouseMoveEvent(QMouseEvent* event)
 		}
 		else if (mMode == PlaceMode)
 		{
-			if (event->buttons() & Qt::LeftButton &&
-				mNewItems.size() == 1 && (mNewItems.first()->flags() & DrawingItem::PlaceByMousePressAndRelease)
-				&& mNewItems.first()->points().size() >= 2)
+			if (event->buttons() & Qt::LeftButton && mPlaceByMousePressAndRelease &&
+				mNewItems.size() == 1 && mNewItems.first()->points().size() >= 2)
 			{
 				mScene->resizeItem(mNewItems.first()->points()[1], roundToGrid(mScenePos));
 			}
@@ -1405,7 +1405,7 @@ void DrawingView::mouseReleaseEvent(QMouseEvent* event)
 					for(auto itemIter = mNewItems.begin(); itemIter != mNewItems.end(); itemIter++)
 					{
 						newItem = (*itemIter)->copy();
-						if (newItem->flags() & DrawingItem::PlaceByMousePressAndRelease)
+						if (mPlaceByMousePressAndRelease)
 						{
 							points = newItem->points();
 							for(auto pointIter = points.begin(); pointIter != points.end(); pointIter++)

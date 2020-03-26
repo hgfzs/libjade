@@ -24,7 +24,7 @@
 
 DrawingPolygonItem::DrawingPolygonItem() : DrawingItem()
 {
-	setFlags(CanMove | CanResize | CanRotate | CanFlip | CanInsertPoints | CanRemovePoints | CanSelect | CanDelete | AdjustPositionOnResize);
+	setFlags(CanMove | CanResize | CanRotate | CanFlip | CanInsertPoints | CanRemovePoints | CanSelect | CanDelete);
 
 	DrawingItemPoint::Flags flags = DrawingItemPoint::Control | DrawingItemPoint::Connection;
 	addPoint(new DrawingItemPoint(QPointF(-200, -200), flags));

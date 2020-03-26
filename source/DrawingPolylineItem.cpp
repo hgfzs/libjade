@@ -24,7 +24,7 @@
 
 DrawingPolylineItem::DrawingPolylineItem() : DrawingItem()
 {
-	setFlags(CanMove | CanResize | CanRotate | CanFlip | CanInsertPoints | CanRemovePoints | CanSelect | CanDelete | PlaceByMousePressAndRelease | AdjustPositionOnResize);
+	setFlags(CanMove | CanResize | CanRotate | CanFlip | CanInsertPoints | CanRemovePoints | CanSelect | CanDelete);
 
 	DrawingItemPoint::Flags flags =
 		DrawingItemPoint::Control | DrawingItemPoint::Connection | DrawingItemPoint::Free;

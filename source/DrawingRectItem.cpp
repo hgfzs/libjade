@@ -27,7 +27,7 @@ DrawingRectItem::DrawingRectItem() : DrawingItem()
 	mCornerRadiusX = 0;
 	mCornerRadiusY = 0;
 
-	setFlags(CanMove | CanResize | CanRotate | CanFlip | CanSelect | CanDelete | PlaceByMousePressAndRelease | AdjustPositionOnResize);
+	setFlags(CanMove | CanResize | CanRotate | CanFlip | CanSelect | CanDelete);
 
 	DrawingItemPoint::Flags flags = (DrawingItemPoint::Control | DrawingItemPoint::Connection);
 	for(int i = 0; i < 8; i++) addPoint(new DrawingItemPoint(QPointF(0, 0), flags));
