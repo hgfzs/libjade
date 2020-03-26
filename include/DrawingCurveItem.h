@@ -157,14 +157,14 @@ public:
 	 */
 	virtual void render(QPainter* painter);
 
-protected:
+
 	/*! \brief Resizes the item within the scene.
 	 *
 	 * This function adds behavior to the default DrawingItem::resizeEvent() implemenation.  This
 	 * behavior is that if itemPoint is the start or end point, the corresponding control point is
 	 * moved by the same amount when the item is resized.
 	 */
-	virtual void resizeEvent(DrawingItemPoint* itemPoint, const QPointF& scenePos);
+	virtual void resize(DrawingItemPoint* itemPoint, const QPointF& scenePos);
 
 private:
 	QPointF pointFromRatio(qreal ratio) const;

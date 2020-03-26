@@ -609,7 +609,7 @@ public:
 	 */
 	virtual void render(QPainter* painter) = 0;
 
-protected:
+
 	/*! \brief Moves the item within the scene.
 	 *
 	 * This function is called when the item is to be moved within the scene.  This will only be
@@ -624,7 +624,7 @@ protected:
 	 *
 	 * \sa resizeEvent(), rotateEvent(), rotateBackEvent(), flipHorizontalEvent(), flipVerticalEvent()
 	 */
-	virtual void moveEvent(const QPointF& scenePos);
+	virtual void move(const QPointF& scenePos);
 
 	/*! \brief Resizes the item within the scene.
 	 *
@@ -640,7 +640,7 @@ protected:
 	 *
 	 * \sa moveEvent(), rotateEvent(), rotateBackEvent(), flipHorizontalEvent(), flipVerticalEvent()
 	 */
-	virtual void resizeEvent(DrawingItemPoint* itemPoint, const QPointF& scenePos);
+	virtual void resize(DrawingItemPoint* itemPoint, const QPointF& scenePos);
 
 	/*! \brief Rotates the item counter-clockwise within the scene.
 	 *
@@ -657,7 +657,7 @@ protected:
 	 *
 	 * \sa moveEvent(), resizeEvent(), rotateBackEvent(), flipHorizontalEvent(), flipVerticalEvent()
 	 */
-	virtual void rotateEvent(const QPointF& scenePos);
+	virtual void rotate(const QPointF& scenePos);
 
 	/*! \brief Rotates the item clockwise within the scene.
 	 *
@@ -674,7 +674,7 @@ protected:
 	 *
 	 * \sa moveEvent(), resizeEvent(), rotateEvent(), flipHorizontalEvent(), flipVerticalEvent()
 	 */
-	virtual void rotateBackEvent(const QPointF& scenePos);
+	virtual void rotateBack(const QPointF& scenePos);
 
 	/*! \brief Flips the item horizontally within the scene.
 	 *
@@ -691,7 +691,7 @@ protected:
 	 *
 	 * \sa moveEvent(), resizeEvent(), rotateEvent(), rotateBackEvent(), flipVerticalEvent()
 	 */
-	virtual void flipHorizontalEvent(const QPointF& scenePos);
+	virtual void flipHorizontal(const QPointF& scenePos);
 
 	/*! \brief Flips the item vertically within the scene.
 	 *
@@ -708,23 +708,7 @@ protected:
 	 *
 	 * \sa moveEvent(), resizeEvent(), rotateEvent(), rotateBackEvent(), flipHorizontalEvent()
 	 */
-	virtual void flipVerticalEvent(const QPointF& scenePos);
-
-	/*! \brief Receives key press events when the item is the focus item of the view.
-	 *
-	 * The default implementation does nothing.
-	 *
-	 * \sa keyReleaseEvent()
-	 */
-	virtual void keyPressEvent(QKeyEvent* event);
-
-	/*! \brief Receives key release events when the item is the focus item of the view.
-	 *
-	 * The default implementation does nothing.
-	 *
-	 * \sa keyPressEvent()
-	 */
-	virtual void keyReleaseEvent(QKeyEvent* event);
+	virtual void flipVertical(const QPointF& scenePos);
 
 protected:
 	QPainterPath strokePath(const QPainterPath& path, const QPen& pen) const;

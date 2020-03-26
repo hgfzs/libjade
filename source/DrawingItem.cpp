@@ -349,12 +349,12 @@ bool DrawingItem::isValid() const
 
 //==================================================================================================
 
-void DrawingItem::moveEvent(const QPointF& scenePos)
+void DrawingItem::move(const QPointF& scenePos)
 {
 	mPosition = scenePos;
 }
 
-void DrawingItem::resizeEvent(DrawingItemPoint* itemPoint, const QPointF& scenePos)
+void DrawingItem::resize(DrawingItemPoint* itemPoint, const QPointF& scenePos)
 {
 	if (itemPoint)
 	{
@@ -371,7 +371,7 @@ void DrawingItem::resizeEvent(DrawingItemPoint* itemPoint, const QPointF& sceneP
 	}
 }
 
-void DrawingItem::rotateEvent(const QPointF& scenePos)
+void DrawingItem::rotate(const QPointF& scenePos)
 {
 	QPointF difference(mPosition - scenePos);
 
@@ -383,7 +383,7 @@ void DrawingItem::rotateEvent(const QPointF& scenePos)
 	mTransformInverse = mTransform.inverted();
 }
 
-void DrawingItem::rotateBackEvent(const QPointF& scenePos)
+void DrawingItem::rotateBack(const QPointF& scenePos)
 {
 	QPointF difference(mPosition - scenePos);
 
@@ -395,7 +395,7 @@ void DrawingItem::rotateBackEvent(const QPointF& scenePos)
 	mTransformInverse = mTransform.inverted();
 }
 
-void DrawingItem::flipHorizontalEvent(const QPointF& scenePos)
+void DrawingItem::flipHorizontal(const QPointF& scenePos)
 {
 	// Calculate new position of reference point
 	mPosition.setX(2 * scenePos.x() - mPosition.x());
@@ -405,7 +405,7 @@ void DrawingItem::flipHorizontalEvent(const QPointF& scenePos)
 	mTransformInverse = mTransform.inverted();
 }
 
-void DrawingItem::flipVerticalEvent(const QPointF& scenePos)
+void DrawingItem::flipVertical(const QPointF& scenePos)
 {
 	// Calculate new position of reference point
 	mPosition.setY(2 * scenePos.y() - mPosition.y());
@@ -413,16 +413,6 @@ void DrawingItem::flipVerticalEvent(const QPointF& scenePos)
 	// Update orientation
 	mTransform.scale(1, -1);
 	mTransformInverse = mTransform.inverted();
-}
-
-void DrawingItem::keyPressEvent(QKeyEvent* event)
-{
-	Q_UNUSED(event)
-}
-
-void DrawingItem::keyReleaseEvent(QKeyEvent* event)
-{
-	Q_UNUSED(event)
 }
 
 //==================================================================================================

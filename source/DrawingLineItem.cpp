@@ -203,9 +203,9 @@ void DrawingLineItem::render(QPainter* painter)
 
 //==================================================================================================
 
-void DrawingLineItem::resizeEvent(DrawingItemPoint* itemPoint, const QPointF& parentPos)
+void DrawingLineItem::resize(DrawingItemPoint* itemPoint, const QPointF& parentPos)
 {
-	DrawingItem::resizeEvent(itemPoint, parentPos);
+	DrawingItem::resize(itemPoint, parentPos);
 
 	QList<DrawingItemPoint*> points = DrawingLineItem::points();
 	DrawingItemPoint* startPoint = points[0];

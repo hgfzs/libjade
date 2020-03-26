@@ -1572,18 +1572,6 @@ void DrawingView::wheelEvent(QWheelEvent* event)
 
 //==================================================================================================
 
-void DrawingView::keyPressEvent(QKeyEvent* event)
-{
-	if (mFocusItem) mFocusItem->keyPressEvent(event);
-}
-
-void DrawingView::keyReleaseEvent(QKeyEvent* event)
-{
-	if (mFocusItem) mFocusItem->keyReleaseEvent(event);
-}
-
-//==================================================================================================
-
 void DrawingView::drawBackground(QPainter* painter)
 {
 	if (mScene) mScene->drawBackground(painter);

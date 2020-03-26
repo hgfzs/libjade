@@ -218,7 +218,7 @@ void DrawingCurveItem::render(QPainter* painter)
 
 //==================================================================================================
 
-void DrawingCurveItem::resizeEvent(DrawingItemPoint* itemPoint, const QPointF& scenePos)
+void DrawingCurveItem::resize(DrawingItemPoint* itemPoint, const QPointF& scenePos)
 {
 	QList<DrawingItemPoint*> points = DrawingCurveItem::points();
 
@@ -236,7 +236,7 @@ void DrawingCurveItem::resizeEvent(DrawingItemPoint* itemPoint, const QPointF& s
 		points[2]->setPosition(mapFromScene(scenePos) + difference);
 	}
 
-	DrawingItem::resizeEvent(itemPoint, scenePos);
+	DrawingItem::resize(itemPoint, scenePos);
 }
 
 //==================================================================================================

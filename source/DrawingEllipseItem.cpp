@@ -160,9 +160,9 @@ void DrawingEllipseItem::render(QPainter* painter)
 
 //==================================================================================================
 
-void DrawingEllipseItem::resizeEvent(DrawingItemPoint* itemPoint, const QPointF& parentPos)
+void DrawingEllipseItem::resize(DrawingItemPoint* itemPoint, const QPointF& parentPos)
 {
-	DrawingItem::resizeEvent(itemPoint, parentPos);
+	DrawingItem::resize(itemPoint, parentPos);
 
 	QList<DrawingItemPoint*> points = DrawingEllipseItem::points();
 	if (points.size() >= 8)

@@ -185,9 +185,9 @@ void DrawingRectItem::render(QPainter* painter)
 
 //==================================================================================================
 
-void DrawingRectItem::resizeEvent(DrawingItemPoint* itemPoint, const QPointF& parentPos)
+void DrawingRectItem::resize(DrawingItemPoint* itemPoint, const QPointF& parentPos)
 {
-	DrawingItem::resizeEvent(itemPoint, parentPos);
+	DrawingItem::resize(itemPoint, parentPos);
 
 	QList<DrawingItemPoint*> points = DrawingRectItem::points();
 	if (points.size() >= 8)

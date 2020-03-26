@@ -240,7 +240,7 @@ void DrawingScene::setItemsVisibility(const QList<DrawingItem*>& items, const QH
 void DrawingScene::moveItems(const QList<DrawingItem*>& items, const QHash<DrawingItem*,QPointF>& parentPos)
 {
 	for(auto itemIter = items.begin(); itemIter != items.end(); itemIter++)
-		(*itemIter)->moveEvent(parentPos[*itemIter]);
+		(*itemIter)->move(parentPos[*itemIter]);
 
 	emit itemsPositionChanged(items);
 }
@@ -252,7 +252,7 @@ void DrawingScene::resizeItem(DrawingItemPoint* itemPoint, const QPointF& parent
 		QList<DrawingItem*> items;
 		items.append(itemPoint->item());
 
-		itemPoint->item()->resizeEvent(itemPoint, parentPos);
+		itemPoint->item()->resize(itemPoint, parentPos);
 
 		emit itemsGeometryChanged(items);
 	}
@@ -263,7 +263,7 @@ void DrawingScene::resizeItem(DrawingItemPoint* itemPoint, const QPointF& parent
 void DrawingScene::rotateItems(const QList<DrawingItem*>& items, const QHash<DrawingItem*,QPointF>& parentPos)
 {
 	for(auto itemIter = items.begin(); itemIter != items.end(); itemIter++)
-		(*itemIter)->rotateEvent(parentPos[*itemIter]);
+		(*itemIter)->rotate(parentPos[*itemIter]);
 
 	emit itemsTransformChanged(items);
 }
@@ -271,7 +271,7 @@ void DrawingScene::rotateItems(const QList<DrawingItem*>& items, const QHash<Dra
 void DrawingScene::rotateBackItems(const QList<DrawingItem*>& items, const QHash<DrawingItem*,QPointF>& parentPos)
 {
 	for(auto itemIter = items.begin(); itemIter != items.end(); itemIter++)
-		(*itemIter)->rotateBackEvent(parentPos[*itemIter]);
+		(*itemIter)->rotateBack(parentPos[*itemIter]);
 
 	emit itemsTransformChanged(items);
 }
@@ -279,7 +279,7 @@ void DrawingScene::rotateBackItems(const QList<DrawingItem*>& items, const QHash
 void DrawingScene::flipItemsHorizontal(const QList<DrawingItem*>& items, const QHash<DrawingItem*,QPointF>& parentPos)
 {
 	for(auto itemIter = items.begin(); itemIter != items.end(); itemIter++)
-		(*itemIter)->flipHorizontalEvent(parentPos[*itemIter]);
+		(*itemIter)->flipHorizontal(parentPos[*itemIter]);
 
 	emit itemsTransformChanged(items);
 }
@@ -287,7 +287,7 @@ void DrawingScene::flipItemsHorizontal(const QList<DrawingItem*>& items, const Q
 void DrawingScene::flipItemsVertical(const QList<DrawingItem*>& items, const QHash<DrawingItem*,QPointF>& parentPos)
 {
 	for(auto itemIter = items.begin(); itemIter != items.end(); itemIter++)
-		(*itemIter)->flipVerticalEvent(parentPos[*itemIter]);
+		(*itemIter)->flipVertical(parentPos[*itemIter]);
 
 	emit itemsTransformChanged(items);
 }

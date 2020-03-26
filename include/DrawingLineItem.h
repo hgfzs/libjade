@@ -146,13 +146,13 @@ public:
 	 */
 	virtual void render(QPainter* painter);
 
-protected:
+
 	/*! \brief Resizes the item within the scene.
 	 *
 	 * This function ensures that whenever the item is resized, the item's midpoint is also moved
 	 * so that it remains at the center of the line.
 	 */
-	virtual void resizeEvent(DrawingItemPoint* itemPoint, const QPointF& parentPos);
+	virtual void resize(DrawingItemPoint* itemPoint, const QPointF& parentPos);
 };
 
 #endif

@@ -1279,23 +1279,6 @@ protected:
 	virtual void wheelEvent(QWheelEvent* event);
 
 
-	/*! \brief Handles key press events for the view.
-	 *
-	 * The default implementation forwards the key press event to the current focusItem().
-	 *
-	 * \sa keyReleaseEvent()
-	 */
-	virtual void keyPressEvent(QKeyEvent* event);
-
-	/*! \brief Handles key release events for the view.
-	 *
-	 * The default implementation forwards the key release event to the current focusItem().
-	 *
-	 * \sa keyPressEvent()
-	 */
-	virtual void keyReleaseEvent(QKeyEvent* event);
-
-
 	/*! \brief Renders the background of the scene using the specified painter.
 	 *
 	 * The default implementation simply calls DrawingScene::drawBackground().
