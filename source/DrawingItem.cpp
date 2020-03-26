@@ -27,9 +27,8 @@ DrawingItem::DrawingItem()
 	mScene = nullptr;
 
 	mFlags = (CanMove | CanResize | CanRotate | CanFlip | CanSelect);
-	mStyle = new DrawingItemStyle();
 
-	mParent = nullptr;
+	mStyle = new DrawingItemStyle();
 
 	mSelected = false;
 	mVisible = true;
@@ -42,16 +41,12 @@ DrawingItem::DrawingItem(const DrawingItem& item)
 	mPosition = item.mPosition;
 	mTransform = item.mTransform;
 	mTransformInverse = item.mTransformInverse;
-
 	mFlags = item.mFlags;
+
 	mStyle = new DrawingItemStyle(*item.mStyle);
 
 	for(auto pointIter = item.mPoints.begin(); pointIter != item.mPoints.end(); pointIter++)
 		addPoint(new DrawingItemPoint(**pointIter));
-
-	for(auto itemIter = item.mChildren.begin(); itemIter != item.mChildren.end(); itemIter++)
-		addChild((*itemIter)->copy());
-	mParent = nullptr;
 
 	mSelected = false;
 	mVisible = true;
@@ -60,9 +55,7 @@ DrawingItem::DrawingItem(const DrawingItem& item)
 DrawingItem::~DrawingItem()
 {
 	clearPoints();
-	clearChildren();
 	delete mStyle;
-	mParent = nullptr;
 	mScene = nullptr;
 }
 
@@ -252,67 +245,15 @@ DrawingItemPoint* DrawingItem::pointNearest(const QPointF& itemPos) const
 
 DrawingItemPoint* DrawingItem::itemPointToInsert(const QPointF& itemPos, int& index)
 {
-	Q_UNUSED(itemPos);
-	Q_UNUSED(index);
+	Q_UNUSED(itemPos)
+	Q_UNUSED(index)
 	return nullptr;
 }
 
 DrawingItemPoint* DrawingItem::itemPointToRemove(const QPointF& itemPos)
 {
-	Q_UNUSED(itemPos);
+	Q_UNUSED(itemPos)
 	return nullptr;
-}
-
-//==================================================================================================
-
-void DrawingItem::addChild(DrawingItem* item)
-{
-	if (item && item->mParent == nullptr)
-	{
-		mChildren.append(item);
-		item->mParent = this;
-	}
-}
-
-void DrawingItem::insertChild(int index, DrawingItem* item)
-{
-	if (item && item->mParent == nullptr)
-	{
-		mChildren.insert(index, item);
-		item->mParent = this;
-	}
-}
-
-void DrawingItem::removeChild(DrawingItem* item)
-{
-	if (item && item->mParent == this)
-	{
-		mChildren.removeAll(item);
-		item->mParent = nullptr;
-	}
-}
-
-void DrawingItem::clearChildren()
-{
-	DrawingItem* item = nullptr;
-
-	while (!mPoints.empty())
-	{
-		item = mChildren.first();
-		removeChild(item);
-		delete item;
-		item = nullptr;
-	}
-}
-
-QList<DrawingItem*> DrawingItem::children() const
-{
-	return mChildren;
-}
-
-DrawingItem* DrawingItem::parent() const
-{
-	return mParent;
 }
 
 //==================================================================================================
@@ -339,94 +280,52 @@ bool DrawingItem::isSelected() const
 
 //==================================================================================================
 
-QPointF DrawingItem::mapFromParent(const QPointF& point) const
+QPointF DrawingItem::mapFromScene(const QPointF& point) const
 {
 	return mTransform.map(point - mPosition);
 }
 
-QPolygonF DrawingItem::mapFromParent(const QRectF& rect) const
+QPolygonF DrawingItem::mapFromScene(const QRectF& rect) const
 {
-	return mapFromParent(QPolygonF(rect));
+	return mapFromScene(QPolygonF(rect));
 }
 
-QPolygonF DrawingItem::mapFromParent(const QPolygonF& polygon) const
+QPolygonF DrawingItem::mapFromScene(const QPolygonF& polygon) const
 {
 	QPolygonF poly = polygon;
 	poly.translate(-mPosition);
 	return mTransform.map(poly);
 }
 
-QPainterPath DrawingItem::mapFromParent(const QPainterPath& path) const
+QPainterPath DrawingItem::mapFromScene(const QPainterPath& path) const
 {
 	QPainterPath painterPath = path;
 	painterPath.translate(-mPosition);
 	return mTransform.map(painterPath);
 }
 
-QPointF DrawingItem::mapToParent(const QPointF& point) const
+QPointF DrawingItem::mapToScene(const QPointF& point) const
 {
 	return mTransformInverse.map(point) + mPosition;
 }
 
-QPolygonF DrawingItem::mapToParent(const QRectF& rect) const
+QPolygonF DrawingItem::mapToScene(const QRectF& rect) const
 {
-	return mapToParent(QPolygonF(rect));
+	return mapToScene(QPolygonF(rect));
 }
 
-QPolygonF DrawingItem::mapToParent(const QPolygonF& polygon) const
+QPolygonF DrawingItem::mapToScene(const QPolygonF& polygon) const
 {
 	QPolygonF poly = mTransformInverse.map(polygon);
 	poly.translate(mPosition);
 	return poly;
 }
 
-QPainterPath DrawingItem::mapToParent(const QPainterPath& path) const
+QPainterPath DrawingItem::mapToScene(const QPainterPath& path) const
 {
 	QPainterPath painterPath = mTransformInverse.map(path);
 	painterPath.translate(mPosition);
 	return painterPath;
-}
-
-//==================================================================================================
-
-QPointF DrawingItem::mapFromScene(const QPointF& point) const
-{
-	return (mParent) ? mapFromParent(mParent->mapFromScene(point)) : mapFromParent(point);
-}
-
-QPolygonF DrawingItem::mapFromScene(const QRectF& rect) const
-{
-	return (mParent) ? mapFromParent(mParent->mapFromScene(rect)) : mapFromParent(rect);
-}
-
-QPolygonF DrawingItem::mapFromScene(const QPolygonF& polygon) const
-{
-	return (mParent) ? mapFromParent(mParent->mapFromScene(polygon)) : mapFromParent(polygon);
-}
-
-QPainterPath DrawingItem::mapFromScene(const QPainterPath& path) const
-{
-	return (mParent) ? mapFromParent(mParent->mapFromScene(path)) : mapFromParent(path);
-}
-
-QPointF DrawingItem::mapToScene(const QPointF& point) const
-{
-	return (mParent) ? mParent->mapToScene(mapToParent(point)) : mapToParent(point);
-}
-
-QPolygonF DrawingItem::mapToScene(const QRectF& rect) const
-{
-	return (mParent) ? mParent->mapToScene(mapToParent(rect)) : mapToParent(rect);
-}
-
-QPolygonF DrawingItem::mapToScene(const QPolygonF& polygon) const
-{
-	return (mParent) ? mParent->mapToScene(mapToParent(polygon)) : mapToParent(polygon);
-}
-
-QPainterPath DrawingItem::mapToScene(const QPainterPath& path) const
-{
-	return (mParent) ? mParent->mapToScene(mapToParent(path)) : mapToParent(path);
 }
 
 //==================================================================================================
@@ -450,111 +349,83 @@ bool DrawingItem::isValid() const
 
 //==================================================================================================
 
-void DrawingItem::moveEvent(const QPointF& parentPos)
+void DrawingItem::moveEvent(const QPointF& scenePos)
 {
-	QHash<DrawingItem*,QPointF> originalScenePos;
-
-	for(auto childIter = mChildren.begin(); childIter != mChildren.end(); childIter++)
-		originalScenePos[*childIter] = (*childIter)->mapToScene((*childIter)->mapFromParent((*childIter)->position()));
-
-	mPosition = parentPos;
-
-	// Don't move children
-	for(auto childIter = mChildren.begin(); childIter != mChildren.end(); childIter++)
-		(*childIter)->moveEvent((*childIter)->mapToParent((*childIter)->mapFromScene(originalScenePos[*childIter])));
+	mPosition = scenePos;
 }
 
-void DrawingItem::resizeEvent(DrawingItemPoint* itemPoint, const QPointF& parentPos)
+void DrawingItem::resizeEvent(DrawingItemPoint* itemPoint, const QPointF& scenePos)
 {
 	if (itemPoint)
 	{
-		itemPoint->setPosition(mapFromParent(parentPos));
+		itemPoint->setPosition(mapFromScene(scenePos));
 
 		if (mFlags & AdjustPositionOnResize)
 		{
 			// Adjust position of item and item points so that point(0)->position() == QPointF(0, 0)
 			QPointF deltaPos = -mPoints.first()->position();
-			QPointF pointParentPos = mapToParent(mPoints.first()->position());
+			QPointF pointParentPos = mapToScene(mPoints.first()->position());
 
 			for(auto pointIter = mPoints.begin(); pointIter != mPoints.end(); pointIter++)
 				(*pointIter)->setPosition((*pointIter)->position() + deltaPos);
-
-			for(auto childIter = mChildren.begin(); childIter != mChildren.end(); childIter++)
-				(*childIter)->setPosition((*childIter)->position() + deltaPos);
 
 			setPosition(pointParentPos);
 		}
 	}
 }
 
-void DrawingItem::rotateEvent(const QPointF& parentPos)
+void DrawingItem::rotateEvent(const QPointF& scenePos)
 {
-	QPointF difference(mPosition - parentPos);
+	QPointF difference(mPosition - scenePos);
 
 	// Calculate new position of reference point
-	mPosition = QPointF(parentPos.x() + difference.y(), parentPos.y() - difference.x());
+	mPosition = QPointF(scenePos.x() + difference.y(), scenePos.y() - difference.x());
 
 	// Update orientation
 	mTransform.rotate(90);
 	mTransformInverse = mTransform.inverted();
-
-	// Don't apply rotation to children
-	for(auto childIter = mChildren.begin(); childIter != mChildren.end(); childIter++)
-		(*childIter)->rotateBackEvent(mapFromParent(parentPos));
 }
 
-void DrawingItem::rotateBackEvent(const QPointF& parentPos)
+void DrawingItem::rotateBackEvent(const QPointF& scenePos)
 {
-	QPointF difference(mPosition - parentPos);
+	QPointF difference(mPosition - scenePos);
 
 	// Calculate new position of reference point
-	mPosition = QPointF(parentPos.x() - difference.y(), parentPos.y() + difference.x());
+	mPosition = QPointF(scenePos.x() - difference.y(), scenePos.y() + difference.x());
 
 	// Update orientation
 	mTransform.rotate(-90);
 	mTransformInverse = mTransform.inverted();
-
-	// Don't apply rotation to children
-	for(auto childIter = mChildren.begin(); childIter != mChildren.end(); childIter++)
-		(*childIter)->rotateEvent(mapFromParent(parentPos));
 }
 
-void DrawingItem::flipHorizontalEvent(const QPointF& parentPos)
+void DrawingItem::flipHorizontalEvent(const QPointF& scenePos)
 {
 	// Calculate new position of reference point
-	mPosition.setX(2 * parentPos.x() - mPosition.x());
+	mPosition.setX(2 * scenePos.x() - mPosition.x());
 
 	// Update orientation
 	mTransform.scale(-1, 1);
 	mTransformInverse = mTransform.inverted();
-
-	// Don't apply flip to children
-	for(auto childIter = mChildren.begin(); childIter != mChildren.end(); childIter++)
-		(*childIter)->flipHorizontalEvent(mapFromParent(parentPos));
 }
 
-void DrawingItem::flipVerticalEvent(const QPointF& parentPos)
+void DrawingItem::flipVerticalEvent(const QPointF& scenePos)
 {
 	// Calculate new position of reference point
-	mPosition.setY(2 * parentPos.y() - mPosition.y());
+	mPosition.setY(2 * scenePos.y() - mPosition.y());
 
 	// Update orientation
 	mTransform.scale(1, -1);
 	mTransformInverse = mTransform.inverted();
-
-	// Don't apply flip to children
-	for(auto childIter = mChildren.begin(); childIter != mChildren.end(); childIter++)
-		(*childIter)->flipVerticalEvent(mapFromParent(parentPos));
 }
 
 void DrawingItem::keyPressEvent(QKeyEvent* event)
 {
-	Q_UNUSED(event);
+	Q_UNUSED(event)
 }
 
 void DrawingItem::keyReleaseEvent(QKeyEvent* event)
 {
-	Q_UNUSED(event);
+	Q_UNUSED(event)
 }
 
 //==================================================================================================

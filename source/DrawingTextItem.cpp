@@ -26,7 +26,7 @@ DrawingTextItem::DrawingTextItem() : DrawingItem()
 {
 	mCaption = "Label";
 
-	setFlags(CanMove | CanRotate | CanFlip | CanSelect);
+	setFlags(CanMove | CanRotate | CanFlip | CanSelect | CanDelete);
 
 	addPoint(new DrawingItemPoint(QPointF(0, 0), DrawingItemPoint::NoFlags));
 

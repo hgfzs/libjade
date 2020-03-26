@@ -23,7 +23,7 @@
 
 DrawingItemGroup::DrawingItemGroup() : DrawingItem()
 {
-	setFlags(CanMove | CanRotate | CanFlip | CanSelect);
+	setFlags(CanMove | CanRotate | CanFlip | CanSelect | CanDelete);
 
 	for(int i = 0; i < 8; i++)
 		addPoint(new DrawingItemPoint(QPointF(0.0, 0.0), DrawingItemPoint::NoFlags));
@@ -120,7 +120,7 @@ void DrawingItemGroup::recalculateContentsRect()
 	{
 		if ((*itemIter)->isVisible())
 		{
-			itemRect = (*itemIter)->mapToParent((*itemIter)->boundingRect()).boundingRect();
+			itemRect = (*itemIter)->mapToScene((*itemIter)->boundingRect()).boundingRect();
 
 			if (!mItemsRect.isValid()) mItemsRect = itemRect;
 			else mItemsRect = mItemsRect.united(itemRect);

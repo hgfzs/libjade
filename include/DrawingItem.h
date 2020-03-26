@@ -171,10 +171,12 @@ public:
 												//!< mouse is released.  If unset, items are placed
 												//!< when the mouse is released with no changes to
 												//!< the item's geometry.
-		AdjustPositionOnResize = 0x2000			//!< Indicates that when the item is resized, its
+		AdjustPositionOnResize = 0x2000,		//!< Indicates that when the item is resized, its
 												//!< position() is changed so that the position of
 												//!< the first item point is the origin (i.e.
 												//!< point(0)->position() == QPointF(0, 0)).
+		CanDelete = 0x80,
+		CanHide = 0x100
 	};
 	Q_DECLARE_FLAGS(Flags, Flag)
 
@@ -182,16 +184,12 @@ private:
 	DrawingScene* mScene;
 
 	QPointF mPosition;
-	QTransform mTransform;
-	QTransform mTransformInverse;
-
+	QTransform mTransform, mTransformInverse;
 	Flags mFlags;
+
 	DrawingItemStyle* mStyle;
 
 	QList<DrawingItemPoint*> mPoints;
-
-	QList<DrawingItem*> mChildren;
-	DrawingItem* mParent;
 
 	bool mVisible;
 	bool mSelected;
@@ -465,66 +463,6 @@ public:
 	virtual DrawingItemPoint* itemPointToRemove(const QPointF& itemPos);
 
 
-	/*! \brief Adds an existing item as a child of this item.
-	 *
-	 * This convenience function is equivalent to calling #insertChild(item, children().size()).
-	 *
-	 * \sa removeChild()
-	 */
-	void addChild(DrawingItem* item);
-
-	/*! \brief Inserts an existing item as a child of this item at the specified index.
-	 *
-	 * If a valid item is passed to this function, DrawingItem will insert it into its list of
-	 * children() at the specified index.  DrawingItem takes ownership of the item and will
-	 * delete it as necessary.
-	 *
-	 * It is safe to pass a nullptr to this function; if a nullptr is received, this function
-	 * does nothing.  This function also does nothing if the item is already one of the item's
-	 * children().
-	 *
-	 * \sa addChild(), removeChild()
-	 */
-	void insertChild(int index, DrawingItem* item);
-
-	/*! \brief Removes an existing item as a child of this item.
-	 *
-	 * If a valid item is passed to this function, DrawingItem will remove it from its list of
-	 * children().  DrawingItem relinquishes ownership of the item and does not delete the
-	 * item from memory.
-	 *
-	 * It is safe to pass a nullptr to this function; if a nullptr is received, this function
-	 * does nothing.  This function also does nothing if the item is not one of the item's
-	 * children().
-	 *
-	 * \sa addChild(), insertChild(), clearChildren()
-	 */
-	void removeChild(DrawingItem* item);
-
-	/*! \brief Removes and deletes all child items from the item.
-	 *
-	 * This function removes and deletes all of the item's children() from memory.
-	 *
-	 * \sa removeChild()
-	 */
-	void clearChildren();
-
-	/*! \brief Returns a list of of the item's children.
-	 *
-	 * \sa addChild(), insertChild(), removeChild()
-	 */
-	QList<DrawingItem*> children() const;
-
-	/*! \brief Returns the item's parent, or nullptr if the item has no parent.
-	 *
-	 * If the item has a valid parent, then its position() is in parent coordinates.  If the item
-	 * does not have a parent, then the position() is assumed to be in scene coordinates.
-	 *
-	 * \sa children()
-	 */
-	DrawingItem* parent() const;
-
-
 	/*! \brief Sets whether the item is currently visible within the scene or not.
 	 *
 	 * Items that are not visible are not drawn and do not receive events.  By default, items are
@@ -554,87 +492,6 @@ public:
 	 * \sa setSelected()
 	 */
 	bool isSelected() const;
-
-
-	/*! \brief Maps the point from the coordinate system of the parent to the item's
-	 * coordinate system.
-	 *
-	 * If the item has no parent(), this function behaves the same as
-	 * mapFromScene(const QPointF&) const.
-	 *
-	 * \sa mapToParent(const QPointF&) const
-	 */
-	QPointF mapFromParent(const QPointF& point) const;
-
-	/*! \brief Maps the rect from the coordinate system of the parent to the item's
-	 * coordinate system.
-	 *
-	 * If the item has no parent(), this function behaves the same as
-	 * mapFromScene(const QRectF&) const.
-	 *
-	 * \sa mapToParent(const QRectF&) const
-	 */
-	QPolygonF mapFromParent(const QRectF& rect) const;
-
-	/*! \brief Maps the polygon from the coordinate system of the parent to the item's
-	 * coordinate system.
-	 *
-	 * If the item has no parent(), this function behaves the same as
-	 * mapFromScene(const QPolygonF&) const.
-	 *
-	 * \sa mapToParent(const QPolygonF&) const
-	 */
-	QPolygonF mapFromParent(const QPolygonF& polygon) const;
-
-	/*! \brief Maps the path from the coordinate system of the parent to the item's
-	 * coordinate system.
-	 *
-	 * If the item has no parent(), this function behaves the same as
-	 * mapFromScene(const QPainterPath&) const.
-	 *
-	 * \sa mapToParent(const QPainterPath&) const
-	 */
-	QPainterPath mapFromParent(const QPainterPath& path) const;
-
-	/*! \brief Maps the point from the item's coordinate system to the coordinate system of the
-	 * parent.
-	 *
-	 * If the item has no parent(), this function behaves the same as
-	 * mapToScene(const QPointF&) const.
-	 *
-	 * \sa mapFromParent(const QPointF&) const
-	 */
-	QPointF mapToParent(const QPointF& point) const;
-
-	/*! \brief Maps the rect from the item's coordinate system to the coordinate system of the
-	 * parent.
-	 *
-	 * If the item has no parent(), this function behaves the same as
-	 * mapToScene(const QRectF&) const.
-	 *
-	 * \sa mapFromParent(const QRectF&) const
-	 */
-	QPolygonF mapToParent(const QRectF& rect) const;
-
-	/*! \brief Maps the polygon from the item's coordinate system to the coordinate system of the
-	 * parent.
-	 *
-	 * If the item has no parent(), this function behaves the same as
-	 * mapToScene(const QPolygonF&) const.
-	 *
-	 * \sa mapFromParent(const QPolygonF&) const
-	 */
-	QPolygonF mapToParent(const QPolygonF& polygon) const;
-
-	/*! \brief Maps the path from the item's coordinate system to the coordinate system of the
-	 * parent.
-	 *
-	 * If the item has no parent(), this function behaves the same as
-	 * mapToScene(const QPainterPath&) const.
-	 *
-	 * \sa mapFromParent(const QPainterPath&) const
-	 */
-	QPainterPath mapToParent(const QPainterPath& path) const;
 
 
 	/*! \brief Maps the point from the coordinate system of the scene to the item's
@@ -772,7 +629,7 @@ protected:
 	 *
 	 * \sa resizeEvent(), rotateEvent(), rotateBackEvent(), flipHorizontalEvent(), flipVerticalEvent()
 	 */
-	virtual void moveEvent(const QPointF& parentPos);
+	virtual void moveEvent(const QPointF& scenePos);
 
 	/*! \brief Resizes the item within the scene.
 	 *
@@ -788,7 +645,7 @@ protected:
 	 *
 	 * \sa moveEvent(), rotateEvent(), rotateBackEvent(), flipHorizontalEvent(), flipVerticalEvent()
 	 */
-	virtual void resizeEvent(DrawingItemPoint* itemPoint, const QPointF& parentPos);
+	virtual void resizeEvent(DrawingItemPoint* itemPoint, const QPointF& scenePos);
 
 	/*! \brief Rotates the item counter-clockwise within the scene.
 	 *
@@ -805,7 +662,7 @@ protected:
 	 *
 	 * \sa moveEvent(), resizeEvent(), rotateBackEvent(), flipHorizontalEvent(), flipVerticalEvent()
 	 */
-	virtual void rotateEvent(const QPointF& parentPos);
+	virtual void rotateEvent(const QPointF& scenePos);
 
 	/*! \brief Rotates the item clockwise within the scene.
 	 *
@@ -822,7 +679,7 @@ protected:
 	 *
 	 * \sa moveEvent(), resizeEvent(), rotateEvent(), flipHorizontalEvent(), flipVerticalEvent()
 	 */
-	virtual void rotateBackEvent(const QPointF& parentPos);
+	virtual void rotateBackEvent(const QPointF& scenePos);
 
 	/*! \brief Flips the item horizontally within the scene.
 	 *
@@ -839,7 +696,7 @@ protected:
 	 *
 	 * \sa moveEvent(), resizeEvent(), rotateEvent(), rotateBackEvent(), flipVerticalEvent()
 	 */
-	virtual void flipHorizontalEvent(const QPointF& parentPos);
+	virtual void flipHorizontalEvent(const QPointF& scenePos);
 
 	/*! \brief Flips the item vertically within the scene.
 	 *
@@ -856,7 +713,7 @@ protected:
 	 *
 	 * \sa moveEvent(), resizeEvent(), rotateEvent(), rotateBackEvent(), flipHorizontalEvent()
 	 */
-	virtual void flipVerticalEvent(const QPointF& parentPos);
+	virtual void flipVerticalEvent(const QPointF& scenePos);
 
 	/*! \brief Receives key press events when the item is the focus item of the view.
 	 *

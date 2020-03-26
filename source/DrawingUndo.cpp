@@ -250,8 +250,8 @@ DrawingResizeItemCommand::DrawingResizeItemCommand(DrawingScene* scene, DrawingI
 	
 	if (mPoint && mPoint->item())
 	{
-		mNewPos = mPoint->item()->mapToParent(mPoint->item()->mapFromScene(scenePos));
-		mOriginalPos = mPoint->item()->mapToParent(mPoint->position());
+		mNewPos = scenePos;
+		mOriginalPos = mPoint->item()->mapToScene(mPoint->position());
 	}
 }
 
@@ -316,7 +316,7 @@ DrawingRotateItemsCommand::DrawingRotateItemsCommand(DrawingScene* scene,
 	mItems = items;
 
 	for(auto itemIter = mItems.begin(); itemIter != mItems.end(); itemIter++)
-		mParentPos[*itemIter] = (*itemIter)->mapToParent((*itemIter)->mapFromScene(scenePos));
+		mParentPos[*itemIter] = scenePos;
 }
 
 DrawingRotateItemsCommand::~DrawingRotateItemsCommand() { }
@@ -348,7 +348,7 @@ DrawingRotateBackItemsCommand::DrawingRotateBackItemsCommand(DrawingScene* scene
 	mItems = items;
 
 	for(auto itemIter = mItems.begin(); itemIter != mItems.end(); itemIter++)
-		mParentPos[*itemIter] = (*itemIter)->mapToParent((*itemIter)->mapFromScene(scenePos));
+		mParentPos[*itemIter] = scenePos;
 }
 
 DrawingRotateBackItemsCommand::~DrawingRotateBackItemsCommand() { }
@@ -380,7 +380,7 @@ DrawingFlipItemsHorizontalCommand::DrawingFlipItemsHorizontalCommand(DrawingScen
 	mItems = items;
 
 	for(auto itemIter = mItems.begin(); itemIter != mItems.end(); itemIter++)
-		mParentPos[*itemIter] = (*itemIter)->mapToParent((*itemIter)->mapFromScene(scenePos));
+		mParentPos[*itemIter] = scenePos;
 }
 
 DrawingFlipItemsHorizontalCommand::~DrawingFlipItemsHorizontalCommand() { }
@@ -412,7 +412,7 @@ DrawingFlipItemsVerticalCommand::DrawingFlipItemsVerticalCommand(DrawingScene* s
 	mItems = items;
 
 	for(auto itemIter = mItems.begin(); itemIter != mItems.end(); itemIter++)
-		mParentPos[*itemIter] = (*itemIter)->mapToParent((*itemIter)->mapFromScene(scenePos));
+		mParentPos[*itemIter] = scenePos;
 }
 
 DrawingFlipItemsVerticalCommand::~DrawingFlipItemsVerticalCommand() { }

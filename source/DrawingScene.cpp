@@ -378,9 +378,6 @@ void DrawingScene::findItems(const QList<DrawingItem*>& items, QList<DrawingItem
 		if ((*itemIter)->isVisible())
 		{
 			foundItems.append(*itemIter);
-
-			if (!(*itemIter)->mChildren.isEmpty())
-				findItems((*itemIter)->mChildren, foundItems);
 		}
 	}
 }
@@ -401,9 +398,6 @@ void DrawingScene::drawItems(QPainter* painter, const QList<DrawingItem*>& items
 			//painter->setPen(QPen(QColor(255, 0, 255, 128), 1));
 			//painter->drawPath(itemAdjustedShape(*itemIter));
 			//painter->restore();
-
-			if (!(*itemIter)->mChildren.isEmpty())
-				drawItems(painter, (*itemIter)->mChildren);
 
 			painter->setTransform((*itemIter)->transform(), true);
 			painter->translate(-(*itemIter)->position());

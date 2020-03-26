@@ -26,7 +26,7 @@ DrawingPathItem::DrawingPathItem() : DrawingItem()
 {
 	mName = "Path";
 
-	setFlags(CanMove | CanResize | CanRotate | CanFlip | CanSelect | AdjustPositionOnResize);
+	setFlags(CanMove | CanResize | CanRotate | CanFlip | CanSelect | CanDelete | AdjustPositionOnResize);
 
 	for(int i = 0; i < 8; i++) addPoint(new DrawingItemPoint(QPointF(0, 0), DrawingItemPoint::Control));
 

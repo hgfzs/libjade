@@ -26,7 +26,7 @@ DrawingTextPolygonItem::DrawingTextPolygonItem() : DrawingItem()
 {
 	mCaption = "Label";
 
-	setFlags(CanMove | CanResize | CanRotate | CanFlip | CanInsertPoints | CanRemovePoints | CanSelect | AdjustPositionOnResize);
+	setFlags(CanMove | CanResize | CanRotate | CanFlip | CanInsertPoints | CanRemovePoints | CanSelect | CanDelete | AdjustPositionOnResize);
 
 	DrawingItemPoint::Flags flags = DrawingItemPoint::Control | DrawingItemPoint::Connection;
 	addPoint(new DrawingItemPoint(QPointF(-200, -200), flags));

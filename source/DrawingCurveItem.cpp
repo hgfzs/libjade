@@ -24,7 +24,7 @@
 
 DrawingCurveItem::DrawingCurveItem() : DrawingItem()
 {
-	setFlags(CanMove | CanResize | CanRotate | CanFlip | CanSelect | AdjustPositionOnResize);
+	setFlags(CanMove | CanResize | CanRotate | CanFlip | CanSelect | CanDelete | AdjustPositionOnResize);
 
 	DrawingItemPoint::Flags flags =
 		DrawingItemPoint::Control | DrawingItemPoint::Connection | DrawingItemPoint::Free;
@@ -218,7 +218,7 @@ void DrawingCurveItem::render(QPainter* painter)
 
 //==================================================================================================
 
-void DrawingCurveItem::resizeEvent(DrawingItemPoint* itemPoint, const QPointF& parentPos)
+void DrawingCurveItem::resizeEvent(DrawingItemPoint* itemPoint, const QPointF& scenePos)
 {
 	QList<DrawingItemPoint*> points = DrawingCurveItem::points();
 
@@ -227,16 +227,16 @@ void DrawingCurveItem::resizeEvent(DrawingItemPoint* itemPoint, const QPointF& p
 	if (pointIndex == 0)
 	{
 		QPointF difference = points[1]->position() - points[0]->position();
-		points[1]->setPosition(mapFromParent(parentPos) + difference);
+		points[1]->setPosition(mapFromScene(scenePos) + difference);
 
 	}
 	else if (pointIndex == 3)
 	{
 		QPointF difference = points[2]->position() - points[3]->position();
-		points[2]->setPosition(mapFromParent(parentPos) + difference);
+		points[2]->setPosition(mapFromScene(scenePos) + difference);
 	}
 
-	DrawingItem::resizeEvent(itemPoint, parentPos);
+	DrawingItem::resizeEvent(itemPoint, scenePos);
 }
 
 //==================================================================================================
