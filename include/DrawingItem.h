@@ -82,7 +82,7 @@ class DrawingItemPoint;
  * most items this implementation is expected to be sufficient.
  *
  * The isValid() function should return false if the item is not really valid (for example, a line
- * where the start and end points are the same).  DrawingView will prevent invalid items from
+ * where the start and end points are the same).  DrawingWidget will prevent invalid items from
  * being added to the scene.  The default implementation is to return true if the item's
  * boundingRect() is a valid rect.
  *
@@ -92,7 +92,7 @@ class DrawingItemPoint;
  * have two points; one point represents the start point and the other represents the end point.
  *
  * Representing the item's geometry based on the location of its item points provides a convenient
- * method for the user to be able to resize an item.  When the user of a DrawingView clicks on one
+ * method for the user to be able to resize an item.  When the user of a DrawingWidget clicks on one
  * of the item's points(), then if the item is a \link DrawingItemPoint::Control Control \endlink
  * point, the view will move just the point around the scene rather than the whole item.
  *
@@ -110,7 +110,7 @@ class DrawingItemPoint;
  *
  * \section itemEvents Events
  *
- * DrawingItem receives events from DrawingView through several event handlers:
+ * DrawingItem receives events from DrawingWidget through several event handlers:
  *
  * \li move() is called to move the item around the scene
  * \li resize() is called to resize the item within the scene
@@ -132,19 +132,19 @@ class DrawingItemPoint;
  * description of the item's geometry.
  *
  * Consider using DrawingItemPoint objects to define the item's geometry to allow the user to
- * resize the item through DrawingView mouse events.
+ * resize the item through DrawingWidget mouse events.
  *
  * To extend the behavior of the item interaction events within the scene, consider overriding any
  * of the item's event handlers such as move() or resize() as well.
  *
  * For items that support adding item points, implementations should set the #CanInsertPoints flag
- * and provide an implementation for itemPointToInsert().  For items that support removing item
+ * and provide an implementation for pointToInsert().  For items that support removing item
  * points, implementations should set the #CanRemovePoints flag and provide an implementation for
- * itemPointToRemove().  By default itemPointToInsert() and itemPointToRemove() return nullptr.
+ * pointToRemove().  By default pointToInsert() and pointToRemove() return nullptr.
  */
 class DrawingItem
 {
-	friend class DrawingView;
+	friend class DrawingWidget;
 	friend class DrawingScene;
 
 public:
@@ -231,7 +231,7 @@ public:
 	 * coordinates.
 	 *
 	 * To move an item around the scene as if the user clicked on it, call
-	 * DrawingView::moveItems() or DrawingView::moveSelection().
+	 * DrawingWidget::moveItems() or DrawingWidget::moveSelection().
 	 *
 	 * \sa position()
 	 */
@@ -318,8 +318,8 @@ public:
 	 * #CanFlip | #CanSelect | #CanDelete) flags are set.
 	 *
 	 * Items that set the #CanInsertPoints flag should also provide an implementation for
-	 * itemPointToInsert().  Items that set the #CanRemovePoints flag should also provide an
-	 * implementation for and itemPointToRemove().
+	 * pointToInsert().  Items that set the #CanRemovePoints flag should also provide an
+	 * implementation for and pointToRemove().
 	 *
 	 * \sa flags()
 	 */
@@ -416,9 +416,9 @@ public:
 	 * function does nothing except return nullptr.  Derived classes that support inserting item
 	 * points should set the #CanInsertPoints flag and provide an implementation for this function.
 	 *
-	 * \sa itemPointToRemove()
+	 * \sa pointToRemove()
 	 */
-	virtual DrawingItemPoint* itemPointToInsert(const QPointF& pos, int& index);
+	virtual DrawingItemPoint* pointToInsert(const QPointF& pos, int& index);
 
 	/*! \brief Called when the view wants to remove an existing item point in the item at the
 	 * specified position.
@@ -430,9 +430,9 @@ public:
 	 * function does nothing except return nullptr.  Derived classes that support removing item
 	 * points should set the #CanRemovePoints flag and provide an implementation for this function.
 	 *
-	 * \sa itemPointToInsert()
+	 * \sa pointToInsert()
 	 */
-	virtual DrawingItemPoint* itemPointToRemove(const QPointF& pos);
+	virtual DrawingItemPoint* pointToRemove(const QPointF& pos);
 
 
 	/*! \brief Sets whether the item is currently selected within the scene or not.
@@ -589,7 +589,7 @@ public:
 	/*! \brief Return false if the item is invalid, true otherwise.
 	 *
 	 * This function should return false if the item is not really valid (for example, a line
-	 * where the start and end points are the same).  DrawingView will prevent invalid items from
+	 * where the start and end points are the same).  DrawingWidget will prevent invalid items from
 	 * being added to the scene.
 	 *
 	 * The default implementation is to return true if the item's boundingRect() is a valid rect.

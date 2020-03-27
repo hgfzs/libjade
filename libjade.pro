@@ -35,7 +35,7 @@ SOURCES += \
 	source/DrawingTextRectItem.cpp \
 	source/DrawingScene.cpp \
 	source/DrawingUndo.cpp \
-	source/DrawingView.cpp
+	source/DrawingWidget.cpp
 
 HEADERS += \
 	include/DrawingArrow.h \
@@ -54,7 +54,7 @@ HEADERS += \
 	include/DrawingTextRectItem.h \
 	include/DrawingScene.h \
 	include/DrawingUndo.h \
-	include/DrawingView.h \
+	include/DrawingWidget.h \
     include/Drawing.h
 
 # --------------------------------------------------------------------------------------------------

@@ -230,7 +230,7 @@ void DrawingPolygonItem::resize(DrawingItemPoint* point, const QPointF& pos)
 
 //==================================================================================================
 
-DrawingItemPoint* DrawingPolygonItem::itemPointToInsert(const QPointF& pos, int& index)
+DrawingItemPoint* DrawingPolygonItem::pointToInsert(const QPointF& pos, int& index)
 {
 	DrawingItemPoint* pointToInsert = new DrawingItemPoint(
 		pos, DrawingItemPoint::Control | DrawingItemPoint::Connection);
@@ -256,7 +256,7 @@ DrawingItemPoint* DrawingPolygonItem::itemPointToInsert(const QPointF& pos, int&
 	return pointToInsert;
 }
 
-DrawingItemPoint* DrawingPolygonItem::itemPointToRemove(const QPointF& pos)
+DrawingItemPoint* DrawingPolygonItem::pointToRemove(const QPointF& pos)
 {
 	DrawingItemPoint* pointToRemove = nullptr;
 

@@ -254,9 +254,9 @@ public:
 	 * The position of the new point is determined by pos.  The flags of the new point are:
 	 * DrawingItemPoint::Control.
 	 *
-	 * \sa itemPointToRemove()
+	 * \sa pointToRemove()
 	 */
-	virtual DrawingItemPoint* itemPointToInsert(const QPointF& pos, int& index);
+	virtual DrawingItemPoint* pointToInsert(const QPointF& pos, int& index);
 
 	/*! \brief Returns an existing DrawingItemPoint to be removed from the item at the specified
 	 * position.
@@ -265,9 +265,9 @@ public:
 	 * last point of the polyline.  Note that a polyline must always have a minimum of two points; if
 	 * the item only has two points, this function returns nullptr.
 	 *
-	 * \sa itemPointToInsert()
+	 * \sa pointToInsert()
 	 */
-	virtual DrawingItemPoint* itemPointToRemove(const QPointF& pos);
+	virtual DrawingItemPoint* pointToRemove(const QPointF& pos);
 
 private:
 	void updateGeometry();

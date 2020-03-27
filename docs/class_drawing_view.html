@@ -281,11 +281,11 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:afe5a9571696121a6abe6ad1e81703a06"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Widget for viewing the contents of a <a class="el" href="class_drawing_scene.html" title="Surface for managing a large number of two-dimensional DrawingItem objects.">DrawingScene</a>. </p>
-<p>When a new <a class="el" href="class_drawing_view.html" title="Widget for viewing the contents of a DrawingScene.">DrawingView</a> object is created, it is associated with a default <a class="el" href="class_drawing_scene.html" title="Surface for managing a large number of two-dimensional DrawingItem objects.">DrawingScene</a> object. To set a different <a class="el" href="class_drawing_scene.html" title="Surface for managing a large number of two-dimensional DrawingItem objects.">DrawingScene</a> object, call <a class="el" href="class_drawing_view.html#a784cfecc042826cd13735a251689cee7" title="Sets the current scene of the view.">setScene()</a>. To return a pointer to the current scene, call <a class="el" href="class_drawing_view.html#a1c105f6daceffff602ed70636857be98" title="Sets the scene associated with the view.">scene()</a>.</p>
+<div class="textblock"><p>Widget for viewing the contents of a <a class="el" href="class_drawing_scene.html" title="Container for DrawingItem objects.">DrawingScene</a>. </p>
+<p>When a new <a class="el" href="class_drawing_view.html" title="Widget for viewing the contents of a DrawingScene.">DrawingView</a> object is created, it is associated with a default <a class="el" href="class_drawing_scene.html" title="Container for DrawingItem objects.">DrawingScene</a> object. To set a different <a class="el" href="class_drawing_scene.html" title="Container for DrawingItem objects.">DrawingScene</a> object, call <a class="el" href="class_drawing_view.html#a784cfecc042826cd13735a251689cee7" title="Sets the current scene of the view.">setScene()</a>. To return a pointer to the current scene, call <a class="el" href="class_drawing_view.html#a1c105f6daceffff602ed70636857be98" title="Sets the scene associated with the view.">scene()</a>.</p>
 <h1><a class="anchor" id="widget_viewport"></a>
 Viewport</h1>
-<p><a class="el" href="class_drawing_view.html" title="Widget for viewing the contents of a DrawingScene.">DrawingView</a> visualizes a scene in a scrollable viewport. The scrollable area of the scene is determined by the scene's <a class="el" href="class_drawing_scene.html#a7bc8f811e994303e939fe210702ca04a" title="Returns the scene&#39;s bounding rectangle.">DrawingScene::sceneRect()</a>.</p>
+<p><a class="el" href="class_drawing_view.html" title="Widget for viewing the contents of a DrawingScene.">DrawingView</a> visualizes a scene in a scrollable viewport. The scrollable area of the scene is determined by the scene's <a class="el" href="class_drawing_scene.html#aa01733cbdeeafd22beb1bf5e8e1d314d" title="Returns the scene&#39;s bounding rectangle.">DrawingScene::sceneRect()</a>.</p>
 <p>Any position on the scene can be scrolled to by using the scroll bars or by calling <a class="el" href="class_drawing_view.html#aa5effcbacadb165feb5b7adccc49dff2" title="Scrolls the contents of the viewport to ensure that specified scenePos is centered in the view.">centerOn()</a>. The area that is currently visible can be obtained by calling <a class="el" href="class_drawing_view.html#a7585257b15c83a68e4c184b3aa2ef21c" title="Returns a rect representing the currently visible area of the scene.">visibleRect()</a>.</p>
 <p>The user can zoom in and out on the viewport through <a class="el" href="class_drawing_view.html#af3338e534484e7b85a542b78acb5bf39" title="Zooms in on the scene.">zoomIn()</a> and <a class="el" href="class_drawing_view.html#a6c9f6e0ccc25ae8f47d3928337f76eaf" title="Zooms out from the scene.">zoomOut()</a>. By default, these functions zoom in or out by a factor of sqrt(2). The user can zoom out to fit the entire scene in the viewport by calling <a class="el" href="class_drawing_view.html#af42ea6fc941cee3fb232169ddb554b73" title="Zooms to fit the entire scene&#39;s DrawingScene::sceneRect() within the view.">zoomFit()</a>.</p>
 <h1><a class="anchor" id="widget_events"></a>
@@ -385,7 +385,7 @@ Undo Support</h1>
 </div><div class="memdoc">
 
 <p>Create a new <a class="el" href="class_drawing_view.html" title="Widget for viewing the contents of a DrawingScene.">DrawingView</a> with default settings. </p>
-<p>A default <a class="el" href="class_drawing_scene.html" title="Surface for managing a large number of two-dimensional DrawingItem objects.">DrawingScene</a> object is created. To set a different <a class="el" href="class_drawing_scene.html" title="Surface for managing a large number of two-dimensional DrawingItem objects.">DrawingScene</a> object, call <a class="el" href="class_drawing_view.html#a784cfecc042826cd13735a251689cee7" title="Sets the current scene of the view.">setScene()</a>. </p>
+<p>A default <a class="el" href="class_drawing_scene.html" title="Container for DrawingItem objects.">DrawingScene</a> object is created. To set a different <a class="el" href="class_drawing_scene.html" title="Container for DrawingItem objects.">DrawingScene</a> object, call <a class="el" href="class_drawing_view.html#a784cfecc042826cd13735a251689cee7" title="Sets the current scene of the view.">setScene()</a>. </p>
 
 </div>
 </div>
@@ -814,7 +814,7 @@ Undo Support</h1>
 </div><div class="memdoc">
 
 <p>Renders the background of the scene using the specified painter. </p>
-<p>The default implementation simply calls <a class="el" href="class_drawing_scene.html#a52daffc984b62ec784d23eb763206329" title="Renders the background of the scene using the specified painter.">DrawingScene::drawBackground()</a>.</p>
+<p>The default implementation simply calls DrawingScene::drawBackground().</p>
 <p>This function may be overridden in a derived class to provide a custom rendering implementation for the scene background.</p>
 <p>This function is called before rendering the widget's items.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_view.html#a057d99b28b98f91cd3629c684649ca3f" title="Renders the widget&#39;s items into the scene using the specified painter.">drawItems()</a>, <a class="el" href="class_drawing_view.html#a6cc04d8c842d07f26ddb7d7caf48d37d" title="Renders the foreground of the scene using the specified painter.">drawForeground()</a> </dd></dl>
@@ -877,7 +877,7 @@ Undo Support</h1>
 </div><div class="memdoc">
 
 <p>Renders the widget's items into the scene using the specified painter. </p>
-<p>The default implementation simply calls <a class="el" href="class_drawing_scene.html#a1789fd1653166b8a9f837e626fdbc9ae" title="Renders the widget&#39;s items into the scene using the specified painter.">DrawingScene::drawItems()</a>.</p>
+<p>The default implementation simply calls DrawingScene::drawItems().</p>
 <p>This function may be overridden in a derived class to provide a custom rendering implementation for items in the scene.</p>
 <p>This function is called after rendering the background of the scene and before rendering the foreground.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_view.html#a2b11e1b5188cbe61bc10dc019833c87f" title="Renders the background of the scene using the specified painter.">drawBackground()</a>, <a class="el" href="class_drawing_view.html#a6cc04d8c842d07f26ddb7d7caf48d37d" title="Renders the foreground of the scene using the specified painter.">drawForeground()</a> </dd></dl>
@@ -1862,7 +1862,7 @@ Undo Support</h1>
 </div><div class="memdoc">
 
 <p>Renders the scene using the specified painter. </p>
-<p>The default implementation simply calls <a class="el" href="class_drawing_scene.html#ab0073f348157985a1c90de0507ddac34" title="Paints the scene using the specified painter object.">DrawingScene::render()</a>. </p>
+<p>The default implementation simply calls DrawingScene::render(). </p>
 
 </div>
 </div>
@@ -2154,7 +2154,7 @@ Undo Support</h1>
 </div><div class="memdoc">
 
 <p>Returns a rect representing the scrollable area of the scene. </p>
-<p>Normally this function returns the scene's <a class="el" href="class_drawing_scene.html#a7bc8f811e994303e939fe210702ca04a" title="Returns the scene&#39;s bounding rectangle.">DrawingScene::sceneRect()</a>. However, if the viewport is zoomed out enough that more of the scene can be seen than the <a class="el" href="class_drawing_scene.html#a7bc8f811e994303e939fe210702ca04a" title="Returns the scene&#39;s bounding rectangle.">DrawingScene::sceneRect()</a>, this function will return a rect representing the entire area.</p>
+<p>Normally this function returns the scene's <a class="el" href="class_drawing_scene.html#aa01733cbdeeafd22beb1bf5e8e1d314d" title="Returns the scene&#39;s bounding rectangle.">DrawingScene::sceneRect()</a>. However, if the viewport is zoomed out enough that more of the scene can be seen than the <a class="el" href="class_drawing_scene.html#aa01733cbdeeafd22beb1bf5e8e1d314d" title="Returns the scene&#39;s bounding rectangle.">DrawingScene::sceneRect()</a>, this function will return a rect representing the entire area.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_view.html#a7585257b15c83a68e4c184b3aa2ef21c" title="Returns a rect representing the currently visible area of the scene.">visibleRect()</a> </dd></dl>
 
 </div>
@@ -2853,7 +2853,7 @@ Undo Support</h1>
 <p>Returns the topmost currently visible item at the specified position, or nullptr if there are no items at this position. </p>
 <p>This function favors already selected items in its search. First it searches through all of the selected items for a match. If none of the selected items is at the specified position, then this function searches recursively through all of the scene items and their children.</p>
 <p>If no items are selected, or if none of the selected items are at the specified position, this function returns the result of calling <a class="el" href="class_drawing_view.html#a1c105f6daceffff602ed70636857be98" title="Sets the scene associated with the view.">scene()</a>-&gt;visibleItemAt(this, scenePos).</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_scene.html#acbb0c75f60f8a208dda17fbc46891da4" title="Returns the topmost visible item at the specified position, or nullptr if there are no items at this ...">DrawingScene::visibleItemAt(const DrawingView*, const QPointF&amp;) const</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd>DrawingScene::visibleItemAt(const DrawingView*, const QPointF&amp;) const </dd></dl>
 
 </div>
 </div>
@@ -2875,7 +2875,7 @@ Undo Support</h1>
 
 <p>Returns a list of all currently visible items in the scene that are inside the specified path. </p>
 <p>This convenience function is equivalent to calling <a class="el" href="class_drawing_view.html#a1c105f6daceffff602ed70636857be98" title="Sets the scene associated with the view.">scene()</a>-&gt;visibleItems(this, sceneRect, itemSelectionMode()).</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_scene.html#ade63e4039303d3c90cbe3f21d2b549db" title="Returns a list of all visible items in the scene that are inside the specified path.">DrawingScene::visibleItems(const DrawingView*, const QPainterPath&amp;, Qt::ItemSelectionMode) const</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd>DrawingScene::visibleItems(const DrawingView*, const QPainterPath&amp;, Qt::ItemSelectionMode) const </dd></dl>
 
 </div>
 </div>
@@ -2897,7 +2897,7 @@ Undo Support</h1>
 
 <p>Returns a list of all currently visible items in the scene that are at the specified position. </p>
 <p>This convenience function is equivalent to calling <a class="el" href="class_drawing_view.html#a1c105f6daceffff602ed70636857be98" title="Sets the scene associated with the view.">scene()</a>-&gt;visibleItems(this, scenePos).</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_scene.html#adfa0af05a3ea0bcfc5e35a77cb272309" title="Returns a list of all currently visible items in the scene that are at the specified position.">DrawingScene::visibleItems(const DrawingView*, const QPointF&amp;) const</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd>DrawingScene::visibleItems(const DrawingView*, const QPointF&amp;) const </dd></dl>
 
 </div>
 </div>
@@ -2919,7 +2919,7 @@ Undo Support</h1>
 
 <p>Returns a list of all currently visible items in the scene that are inside the specified rectangle. </p>
 <p>This convenience function is equivalent to calling <a class="el" href="class_drawing_view.html#a1c105f6daceffff602ed70636857be98" title="Sets the scene associated with the view.">scene()</a>-&gt;visibleItems(this, sceneRect, itemSelectionMode()).</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_scene.html#a4d369e674a6475d7d0a4a8cfdc5f29d2" title="Returns a list of all visible items in the scene that are inside the specified rectangle.">DrawingScene::visibleItems(const DrawingView*, const QRectF&amp;, Qt::ItemSelectionMode) const</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd>DrawingScene::visibleItems(const DrawingView*, const QRectF&amp;, Qt::ItemSelectionMode) const </dd></dl>
 
 </div>
 </div>
@@ -2996,8 +2996,8 @@ Undo Support</h1>
 </table>
 </div><div class="memdoc">
 
-<p>Zooms to fit the entire scene's <a class="el" href="class_drawing_scene.html#a7bc8f811e994303e939fe210702ca04a" title="Returns the scene&#39;s bounding rectangle.">DrawingScene::sceneRect()</a> within the view. </p>
-<p>Scales the view and scrolls the scroll bars to ensure that the <a class="el" href="class_drawing_scene.html#a7bc8f811e994303e939fe210702ca04a" title="Returns the scene&#39;s bounding rectangle.">DrawingScene::sceneRect()</a> fits inside the viewport, then sends the <a class="el" href="class_drawing_view.html#ac7ac110971266086b4ed19ee397bd9f2" title="Emitted whenever the scale of the viewport changes.">scaleChanged()</a> signal to indicate the new scale factor.</p>
+<p>Zooms to fit the entire scene's <a class="el" href="class_drawing_scene.html#aa01733cbdeeafd22beb1bf5e8e1d314d" title="Returns the scene&#39;s bounding rectangle.">DrawingScene::sceneRect()</a> within the view. </p>
+<p>Scales the view and scrolls the scroll bars to ensure that the <a class="el" href="class_drawing_scene.html#aa01733cbdeeafd22beb1bf5e8e1d314d" title="Returns the scene&#39;s bounding rectangle.">DrawingScene::sceneRect()</a> fits inside the viewport, then sends the <a class="el" href="class_drawing_view.html#ac7ac110971266086b4ed19ee397bd9f2" title="Emitted whenever the scale of the viewport changes.">scaleChanged()</a> signal to indicate the new scale factor.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_view.html#a6c9f6e0ccc25ae8f47d3928337f76eaf" title="Zooms out from the scene.">zoomOut()</a>, <a class="el" href="class_drawing_view.html#af42ea6fc941cee3fb232169ddb554b73" title="Zooms to fit the entire scene&#39;s DrawingScene::sceneRect() within the view.">zoomFit()</a>, <a class="el" href="class_drawing_view.html#ae4f738980d7abf0677bd993a98f92564" title="Scales the view by the specified scaling factor.">scaleBy()</a> </dd></dl>
 
 </div>

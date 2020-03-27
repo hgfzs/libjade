@@ -224,14 +224,14 @@ DrawingItemPoint* DrawingItem::pointNearest(const QPointF& pos) const
 	return point;
 }
 
-DrawingItemPoint* DrawingItem::itemPointToInsert(const QPointF& pos, int& index)
+DrawingItemPoint* DrawingItem::pointToInsert(const QPointF& pos, int& index)
 {
 	Q_UNUSED(pos)
 	Q_UNUSED(index)
 	return nullptr;
 }
 
-DrawingItemPoint* DrawingItem::itemPointToRemove(const QPointF& pos)
+DrawingItemPoint* DrawingItem::pointToRemove(const QPointF& pos)
 {
 	Q_UNUSED(pos)
 	return nullptr;

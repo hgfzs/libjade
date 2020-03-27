@@ -32,19 +32,19 @@ class DrawingItem;
  * Each DrawingItemPoint object is associated with a specific item().  The item point has a
  * position() that is given in the local coordinate system of its item.
  *
- * When a DrawingItem is selected in a DrawingView, its item points are shown.  If the user clicks
- * and drags on a #Control point, DrawingView will move just the item point around the scene
+ * When a DrawingItem is selected in a DrawingWidget, its item points are shown.  If the user clicks
+ * and drags on a #Control point, DrawingWidget will move just the item point around the scene
  * instead of the whole item.  This provides a method for resizing items whose geometry is
  * determined by the location of their item points.
  *
  * Additionally, if the user moves or resizes and item such that two #Connection points
- * overlap, DrawingView will connect the two items together.  If the user then moves one of the
- * two items, DrawingView will attempt to maintain the connection by resizing the other item.
+ * overlap, DrawingWidget will connect the two items together.  If the user then moves one of the
+ * two items, DrawingWidget will attempt to maintain the connection by resizing the other item.
  * The other item's connection point must have the #Free flag set.
  *
  * DrawingItemPoint objects can be both #Control and #Connection points.
  *
- * All rendering of item points is handled by DrawingView.  Item points remain hidden until their
+ * All rendering of item points is handled by DrawingWidget.  Item points remain hidden until their
  * parent item is selected.  #Control points (and points that are both #Control and #Connection
  * points) are rendered as green squares that the user can then click on to move.  #Connection
  * points are rendered as yellow squares; the user can drag the connecting item over the yellow
@@ -62,16 +62,16 @@ public:
 	{
 		NoFlags = 0x0000,		//!< Convenience value indicating that none of the other flags are set.
 		Control = 0x0001,		//!< #Control points can be used to resize an item. If the
-								//!< user clicks and drags on a #Control point, DrawingView
+								//!< user clicks and drags on a #Control point, DrawingWidget
 								//!< will move just the item point around the canvas instead of the
 								//!< whole item.
 		Connection = 0x0002,	//!< #Connection points can be used to connect two items
 								//!< together. If the user moves one of two connected items,
-								//!< DrawingView attempts to maintain the connection by resizing
+								//!< DrawingWidget attempts to maintain the connection by resizing
 								//!< the other item.
 		Free = 0x0004			//!< #Free points are typically used for the ends of lines
 								//!< and similar types of items. This flag indicates that
-								//!< DrawingView is free to resize the associated item to try to
+								//!< DrawingWidget is free to resize the associated item to try to
 								//!< maintain the connection.
 	};
 
@@ -134,7 +134,7 @@ public:
 	 * parent item.
 	 *
 	 * To move an item point around the scene as if the user clicked on it, call
-	 * DrawingView::resizeSelection().
+	 * DrawingWidget::resizeItem() or DrawingWidget::resizeSelection().
 	 *
 	 * \sa position()
 	 */
@@ -193,9 +193,9 @@ public:
 	 * \li #Control - point is only a #Control point
 	 * \li #Connection - point is only a #Connection point
 	 * \li #Control|#Connection - point is both a #Control and #Connection point.  When a
-	 * connected item is moved, DrawingView breaks the connection.
+	 * connected item is moved, DrawingWidget breaks the connection.
 	 * \li #Control|#Connection|#Free - point is both a #Control and #Connection point. When a
-	 * connected item is moved, DrawingView resizes the item to maintain the connection.
+	 * connected item is moved, DrawingWidget resizes the item to maintain the connection.
 	 *
 	 * For any other combination of flags, the behavior is undefined.
 	 *

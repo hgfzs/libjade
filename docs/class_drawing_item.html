@@ -105,10 +105,6 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <tr class="separator:a5cee357db6aa005d5da5dd04929db252"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad977ebfb76c9693e7b9e8da6086ca216"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#ad977ebfb76c9693e7b9e8da6086ca216">isVisible</a> () const</td></tr>
 <tr class="separator:ad977ebfb76c9693e7b9e8da6086ca216"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af8e9ed50f1e7a20d49dc0ea005e4abc7"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#af8e9ed50f1e7a20d49dc0ea005e4abc7">itemPointToInsert</a> (const QPointF &amp;pos, int &amp;index)</td></tr>
-<tr class="separator:af8e9ed50f1e7a20d49dc0ea005e4abc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a688d10ac5e0ffc8bab6c43c5ff001ef3"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a688d10ac5e0ffc8bab6c43c5ff001ef3">itemPointToRemove</a> (const QPointF &amp;pos)</td></tr>
-<tr class="separator:a688d10ac5e0ffc8bab6c43c5ff001ef3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4541e39830ee616339c8962efb8eb00b"><td class="memItemLeft" align="right" valign="top">QPainterPath&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a4541e39830ee616339c8962efb8eb00b">mapFromScene</a> (const QPainterPath &amp;path) const</td></tr>
 <tr class="separator:a4541e39830ee616339c8962efb8eb00b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a250cb69998cf177c1d0c2d26897df2ed"><td class="memItemLeft" align="right" valign="top">QPointF&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a250cb69998cf177c1d0c2d26897df2ed">mapFromScene</a> (const QPointF &amp;point) const</td></tr>
@@ -133,6 +129,10 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <tr class="separator:a38b330dec49c707223ba3cc7b7dadb8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4690075ae05f5c26a8b2cd587d63e9eb"><td class="memItemLeft" align="right" valign="top">QList&lt; <a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a4690075ae05f5c26a8b2cd587d63e9eb">points</a> () const</td></tr>
 <tr class="separator:a4690075ae05f5c26a8b2cd587d63e9eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace5000768b510aee3102b063575298be"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#ace5000768b510aee3102b063575298be">pointToInsert</a> (const QPointF &amp;pos, int &amp;index)</td></tr>
+<tr class="separator:ace5000768b510aee3102b063575298be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b44404919b89264f57696929a4e270a"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a6b44404919b89264f57696929a4e270a">pointToRemove</a> (const QPointF &amp;pos)</td></tr>
+<tr class="separator:a6b44404919b89264f57696929a4e270a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4897ffe099b9ba3f8d69f202b1ac640b"><td class="memItemLeft" align="right" valign="top">QPointF&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a4897ffe099b9ba3f8d69f202b1ac640b">position</a> () const</td></tr>
 <tr class="separator:a4897ffe099b9ba3f8d69f202b1ac640b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a85ca345f943fdbc53c8ff849321b698b"><td class="memItemLeft" align="right" valign="top">virtual QHash&lt; QString, QVariant &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a85ca345f943fdbc53c8ff849321b698b">properties</a> () const</td></tr>
@@ -184,7 +184,7 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:a974db65a4b51a926177f654fe334cc85"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Base class for all graphical items in a <a class="el" href="class_drawing_scene.html" title="Surface for managing a large number of two-dimensional DrawingItem objects.">DrawingScene</a>. </p>
+<div class="textblock"><p>Base class for all graphical items in a <a class="el" href="class_drawing_scene.html" title="Container for DrawingItem objects.">DrawingScene</a>. </p>
 <p><a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a> provides a lightweight foundation for writing custom items. This includes defining the item's geometry, painting implementation, and item interaction through event handlers.</p>
 <p>For convenience, a set of standard graphics items are provided for the most common shapes:</p>
 <ul>
@@ -207,19 +207,19 @@ Item Geometry</h1>
 <p>A complete description of the geometry of an item is given by the <a class="el" href="class_drawing_item.html#a6cf2e2f89c56fcc56451d5a8088d534e" title="Returns an estimate of the area painted by an item.">boundingRect()</a>, <a class="el" href="class_drawing_item.html#a464d44b4c148170711a9661bfe988ba5" title="Returns an accurate outline of an item&#39;s shape.">shape()</a>, <a class="el" href="class_drawing_item.html#abd3df43ae85daadc4b0af0947da497f5" title="Returns a position representing the center of the item.">centerPos()</a>, and <a class="el" href="class_drawing_item.html#a5cee357db6aa005d5da5dd04929db252" title="Return false if the item is invalid, true otherwise.">isValid()</a> functions.</p>
 <p>The <a class="el" href="class_drawing_item.html#a464d44b4c148170711a9661bfe988ba5" title="Returns an accurate outline of an item&#39;s shape.">shape()</a> function returns an accurate outline of an item's shape as a QPainterPath. The <a class="el" href="class_drawing_item.html#a6cf2e2f89c56fcc56451d5a8088d534e" title="Returns an estimate of the area painted by an item.">boundingRect()</a> function returns an estimate of the area painted by an item as a QRectF. The implementation of <a class="el" href="class_drawing_item.html#a6cf2e2f89c56fcc56451d5a8088d534e" title="Returns an estimate of the area painted by an item.">boundingRect()</a> is meant to be as lightweight as possible. It is not recommended to return the boundingRect of the QPainterPath returned by <a class="el" href="class_drawing_item.html#a464d44b4c148170711a9661bfe988ba5" title="Returns an accurate outline of an item&#39;s shape.">shape()</a> for this implementation for most items.</p>
 <p>The <a class="el" href="class_drawing_item.html#abd3df43ae85daadc4b0af0947da497f5" title="Returns a position representing the center of the item.">centerPos()</a> is used to determine the center of all of the currently selected items in the scene. The default implementation is to return the center of the item's <a class="el" href="class_drawing_item.html#a6cf2e2f89c56fcc56451d5a8088d534e" title="Returns an estimate of the area painted by an item.">boundingRect()</a>. For most items this implementation is expected to be sufficient.</p>
-<p>The <a class="el" href="class_drawing_item.html#a5cee357db6aa005d5da5dd04929db252" title="Return false if the item is invalid, true otherwise.">isValid()</a> function should return false if the item is not really valid (for example, a line where the start and end points are the same). <a class="el" href="class_drawing_view.html" title="Widget for viewing the contents of a DrawingScene.">DrawingView</a> will prevent invalid items from being added to the scene. The default implementation is to return true if the item's <a class="el" href="class_drawing_item.html#a6cf2e2f89c56fcc56451d5a8088d534e" title="Returns an estimate of the area painted by an item.">boundingRect()</a> is a valid rect.</p>
+<p>The <a class="el" href="class_drawing_item.html#a5cee357db6aa005d5da5dd04929db252" title="Return false if the item is invalid, true otherwise.">isValid()</a> function should return false if the item is not really valid (for example, a line where the start and end points are the same). <a class="el" href="class_drawing_widget.html" title="Widget for viewing the contents of a DrawingScene.">DrawingWidget</a> will prevent invalid items from being added to the scene. The default implementation is to return true if the item's <a class="el" href="class_drawing_item.html#a6cf2e2f89c56fcc56451d5a8088d534e" title="Returns an estimate of the area painted by an item.">boundingRect()</a> is a valid rect.</p>
 <h1><a class="anchor" id="itemPoints"></a>
 Item Points</h1>
 <p>An item's geometry may be represented by a series of item points. For example, a line item may have two points; one point represents the start point and the other represents the end point.</p>
-<p>Representing the item's geometry based on the location of its item points provides a convenient method for the user to be able to resize an item. When the user of a <a class="el" href="class_drawing_view.html" title="Widget for viewing the contents of a DrawingScene.">DrawingView</a> clicks on one of the item's <a class="el" href="class_drawing_item.html#a4690075ae05f5c26a8b2cd587d63e9eb" title="Returns a list of all item points added to the item.">points()</a>, then if the item is a <a class="el" href="class_drawing_item_point.html#af7b04a93a5666d01795a268b90f9a7ccab852151e0bfc1d7ead9a05d62fe5ae15">Control </a> point, the view will move just the point around the scene rather than the whole item.</p>
+<p>Representing the item's geometry based on the location of its item points provides a convenient method for the user to be able to resize an item. When the user of a <a class="el" href="class_drawing_widget.html" title="Widget for viewing the contents of a DrawingScene.">DrawingWidget</a> clicks on one of the item's <a class="el" href="class_drawing_item.html#a4690075ae05f5c26a8b2cd587d63e9eb" title="Returns a list of all item points added to the item.">points()</a>, then if the item is a <a class="el" href="class_drawing_item_point.html#af7b04a93a5666d01795a268b90f9a7ccab852151e0bfc1d7ead9a05d62fe5ae15">Control </a> point, the view will move just the point around the scene rather than the whole item.</p>
 <p>Item points can be added to an item using <a class="el" href="class_drawing_item.html#a91c239ff70767b77694b19914f25f57f" title="Adds an existing item point to the item.">addPoint()</a> or <a class="el" href="class_drawing_item.html#a7b62f045eba710bcb47ef282d6e2cb6f" title="Inserts an existing item point to the item at the specified index.">insertPoint()</a>. Points may be removed from an item using <a class="el" href="class_drawing_item.html#ae8f3499b174276e72b710d30287645d6" title="Removes an existing item point from the item.">removePoint()</a>. A list of all the item's points is available using <a class="el" href="class_drawing_item.html#a4690075ae05f5c26a8b2cd587d63e9eb" title="Returns a list of all item points added to the item.">points()</a>.</p>
 <h1><a class="anchor" id="itemPainting"></a>
 Painting</h1>
-<p>The <a class="el" href="class_drawing_item.html#a0ba79b50ff212298409dd53079c1ded2" title="Paints the contents of the item into the scene.">render()</a> function is called by <a class="el" href="class_drawing_scene.html" title="Surface for managing a large number of two-dimensional DrawingItem objects.">DrawingScene</a> to paint the item's contents. The item has no background or default fill of its own; whatever is behind the item will show through all areas that are not explicitly painted in this function.</p>
+<p>The <a class="el" href="class_drawing_item.html#a0ba79b50ff212298409dd53079c1ded2" title="Paints the contents of the item into the scene.">render()</a> function is called by <a class="el" href="class_drawing_scene.html" title="Container for DrawingItem objects.">DrawingScene</a> to paint the item's contents. The item has no background or default fill of its own; whatever is behind the item will show through all areas that are not explicitly painted in this function.</p>
 <p>All items are drawn in the order of when they were added to scene. This order also dictates which items will receive mouse input first when clicking within the scene.</p>
 <h1><a class="anchor" id="itemEvents"></a>
 Events</h1>
-<p><a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a> receives events from <a class="el" href="class_drawing_view.html" title="Widget for viewing the contents of a DrawingScene.">DrawingView</a> through several event handlers:</p>
+<p><a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a> receives events from <a class="el" href="class_drawing_widget.html" title="Widget for viewing the contents of a DrawingScene.">DrawingWidget</a> through several event handlers:</p>
 <ul>
 <li><a class="el" href="class_drawing_item.html#a5d8204cb39cfbbbf17c19e72c45cf2a1" title="Moves the item within the scene.">move()</a> is called to move the item around the scene </li>
 <li><a class="el" href="class_drawing_item.html#a4d96f0f93f32a992daf67f8a726424c2" title="Resizes the item within the scene.">resize()</a> is called to resize the item within the scene </li>
@@ -231,9 +231,9 @@ Events</h1>
 <h1><a class="anchor" id="itemCustom"></a>
 Custom Items</h1>
 <p>To write a custom graphics item, first create a subclass of <a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a>, and then start by implementing its three pure virtual public functions: <a class="el" href="class_drawing_item.html#af9b37ac9b5ce0a3bf528f94edb0de151" title="Creates a copy of the DrawingItem and returns it.">copy()</a>, <a class="el" href="class_drawing_item.html#a6cf2e2f89c56fcc56451d5a8088d534e" title="Returns an estimate of the area painted by an item.">boundingRect()</a> and <a class="el" href="class_drawing_item.html#a0ba79b50ff212298409dd53079c1ded2" title="Paints the contents of the item into the scene.">render()</a>. Complex items may need to override <a class="el" href="class_drawing_item.html#a464d44b4c148170711a9661bfe988ba5" title="Returns an accurate outline of an item&#39;s shape.">shape()</a>, <a class="el" href="class_drawing_item.html#abd3df43ae85daadc4b0af0947da497f5" title="Returns a position representing the center of the item.">centerPos()</a>, and <a class="el" href="class_drawing_item.html#a5cee357db6aa005d5da5dd04929db252" title="Return false if the item is invalid, true otherwise.">isValid()</a> for a more complete description of the item's geometry.</p>
-<p>Consider using <a class="el" href="class_drawing_item_point.html" title="Represents an interaction point within a DrawingItem through which the user can resize the item or co...">DrawingItemPoint</a> objects to define the item's geometry to allow the user to resize the item through <a class="el" href="class_drawing_view.html" title="Widget for viewing the contents of a DrawingScene.">DrawingView</a> mouse events.</p>
+<p>Consider using <a class="el" href="class_drawing_item_point.html" title="Represents an interaction point within a DrawingItem through which the user can resize the item or co...">DrawingItemPoint</a> objects to define the item's geometry to allow the user to resize the item through <a class="el" href="class_drawing_widget.html" title="Widget for viewing the contents of a DrawingScene.">DrawingWidget</a> mouse events.</p>
 <p>To extend the behavior of the item interaction events within the scene, consider overriding any of the item's event handlers such as <a class="el" href="class_drawing_item.html#a5d8204cb39cfbbbf17c19e72c45cf2a1" title="Moves the item within the scene.">move()</a> or <a class="el" href="class_drawing_item.html#a4d96f0f93f32a992daf67f8a726424c2" title="Resizes the item within the scene.">resize()</a> as well.</p>
-<p>For items that support adding item points, implementations should set the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a0fe2476868caa5cbe01dc1872436ae4d" title="Indicates that item points can be added to the item.">CanInsertPoints</a> flag and provide an implementation for <a class="el" href="class_drawing_item.html#af8e9ed50f1e7a20d49dc0ea005e4abc7" title="Called when the view wants to insert a new item point in the item at the specified position.">itemPointToInsert()</a>. For items that support removing item points, implementations should set the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8acf870023363a32ad64518e395a8faf55">CanRemovePoints</a> flag and provide an implementation for <a class="el" href="class_drawing_item.html#a688d10ac5e0ffc8bab6c43c5ff001ef3" title="Called when the view wants to remove an existing item point in the item at the specified position.">itemPointToRemove()</a>. By default <a class="el" href="class_drawing_item.html#af8e9ed50f1e7a20d49dc0ea005e4abc7" title="Called when the view wants to insert a new item point in the item at the specified position.">itemPointToInsert()</a> and <a class="el" href="class_drawing_item.html#a688d10ac5e0ffc8bab6c43c5ff001ef3" title="Called when the view wants to remove an existing item point in the item at the specified position.">itemPointToRemove()</a> return nullptr. </p>
+<p>For items that support adding item points, implementations should set the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a0fe2476868caa5cbe01dc1872436ae4d" title="Indicates that item points can be added to the item.">CanInsertPoints</a> flag and provide an implementation for <a class="el" href="class_drawing_item.html#ace5000768b510aee3102b063575298be" title="Called when the view wants to insert a new item point in the item at the specified position.">pointToInsert()</a>. For items that support removing item points, implementations should set the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8acf870023363a32ad64518e395a8faf55">CanRemovePoints</a> flag and provide an implementation for <a class="el" href="class_drawing_item.html#a6b44404919b89264f57696929a4e270a" title="Called when the view wants to remove an existing item point in the item at the specified position.">pointToRemove()</a>. By default <a class="el" href="class_drawing_item.html#ace5000768b510aee3102b063575298be" title="Called when the view wants to insert a new item point in the item at the specified position.">pointToInsert()</a> and <a class="el" href="class_drawing_item.html#a6b44404919b89264f57696929a4e270a" title="Called when the view wants to remove an existing item point in the item at the specified position.">pointToRemove()</a> return nullptr. </p>
 </div><h2 class="groupheader">Member Enumeration Documentation</h2>
 <a id="a7dcef175f26729d5af8e0a815ce63ba8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7dcef175f26729d5af8e0a815ce63ba8">&#9670;&nbsp;</a></span>Flag</h2>
@@ -305,7 +305,7 @@ Custom Items</h1>
 </div><div class="memdoc">
 
 <p>Create a new <a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a> with default settings. </p>
-<p>The new item is not associated with a <a class="el" href="class_drawing_scene.html" title="Surface for managing a large number of two-dimensional DrawingItem objects.">DrawingScene</a>. </p>
+<p>The new item is not associated with a <a class="el" href="class_drawing_scene.html" title="Container for DrawingItem objects.">DrawingScene</a>. </p>
 
 </div>
 </div>
@@ -327,7 +327,7 @@ Custom Items</h1>
 
 <p>Create a new <a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a> as a copy of an existing item. </p>
 <p>Copies the position, transform, and flags from the existing item. Also creates copies of the existing item's points for the new item.</p>
-<p>The new item is not associated with a <a class="el" href="class_drawing_scene.html" title="Surface for managing a large number of two-dimensional DrawingItem objects.">DrawingScene</a>. </p>
+<p>The new item is not associated with a <a class="el" href="class_drawing_scene.html" title="Container for DrawingItem objects.">DrawingScene</a>. </p>
 
 </div>
 </div>
@@ -663,7 +663,7 @@ Custom Items</h1>
 </div><div class="memdoc">
 
 <p>Return false if the item is invalid, true otherwise. </p>
-<p>This function should return false if the item is not really valid (for example, a line where the start and end points are the same). <a class="el" href="class_drawing_view.html" title="Widget for viewing the contents of a DrawingScene.">DrawingView</a> will prevent invalid items from being added to the scene.</p>
+<p>This function should return false if the item is not really valid (for example, a line where the start and end points are the same). <a class="el" href="class_drawing_widget.html" title="Widget for viewing the contents of a DrawingScene.">DrawingWidget</a> will prevent invalid items from being added to the scene.</p>
 <p>The default implementation is to return true if the item's <a class="el" href="class_drawing_item.html#a6cf2e2f89c56fcc56451d5a8088d534e" title="Returns an estimate of the area painted by an item.">boundingRect()</a> is a valid rect.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a6cf2e2f89c56fcc56451d5a8088d534e" title="Returns an estimate of the area painted by an item.">boundingRect()</a>, <a class="el" href="class_drawing_item.html#a464d44b4c148170711a9661bfe988ba5" title="Returns an accurate outline of an item&#39;s shape.">shape()</a>, <a class="el" href="class_drawing_item.html#abd3df43ae85daadc4b0af0947da497f5" title="Returns a position representing the center of the item.">centerPos()</a> </dd></dl>
 
@@ -688,82 +688,6 @@ Custom Items</h1>
 
 <p>Returns whether the item is currently visible within the scene or not. </p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a6db3865450d5bb89ca54491b18e0bd4b" title="Sets whether the item is currently visible within the scene or not.">setVisible()</a> </dd></dl>
-
-</div>
-</div>
-<a id="af8e9ed50f1e7a20d49dc0ea005e4abc7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af8e9ed50f1e7a20d49dc0ea005e4abc7">&#9670;&nbsp;</a></span>itemPointToInsert()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual <a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a>* DrawingItem::itemPointToInsert </td>
-          <td>(</td>
-          <td class="paramtype">const QPointF &amp;&#160;</td>
-          <td class="paramname"><em>pos</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int &amp;&#160;</td>
-          <td class="paramname"><em>index</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Called when the view wants to insert a new item point in the item at the specified position. </p>
-<p>This will only be called for items that have the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a0fe2476868caa5cbe01dc1872436ae4d" title="Indicates that item points can be added to the item.">CanInsertPoints</a> flag set as one of their <a class="el" href="class_drawing_item.html#a817a54e0af5105045d009024b21a00ac" title="Returns the type of the item as represented as a combination of flags.">flags()</a>.</p>
-<p>The <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a0fe2476868caa5cbe01dc1872436ae4d" title="Indicates that item points can be added to the item.">CanInsertPoints</a> flag is not set by default, and the default implementation of this function does nothing except return nullptr. Derived classes that support inserting item points should set the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a0fe2476868caa5cbe01dc1872436ae4d" title="Indicates that item points can be added to the item.">CanInsertPoints</a> flag and provide an implementation for this function.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a688d10ac5e0ffc8bab6c43c5ff001ef3" title="Called when the view wants to remove an existing item point in the item at the specified position.">itemPointToRemove()</a> </dd></dl>
-
-<p>Reimplemented in <a class="el" href="class_drawing_polyline_item.html#a3509bb87770d10b9a05c647ae7ef41b9">DrawingPolylineItem</a>, and <a class="el" href="class_drawing_polygon_item.html#af2f02a913c09b64de7a0371d1948b02f">DrawingPolygonItem</a>.</p>
-
-</div>
-</div>
-<a id="a688d10ac5e0ffc8bab6c43c5ff001ef3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a688d10ac5e0ffc8bab6c43c5ff001ef3">&#9670;&nbsp;</a></span>itemPointToRemove()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual <a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a>* DrawingItem::itemPointToRemove </td>
-          <td>(</td>
-          <td class="paramtype">const QPointF &amp;&#160;</td>
-          <td class="paramname"><em>pos</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Called when the view wants to remove an existing item point in the item at the specified position. </p>
-<p>This will only be called for items that have the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8acf870023363a32ad64518e395a8faf55">CanRemovePoints</a> flag set as one of their <a class="el" href="class_drawing_item.html#a817a54e0af5105045d009024b21a00ac" title="Returns the type of the item as represented as a combination of flags.">flags()</a>.</p>
-<p>The <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8acf870023363a32ad64518e395a8faf55">CanRemovePoints</a> flag is not set by default, and the default implementation of this function does nothing except return nullptr. Derived classes that support removing item points should set the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8acf870023363a32ad64518e395a8faf55">CanRemovePoints</a> flag and provide an implementation for this function.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#af8e9ed50f1e7a20d49dc0ea005e4abc7" title="Called when the view wants to insert a new item point in the item at the specified position.">itemPointToInsert()</a> </dd></dl>
-
-<p>Reimplemented in <a class="el" href="class_drawing_polyline_item.html#a2eec2a37551409fe7170a397736116eb">DrawingPolylineItem</a>, and <a class="el" href="class_drawing_polygon_item.html#abdde629a552fce471587f4aafd2e2055">DrawingPolygonItem</a>.</p>
 
 </div>
 </div>
@@ -1034,6 +958,82 @@ Custom Items</h1>
 
 </div>
 </div>
+<a id="ace5000768b510aee3102b063575298be"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ace5000768b510aee3102b063575298be">&#9670;&nbsp;</a></span>pointToInsert()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a>* DrawingItem::pointToInsert </td>
+          <td>(</td>
+          <td class="paramtype">const QPointF &amp;&#160;</td>
+          <td class="paramname"><em>pos</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &amp;&#160;</td>
+          <td class="paramname"><em>index</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called when the view wants to insert a new item point in the item at the specified position. </p>
+<p>This will only be called for items that have the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a0fe2476868caa5cbe01dc1872436ae4d" title="Indicates that item points can be added to the item.">CanInsertPoints</a> flag set as one of their <a class="el" href="class_drawing_item.html#a817a54e0af5105045d009024b21a00ac" title="Returns the type of the item as represented as a combination of flags.">flags()</a>.</p>
+<p>The <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a0fe2476868caa5cbe01dc1872436ae4d" title="Indicates that item points can be added to the item.">CanInsertPoints</a> flag is not set by default, and the default implementation of this function does nothing except return nullptr. Derived classes that support inserting item points should set the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a0fe2476868caa5cbe01dc1872436ae4d" title="Indicates that item points can be added to the item.">CanInsertPoints</a> flag and provide an implementation for this function.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a6b44404919b89264f57696929a4e270a" title="Called when the view wants to remove an existing item point in the item at the specified position.">pointToRemove()</a> </dd></dl>
+
+<p>Reimplemented in <a class="el" href="class_drawing_polyline_item.html#a6777c8daecb90471bd13494ea5fb08ea">DrawingPolylineItem</a>, and <a class="el" href="class_drawing_polygon_item.html#afb41a62b67f558f99319c4b23de7ed42">DrawingPolygonItem</a>.</p>
+
+</div>
+</div>
+<a id="a6b44404919b89264f57696929a4e270a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b44404919b89264f57696929a4e270a">&#9670;&nbsp;</a></span>pointToRemove()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a>* DrawingItem::pointToRemove </td>
+          <td>(</td>
+          <td class="paramtype">const QPointF &amp;&#160;</td>
+          <td class="paramname"><em>pos</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called when the view wants to remove an existing item point in the item at the specified position. </p>
+<p>This will only be called for items that have the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8acf870023363a32ad64518e395a8faf55">CanRemovePoints</a> flag set as one of their <a class="el" href="class_drawing_item.html#a817a54e0af5105045d009024b21a00ac" title="Returns the type of the item as represented as a combination of flags.">flags()</a>.</p>
+<p>The <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8acf870023363a32ad64518e395a8faf55">CanRemovePoints</a> flag is not set by default, and the default implementation of this function does nothing except return nullptr. Derived classes that support removing item points should set the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8acf870023363a32ad64518e395a8faf55">CanRemovePoints</a> flag and provide an implementation for this function.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#ace5000768b510aee3102b063575298be" title="Called when the view wants to insert a new item point in the item at the specified position.">pointToInsert()</a> </dd></dl>
+
+<p>Reimplemented in <a class="el" href="class_drawing_polyline_item.html#a0046ddc00d9adc58679e42ef7d2a0f2c">DrawingPolylineItem</a>, and <a class="el" href="class_drawing_polygon_item.html#a73a46b781f9c643d638afe8fc4c6243f">DrawingPolygonItem</a>.</p>
+
+</div>
+</div>
 <a id="a4897ffe099b9ba3f8d69f202b1ac640b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4897ffe099b9ba3f8d69f202b1ac640b">&#9670;&nbsp;</a></span>position()</h2>
 
@@ -1134,7 +1134,7 @@ Custom Items</h1>
 </div><div class="memdoc">
 
 <p>Paints the contents of the item into the scene. </p>
-<p>This function is typically called by <a class="el" href="class_drawing_scene.html" title="Surface for managing a large number of two-dimensional DrawingItem objects.">DrawingScene</a> when rendering the scene. <a class="el" href="class_drawing_scene.html" title="Surface for managing a large number of two-dimensional DrawingItem objects.">DrawingScene</a> handles all of the necessary transformations, so this function should paint the item in local item coordinates. </p>
+<p>This function is typically called by <a class="el" href="class_drawing_scene.html" title="Container for DrawingItem objects.">DrawingScene</a> when rendering the scene. <a class="el" href="class_drawing_scene.html" title="Container for DrawingItem objects.">DrawingScene</a> handles all of the necessary transformations, so this function should paint the item in local item coordinates. </p>
 
 <p>Implemented in <a class="el" href="class_drawing_text_rect_item.html#abadbdc219c5a70adc0b0392a39badb18">DrawingTextRectItem</a>, <a class="el" href="class_drawing_text_ellipse_item.html#af97b980ebf522862b1c1b08dd56edfd4">DrawingTextEllipseItem</a>, <a class="el" href="class_drawing_path_item.html#a52186f08ed4c15c28d7290278a703645">DrawingPathItem</a>, <a class="el" href="class_drawing_curve_item.html#ad2fe02271c7ce3eedca9a4d68c37a025">DrawingCurveItem</a>, <a class="el" href="class_drawing_line_item.html#a7763a930ed9d3604b1540db70374fd11">DrawingLineItem</a>, <a class="el" href="class_drawing_text_item.html#adc05acc62d62a3bdd5feb3ba59285269">DrawingTextItem</a>, <a class="el" href="class_drawing_polyline_item.html#ab8bac697232d2131967b6bb2a3d5266b">DrawingPolylineItem</a>, <a class="el" href="class_drawing_rect_item.html#ab7cb6d34850a3ecf19ca705954b067b7">DrawingRectItem</a>, <a class="el" href="class_drawing_ellipse_item.html#a3f58d7f0657211eabce91d2e17e0c811">DrawingEllipseItem</a>, <a class="el" href="class_drawing_polygon_item.html#a5a70a5071b02bcf6961c52ae5bf25866">DrawingPolygonItem</a>, and <a class="el" href="class_drawing_item_group.html#a4ea3b63640294d0c291e05018ed0bb10">DrawingItemGroup</a>.</p>
 
@@ -1289,7 +1289,7 @@ Custom Items</h1>
 
 <p>Sets the type of item through a combination of flags. </p>
 <p>The type of item is represented by a combination of flags. Any combination of flags is valid for <a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a> objects. By default, the (<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a95a39079caad1648c6072dc5d31bf19b" title="Indicates that the item can be moved around the scene.">CanMove</a> | <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8ac11487cdd344db23e865fe04a00207a7">CanResize</a> | <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a1853e3a339adeec237de605616adc055">CanRotate</a> | <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8ac1442db61d2994e29519efc19539901c">CanFlip</a> | <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a0eb4b3d4f6801707ab6f635f0a84581a">CanSelect</a> | <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a68c630ca2a27c866e66830ae927a122d">CanDelete</a>) flags are set.</p>
-<p>Items that set the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a0fe2476868caa5cbe01dc1872436ae4d" title="Indicates that item points can be added to the item.">CanInsertPoints</a> flag should also provide an implementation for <a class="el" href="class_drawing_item.html#af8e9ed50f1e7a20d49dc0ea005e4abc7" title="Called when the view wants to insert a new item point in the item at the specified position.">itemPointToInsert()</a>. Items that set the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8acf870023363a32ad64518e395a8faf55">CanRemovePoints</a> flag should also provide an implementation for and <a class="el" href="class_drawing_item.html#a688d10ac5e0ffc8bab6c43c5ff001ef3" title="Called when the view wants to remove an existing item point in the item at the specified position.">itemPointToRemove()</a>.</p>
+<p>Items that set the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a0fe2476868caa5cbe01dc1872436ae4d" title="Indicates that item points can be added to the item.">CanInsertPoints</a> flag should also provide an implementation for <a class="el" href="class_drawing_item.html#ace5000768b510aee3102b063575298be" title="Called when the view wants to insert a new item point in the item at the specified position.">pointToInsert()</a>. Items that set the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8acf870023363a32ad64518e395a8faf55">CanRemovePoints</a> flag should also provide an implementation for and <a class="el" href="class_drawing_item.html#a6b44404919b89264f57696929a4e270a" title="Called when the view wants to remove an existing item point in the item at the specified position.">pointToRemove()</a>.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a817a54e0af5105045d009024b21a00ac" title="Returns the type of the item as represented as a combination of flags.">flags()</a> </dd></dl>
 
 </div>
@@ -1312,7 +1312,7 @@ Custom Items</h1>
 
 <p>Sets the position of the item. </p>
 <p>The position of the item describes its origin (local coordinate (0,0)) in scene coordinates.</p>
-<p>To move an item around the scene as if the user clicked on it, call DrawingView::moveItems() or <a class="el" href="class_drawing_view.html#a2fd0c30d1874873f6bfe49e4873cc0c9" title="Moves the selected items by the specified position.">DrawingView::moveSelection()</a>.</p>
+<p>To move an item around the scene as if the user clicked on it, call DrawingWidget::moveItems() or <a class="el" href="class_drawing_widget.html#aedb24c2753315060f00bb488cea53a2d" title="Moves the selected items by the specified position.">DrawingWidget::moveSelection()</a>.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a4897ffe099b9ba3f8d69f202b1ac640b" title="Returns the position of the item in the scene.">position()</a> </dd></dl>
 
 </div>

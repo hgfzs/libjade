@@ -298,7 +298,7 @@ void DrawingPolylineItem::resize(DrawingItemPoint* point, const QPointF& pos)
 
 //==================================================================================================
 
-DrawingItemPoint* DrawingPolylineItem::itemPointToInsert(const QPointF& pos, int& index)
+DrawingItemPoint* DrawingPolylineItem::pointToInsert(const QPointF& pos, int& index)
 {
 	DrawingItemPoint* pointToInsert = new DrawingItemPoint(
 		pos, DrawingItemPoint::Control | DrawingItemPoint::Connection);
@@ -324,7 +324,7 @@ DrawingItemPoint* DrawingPolylineItem::itemPointToInsert(const QPointF& pos, int
 	return pointToInsert;
 }
 
-DrawingItemPoint* DrawingPolylineItem::itemPointToRemove(const QPointF& pos)
+DrawingItemPoint* DrawingPolylineItem::pointToRemove(const QPointF& pos)
 {
 	DrawingItemPoint* pointToRemove = nullptr;
 

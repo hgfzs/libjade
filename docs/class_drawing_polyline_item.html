@@ -66,12 +66,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ad44d970402f0066009c286c19ec459cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a251f64deab5cdb88f3a891c73e5cb432"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_polyline_item.html#a251f64deab5cdb88f3a891c73e5cb432">isValid</a> () const</td></tr>
 <tr class="separator:a251f64deab5cdb88f3a891c73e5cb432"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3509bb87770d10b9a05c647ae7ef41b9"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_polyline_item.html#a3509bb87770d10b9a05c647ae7ef41b9">itemPointToInsert</a> (const QPointF &amp;pos, int &amp;index)</td></tr>
-<tr class="separator:a3509bb87770d10b9a05c647ae7ef41b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2eec2a37551409fe7170a397736116eb"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_polyline_item.html#a2eec2a37551409fe7170a397736116eb">itemPointToRemove</a> (const QPointF &amp;pos)</td></tr>
-<tr class="separator:a2eec2a37551409fe7170a397736116eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a496ce0e2ec7d7b41ea366c4fe4a37c61"><td class="memItemLeft" align="right" valign="top">QPen&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_polyline_item.html#a496ce0e2ec7d7b41ea366c4fe4a37c61">pen</a> () const</td></tr>
 <tr class="separator:a496ce0e2ec7d7b41ea366c4fe4a37c61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6777c8daecb90471bd13494ea5fb08ea"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_polyline_item.html#a6777c8daecb90471bd13494ea5fb08ea">pointToInsert</a> (const QPointF &amp;pos, int &amp;index)</td></tr>
+<tr class="separator:a6777c8daecb90471bd13494ea5fb08ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0046ddc00d9adc58679e42ef7d2a0f2c"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_polyline_item.html#a0046ddc00d9adc58679e42ef7d2a0f2c">pointToRemove</a> (const QPointF &amp;pos)</td></tr>
+<tr class="separator:a0046ddc00d9adc58679e42ef7d2a0f2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a081a2f2f963b826e8c55f0d1e65786e9"><td class="memItemLeft" align="right" valign="top">QPolygonF&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_polyline_item.html#a081a2f2f963b826e8c55f0d1e65786e9">polyline</a> () const</td></tr>
 <tr class="separator:a081a2f2f963b826e8c55f0d1e65786e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a70d72688a0e2902c5b35071ab1902342"><td class="memItemLeft" align="right" valign="top">QHash&lt; QString, QVariant &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_polyline_item.html#a70d72688a0e2902c5b35071ab1902342">properties</a> () const</td></tr>
@@ -204,7 +204,7 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:a974db65a4b51a926177f654fe334cc85 inherit pub_static_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Provides a polyline item that can be added to a <a class="el" href="class_drawing_scene.html" title="Surface for managing a large number of two-dimensional DrawingItem objects.">DrawingScene</a>. </p>
+<div class="textblock"><p>Provides a polyline item that can be added to a <a class="el" href="class_drawing_scene.html" title="Container for DrawingItem objects.">DrawingScene</a>. </p>
 <p>To set the item's polyline, call the <a class="el" href="class_drawing_polyline_item.html#a035a15230526d496976fa9f01359c365" title="Sets the item&#39;s polyline to polygon, which is given in local item coordinates.">setPolyline()</a> function. The <a class="el" href="class_drawing_polyline_item.html#a081a2f2f963b826e8c55f0d1e65786e9" title="Returns the item&#39;s polyline in local item coordinates.">polyline()</a> function returns the current polyline. Both functions operate in local item coordinates.</p>
 <p><a class="el" href="class_drawing_polyline_item.html" title="Provides a polyline item that can be added to a DrawingScene.">DrawingPolylineItem</a> provides a reasonable implementation of <a class="el" href="class_drawing_polyline_item.html#aefee17874df2a4296729ac331e03060b" title="Returns an estimate of the area painted by the polyline item.">boundingRect()</a>, <a class="el" href="class_drawing_polyline_item.html#a5ee8acdea70c2b6e16ea0521da782c2f" title="Returns an accurate outline of the item&#39;s shape.">shape()</a>, and <a class="el" href="class_drawing_polyline_item.html#a251f64deab5cdb88f3a891c73e5cb432" title="Return false if the item is invalid, true otherwise.">isValid()</a>. The <a class="el" href="class_drawing_polyline_item.html#ab8bac697232d2131967b6bb2a3d5266b" title="Paints the contents of the polyline item into the scene.">render()</a> function draws the polyline using the item's <a class="el" href="class_drawing_polyline_item.html#a496ce0e2ec7d7b41ea366c4fe4a37c61" title="Returns the pen used to draw the polyline.">pen()</a>. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
@@ -390,8 +390,28 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a3509bb87770d10b9a05c647ae7ef41b9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3509bb87770d10b9a05c647ae7ef41b9">&#9670;&nbsp;</a></span>itemPointToInsert()</h2>
+<a id="a496ce0e2ec7d7b41ea366c4fe4a37c61"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a496ce0e2ec7d7b41ea366c4fe4a37c61">&#9670;&nbsp;</a></span>pen()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QPen DrawingPolylineItem::pen </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the pen used to draw the polyline. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_polyline_item.html#abca94fc8ef92b11f53715ae9809360e3" title="Sets the pen used to draw the polyline.">setPen()</a> </dd></dl>
+
+</div>
+</div>
+<a id="a6777c8daecb90471bd13494ea5fb08ea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6777c8daecb90471bd13494ea5fb08ea">&#9670;&nbsp;</a></span>pointToInsert()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -400,7 +420,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a>* DrawingPolylineItem::itemPointToInsert </td>
+          <td class="memname">virtual <a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a>* DrawingPolylineItem::pointToInsert </td>
           <td>(</td>
           <td class="paramtype">const QPointF &amp;&#160;</td>
           <td class="paramname"><em>pos</em>, </td>
@@ -426,14 +446,14 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Creates a new <a class="el" href="class_drawing_item_point.html" title="Represents an interaction point within a DrawingItem through which the user can resize the item or co...">DrawingItemPoint</a> to be inserted in the item and determines the appropriate location in the item's point list to insert the new point. </p>
 <p>The position of the new point is determined by pos. The flags of the new point are: <a class="el" href="class_drawing_item_point.html#af7b04a93a5666d01795a268b90f9a7ccab852151e0bfc1d7ead9a05d62fe5ae15">DrawingItemPoint::Control</a>.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_polyline_item.html#a2eec2a37551409fe7170a397736116eb" title="Returns an existing DrawingItemPoint to be removed from the item at the specified position.">itemPointToRemove()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_polyline_item.html#a0046ddc00d9adc58679e42ef7d2a0f2c" title="Returns an existing DrawingItemPoint to be removed from the item at the specified position.">pointToRemove()</a> </dd></dl>
 
-<p>Reimplemented from <a class="el" href="class_drawing_item.html#af8e9ed50f1e7a20d49dc0ea005e4abc7">DrawingItem</a>.</p>
+<p>Reimplemented from <a class="el" href="class_drawing_item.html#ace5000768b510aee3102b063575298be">DrawingItem</a>.</p>
 
 </div>
 </div>
-<a id="a2eec2a37551409fe7170a397736116eb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2eec2a37551409fe7170a397736116eb">&#9670;&nbsp;</a></span>itemPointToRemove()</h2>
+<a id="a0046ddc00d9adc58679e42ef7d2a0f2c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0046ddc00d9adc58679e42ef7d2a0f2c">&#9670;&nbsp;</a></span>pointToRemove()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -442,7 +462,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a>* DrawingPolylineItem::itemPointToRemove </td>
+          <td class="memname">virtual <a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a>* DrawingPolylineItem::pointToRemove </td>
           <td>(</td>
           <td class="paramtype">const QPointF &amp;&#160;</td>
           <td class="paramname"><em>pos</em></td><td>)</td>
@@ -458,29 +478,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Returns an existing <a class="el" href="class_drawing_item_point.html" title="Represents an interaction point within a DrawingItem through which the user can resize the item or co...">DrawingItemPoint</a> to be removed from the item at the specified position. </p>
 <p>This function removes the <a class="el" href="class_drawing_item_point.html" title="Represents an interaction point within a DrawingItem through which the user can resize the item or co...">DrawingItemPoint</a> nearest to pos, as long as it is not the first or last point of the polyline. Note that a polyline must always have a minimum of two points; if the item only has two points, this function returns nullptr.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_polyline_item.html#a3509bb87770d10b9a05c647ae7ef41b9" title="Creates a new DrawingItemPoint to be inserted in the item and determines the appropriate location in ...">itemPointToInsert()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_polyline_item.html#a6777c8daecb90471bd13494ea5fb08ea" title="Creates a new DrawingItemPoint to be inserted in the item and determines the appropriate location in ...">pointToInsert()</a> </dd></dl>
 
-<p>Reimplemented from <a class="el" href="class_drawing_item.html#a688d10ac5e0ffc8bab6c43c5ff001ef3">DrawingItem</a>.</p>
-
-</div>
-</div>
-<a id="a496ce0e2ec7d7b41ea366c4fe4a37c61"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a496ce0e2ec7d7b41ea366c4fe4a37c61">&#9670;&nbsp;</a></span>pen()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">QPen DrawingPolylineItem::pen </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Returns the pen used to draw the polyline. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_polyline_item.html#abca94fc8ef92b11f53715ae9809360e3" title="Sets the pen used to draw the polyline.">setPen()</a> </dd></dl>
+<p>Reimplemented from <a class="el" href="class_drawing_item.html#a6b44404919b89264f57696929a4e270a">DrawingItem</a>.</p>
 
 </div>
 </div>
