@@ -42,7 +42,6 @@ $(function() {
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
-<a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="class_drawing_item-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">DrawingItem Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
@@ -56,20 +55,22 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr class="memitem:a7dcef175f26729d5af8e0a815ce63ba8"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8">Flag</a> { <br />
-&#160;&#160;<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a95a39079caad1648c6072dc5d31bf19b">CanMove</a> = 0x01, 
-<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8ac11487cdd344db23e865fe04a00207a7">CanResize</a> = 0x02, 
-<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a1853e3a339adeec237de605616adc055">CanRotate</a> = 0x04, 
-<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8ac1442db61d2994e29519efc19539901c">CanFlip</a> = 0x08, 
+&#160;&#160;<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a95a39079caad1648c6072dc5d31bf19b">CanMove</a> = 0x0001, 
+<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8ac11487cdd344db23e865fe04a00207a7">CanResize</a> = 0x0002, 
+<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a1853e3a339adeec237de605616adc055">CanRotate</a> = 0x0004, 
+<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8ac1442db61d2994e29519efc19539901c">CanFlip</a> = 0x0008, 
 <br />
-&#160;&#160;<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a0eb4b3d4f6801707ab6f635f0a84581a">CanSelect</a> = 0x10, 
-<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a0fe2476868caa5cbe01dc1872436ae4d">CanInsertPoints</a> = 0x20, 
-<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8acf870023363a32ad64518e395a8faf55">CanRemovePoints</a> = 0x40, 
-<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a16f147948e2219f57620d48431d55deb">PlaceByMousePressAndRelease</a> = 0x1000, 
+&#160;&#160;<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a0eb4b3d4f6801707ab6f635f0a84581a">CanSelect</a> = 0x0010, 
+<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8afab8748101ba82c9bc185a91cdb2f1b0">CanHide</a> = 0x0020, 
+<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a68c630ca2a27c866e66830ae927a122d">CanDelete</a> = 0x0040, 
+<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a0fe2476868caa5cbe01dc1872436ae4d">CanInsertPoints</a> = 0x0080, 
 <br />
-&#160;&#160;<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a401e4368d8adc9c3d6f0bbd6eeeea00b">AdjustPositionOnResize</a> = 0x2000
+&#160;&#160;<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8acf870023363a32ad64518e395a8faf55">CanRemovePoints</a> = 0x0100
 <br />
  }</td></tr>
 <tr class="separator:a7dcef175f26729d5af8e0a815ce63ba8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac325ca8f325d5b8d05a6be05593305bd"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#ac325ca8f325d5b8d05a6be05593305bd">Flags</a> </td></tr>
+<tr class="separator:ac325ca8f325d5b8d05a6be05593305bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -80,46 +81,34 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8d0c8fa8420e3aa3a69a301ecb6fc308"><td class="memItemLeft" align="right" valign="top"><a id="a8d0c8fa8420e3aa3a69a301ecb6fc308"></a>
 virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a8d0c8fa8420e3aa3a69a301ecb6fc308">~DrawingItem</a> ()</td></tr>
 <tr class="separator:a8d0c8fa8420e3aa3a69a301ecb6fc308"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab59d559cd81cd47ae72a5cff80806540"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#ab59d559cd81cd47ae72a5cff80806540">addChild</a> (<a class="el" href="class_drawing_item.html">DrawingItem</a> *item)</td></tr>
-<tr class="separator:ab59d559cd81cd47ae72a5cff80806540"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad6da55995aa2415ff77858be465ce1f4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#ad6da55995aa2415ff77858be465ce1f4">addPoint</a> (<a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *itemPoint)</td></tr>
-<tr class="separator:ad6da55995aa2415ff77858be465ce1f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a91c239ff70767b77694b19914f25f57f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a91c239ff70767b77694b19914f25f57f">addPoint</a> (<a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *point)</td></tr>
+<tr class="separator:a91c239ff70767b77694b19914f25f57f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6cf2e2f89c56fcc56451d5a8088d534e"><td class="memItemLeft" align="right" valign="top">virtual QRectF&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a6cf2e2f89c56fcc56451d5a8088d534e">boundingRect</a> () const =0</td></tr>
 <tr class="separator:a6cf2e2f89c56fcc56451d5a8088d534e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abd3df43ae85daadc4b0af0947da497f5"><td class="memItemLeft" align="right" valign="top">virtual QPointF&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#abd3df43ae85daadc4b0af0947da497f5">centerPos</a> () const</td></tr>
 <tr class="separator:abd3df43ae85daadc4b0af0947da497f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8f44e8531ab44d5d6b5a137c4b5cdfc6"><td class="memItemLeft" align="right" valign="top">QList&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a8f44e8531ab44d5d6b5a137c4b5cdfc6">children</a> () const</td></tr>
-<tr class="separator:a8f44e8531ab44d5d6b5a137c4b5cdfc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a763f54616a3a9d359dfa10dc1284739a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a763f54616a3a9d359dfa10dc1284739a">clearChildren</a> ()</td></tr>
-<tr class="separator:a763f54616a3a9d359dfa10dc1284739a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a206c414a4dfaa4658397d06ba21c2e71"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a206c414a4dfaa4658397d06ba21c2e71">clearPoints</a> ()</td></tr>
 <tr class="separator:a206c414a4dfaa4658397d06ba21c2e71"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af9b37ac9b5ce0a3bf528f94edb0de151"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_drawing_item.html">DrawingItem</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#af9b37ac9b5ce0a3bf528f94edb0de151">copy</a> () const =0</td></tr>
 <tr class="separator:af9b37ac9b5ce0a3bf528f94edb0de151"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a817a54e0af5105045d009024b21a00ac"><td class="memItemLeft" align="right" valign="top">Flags&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a817a54e0af5105045d009024b21a00ac">flags</a> () const</td></tr>
+<tr class="memitem:a817a54e0af5105045d009024b21a00ac"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_drawing_item.html#ac325ca8f325d5b8d05a6be05593305bd">Flags</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a817a54e0af5105045d009024b21a00ac">flags</a> () const</td></tr>
 <tr class="separator:a817a54e0af5105045d009024b21a00ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9cd2d7320485882627b365606b9e0bd7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a9cd2d7320485882627b365606b9e0bd7">insertChild</a> (int index, <a class="el" href="class_drawing_item.html">DrawingItem</a> *item)</td></tr>
-<tr class="separator:a9cd2d7320485882627b365606b9e0bd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abe9cb445431a70fa976dd5f9a986a97f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#abe9cb445431a70fa976dd5f9a986a97f">insertPoint</a> (int index, <a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *itemPoint)</td></tr>
-<tr class="separator:abe9cb445431a70fa976dd5f9a986a97f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb2aac8fe63b6ed6f55c67b2ad098b5f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#aeb2aac8fe63b6ed6f55c67b2ad098b5f">flipHorizontal</a> (const QPointF &amp;pos)</td></tr>
+<tr class="separator:aeb2aac8fe63b6ed6f55c67b2ad098b5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef995113a07ea8651fa20011a4f047fc"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#aef995113a07ea8651fa20011a4f047fc">flipVertical</a> (const QPointF &amp;pos)</td></tr>
+<tr class="separator:aef995113a07ea8651fa20011a4f047fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b62f045eba710bcb47ef282d6e2cb6f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a7b62f045eba710bcb47ef282d6e2cb6f">insertPoint</a> (int index, <a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *point)</td></tr>
+<tr class="separator:a7b62f045eba710bcb47ef282d6e2cb6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad24d4066644656f57d0ddb2ab276307e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#ad24d4066644656f57d0ddb2ab276307e">isSelected</a> () const</td></tr>
 <tr class="separator:ad24d4066644656f57d0ddb2ab276307e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5cee357db6aa005d5da5dd04929db252"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a5cee357db6aa005d5da5dd04929db252">isValid</a> () const</td></tr>
 <tr class="separator:a5cee357db6aa005d5da5dd04929db252"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad977ebfb76c9693e7b9e8da6086ca216"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#ad977ebfb76c9693e7b9e8da6086ca216">isVisible</a> () const</td></tr>
 <tr class="separator:ad977ebfb76c9693e7b9e8da6086ca216"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2c0ae05e921e63275b105177edac7365"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a2c0ae05e921e63275b105177edac7365">itemPointToInsert</a> (const QPointF &amp;itemPos, int &amp;index)</td></tr>
-<tr class="separator:a2c0ae05e921e63275b105177edac7365"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aae42e097461eef61b78f296e2f14be7f"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#aae42e097461eef61b78f296e2f14be7f">itemPointToRemove</a> (const QPointF &amp;itemPos)</td></tr>
-<tr class="separator:aae42e097461eef61b78f296e2f14be7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af1de3d9a05873a773479e761ca2a1d94"><td class="memItemLeft" align="right" valign="top">QPainterPath&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#af1de3d9a05873a773479e761ca2a1d94">mapFromParent</a> (const QPainterPath &amp;path) const</td></tr>
-<tr class="separator:af1de3d9a05873a773479e761ca2a1d94"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a35b31eedcf84acdcc70ab982d9f11f44"><td class="memItemLeft" align="right" valign="top">QPointF&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a35b31eedcf84acdcc70ab982d9f11f44">mapFromParent</a> (const QPointF &amp;point) const</td></tr>
-<tr class="separator:a35b31eedcf84acdcc70ab982d9f11f44"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3d8549e2eae28abfaec69f74b60befae"><td class="memItemLeft" align="right" valign="top">QPolygonF&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a3d8549e2eae28abfaec69f74b60befae">mapFromParent</a> (const QPolygonF &amp;polygon) const</td></tr>
-<tr class="separator:a3d8549e2eae28abfaec69f74b60befae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adf483fdb74a22587e2f7b8f473f37da4"><td class="memItemLeft" align="right" valign="top">QPolygonF&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#adf483fdb74a22587e2f7b8f473f37da4">mapFromParent</a> (const QRectF &amp;rect) const</td></tr>
-<tr class="separator:adf483fdb74a22587e2f7b8f473f37da4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8e9ed50f1e7a20d49dc0ea005e4abc7"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#af8e9ed50f1e7a20d49dc0ea005e4abc7">itemPointToInsert</a> (const QPointF &amp;pos, int &amp;index)</td></tr>
+<tr class="separator:af8e9ed50f1e7a20d49dc0ea005e4abc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a688d10ac5e0ffc8bab6c43c5ff001ef3"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a688d10ac5e0ffc8bab6c43c5ff001ef3">itemPointToRemove</a> (const QPointF &amp;pos)</td></tr>
+<tr class="separator:a688d10ac5e0ffc8bab6c43c5ff001ef3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4541e39830ee616339c8962efb8eb00b"><td class="memItemLeft" align="right" valign="top">QPainterPath&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a4541e39830ee616339c8962efb8eb00b">mapFromScene</a> (const QPainterPath &amp;path) const</td></tr>
 <tr class="separator:a4541e39830ee616339c8962efb8eb00b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a250cb69998cf177c1d0c2d26897df2ed"><td class="memItemLeft" align="right" valign="top">QPointF&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a250cb69998cf177c1d0c2d26897df2ed">mapFromScene</a> (const QPointF &amp;point) const</td></tr>
@@ -128,14 +117,6 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <tr class="separator:a9d34b204c452490697d8d160636a6ad1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a57ee775689c72f8c9d2d52f25dcdbc59"><td class="memItemLeft" align="right" valign="top">QPolygonF&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a57ee775689c72f8c9d2d52f25dcdbc59">mapFromScene</a> (const QRectF &amp;rect) const</td></tr>
 <tr class="separator:a57ee775689c72f8c9d2d52f25dcdbc59"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a86b50ab2e78e9de3b7214e83d3d534d5"><td class="memItemLeft" align="right" valign="top">QPainterPath&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a86b50ab2e78e9de3b7214e83d3d534d5">mapToParent</a> (const QPainterPath &amp;path) const</td></tr>
-<tr class="separator:a86b50ab2e78e9de3b7214e83d3d534d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a00f9285c9075d944d3032e98d30c0772"><td class="memItemLeft" align="right" valign="top">QPointF&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a00f9285c9075d944d3032e98d30c0772">mapToParent</a> (const QPointF &amp;point) const</td></tr>
-<tr class="separator:a00f9285c9075d944d3032e98d30c0772"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a17d77246908cb138a5d1c704955d691c"><td class="memItemLeft" align="right" valign="top">QPolygonF&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a17d77246908cb138a5d1c704955d691c">mapToParent</a> (const QPolygonF &amp;polygon) const</td></tr>
-<tr class="separator:a17d77246908cb138a5d1c704955d691c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad0eb21095da52008c3577041e7e4ba1d"><td class="memItemLeft" align="right" valign="top">QPolygonF&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#ad0eb21095da52008c3577041e7e4ba1d">mapToParent</a> (const QRectF &amp;rect) const</td></tr>
-<tr class="separator:ad0eb21095da52008c3577041e7e4ba1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aff973a0f74a748aea706b92ab5ab1a3d"><td class="memItemLeft" align="right" valign="top">QPainterPath&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#aff973a0f74a748aea706b92ab5ab1a3d">mapToScene</a> (const QPainterPath &amp;path) const</td></tr>
 <tr class="separator:aff973a0f74a748aea706b92ab5ab1a3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa396271882e6c7cd200b098482823f44"><td class="memItemLeft" align="right" valign="top">QPointF&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#aa396271882e6c7cd200b098482823f44">mapToScene</a> (const QPointF &amp;point) const</td></tr>
@@ -144,34 +125,40 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <tr class="separator:a23a07455b8a5d49d313af51b5493f5b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aff50a38322946a012545a698972a91f2"><td class="memItemLeft" align="right" valign="top">QPolygonF&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#aff50a38322946a012545a698972a91f2">mapToScene</a> (const QRectF &amp;rect) const</td></tr>
 <tr class="separator:aff50a38322946a012545a698972a91f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a478ce32c7c22ae84b217a03189d3812e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_drawing_item.html">DrawingItem</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a478ce32c7c22ae84b217a03189d3812e">parent</a> () const</td></tr>
-<tr class="separator:a478ce32c7c22ae84b217a03189d3812e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a83cc5401e42241c4115d3af71a06630b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a83cc5401e42241c4115d3af71a06630b">pointAt</a> (const QPointF &amp;itemPos) const</td></tr>
-<tr class="separator:a83cc5401e42241c4115d3af71a06630b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa9a4672cd728633945f970ba2fc2a363"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#aa9a4672cd728633945f970ba2fc2a363">pointNearest</a> (const QPointF &amp;itemPos) const</td></tr>
-<tr class="separator:aa9a4672cd728633945f970ba2fc2a363"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d8204cb39cfbbbf17c19e72c45cf2a1"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a5d8204cb39cfbbbf17c19e72c45cf2a1">move</a> (const QPointF &amp;pos)</td></tr>
+<tr class="separator:a5d8204cb39cfbbbf17c19e72c45cf2a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a085131ea628dde24f44fcaa219876c53"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a085131ea628dde24f44fcaa219876c53">pointAt</a> (const QPointF &amp;pos) const</td></tr>
+<tr class="separator:a085131ea628dde24f44fcaa219876c53"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38b330dec49c707223ba3cc7b7dadb8e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a38b330dec49c707223ba3cc7b7dadb8e">pointNearest</a> (const QPointF &amp;pos) const</td></tr>
+<tr class="separator:a38b330dec49c707223ba3cc7b7dadb8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4690075ae05f5c26a8b2cd587d63e9eb"><td class="memItemLeft" align="right" valign="top">QList&lt; <a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a4690075ae05f5c26a8b2cd587d63e9eb">points</a> () const</td></tr>
 <tr class="separator:a4690075ae05f5c26a8b2cd587d63e9eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4897ffe099b9ba3f8d69f202b1ac640b"><td class="memItemLeft" align="right" valign="top">QPointF&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a4897ffe099b9ba3f8d69f202b1ac640b">position</a> () const</td></tr>
 <tr class="separator:a4897ffe099b9ba3f8d69f202b1ac640b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa6ca8aa788511ba59980299bc5965fa1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#aa6ca8aa788511ba59980299bc5965fa1">removeChild</a> (<a class="el" href="class_drawing_item.html">DrawingItem</a> *item)</td></tr>
-<tr class="separator:aa6ca8aa788511ba59980299bc5965fa1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a765010de46e8913db1df92ecd708a02b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a765010de46e8913db1df92ecd708a02b">removePoint</a> (<a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *itemPoint)</td></tr>
-<tr class="separator:a765010de46e8913db1df92ecd708a02b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85ca345f943fdbc53c8ff849321b698b"><td class="memItemLeft" align="right" valign="top">virtual QHash&lt; QString, QVariant &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a85ca345f943fdbc53c8ff849321b698b">properties</a> () const</td></tr>
+<tr class="separator:a85ca345f943fdbc53c8ff849321b698b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae8f3499b174276e72b710d30287645d6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#ae8f3499b174276e72b710d30287645d6">removePoint</a> (<a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *point)</td></tr>
+<tr class="separator:ae8f3499b174276e72b710d30287645d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0ba79b50ff212298409dd53079c1ded2"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a0ba79b50ff212298409dd53079c1ded2">render</a> (QPainter *painter)=0</td></tr>
 <tr class="separator:a0ba79b50ff212298409dd53079c1ded2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d96f0f93f32a992daf67f8a726424c2"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a4d96f0f93f32a992daf67f8a726424c2">resize</a> (<a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *point, const QPointF &amp;pos)</td></tr>
+<tr class="separator:a4d96f0f93f32a992daf67f8a726424c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b848aaa250dc6f75d39ddd6bfc798a0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a5b848aaa250dc6f75d39ddd6bfc798a0">rotate</a> (const QPointF &amp;pos)</td></tr>
+<tr class="separator:a5b848aaa250dc6f75d39ddd6bfc798a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e38257600cac7e6867efb50b59044ec"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a7e38257600cac7e6867efb50b59044ec">rotateBack</a> (const QPointF &amp;pos)</td></tr>
+<tr class="separator:a7e38257600cac7e6867efb50b59044ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a24542b301dfd68802b5c8df5b1c1b03a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_drawing_scene.html">DrawingScene</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a24542b301dfd68802b5c8df5b1c1b03a">scene</a> () const</td></tr>
 <tr class="separator:a24542b301dfd68802b5c8df5b1c1b03a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a508f5aace4e4f65fe63b3d1641d6502e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a508f5aace4e4f65fe63b3d1641d6502e">setFlags</a> (Flags <a class="el" href="class_drawing_item.html#a817a54e0af5105045d009024b21a00ac">flags</a>)</td></tr>
+<tr class="memitem:a508f5aace4e4f65fe63b3d1641d6502e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a508f5aace4e4f65fe63b3d1641d6502e">setFlags</a> (<a class="el" href="class_drawing_item.html#ac325ca8f325d5b8d05a6be05593305bd">Flags</a> <a class="el" href="class_drawing_item.html#a817a54e0af5105045d009024b21a00ac">flags</a>)</td></tr>
 <tr class="separator:a508f5aace4e4f65fe63b3d1641d6502e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac39291f573a34a991c69c800006ed8a9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#ac39291f573a34a991c69c800006ed8a9">setPosition</a> (const QPointF &amp;pos)</td></tr>
 <tr class="separator:ac39291f573a34a991c69c800006ed8a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02a0379fcb97385553a007b3d58bf188"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a02a0379fcb97385553a007b3d58bf188">setPosition</a> (qreal <a class="el" href="class_drawing_item.html#aa8534a6f0254e9705f504d9b849df994">x</a>, qreal <a class="el" href="class_drawing_item.html#a40531bf2e1100db70175ae826e7d63e3">y</a>)</td></tr>
 <tr class="separator:a02a0379fcb97385553a007b3d58bf188"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab775f7226653f34972da6fa5a21f1c04"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#ab775f7226653f34972da6fa5a21f1c04">setProperties</a> (const QHash&lt; QString, QVariant &gt; &amp;<a class="el" href="class_drawing_item.html#a85ca345f943fdbc53c8ff849321b698b">properties</a>)</td></tr>
+<tr class="separator:ab775f7226653f34972da6fa5a21f1c04"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a42372c44de34ca552014dc82e9c41e7a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a42372c44de34ca552014dc82e9c41e7a">setSelected</a> (bool select)</td></tr>
 <tr class="separator:a42372c44de34ca552014dc82e9c41e7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8be6c89cf11d1022a2b1b5344d7edf08"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a8be6c89cf11d1022a2b1b5344d7edf08">setStyle</a> (<a class="el" href="class_drawing_item_style.html">DrawingItemStyle</a> *<a class="el" href="class_drawing_item.html#a880152c49551149054d0aa2ac07cee31">style</a>)</td></tr>
-<tr class="separator:a8be6c89cf11d1022a2b1b5344d7edf08"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa1d5d384fbaa5e7c0e94eb6819b203ed"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#aa1d5d384fbaa5e7c0e94eb6819b203ed">setTransform</a> (const QTransform &amp;<a class="el" href="class_drawing_item.html#ae5295e717fcc57ea1e41eb0981e817af">transform</a>, bool combine=false)</td></tr>
 <tr class="separator:aa1d5d384fbaa5e7c0e94eb6819b203ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6db3865450d5bb89ca54491b18e0bd4b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a6db3865450d5bb89ca54491b18e0bd4b">setVisible</a> (bool visible)</td></tr>
@@ -182,8 +169,6 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <tr class="separator:af61e5c4af48c58ca718f99949cf7573c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a464d44b4c148170711a9661bfe988ba5"><td class="memItemLeft" align="right" valign="top">virtual QPainterPath&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a464d44b4c148170711a9661bfe988ba5">shape</a> () const</td></tr>
 <tr class="separator:a464d44b4c148170711a9661bfe988ba5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a880152c49551149054d0aa2ac07cee31"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_drawing_item_style.html">DrawingItemStyle</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a880152c49551149054d0aa2ac07cee31">style</a> () const</td></tr>
-<tr class="separator:a880152c49551149054d0aa2ac07cee31"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae5295e717fcc57ea1e41eb0981e817af"><td class="memItemLeft" align="right" valign="top">QTransform&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#ae5295e717fcc57ea1e41eb0981e817af">transform</a> () const</td></tr>
 <tr class="separator:ae5295e717fcc57ea1e41eb0981e817af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a592cf39e5ec688f2112ba6136cce05e7"><td class="memItemLeft" align="right" valign="top">QTransform&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a592cf39e5ec688f2112ba6136cce05e7">transformInverted</a> () const</td></tr>
@@ -197,32 +182,12 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a974db65a4b51a926177f654fe334cc85"><td class="memItemLeft" align="right" valign="top">static QList&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a974db65a4b51a926177f654fe334cc85">copyItems</a> (const QList&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> * &gt; &amp;items)</td></tr>
 <tr class="separator:a974db65a4b51a926177f654fe334cc85"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
-Protected Member Functions</h2></td></tr>
-<tr class="memitem:abeb9ec1bfe7099fad04a9d1770c40086"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#abeb9ec1bfe7099fad04a9d1770c40086">flipHorizontalEvent</a> (const QPointF &amp;parentPos)</td></tr>
-<tr class="separator:abeb9ec1bfe7099fad04a9d1770c40086"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2cdaad75d76fc1a71102bdd2bd9ffdf2"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a2cdaad75d76fc1a71102bdd2bd9ffdf2">flipVerticalEvent</a> (const QPointF &amp;parentPos)</td></tr>
-<tr class="separator:a2cdaad75d76fc1a71102bdd2bd9ffdf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a21fab700343d0c383a545ff29a5bd80c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a21fab700343d0c383a545ff29a5bd80c">keyPressEvent</a> (QKeyEvent *event)</td></tr>
-<tr class="separator:a21fab700343d0c383a545ff29a5bd80c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a00e9e7f72f165b4d5329fc2ae098d095"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a00e9e7f72f165b4d5329fc2ae098d095">keyReleaseEvent</a> (QKeyEvent *event)</td></tr>
-<tr class="separator:a00e9e7f72f165b4d5329fc2ae098d095"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa971acd6e184397cb021400420de7fd8"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#aa971acd6e184397cb021400420de7fd8">moveEvent</a> (const QPointF &amp;parentPos)</td></tr>
-<tr class="separator:aa971acd6e184397cb021400420de7fd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac7355c993973166c1fdb4c3c8f6f579c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#ac7355c993973166c1fdb4c3c8f6f579c">resizeEvent</a> (<a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *itemPoint, const QPointF &amp;parentPos)</td></tr>
-<tr class="separator:ac7355c993973166c1fdb4c3c8f6f579c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac60915e7dffcc720011fc764d67501bc"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#ac60915e7dffcc720011fc764d67501bc">rotateBackEvent</a> (const QPointF &amp;parentPos)</td></tr>
-<tr class="separator:ac60915e7dffcc720011fc764d67501bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41b9b8fbe5aef12d5fd9ef59a34f71d7"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a41b9b8fbe5aef12d5fd9ef59a34f71d7">rotateEvent</a> (const QPointF &amp;parentPos)</td></tr>
-<tr class="separator:a41b9b8fbe5aef12d5fd9ef59a34f71d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Base class for all graphical items in a <a class="el" href="class_drawing_scene.html" title="Surface for managing a large number of two-dimensional DrawingItem objects.">DrawingScene</a>. </p>
 <p><a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a> provides a lightweight foundation for writing custom items. This includes defining the item's geometry, painting implementation, and item interaction through event handlers.</p>
-<p>For convenience, a set of standard graphics items if provided for the most common shapes:</p>
+<p>For convenience, a set of standard graphics items are provided for the most common shapes:</p>
 <ul>
-<li><a class="el" href="class_drawing_arc_item.html" title="Provides an arc item that can be added to a DrawingScene.">DrawingArcItem</a> provides an arc item </li>
 <li><a class="el" href="class_drawing_curve_item.html" title="Provides a curve item that can be added to a DrawingScene.">DrawingCurveItem</a> provides a Bezier curve item </li>
 <li><a class="el" href="class_drawing_ellipse_item.html" title="Provides an ellipse item that can be added to a DrawingScene.">DrawingEllipseItem</a> provides an ellipse item </li>
 <li><a class="el" href="class_drawing_line_item.html" title="Provides a line item that can be added to a DrawingScene.">DrawingLineItem</a> provides a line item </li>
@@ -231,47 +196,44 @@ Protected Member Functions</h2></td></tr>
 <li><a class="el" href="class_drawing_rect_item.html" title="Provides a rectangle item that can be added to a DrawingScene.">DrawingRectItem</a> provides a rectangular item </li>
 <li><a class="el" href="class_drawing_text_item.html" title="Provides a text item that can be added to a DrawingScene.">DrawingTextItem</a> provides a text item </li>
 <li><a class="el" href="class_drawing_text_rect_item.html" title="Provides a text rectangle item that can be added to a DrawingScene.">DrawingTextRectItem</a> provides a rectangular item with text </li>
-<li><a class="el" href="class_drawing_text_ellipse_item.html" title="Provides a text ellipse item that can be added to a DrawingScene.">DrawingTextEllipseItem</a> provides an ellipse item with text </li>
-<li><a class="el" href="class_drawing_text_polygon_item.html" title="Provides a text polygon item that can be added to a DrawingScene.">DrawingTextPolygonItem</a> provides a polygon item with text</li>
+<li><a class="el" href="class_drawing_text_ellipse_item.html" title="Provides a text ellipse item that can be added to a DrawingScene.">DrawingTextEllipseItem</a> provides an ellipse item with text</li>
 </ul>
 <p>All of an item's geometric information is based on its local coordinate system. The item's <a class="el" href="class_drawing_item.html#a4897ffe099b9ba3f8d69f202b1ac640b" title="Returns the position of the item in the scene.">position()</a> is the only property that does not operate in local coordinates.</p>
-<p>Items can contain other items, and also be contained by other items. All items can have a parent item and a list of children. Unless the item has no parent, its position is in parent coordinates (i.e., the parent's local coordinates). (If the item has no parent, its position is in scene coordinates.) Parent items propagate both their position and their transformation to all children.</p>
-<p>An item can be set as visible (i.e., drawn and accepting events) by calling <a class="el" href="class_drawing_item.html#a6db3865450d5bb89ca54491b18e0bd4b" title="Sets whether the item is currently visible within the scene or not.">setVisible()</a>. By default, items are set as visible and enabled.</p>
-<p>Normally, selection is toggled by the scene as a result of user interaction. To determine if an item is selected, call <a class="el" href="class_drawing_item.html#ad24d4066644656f57d0ddb2ab276307e" title="Returns whether the item is currently selected within the scene or not.">isSelected()</a>.</p>
+<p>An item can be set as visible (i.e. drawn and accepting events) by calling <a class="el" href="class_drawing_item.html#a6db3865450d5bb89ca54491b18e0bd4b" title="Sets whether the item is currently visible within the scene or not.">setVisible()</a>. By default, items are set as visible and enabled.</p>
+<p>Normally, item selection is toggled by the scene as a result of user interaction. To determine if an item is selected, call <a class="el" href="class_drawing_item.html#ad24d4066644656f57d0ddb2ab276307e" title="Returns whether the item is currently selected within the scene or not.">isSelected()</a>.</p>
+<p>In order to make it as lightweight as possible, <a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a> does not inherit from QObject. Therefore it does not support Qt's signals and slots system, nor does it support Qt's property macro. A rudimentary property system is provided instead by <a class="el" href="class_drawing_item.html#ab775f7226653f34972da6fa5a21f1c04" title="Sets the values of all object properties.">setProperties()</a> and <a class="el" href="class_drawing_item.html#a85ca345f943fdbc53c8ff849321b698b" title="Returns the values of all object properties.">properties()</a>.</p>
 <h1><a class="anchor" id="itemGeometry"></a>
 Item Geometry</h1>
-<p>A complete description of the geometry of an item is given by the <a class="el" href="class_drawing_item.html#a6cf2e2f89c56fcc56451d5a8088d534e" title="Returns an estimate of the area painted by an item.">boundingRect()</a>, <a class="el" href="class_drawing_item.html#a464d44b4c148170711a9661bfe988ba5" title="Returns an accurate outline of an item&#39;s shape.">shape()</a>, <a class="el" href="class_drawing_item.html#abd3df43ae85daadc4b0af0947da497f5" title="Returns a position representing the center of the item.">centerPos()</a>, and <a class="el" href="class_drawing_item.html#a5cee357db6aa005d5da5dd04929db252" title="Return false if the item is degenerate, true otherwise.">isValid()</a> functions.</p>
+<p>A complete description of the geometry of an item is given by the <a class="el" href="class_drawing_item.html#a6cf2e2f89c56fcc56451d5a8088d534e" title="Returns an estimate of the area painted by an item.">boundingRect()</a>, <a class="el" href="class_drawing_item.html#a464d44b4c148170711a9661bfe988ba5" title="Returns an accurate outline of an item&#39;s shape.">shape()</a>, <a class="el" href="class_drawing_item.html#abd3df43ae85daadc4b0af0947da497f5" title="Returns a position representing the center of the item.">centerPos()</a>, and <a class="el" href="class_drawing_item.html#a5cee357db6aa005d5da5dd04929db252" title="Return false if the item is invalid, true otherwise.">isValid()</a> functions.</p>
 <p>The <a class="el" href="class_drawing_item.html#a464d44b4c148170711a9661bfe988ba5" title="Returns an accurate outline of an item&#39;s shape.">shape()</a> function returns an accurate outline of an item's shape as a QPainterPath. The <a class="el" href="class_drawing_item.html#a6cf2e2f89c56fcc56451d5a8088d534e" title="Returns an estimate of the area painted by an item.">boundingRect()</a> function returns an estimate of the area painted by an item as a QRectF. The implementation of <a class="el" href="class_drawing_item.html#a6cf2e2f89c56fcc56451d5a8088d534e" title="Returns an estimate of the area painted by an item.">boundingRect()</a> is meant to be as lightweight as possible. It is not recommended to return the boundingRect of the QPainterPath returned by <a class="el" href="class_drawing_item.html#a464d44b4c148170711a9661bfe988ba5" title="Returns an accurate outline of an item&#39;s shape.">shape()</a> for this implementation for most items.</p>
 <p>The <a class="el" href="class_drawing_item.html#abd3df43ae85daadc4b0af0947da497f5" title="Returns a position representing the center of the item.">centerPos()</a> is used to determine the center of all of the currently selected items in the scene. The default implementation is to return the center of the item's <a class="el" href="class_drawing_item.html#a6cf2e2f89c56fcc56451d5a8088d534e" title="Returns an estimate of the area painted by an item.">boundingRect()</a>. For most items this implementation is expected to be sufficient.</p>
-<p>The <a class="el" href="class_drawing_item.html#a5cee357db6aa005d5da5dd04929db252" title="Return false if the item is degenerate, true otherwise.">isValid()</a> function should return false if the item is not really valid (for example, a line where the start and end points are the same). <a class="el" href="class_drawing_view.html" title="Widget for viewing the contents of a DrawingScene.">DrawingView</a> will prevent invalid items from being added to the scene. The default implementation is to return true if the item's <a class="el" href="class_drawing_item.html#a6cf2e2f89c56fcc56451d5a8088d534e" title="Returns an estimate of the area painted by an item.">boundingRect()</a> is a valid rect.</p>
+<p>The <a class="el" href="class_drawing_item.html#a5cee357db6aa005d5da5dd04929db252" title="Return false if the item is invalid, true otherwise.">isValid()</a> function should return false if the item is not really valid (for example, a line where the start and end points are the same). <a class="el" href="class_drawing_view.html" title="Widget for viewing the contents of a DrawingScene.">DrawingView</a> will prevent invalid items from being added to the scene. The default implementation is to return true if the item's <a class="el" href="class_drawing_item.html#a6cf2e2f89c56fcc56451d5a8088d534e" title="Returns an estimate of the area painted by an item.">boundingRect()</a> is a valid rect.</p>
 <h1><a class="anchor" id="itemPoints"></a>
 Item Points</h1>
 <p>An item's geometry may be represented by a series of item points. For example, a line item may have two points; one point represents the start point and the other represents the end point.</p>
-<p>Representing the item's geometry based on the location of its item points provides a convenient method for the user to be able to resize an item. When the user of a <a class="el" href="class_drawing_view.html" title="Widget for viewing the contents of a DrawingScene.">DrawingView</a> clicks on one of the items <a class="el" href="class_drawing_item.html#a4690075ae05f5c26a8b2cd587d63e9eb" title="Returns a list of all item points added to the item.">points()</a>, then if the item is a Control point, the view will move just the point around the scene rather than the whole item.</p>
-<p>Item points can be added to an item using <a class="el" href="class_drawing_item.html#ad6da55995aa2415ff77858be465ce1f4" title="Adds an existing item point to the item.">addPoint()</a> or <a class="el" href="class_drawing_item.html#abe9cb445431a70fa976dd5f9a986a97f" title="Inserts an existing item point to the item at the specified index.">insertPoint()</a>. Points may be removed from an item using <a class="el" href="class_drawing_item.html#a765010de46e8913db1df92ecd708a02b" title="Removes an existing item point from the item.">removePoint()</a>. A list of all the item's points is available using <a class="el" href="class_drawing_item.html#a4690075ae05f5c26a8b2cd587d63e9eb" title="Returns a list of all item points added to the item.">points()</a>.</p>
+<p>Representing the item's geometry based on the location of its item points provides a convenient method for the user to be able to resize an item. When the user of a <a class="el" href="class_drawing_view.html" title="Widget for viewing the contents of a DrawingScene.">DrawingView</a> clicks on one of the item's <a class="el" href="class_drawing_item.html#a4690075ae05f5c26a8b2cd587d63e9eb" title="Returns a list of all item points added to the item.">points()</a>, then if the item is a <a class="el" href="class_drawing_item_point.html#af7b04a93a5666d01795a268b90f9a7ccab852151e0bfc1d7ead9a05d62fe5ae15">Control </a> point, the view will move just the point around the scene rather than the whole item.</p>
+<p>Item points can be added to an item using <a class="el" href="class_drawing_item.html#a91c239ff70767b77694b19914f25f57f" title="Adds an existing item point to the item.">addPoint()</a> or <a class="el" href="class_drawing_item.html#a7b62f045eba710bcb47ef282d6e2cb6f" title="Inserts an existing item point to the item at the specified index.">insertPoint()</a>. Points may be removed from an item using <a class="el" href="class_drawing_item.html#ae8f3499b174276e72b710d30287645d6" title="Removes an existing item point from the item.">removePoint()</a>. A list of all the item's points is available using <a class="el" href="class_drawing_item.html#a4690075ae05f5c26a8b2cd587d63e9eb" title="Returns a list of all item points added to the item.">points()</a>.</p>
 <h1><a class="anchor" id="itemPainting"></a>
 Painting</h1>
 <p>The <a class="el" href="class_drawing_item.html#a0ba79b50ff212298409dd53079c1ded2" title="Paints the contents of the item into the scene.">render()</a> function is called by <a class="el" href="class_drawing_scene.html" title="Surface for managing a large number of two-dimensional DrawingItem objects.">DrawingScene</a> to paint the item's contents. The item has no background or default fill of its own; whatever is behind the item will show through all areas that are not explicitly painted in this function.</p>
 <p>All items are drawn in the order of when they were added to scene. This order also dictates which items will receive mouse input first when clicking within the scene.</p>
-<p><a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a> has support for item styles via <a class="el" href="class_drawing_item_style.html" title="Class for managing common item style properties.">DrawingItemStyle</a>. Item styles affect how an item is rendered within a <a class="el" href="class_drawing_scene.html" title="Surface for managing a large number of two-dimensional DrawingItem objects.">DrawingScene</a>. See <a class="el" href="class_drawing_item_style.html" title="Class for managing common item style properties.">DrawingItemStyle</a> for more information.</p>
 <h1><a class="anchor" id="itemEvents"></a>
 Events</h1>
 <p><a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a> receives events from <a class="el" href="class_drawing_view.html" title="Widget for viewing the contents of a DrawingScene.">DrawingView</a> through several event handlers:</p>
 <ul>
-<li><a class="el" href="class_drawing_item.html#aa971acd6e184397cb021400420de7fd8" title="Moves the item within the scene.">moveEvent()</a> is called when moving the item around the scene </li>
-<li><a class="el" href="class_drawing_item.html#ac7355c993973166c1fdb4c3c8f6f579c" title="Resizes the item within the scene.">resizeEvent()</a> is called when resizing the item within the scene </li>
-<li><a class="el" href="class_drawing_item.html#a41b9b8fbe5aef12d5fd9ef59a34f71d7" title="Rotates the item counter-clockwise within the scene.">rotateEvent()</a> and <a class="el" href="class_drawing_item.html#ac60915e7dffcc720011fc764d67501bc" title="Rotates the item clockwise within the scene.">rotateBackEvent()</a> are called when rotating the item within the scene </li>
-<li><a class="el" href="class_drawing_item.html#abeb9ec1bfe7099fad04a9d1770c40086" title="Flips the item horizontally within the scene.">flipHorizontalEvent()</a> and <a class="el" href="class_drawing_item.html#a2cdaad75d76fc1a71102bdd2bd9ffdf2" title="Flips the item vertically within the scene.">flipVerticalEvent()</a> are called when flipping the item within the scene </li>
-<li><a class="el" href="class_drawing_item.html#a21fab700343d0c383a545ff29a5bd80c" title="Receives key press events when the item is the focus item of the view.">keyPressEvent()</a> and <a class="el" href="class_drawing_item.html#a00e9e7f72f165b4d5329fc2ae098d095" title="Receives key release events when the item is the focus item of the view.">keyReleaseEvent()</a> are called for keyboard events when the item is the focus item of the view</li>
+<li><a class="el" href="class_drawing_item.html#a5d8204cb39cfbbbf17c19e72c45cf2a1" title="Moves the item within the scene.">move()</a> is called to move the item around the scene </li>
+<li><a class="el" href="class_drawing_item.html#a4d96f0f93f32a992daf67f8a726424c2" title="Resizes the item within the scene.">resize()</a> is called to resize the item within the scene </li>
+<li><a class="el" href="class_drawing_item.html#a5b848aaa250dc6f75d39ddd6bfc798a0" title="Rotates the item clockwise within the scene.">rotate()</a> and <a class="el" href="class_drawing_item.html#a7e38257600cac7e6867efb50b59044ec" title="Rotates the item counter-clockwise within the scene.">rotateBack()</a> are called to rotate the item within the scene </li>
+<li><a class="el" href="class_drawing_item.html#aeb2aac8fe63b6ed6f55c67b2ad098b5f" title="Flips the item horizontally within the scene.">flipHorizontal()</a> and <a class="el" href="class_drawing_item.html#aef995113a07ea8651fa20011a4f047fc" title="Flips the item vertically within the scene.">flipVertical()</a> are called to flip the item within the scene</li>
 </ul>
 <p>These functions may be overloaded in a derived class to extend the behavior of each type of event.</p>
-<p>These events are only called if their corresponding flag is set on the item. For example, the <a class="el" href="class_drawing_item.html#ac7355c993973166c1fdb4c3c8f6f579c" title="Resizes the item within the scene.">resizeEvent()</a> slot is only called if the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8ac11487cdd344db23e865fe04a00207a7">CanResize</a> flag is set. The default <a class="el" href="class_drawing_item.html#a817a54e0af5105045d009024b21a00ac" title="Returns the type of the item as represented as a combination of flags.">flags()</a> set on a new item are <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a95a39079caad1648c6072dc5d31bf19b">CanMove</a> | <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8ac11487cdd344db23e865fe04a00207a7">CanResize</a> | <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a1853e3a339adeec237de605616adc055">CanRotate</a> | <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8ac1442db61d2994e29519efc19539901c">CanFlip</a> | <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a0eb4b3d4f6801707ab6f635f0a84581a">CanSelect</a>.</p>
+<p>These events are only called if their corresponding flag is set on the item. For example, the <a class="el" href="class_drawing_item.html#a4d96f0f93f32a992daf67f8a726424c2" title="Resizes the item within the scene.">resize()</a> function is only called if the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8ac11487cdd344db23e865fe04a00207a7">CanResize</a> flag is set. The default <a class="el" href="class_drawing_item.html#a817a54e0af5105045d009024b21a00ac" title="Returns the type of the item as represented as a combination of flags.">flags()</a> set on a new item are <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a95a39079caad1648c6072dc5d31bf19b" title="Indicates that the item can be moved around the scene.">CanMove</a> | <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8ac11487cdd344db23e865fe04a00207a7">CanResize</a> | <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a1853e3a339adeec237de605616adc055">CanRotate</a> | <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8ac1442db61d2994e29519efc19539901c">CanFlip</a> | <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a0eb4b3d4f6801707ab6f635f0a84581a">CanSelect</a> | <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a68c630ca2a27c866e66830ae927a122d">CanDelete</a>.</p>
 <h1><a class="anchor" id="itemCustom"></a>
 Custom Items</h1>
-<p>To write a custom graphics item, first create a subclass of <a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a>, and then start by implementing its three pure virtual public functions: <a class="el" href="class_drawing_item.html#af9b37ac9b5ce0a3bf528f94edb0de151" title="Creates a copy of the DrawingItem and returns it.">copy()</a>, <a class="el" href="class_drawing_item.html#a6cf2e2f89c56fcc56451d5a8088d534e" title="Returns an estimate of the area painted by an item.">boundingRect()</a> and <a class="el" href="class_drawing_item.html#a0ba79b50ff212298409dd53079c1ded2" title="Paints the contents of the item into the scene.">render()</a>. Complex items may need to override <a class="el" href="class_drawing_item.html#a464d44b4c148170711a9661bfe988ba5" title="Returns an accurate outline of an item&#39;s shape.">shape()</a>, <a class="el" href="class_drawing_item.html#abd3df43ae85daadc4b0af0947da497f5" title="Returns a position representing the center of the item.">centerPos()</a>, and <a class="el" href="class_drawing_item.html#a5cee357db6aa005d5da5dd04929db252" title="Return false if the item is degenerate, true otherwise.">isValid()</a> for a more complete description of the item's geometry.</p>
+<p>To write a custom graphics item, first create a subclass of <a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a>, and then start by implementing its three pure virtual public functions: <a class="el" href="class_drawing_item.html#af9b37ac9b5ce0a3bf528f94edb0de151" title="Creates a copy of the DrawingItem and returns it.">copy()</a>, <a class="el" href="class_drawing_item.html#a6cf2e2f89c56fcc56451d5a8088d534e" title="Returns an estimate of the area painted by an item.">boundingRect()</a> and <a class="el" href="class_drawing_item.html#a0ba79b50ff212298409dd53079c1ded2" title="Paints the contents of the item into the scene.">render()</a>. Complex items may need to override <a class="el" href="class_drawing_item.html#a464d44b4c148170711a9661bfe988ba5" title="Returns an accurate outline of an item&#39;s shape.">shape()</a>, <a class="el" href="class_drawing_item.html#abd3df43ae85daadc4b0af0947da497f5" title="Returns a position representing the center of the item.">centerPos()</a>, and <a class="el" href="class_drawing_item.html#a5cee357db6aa005d5da5dd04929db252" title="Return false if the item is invalid, true otherwise.">isValid()</a> for a more complete description of the item's geometry.</p>
 <p>Consider using <a class="el" href="class_drawing_item_point.html" title="Represents an interaction point within a DrawingItem through which the user can resize the item or co...">DrawingItemPoint</a> objects to define the item's geometry to allow the user to resize the item through <a class="el" href="class_drawing_view.html" title="Widget for viewing the contents of a DrawingScene.">DrawingView</a> mouse events.</p>
-<p>To extend the behavior of the item interaction events within the scene, consider overriding any of the item's event handlers such as <a class="el" href="class_drawing_item.html#aa971acd6e184397cb021400420de7fd8" title="Moves the item within the scene.">moveEvent()</a> or <a class="el" href="class_drawing_item.html#ac7355c993973166c1fdb4c3c8f6f579c" title="Resizes the item within the scene.">resizeEvent()</a> as well.</p>
-<p>For items that support adding item points, implementations should set the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a0fe2476868caa5cbe01dc1872436ae4d">CanInsertPoints</a> flag and provide an implementation for <a class="el" href="class_drawing_item.html#a2c0ae05e921e63275b105177edac7365" title="Called when the view wants to insert a new item point in the item at the specified position.">itemPointToInsert()</a>. For items that support removing item points, implementations should set the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8acf870023363a32ad64518e395a8faf55">CanRemovePoints</a> flag and provide an implementation for <a class="el" href="class_drawing_item.html#aae42e097461eef61b78f296e2f14be7f" title="Called when the view wants to remove an existing item point in the item at the specified position.">itemPointToRemove()</a>. By default <a class="el" href="class_drawing_item.html#a2c0ae05e921e63275b105177edac7365" title="Called when the view wants to insert a new item point in the item at the specified position.">itemPointToInsert()</a> and <a class="el" href="class_drawing_item.html#aae42e097461eef61b78f296e2f14be7f" title="Called when the view wants to remove an existing item point in the item at the specified position.">itemPointToRemove()</a> return nullptr. </p>
+<p>To extend the behavior of the item interaction events within the scene, consider overriding any of the item's event handlers such as <a class="el" href="class_drawing_item.html#a5d8204cb39cfbbbf17c19e72c45cf2a1" title="Moves the item within the scene.">move()</a> or <a class="el" href="class_drawing_item.html#a4d96f0f93f32a992daf67f8a726424c2" title="Resizes the item within the scene.">resize()</a> as well.</p>
+<p>For items that support adding item points, implementations should set the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a0fe2476868caa5cbe01dc1872436ae4d" title="Indicates that item points can be added to the item.">CanInsertPoints</a> flag and provide an implementation for <a class="el" href="class_drawing_item.html#af8e9ed50f1e7a20d49dc0ea005e4abc7" title="Called when the view wants to insert a new item point in the item at the specified position.">itemPointToInsert()</a>. For items that support removing item points, implementations should set the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8acf870023363a32ad64518e395a8faf55">CanRemovePoints</a> flag and provide an implementation for <a class="el" href="class_drawing_item.html#a688d10ac5e0ffc8bab6c43c5ff001ef3" title="Called when the view wants to remove an existing item point in the item at the specified position.">itemPointToRemove()</a>. By default <a class="el" href="class_drawing_item.html#af8e9ed50f1e7a20d49dc0ea005e4abc7" title="Called when the view wants to insert a new item point in the item at the specified position.">itemPointToInsert()</a> and <a class="el" href="class_drawing_item.html#a688d10ac5e0ffc8bab6c43c5ff001ef3" title="Called when the view wants to remove an existing item point in the item at the specified position.">itemPointToRemove()</a> return nullptr. </p>
 </div><h2 class="groupheader">Member Enumeration Documentation</h2>
 <a id="a7dcef175f26729d5af8e0a815ce63ba8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7dcef175f26729d5af8e0a815ce63ba8">&#9670;&nbsp;</a></span>Flag</h2>
@@ -287,25 +249,42 @@ Custom Items</h1>
 
 <p>Enum used to affect the behavior of the <a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a> within the scene. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a7dcef175f26729d5af8e0a815ce63ba8a95a39079caad1648c6072dc5d31bf19b"></a>CanMove&#160;</td><td class="fielddoc"><p>Indicates that the item can be moved around the scene. See also moveItem(). </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a7dcef175f26729d5af8e0a815ce63ba8a95a39079caad1648c6072dc5d31bf19b"></a>CanMove&#160;</td><td class="fielddoc"><p>Indicates that the item can be moved around the scene. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a7dcef175f26729d5af8e0a815ce63ba8ac11487cdd344db23e865fe04a00207a7"></a>CanResize&#160;</td><td class="fielddoc"><p>Indicates that the item can be resized within the scene. See also resizeItem(). </p>
+<tr><td class="fieldname"><a id="a7dcef175f26729d5af8e0a815ce63ba8ac11487cdd344db23e865fe04a00207a7"></a>CanResize&#160;</td><td class="fielddoc"><p>Indicates that the item can be resized within the scene. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a7dcef175f26729d5af8e0a815ce63ba8a1853e3a339adeec237de605616adc055"></a>CanRotate&#160;</td><td class="fielddoc"><p>Indicates that the item can be rotated within the scene. See also rotateItem() and rotateBackItem(). </p>
+<tr><td class="fieldname"><a id="a7dcef175f26729d5af8e0a815ce63ba8a1853e3a339adeec237de605616adc055"></a>CanRotate&#160;</td><td class="fielddoc"><p>Indicates that the item can be rotated within the scene. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a7dcef175f26729d5af8e0a815ce63ba8ac1442db61d2994e29519efc19539901c"></a>CanFlip&#160;</td><td class="fielddoc"><p>Indicates that the item can be flipped horizontally within the scene. See also flipItem(). </p>
+<tr><td class="fieldname"><a id="a7dcef175f26729d5af8e0a815ce63ba8ac1442db61d2994e29519efc19539901c"></a>CanFlip&#160;</td><td class="fielddoc"><p>Indicates that the item can be flipped within the scene. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a7dcef175f26729d5af8e0a815ce63ba8a0eb4b3d4f6801707ab6f635f0a84581a"></a>CanSelect&#160;</td><td class="fielddoc"><p>Indicates that the item can be selected by the user within the scene. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a7dcef175f26729d5af8e0a815ce63ba8a0fe2476868caa5cbe01dc1872436ae4d"></a>CanInsertPoints&#160;</td><td class="fielddoc"><p>Indicates that item points can be added to the item. See also insertItemPoint(). </p>
+<tr><td class="fieldname"><a id="a7dcef175f26729d5af8e0a815ce63ba8afab8748101ba82c9bc185a91cdb2f1b0"></a>CanHide&#160;</td><td class="fielddoc"><p>Indicates that the item can be hidden by the user in the scene. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a7dcef175f26729d5af8e0a815ce63ba8acf870023363a32ad64518e395a8faf55"></a>CanRemovePoints&#160;</td><td class="fielddoc"><p>Indicates that item points can be removed from the item. See also removeItemPoint(). </p>
+<tr><td class="fieldname"><a id="a7dcef175f26729d5af8e0a815ce63ba8a68c630ca2a27c866e66830ae927a122d"></a>CanDelete&#160;</td><td class="fielddoc"><p>Indicates that the item can be deleted by the user from the scene. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a7dcef175f26729d5af8e0a815ce63ba8a16f147948e2219f57620d48431d55deb"></a>PlaceByMousePressAndRelease&#160;</td><td class="fielddoc"><p>Indicates that the item is placed by setting its first item point (<a class="el" href="class_drawing_item.html#a4690075ae05f5c26a8b2cd587d63e9eb" title="Returns a list of all item points added to the item.">points()</a>[0]) when the mouse is pressed and by setting the second item point (<a class="el" href="class_drawing_item.html#a4690075ae05f5c26a8b2cd587d63e9eb" title="Returns a list of all item points added to the item.">points()</a>[1]) when the mouse is released. If unset, items are placed when the mouse is released with no changes to the item's geometry. </p>
+<tr><td class="fieldname"><a id="a7dcef175f26729d5af8e0a815ce63ba8a0fe2476868caa5cbe01dc1872436ae4d"></a>CanInsertPoints&#160;</td><td class="fielddoc"><p>Indicates that item points can be added to the item. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a7dcef175f26729d5af8e0a815ce63ba8a401e4368d8adc9c3d6f0bbd6eeeea00b"></a>AdjustPositionOnResize&#160;</td><td class="fielddoc"><p>Indicates that when the item is resized, its <a class="el" href="class_drawing_item.html#a4897ffe099b9ba3f8d69f202b1ac640b" title="Returns the position of the item in the scene.">position()</a> is changed so that the position of the first item point is the origin (i.e. point(0)-&gt;<a class="el" href="class_drawing_item.html#a4897ffe099b9ba3f8d69f202b1ac640b" title="Returns the position of the item in the scene.">position()</a> == QPointF(0, 0)). </p>
+<tr><td class="fieldname"><a id="a7dcef175f26729d5af8e0a815ce63ba8acf870023363a32ad64518e395a8faf55"></a>CanRemovePoints&#160;</td><td class="fielddoc"><p>Indicates that item points can be removed from the item. </p>
 </td></tr>
 </table>
+
+</div>
+</div>
+<a id="ac325ca8f325d5b8d05a6be05593305bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac325ca8f325d5b8d05a6be05593305bd">&#9670;&nbsp;</a></span>Flags</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="class_drawing_item.html#ac325ca8f325d5b8d05a6be05593305bd">DrawingItem::Flags</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Logical OR of various <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8" title="Enum used to affect the behavior of the DrawingItem within the scene.">Flag</a> values. Any combination of <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8" title="Enum used to affect the behavior of the DrawingItem within the scene.">Flag</a> values are supported. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a508f5aace4e4f65fe63b3d1641d6502e" title="Sets the type of item through a combination of flags.">setFlags()</a>, <a class="el" href="class_drawing_item.html#a817a54e0af5105045d009024b21a00ac" title="Returns the type of the item as represented as a combination of flags.">flags()</a> </dd></dl>
 
 </div>
 </div>
@@ -326,7 +305,7 @@ Custom Items</h1>
 </div><div class="memdoc">
 
 <p>Create a new <a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a> with default settings. </p>
-<p>The new item is not associated with a <a class="el" href="class_drawing_scene.html" title="Surface for managing a large number of two-dimensional DrawingItem objects.">DrawingScene</a> and does not have a parent. </p>
+<p>The new item is not associated with a <a class="el" href="class_drawing_scene.html" title="Surface for managing a large number of two-dimensional DrawingItem objects.">DrawingScene</a>. </p>
 
 </div>
 </div>
@@ -347,36 +326,14 @@ Custom Items</h1>
 </div><div class="memdoc">
 
 <p>Create a new <a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a> as a copy of an existing item. </p>
-<p>Copies the position, transform, and flags from the existing item. Also creates copies of the existing item's points and the existing item's children for the new item. Also creates a new item style based upon the existing item's style.</p>
-<p>The new item is not associated with a <a class="el" href="class_drawing_scene.html" title="Surface for managing a large number of two-dimensional DrawingItem objects.">DrawingScene</a> and does not have a parent. </p>
+<p>Copies the position, transform, and flags from the existing item. Also creates copies of the existing item's points for the new item.</p>
+<p>The new item is not associated with a <a class="el" href="class_drawing_scene.html" title="Surface for managing a large number of two-dimensional DrawingItem objects.">DrawingScene</a>. </p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ab59d559cd81cd47ae72a5cff80806540"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab59d559cd81cd47ae72a5cff80806540">&#9670;&nbsp;</a></span>addChild()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void DrawingItem::addChild </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_drawing_item.html">DrawingItem</a> *&#160;</td>
-          <td class="paramname"><em>item</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Adds an existing item as a child of this item. </p>
-<p>This convenience function is equivalent to calling <a class="el" href="class_drawing_item.html#a9cd2d7320485882627b365606b9e0bd7" title="Inserts an existing item as a child of this item at the specified index.">insertChild</a>(item, <a class="el" href="class_drawing_item.html#a8f44e8531ab44d5d6b5a137c4b5cdfc6" title="Returns a list of of the item&#39;s children.">children()</a>.size()).</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#aa6ca8aa788511ba59980299bc5965fa1" title="Removes an existing item as a child of this item.">removeChild()</a> </dd></dl>
-
-</div>
-</div>
-<a id="ad6da55995aa2415ff77858be465ce1f4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad6da55995aa2415ff77858be465ce1f4">&#9670;&nbsp;</a></span>addPoint()</h2>
+<a id="a91c239ff70767b77694b19914f25f57f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a91c239ff70767b77694b19914f25f57f">&#9670;&nbsp;</a></span>addPoint()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -385,15 +342,15 @@ Custom Items</h1>
           <td class="memname">void DrawingItem::addPoint </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *&#160;</td>
-          <td class="paramname"><em>itemPoint</em></td><td>)</td>
+          <td class="paramname"><em>point</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Adds an existing item point to the item. </p>
-<p>This convenience function is equivalent to calling <a class="el" href="class_drawing_item.html#abe9cb445431a70fa976dd5f9a986a97f" title="Inserts an existing item point to the item at the specified index.">insertPoint</a>(itemPoint, <a class="el" href="class_drawing_item.html#a4690075ae05f5c26a8b2cd587d63e9eb" title="Returns a list of all item points added to the item.">points()</a>.size()).</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a765010de46e8913db1df92ecd708a02b" title="Removes an existing item point from the item.">removePoint()</a> </dd></dl>
+<p>This convenience function is equivalent to calling <a class="el" href="class_drawing_item.html#a7b62f045eba710bcb47ef282d6e2cb6f" title="Inserts an existing item point to the item at the specified index.">insertPoint</a>(point, <a class="el" href="class_drawing_item.html#a4690075ae05f5c26a8b2cd587d63e9eb" title="Returns a list of all item points added to the item.">points()</a>.size()).</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#ae8f3499b174276e72b710d30287645d6" title="Removes an existing item point from the item.">removePoint()</a> </dd></dl>
 
 </div>
 </div>
@@ -423,7 +380,7 @@ Custom Items</h1>
 <p>Returns an estimate of the area painted by an item. </p>
 <p>The function returns a rectangle in local item coordinates.</p>
 <p>The implementation of <a class="el" href="class_drawing_item.html#a6cf2e2f89c56fcc56451d5a8088d534e" title="Returns an estimate of the area painted by an item.">boundingRect()</a> is meant to be as lightweight as possible. It is not recommended to return the boundingRect of the QPainterPath returned by <a class="el" href="class_drawing_item.html#a464d44b4c148170711a9661bfe988ba5" title="Returns an accurate outline of an item&#39;s shape.">shape()</a> for most items. A better approach would be to determine a quick way to estimate this rect without creating a QPainterPath.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a464d44b4c148170711a9661bfe988ba5" title="Returns an accurate outline of an item&#39;s shape.">shape()</a>, <a class="el" href="class_drawing_item.html#abd3df43ae85daadc4b0af0947da497f5" title="Returns a position representing the center of the item.">centerPos()</a>, <a class="el" href="class_drawing_item.html#a5cee357db6aa005d5da5dd04929db252" title="Return false if the item is degenerate, true otherwise.">isValid()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a464d44b4c148170711a9661bfe988ba5" title="Returns an accurate outline of an item&#39;s shape.">shape()</a>, <a class="el" href="class_drawing_item.html#abd3df43ae85daadc4b0af0947da497f5" title="Returns a position representing the center of the item.">centerPos()</a>, <a class="el" href="class_drawing_item.html#a5cee357db6aa005d5da5dd04929db252" title="Return false if the item is invalid, true otherwise.">isValid()</a> </dd></dl>
 
 <p>Implemented in <a class="el" href="class_drawing_path_item.html#a5271e1948e551fb139d88954b087cf92">DrawingPathItem</a>, <a class="el" href="class_drawing_text_rect_item.html#a13b72913b2ac658bcc1c41f842b2df0e">DrawingTextRectItem</a>, <a class="el" href="class_drawing_text_ellipse_item.html#a8998db749016da131eefac23dba0913c">DrawingTextEllipseItem</a>, <a class="el" href="class_drawing_rect_item.html#ab3d9b942403a61152f87da15f2e7d874">DrawingRectItem</a>, <a class="el" href="class_drawing_text_polygon_item.html#a9165b5bbbf6b06d7ee5a6c380e5e2d50">DrawingTextPolygonItem</a>, <a class="el" href="class_drawing_curve_item.html#a3ba7307d19a07fea69411094244d66fc">DrawingCurveItem</a>, <a class="el" href="class_drawing_line_item.html#a1c2e46071186067b3c008bd5a42171c9">DrawingLineItem</a>, <a class="el" href="class_drawing_arc_item.html#a2068bf0d7d5fa3596679e62b040c0dd6">DrawingArcItem</a>, <a class="el" href="class_drawing_ellipse_item.html#a374a2f401337f6961944aa6da2de339b">DrawingEllipseItem</a>, <a class="el" href="class_drawing_polyline_item.html#aefee17874df2a4296729ac331e03060b">DrawingPolylineItem</a>, <a class="el" href="class_drawing_polygon_item.html#a9e608a8047b14e598ddf2d7e99bd5485">DrawingPolygonItem</a>, <a class="el" href="class_drawing_text_item.html#a6fc699c5b7d541ce366f1878689d4d4f">DrawingTextItem</a>, and <a class="el" href="class_drawing_item_group.html#a9b6a6c3b4fde55de5d54a18f27310ca0">DrawingItemGroup</a>.</p>
 
@@ -456,50 +413,9 @@ Custom Items</h1>
 <p>The function returns a location in local item coordinates.</p>
 <p>This function is used to determine the center of all of the currently selected items in the scene.</p>
 <p>The default implementation is to return the center of the item's <a class="el" href="class_drawing_item.html#a6cf2e2f89c56fcc56451d5a8088d534e" title="Returns an estimate of the area painted by an item.">boundingRect()</a>.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a6cf2e2f89c56fcc56451d5a8088d534e" title="Returns an estimate of the area painted by an item.">boundingRect()</a>, <a class="el" href="class_drawing_item.html#a464d44b4c148170711a9661bfe988ba5" title="Returns an accurate outline of an item&#39;s shape.">shape()</a>, <a class="el" href="class_drawing_item.html#a5cee357db6aa005d5da5dd04929db252" title="Return false if the item is degenerate, true otherwise.">isValid()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a6cf2e2f89c56fcc56451d5a8088d534e" title="Returns an estimate of the area painted by an item.">boundingRect()</a>, <a class="el" href="class_drawing_item.html#a464d44b4c148170711a9661bfe988ba5" title="Returns an accurate outline of an item&#39;s shape.">shape()</a>, <a class="el" href="class_drawing_item.html#a5cee357db6aa005d5da5dd04929db252" title="Return false if the item is invalid, true otherwise.">isValid()</a> </dd></dl>
 
 <p>Reimplemented in <a class="el" href="class_drawing_text_item.html#a28191fdeb9ff4adaddabf1a8d44c5cfd">DrawingTextItem</a>.</p>
-
-</div>
-</div>
-<a id="a8f44e8531ab44d5d6b5a137c4b5cdfc6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8f44e8531ab44d5d6b5a137c4b5cdfc6">&#9670;&nbsp;</a></span>children()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">QList&lt;<a class="el" href="class_drawing_item.html">DrawingItem</a>*&gt; DrawingItem::children </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Returns a list of of the item's children. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#ab59d559cd81cd47ae72a5cff80806540" title="Adds an existing item as a child of this item.">addChild()</a>, <a class="el" href="class_drawing_item.html#a9cd2d7320485882627b365606b9e0bd7" title="Inserts an existing item as a child of this item at the specified index.">insertChild()</a>, <a class="el" href="class_drawing_item.html#aa6ca8aa788511ba59980299bc5965fa1" title="Removes an existing item as a child of this item.">removeChild()</a> </dd></dl>
-
-</div>
-</div>
-<a id="a763f54616a3a9d359dfa10dc1284739a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a763f54616a3a9d359dfa10dc1284739a">&#9670;&nbsp;</a></span>clearChildren()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void DrawingItem::clearChildren </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Removes and deletes all child items from the item. </p>
-<p>This function removes and deletes all of the item's <a class="el" href="class_drawing_item.html#a8f44e8531ab44d5d6b5a137c4b5cdfc6" title="Returns a list of of the item&#39;s children.">children()</a> from memory.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#aa6ca8aa788511ba59980299bc5965fa1" title="Removes an existing item as a child of this item.">removeChild()</a> </dd></dl>
 
 </div>
 </div>
@@ -520,7 +436,7 @@ Custom Items</h1>
 
 <p>Removes and deletes all item points from the item. </p>
 <p>This function removes and deletes all of the item's <a class="el" href="class_drawing_item.html#a4690075ae05f5c26a8b2cd587d63e9eb" title="Returns a list of all item points added to the item.">points()</a> from memory.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a765010de46e8913db1df92ecd708a02b" title="Removes an existing item point from the item.">removePoint()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#ae8f3499b174276e72b710d30287645d6" title="Removes an existing item point from the item.">removePoint()</a> </dd></dl>
 
 </div>
 </div>
@@ -591,7 +507,7 @@ Custom Items</h1>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">Flags DrawingItem::flags </td>
+          <td class="memname"><a class="el" href="class_drawing_item.html#ac325ca8f325d5b8d05a6be05593305bd">Flags</a> DrawingItem::flags </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -604,8 +520,8 @@ Custom Items</h1>
 
 </div>
 </div>
-<a id="abeb9ec1bfe7099fad04a9d1770c40086"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abeb9ec1bfe7099fad04a9d1770c40086">&#9670;&nbsp;</a></span>flipHorizontalEvent()</h2>
+<a id="aeb2aac8fe63b6ed6f55c67b2ad098b5f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb2aac8fe63b6ed6f55c67b2ad098b5f">&#9670;&nbsp;</a></span>flipHorizontal()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -614,30 +530,31 @@ Custom Items</h1>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void DrawingItem::flipHorizontalEvent </td>
+          <td class="memname">virtual void DrawingItem::flipHorizontal </td>
           <td>(</td>
           <td class="paramtype">const QPointF &amp;&#160;</td>
-          <td class="paramname"><em>parentPos</em></td><td>)</td>
+          <td class="paramname"><em>pos</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Flips the item horizontally within the scene. </p>
-<p>This function is called when the item is to be flipped horizontally within the scene. This will only be called for items that have the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8ac1442db61d2994e29519efc19539901c">CanFlip</a> flag set as one of their <a class="el" href="class_drawing_item.html#a817a54e0af5105045d009024b21a00ac" title="Returns the type of the item as represented as a combination of flags.">flags()</a>. Note that the parentPos parameter is in the coordinate system of the <a class="el" href="class_drawing_item.html#a478ce32c7c22ae84b217a03189d3812e" title="Returns the item&#39;s parent, or nullptr if the item has no parent.">parent()</a>, or the <a class="el" href="class_drawing_item.html#a24542b301dfd68802b5c8df5b1c1b03a" title="Returns the current scene that this item is a member of, or nullptr if the item is not associated wit...">scene()</a> if no parent is set.</p>
-<p>The default implementation updates item's <a class="el" href="class_drawing_item.html#a4897ffe099b9ba3f8d69f202b1ac640b" title="Returns the position of the item in the scene.">position()</a> to flip it about the specified parentPos and updates the item's <a class="el" href="class_drawing_item.html#ae5295e717fcc57ea1e41eb0981e817af" title="Returns the item&#39;s current transformation matrix.">transform()</a>.</p>
+<p>This function is called when the item is to be flipped horizontally within the scene. This will only be called for items that have the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8ac1442db61d2994e29519efc19539901c">CanFlip</a> flag set as one of their <a class="el" href="class_drawing_item.html#a817a54e0af5105045d009024b21a00ac" title="Returns the type of the item as represented as a combination of flags.">flags()</a>.</p>
+<p>Note that the pos parameter is in scene coordinates.</p>
+<p>The default implementation updates item's <a class="el" href="class_drawing_item.html#a4897ffe099b9ba3f8d69f202b1ac640b" title="Returns the position of the item in the scene.">position()</a> to flip it about the specified pos and updates the item's <a class="el" href="class_drawing_item.html#ae5295e717fcc57ea1e41eb0981e817af" title="Returns the item&#39;s current transformation matrix.">transform()</a>.</p>
 <p>Derived class implementations can add additional behavior. These implementations should call the parent implementation first before adding custom logic.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#aa971acd6e184397cb021400420de7fd8" title="Moves the item within the scene.">moveEvent()</a>, <a class="el" href="class_drawing_item.html#ac7355c993973166c1fdb4c3c8f6f579c" title="Resizes the item within the scene.">resizeEvent()</a>, <a class="el" href="class_drawing_item.html#a41b9b8fbe5aef12d5fd9ef59a34f71d7" title="Rotates the item counter-clockwise within the scene.">rotateEvent()</a>, <a class="el" href="class_drawing_item.html#ac60915e7dffcc720011fc764d67501bc" title="Rotates the item clockwise within the scene.">rotateBackEvent()</a>, <a class="el" href="class_drawing_item.html#a2cdaad75d76fc1a71102bdd2bd9ffdf2" title="Flips the item vertically within the scene.">flipVerticalEvent()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a5d8204cb39cfbbbf17c19e72c45cf2a1" title="Moves the item within the scene.">move()</a>, <a class="el" href="class_drawing_item.html#a4d96f0f93f32a992daf67f8a726424c2" title="Resizes the item within the scene.">resize()</a>, <a class="el" href="class_drawing_item.html#a5b848aaa250dc6f75d39ddd6bfc798a0" title="Rotates the item clockwise within the scene.">rotate()</a>, <a class="el" href="class_drawing_item.html#a7e38257600cac7e6867efb50b59044ec" title="Rotates the item counter-clockwise within the scene.">rotateBack()</a>, <a class="el" href="class_drawing_item.html#aef995113a07ea8651fa20011a4f047fc" title="Flips the item vertically within the scene.">flipVertical()</a> </dd></dl>
 
 </div>
 </div>
-<a id="a2cdaad75d76fc1a71102bdd2bd9ffdf2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2cdaad75d76fc1a71102bdd2bd9ffdf2">&#9670;&nbsp;</a></span>flipVerticalEvent()</h2>
+<a id="aef995113a07ea8651fa20011a4f047fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef995113a07ea8651fa20011a4f047fc">&#9670;&nbsp;</a></span>flipVertical()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -646,63 +563,31 @@ Custom Items</h1>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void DrawingItem::flipVerticalEvent </td>
+          <td class="memname">virtual void DrawingItem::flipVertical </td>
           <td>(</td>
           <td class="paramtype">const QPointF &amp;&#160;</td>
-          <td class="paramname"><em>parentPos</em></td><td>)</td>
+          <td class="paramname"><em>pos</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Flips the item vertically within the scene. </p>
-<p>This function is called when the item is to be flipped vertically within the scene. This will only be called for items that have the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8ac1442db61d2994e29519efc19539901c">CanFlip</a> flag set as one of their <a class="el" href="class_drawing_item.html#a817a54e0af5105045d009024b21a00ac" title="Returns the type of the item as represented as a combination of flags.">flags()</a>. Note that the parentPos parameter is in the coordinate system of the <a class="el" href="class_drawing_item.html#a478ce32c7c22ae84b217a03189d3812e" title="Returns the item&#39;s parent, or nullptr if the item has no parent.">parent()</a>, or the <a class="el" href="class_drawing_item.html#a24542b301dfd68802b5c8df5b1c1b03a" title="Returns the current scene that this item is a member of, or nullptr if the item is not associated wit...">scene()</a> if no parent is set.</p>
-<p>The default implementation updates item's <a class="el" href="class_drawing_item.html#a4897ffe099b9ba3f8d69f202b1ac640b" title="Returns the position of the item in the scene.">position()</a> to flip it about the specified parentPos and updates the item's <a class="el" href="class_drawing_item.html#ae5295e717fcc57ea1e41eb0981e817af" title="Returns the item&#39;s current transformation matrix.">transform()</a>.</p>
+<p>This function is called when the item is to be flipped vertically within the scene. This will only be called for items that have the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8ac1442db61d2994e29519efc19539901c">CanFlip</a> flag set as one of their <a class="el" href="class_drawing_item.html#a817a54e0af5105045d009024b21a00ac" title="Returns the type of the item as represented as a combination of flags.">flags()</a>.</p>
+<p>Note that the pos parameter is in scene coordinates.</p>
+<p>The default implementation updates item's <a class="el" href="class_drawing_item.html#a4897ffe099b9ba3f8d69f202b1ac640b" title="Returns the position of the item in the scene.">position()</a> to flip it about the specified pos and updates the item's <a class="el" href="class_drawing_item.html#ae5295e717fcc57ea1e41eb0981e817af" title="Returns the item&#39;s current transformation matrix.">transform()</a>.</p>
 <p>Derived class implementations can add additional behavior. These implementations should call the parent implementation first before adding custom logic.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#aa971acd6e184397cb021400420de7fd8" title="Moves the item within the scene.">moveEvent()</a>, <a class="el" href="class_drawing_item.html#ac7355c993973166c1fdb4c3c8f6f579c" title="Resizes the item within the scene.">resizeEvent()</a>, <a class="el" href="class_drawing_item.html#a41b9b8fbe5aef12d5fd9ef59a34f71d7" title="Rotates the item counter-clockwise within the scene.">rotateEvent()</a>, <a class="el" href="class_drawing_item.html#ac60915e7dffcc720011fc764d67501bc" title="Rotates the item clockwise within the scene.">rotateBackEvent()</a>, <a class="el" href="class_drawing_item.html#abeb9ec1bfe7099fad04a9d1770c40086" title="Flips the item horizontally within the scene.">flipHorizontalEvent()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a5d8204cb39cfbbbf17c19e72c45cf2a1" title="Moves the item within the scene.">move()</a>, <a class="el" href="class_drawing_item.html#a4d96f0f93f32a992daf67f8a726424c2" title="Resizes the item within the scene.">resize()</a>, <a class="el" href="class_drawing_item.html#a5b848aaa250dc6f75d39ddd6bfc798a0" title="Rotates the item clockwise within the scene.">rotate()</a>, <a class="el" href="class_drawing_item.html#a7e38257600cac7e6867efb50b59044ec" title="Rotates the item counter-clockwise within the scene.">rotateBack()</a>, <a class="el" href="class_drawing_item.html#aeb2aac8fe63b6ed6f55c67b2ad098b5f" title="Flips the item horizontally within the scene.">flipHorizontal()</a> </dd></dl>
 
 </div>
 </div>
-<a id="a9cd2d7320485882627b365606b9e0bd7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9cd2d7320485882627b365606b9e0bd7">&#9670;&nbsp;</a></span>insertChild()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void DrawingItem::insertChild </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>index</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="class_drawing_item.html">DrawingItem</a> *&#160;</td>
-          <td class="paramname"><em>item</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Inserts an existing item as a child of this item at the specified index. </p>
-<p>If a valid item is passed to this function, <a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a> will insert it into its list of <a class="el" href="class_drawing_item.html#a8f44e8531ab44d5d6b5a137c4b5cdfc6" title="Returns a list of of the item&#39;s children.">children()</a> at the specified index. <a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a> takes ownership of the item and will delete it as necessary.</p>
-<p>It is safe to pass a nullptr to this function; if a nullptr is received, this function does nothing. This function also does nothing if the item is already one of the item's <a class="el" href="class_drawing_item.html#a8f44e8531ab44d5d6b5a137c4b5cdfc6" title="Returns a list of of the item&#39;s children.">children()</a>.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#ab59d559cd81cd47ae72a5cff80806540" title="Adds an existing item as a child of this item.">addChild()</a>, <a class="el" href="class_drawing_item.html#aa6ca8aa788511ba59980299bc5965fa1" title="Removes an existing item as a child of this item.">removeChild()</a> </dd></dl>
-
-</div>
-</div>
-<a id="abe9cb445431a70fa976dd5f9a986a97f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abe9cb445431a70fa976dd5f9a986a97f">&#9670;&nbsp;</a></span>insertPoint()</h2>
+<a id="a7b62f045eba710bcb47ef282d6e2cb6f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b62f045eba710bcb47ef282d6e2cb6f">&#9670;&nbsp;</a></span>insertPoint()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -717,7 +602,7 @@ Custom Items</h1>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *&#160;</td>
-          <td class="paramname"><em>itemPoint</em>&#160;</td>
+          <td class="paramname"><em>point</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -728,9 +613,9 @@ Custom Items</h1>
 </div><div class="memdoc">
 
 <p>Inserts an existing item point to the item at the specified index. </p>
-<p>If a valid item point is passed to this function, <a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a> will insert it into its list of <a class="el" href="class_drawing_item.html#a4690075ae05f5c26a8b2cd587d63e9eb" title="Returns a list of all item points added to the item.">points()</a> at the specified index. <a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a> takes ownership of the itemPoint and will delete it as necessary.</p>
-<p>It is safe to pass a nullptr to this function; if a nullptr is received, this function does nothing. This function also does nothing if the itemPoint is already one of the item's <a class="el" href="class_drawing_item.html#a4690075ae05f5c26a8b2cd587d63e9eb" title="Returns a list of all item points added to the item.">points()</a>.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#ad6da55995aa2415ff77858be465ce1f4" title="Adds an existing item point to the item.">addPoint()</a>, <a class="el" href="class_drawing_item.html#a765010de46e8913db1df92ecd708a02b" title="Removes an existing item point from the item.">removePoint()</a> </dd></dl>
+<p>If a valid item point is passed to this function, <a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a> will insert it into its list of <a class="el" href="class_drawing_item.html#a4690075ae05f5c26a8b2cd587d63e9eb" title="Returns a list of all item points added to the item.">points()</a> at the specified index. <a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a> takes ownership of the point and will delete it as necessary.</p>
+<p>It is safe to pass a nullptr to this function; if a nullptr is received, this function does nothing. This function also does nothing if the point is already one of the item's <a class="el" href="class_drawing_item.html#a4690075ae05f5c26a8b2cd587d63e9eb" title="Returns a list of all item points added to the item.">points()</a>.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a91c239ff70767b77694b19914f25f57f" title="Adds an existing item point to the item.">addPoint()</a>, <a class="el" href="class_drawing_item.html#ae8f3499b174276e72b710d30287645d6" title="Removes an existing item point from the item.">removePoint()</a> </dd></dl>
 
 </div>
 </div>
@@ -777,7 +662,7 @@ Custom Items</h1>
 </table>
 </div><div class="memdoc">
 
-<p>Return false if the item is degenerate, true otherwise. </p>
+<p>Return false if the item is invalid, true otherwise. </p>
 <p>This function should return false if the item is not really valid (for example, a line where the start and end points are the same). <a class="el" href="class_drawing_view.html" title="Widget for viewing the contents of a DrawingScene.">DrawingView</a> will prevent invalid items from being added to the scene.</p>
 <p>The default implementation is to return true if the item's <a class="el" href="class_drawing_item.html#a6cf2e2f89c56fcc56451d5a8088d534e" title="Returns an estimate of the area painted by an item.">boundingRect()</a> is a valid rect.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a6cf2e2f89c56fcc56451d5a8088d534e" title="Returns an estimate of the area painted by an item.">boundingRect()</a>, <a class="el" href="class_drawing_item.html#a464d44b4c148170711a9661bfe988ba5" title="Returns an accurate outline of an item&#39;s shape.">shape()</a>, <a class="el" href="class_drawing_item.html#abd3df43ae85daadc4b0af0947da497f5" title="Returns a position representing the center of the item.">centerPos()</a> </dd></dl>
@@ -806,8 +691,8 @@ Custom Items</h1>
 
 </div>
 </div>
-<a id="a2c0ae05e921e63275b105177edac7365"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2c0ae05e921e63275b105177edac7365">&#9670;&nbsp;</a></span>itemPointToInsert()</h2>
+<a id="af8e9ed50f1e7a20d49dc0ea005e4abc7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af8e9ed50f1e7a20d49dc0ea005e4abc7">&#9670;&nbsp;</a></span>itemPointToInsert()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -819,7 +704,7 @@ Custom Items</h1>
           <td class="memname">virtual <a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a>* DrawingItem::itemPointToInsert </td>
           <td>(</td>
           <td class="paramtype">const QPointF &amp;&#160;</td>
-          <td class="paramname"><em>itemPos</em>, </td>
+          <td class="paramname"><em>pos</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -841,16 +726,16 @@ Custom Items</h1>
 </div><div class="memdoc">
 
 <p>Called when the view wants to insert a new item point in the item at the specified position. </p>
-<p>This will only be called for items that have the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a0fe2476868caa5cbe01dc1872436ae4d">CanInsertPoints</a> flag set as one of their <a class="el" href="class_drawing_item.html#a817a54e0af5105045d009024b21a00ac" title="Returns the type of the item as represented as a combination of flags.">flags()</a>.</p>
-<p>The <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a0fe2476868caa5cbe01dc1872436ae4d">CanInsertPoints</a> flag is not set by default, and the default implementation of this function does nothing except return nullptr. Derived classes that support inserting item points should set the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a0fe2476868caa5cbe01dc1872436ae4d">CanInsertPoints</a> flag and provide an implementation for this function.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#aae42e097461eef61b78f296e2f14be7f" title="Called when the view wants to remove an existing item point in the item at the specified position.">itemPointToRemove()</a> </dd></dl>
+<p>This will only be called for items that have the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a0fe2476868caa5cbe01dc1872436ae4d" title="Indicates that item points can be added to the item.">CanInsertPoints</a> flag set as one of their <a class="el" href="class_drawing_item.html#a817a54e0af5105045d009024b21a00ac" title="Returns the type of the item as represented as a combination of flags.">flags()</a>.</p>
+<p>The <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a0fe2476868caa5cbe01dc1872436ae4d" title="Indicates that item points can be added to the item.">CanInsertPoints</a> flag is not set by default, and the default implementation of this function does nothing except return nullptr. Derived classes that support inserting item points should set the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a0fe2476868caa5cbe01dc1872436ae4d" title="Indicates that item points can be added to the item.">CanInsertPoints</a> flag and provide an implementation for this function.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a688d10ac5e0ffc8bab6c43c5ff001ef3" title="Called when the view wants to remove an existing item point in the item at the specified position.">itemPointToRemove()</a> </dd></dl>
 
 <p>Reimplemented in <a class="el" href="class_drawing_text_polygon_item.html#a3b8baf376ef0c6989b3e0aedd78fe1a6">DrawingTextPolygonItem</a>, <a class="el" href="class_drawing_polyline_item.html#af51178cb9c8c675d2bcbdcba268adad5">DrawingPolylineItem</a>, and <a class="el" href="class_drawing_polygon_item.html#a8545f5ac2a5a2b76bc4e9c462d7dc283">DrawingPolygonItem</a>.</p>
 
 </div>
 </div>
-<a id="aae42e097461eef61b78f296e2f14be7f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aae42e097461eef61b78f296e2f14be7f">&#9670;&nbsp;</a></span>itemPointToRemove()</h2>
+<a id="a688d10ac5e0ffc8bab6c43c5ff001ef3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a688d10ac5e0ffc8bab6c43c5ff001ef3">&#9670;&nbsp;</a></span>itemPointToRemove()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -862,7 +747,7 @@ Custom Items</h1>
           <td class="memname">virtual <a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a>* DrawingItem::itemPointToRemove </td>
           <td>(</td>
           <td class="paramtype">const QPointF &amp;&#160;</td>
-          <td class="paramname"><em>itemPos</em></td><td>)</td>
+          <td class="paramname"><em>pos</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -876,157 +761,9 @@ Custom Items</h1>
 <p>Called when the view wants to remove an existing item point in the item at the specified position. </p>
 <p>This will only be called for items that have the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8acf870023363a32ad64518e395a8faf55">CanRemovePoints</a> flag set as one of their <a class="el" href="class_drawing_item.html#a817a54e0af5105045d009024b21a00ac" title="Returns the type of the item as represented as a combination of flags.">flags()</a>.</p>
 <p>The <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8acf870023363a32ad64518e395a8faf55">CanRemovePoints</a> flag is not set by default, and the default implementation of this function does nothing except return nullptr. Derived classes that support removing item points should set the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8acf870023363a32ad64518e395a8faf55">CanRemovePoints</a> flag and provide an implementation for this function.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a2c0ae05e921e63275b105177edac7365" title="Called when the view wants to insert a new item point in the item at the specified position.">itemPointToInsert()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#af8e9ed50f1e7a20d49dc0ea005e4abc7" title="Called when the view wants to insert a new item point in the item at the specified position.">itemPointToInsert()</a> </dd></dl>
 
 <p>Reimplemented in <a class="el" href="class_drawing_text_polygon_item.html#a30e6c72a6283d892f7ea422fe857f8ca">DrawingTextPolygonItem</a>, <a class="el" href="class_drawing_polyline_item.html#a498cf1391bf23a943a72f12304074a70">DrawingPolylineItem</a>, and <a class="el" href="class_drawing_polygon_item.html#a07bca7b7ff8c116e2eadaa33265aa2c7">DrawingPolygonItem</a>.</p>
-
-</div>
-</div>
-<a id="a21fab700343d0c383a545ff29a5bd80c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a21fab700343d0c383a545ff29a5bd80c">&#9670;&nbsp;</a></span>keyPressEvent()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void DrawingItem::keyPressEvent </td>
-          <td>(</td>
-          <td class="paramtype">QKeyEvent *&#160;</td>
-          <td class="paramname"><em>event</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Receives key press events when the item is the focus item of the view. </p>
-<p>The default implementation does nothing.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a00e9e7f72f165b4d5329fc2ae098d095" title="Receives key release events when the item is the focus item of the view.">keyReleaseEvent()</a> </dd></dl>
-
-</div>
-</div>
-<a id="a00e9e7f72f165b4d5329fc2ae098d095"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a00e9e7f72f165b4d5329fc2ae098d095">&#9670;&nbsp;</a></span>keyReleaseEvent()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void DrawingItem::keyReleaseEvent </td>
-          <td>(</td>
-          <td class="paramtype">QKeyEvent *&#160;</td>
-          <td class="paramname"><em>event</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Receives key release events when the item is the focus item of the view. </p>
-<p>The default implementation does nothing.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a21fab700343d0c383a545ff29a5bd80c" title="Receives key press events when the item is the focus item of the view.">keyPressEvent()</a> </dd></dl>
-
-</div>
-</div>
-<a id="af1de3d9a05873a773479e761ca2a1d94"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af1de3d9a05873a773479e761ca2a1d94">&#9670;&nbsp;</a></span>mapFromParent() <span class="overload">[1/4]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">QPainterPath DrawingItem::mapFromParent </td>
-          <td>(</td>
-          <td class="paramtype">const QPainterPath &amp;&#160;</td>
-          <td class="paramname"><em>path</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Maps the path from the coordinate system of the parent to the item's coordinate system. </p>
-<p>If the item has no <a class="el" href="class_drawing_item.html#a478ce32c7c22ae84b217a03189d3812e" title="Returns the item&#39;s parent, or nullptr if the item has no parent.">parent()</a>, this function behaves the same as <a class="el" href="class_drawing_item.html#a4541e39830ee616339c8962efb8eb00b" title="Maps the path from the coordinate system of the scene to the item&#39;s coordinate system.">mapFromScene(const QPainterPath&amp;) const</a>.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a86b50ab2e78e9de3b7214e83d3d534d5" title="Maps the path from the item&#39;s coordinate system to the coordinate system of the parent.">mapToParent(const QPainterPath&amp;) const</a> </dd></dl>
-
-</div>
-</div>
-<a id="a35b31eedcf84acdcc70ab982d9f11f44"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a35b31eedcf84acdcc70ab982d9f11f44">&#9670;&nbsp;</a></span>mapFromParent() <span class="overload">[2/4]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">QPointF DrawingItem::mapFromParent </td>
-          <td>(</td>
-          <td class="paramtype">const QPointF &amp;&#160;</td>
-          <td class="paramname"><em>point</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Maps the point from the coordinate system of the parent to the item's coordinate system. </p>
-<p>If the item has no <a class="el" href="class_drawing_item.html#a478ce32c7c22ae84b217a03189d3812e" title="Returns the item&#39;s parent, or nullptr if the item has no parent.">parent()</a>, this function behaves the same as <a class="el" href="class_drawing_item.html#a250cb69998cf177c1d0c2d26897df2ed" title="Maps the point from the coordinate system of the scene to the item&#39;s coordinate system.">mapFromScene(const QPointF&amp;) const</a>.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a00f9285c9075d944d3032e98d30c0772" title="Maps the point from the item&#39;s coordinate system to the coordinate system of the parent.">mapToParent(const QPointF&amp;) const</a> </dd></dl>
-
-</div>
-</div>
-<a id="a3d8549e2eae28abfaec69f74b60befae"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3d8549e2eae28abfaec69f74b60befae">&#9670;&nbsp;</a></span>mapFromParent() <span class="overload">[3/4]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">QPolygonF DrawingItem::mapFromParent </td>
-          <td>(</td>
-          <td class="paramtype">const QPolygonF &amp;&#160;</td>
-          <td class="paramname"><em>polygon</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Maps the polygon from the coordinate system of the parent to the item's coordinate system. </p>
-<p>If the item has no <a class="el" href="class_drawing_item.html#a478ce32c7c22ae84b217a03189d3812e" title="Returns the item&#39;s parent, or nullptr if the item has no parent.">parent()</a>, this function behaves the same as <a class="el" href="class_drawing_item.html#a9d34b204c452490697d8d160636a6ad1" title="Maps the polygon from the coordinate system of the scene to the item&#39;s coordinate system.">mapFromScene(const QPolygonF&amp;) const</a>.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a17d77246908cb138a5d1c704955d691c" title="Maps the polygon from the item&#39;s coordinate system to the coordinate system of the parent.">mapToParent(const QPolygonF&amp;) const</a> </dd></dl>
-
-</div>
-</div>
-<a id="adf483fdb74a22587e2f7b8f473f37da4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adf483fdb74a22587e2f7b8f473f37da4">&#9670;&nbsp;</a></span>mapFromParent() <span class="overload">[4/4]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">QPolygonF DrawingItem::mapFromParent </td>
-          <td>(</td>
-          <td class="paramtype">const QRectF &amp;&#160;</td>
-          <td class="paramname"><em>rect</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Maps the rect from the coordinate system of the parent to the item's coordinate system. </p>
-<p>If the item has no <a class="el" href="class_drawing_item.html#a478ce32c7c22ae84b217a03189d3812e" title="Returns the item&#39;s parent, or nullptr if the item has no parent.">parent()</a>, this function behaves the same as <a class="el" href="class_drawing_item.html#a57ee775689c72f8c9d2d52f25dcdbc59" title="Maps the rect from the coordinate system of the scene to the item&#39;s coordinate system.">mapFromScene(const QRectF&amp;) const</a>.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#ad0eb21095da52008c3577041e7e4ba1d" title="Maps the rect from the item&#39;s coordinate system to the coordinate system of the parent.">mapToParent(const QRectF&amp;) const</a> </dd></dl>
 
 </div>
 </div>
@@ -1114,94 +851,6 @@ Custom Items</h1>
 
 </div>
 </div>
-<a id="a86b50ab2e78e9de3b7214e83d3d534d5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a86b50ab2e78e9de3b7214e83d3d534d5">&#9670;&nbsp;</a></span>mapToParent() <span class="overload">[1/4]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">QPainterPath DrawingItem::mapToParent </td>
-          <td>(</td>
-          <td class="paramtype">const QPainterPath &amp;&#160;</td>
-          <td class="paramname"><em>path</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Maps the path from the item's coordinate system to the coordinate system of the parent. </p>
-<p>If the item has no <a class="el" href="class_drawing_item.html#a478ce32c7c22ae84b217a03189d3812e" title="Returns the item&#39;s parent, or nullptr if the item has no parent.">parent()</a>, this function behaves the same as <a class="el" href="class_drawing_item.html#aff973a0f74a748aea706b92ab5ab1a3d" title="Maps the path from the item&#39;s coordinate system to the coordinate system of the scene.">mapToScene(const QPainterPath&amp;) const</a>.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#af1de3d9a05873a773479e761ca2a1d94" title="Maps the path from the coordinate system of the parent to the item&#39;s coordinate system.">mapFromParent(const QPainterPath&amp;) const</a> </dd></dl>
-
-</div>
-</div>
-<a id="a00f9285c9075d944d3032e98d30c0772"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a00f9285c9075d944d3032e98d30c0772">&#9670;&nbsp;</a></span>mapToParent() <span class="overload">[2/4]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">QPointF DrawingItem::mapToParent </td>
-          <td>(</td>
-          <td class="paramtype">const QPointF &amp;&#160;</td>
-          <td class="paramname"><em>point</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Maps the point from the item's coordinate system to the coordinate system of the parent. </p>
-<p>If the item has no <a class="el" href="class_drawing_item.html#a478ce32c7c22ae84b217a03189d3812e" title="Returns the item&#39;s parent, or nullptr if the item has no parent.">parent()</a>, this function behaves the same as <a class="el" href="class_drawing_item.html#aa396271882e6c7cd200b098482823f44" title="Maps the point from the item&#39;s coordinate system to the coordinate system of the scene.">mapToScene(const QPointF&amp;) const</a>.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a35b31eedcf84acdcc70ab982d9f11f44" title="Maps the point from the coordinate system of the parent to the item&#39;s coordinate system.">mapFromParent(const QPointF&amp;) const</a> </dd></dl>
-
-</div>
-</div>
-<a id="a17d77246908cb138a5d1c704955d691c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a17d77246908cb138a5d1c704955d691c">&#9670;&nbsp;</a></span>mapToParent() <span class="overload">[3/4]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">QPolygonF DrawingItem::mapToParent </td>
-          <td>(</td>
-          <td class="paramtype">const QPolygonF &amp;&#160;</td>
-          <td class="paramname"><em>polygon</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Maps the polygon from the item's coordinate system to the coordinate system of the parent. </p>
-<p>If the item has no <a class="el" href="class_drawing_item.html#a478ce32c7c22ae84b217a03189d3812e" title="Returns the item&#39;s parent, or nullptr if the item has no parent.">parent()</a>, this function behaves the same as <a class="el" href="class_drawing_item.html#a23a07455b8a5d49d313af51b5493f5b3" title="Maps the polygon from the item&#39;s coordinate system to the coordinate system of the scene.">mapToScene(const QPolygonF&amp;) const</a>.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a3d8549e2eae28abfaec69f74b60befae" title="Maps the polygon from the coordinate system of the parent to the item&#39;s coordinate system.">mapFromParent(const QPolygonF&amp;) const</a> </dd></dl>
-
-</div>
-</div>
-<a id="ad0eb21095da52008c3577041e7e4ba1d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad0eb21095da52008c3577041e7e4ba1d">&#9670;&nbsp;</a></span>mapToParent() <span class="overload">[4/4]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">QPolygonF DrawingItem::mapToParent </td>
-          <td>(</td>
-          <td class="paramtype">const QRectF &amp;&#160;</td>
-          <td class="paramname"><em>rect</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Maps the rect from the item's coordinate system to the coordinate system of the parent. </p>
-<p>If the item has no <a class="el" href="class_drawing_item.html#a478ce32c7c22ae84b217a03189d3812e" title="Returns the item&#39;s parent, or nullptr if the item has no parent.">parent()</a>, this function behaves the same as <a class="el" href="class_drawing_item.html#aff50a38322946a012545a698972a91f2" title="Maps the rect from the item&#39;s coordinate system to the coordinate system of the scene.">mapToScene(const QRectF&amp;) const</a>.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#adf483fdb74a22587e2f7b8f473f37da4" title="Maps the rect from the coordinate system of the parent to the item&#39;s coordinate system.">mapFromParent(const QRectF&amp;) const</a> </dd></dl>
-
-</div>
-</div>
 <a id="aff973a0f74a748aea706b92ab5ab1a3d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aff973a0f74a748aea706b92ab5ab1a3d">&#9670;&nbsp;</a></span>mapToScene() <span class="overload">[1/4]</span></h2>
 
@@ -1286,8 +935,8 @@ Custom Items</h1>
 
 </div>
 </div>
-<a id="aa971acd6e184397cb021400420de7fd8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa971acd6e184397cb021400420de7fd8">&#9670;&nbsp;</a></span>moveEvent()</h2>
+<a id="a5d8204cb39cfbbbf17c19e72c45cf2a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5d8204cb39cfbbbf17c19e72c45cf2a1">&#9670;&nbsp;</a></span>move()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1296,51 +945,31 @@ Custom Items</h1>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void DrawingItem::moveEvent </td>
+          <td class="memname">virtual void DrawingItem::move </td>
           <td>(</td>
           <td class="paramtype">const QPointF &amp;&#160;</td>
-          <td class="paramname"><em>parentPos</em></td><td>)</td>
+          <td class="paramname"><em>pos</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Moves the item within the scene. </p>
-<p>This function is called when the item is to be moved within the scene. This will only be called for items that have the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a95a39079caad1648c6072dc5d31bf19b">CanMove</a> flag set as one of their <a class="el" href="class_drawing_item.html#a817a54e0af5105045d009024b21a00ac" title="Returns the type of the item as represented as a combination of flags.">flags()</a>. Note that the parentPos parameter is in the coordinate system of the <a class="el" href="class_drawing_item.html#a478ce32c7c22ae84b217a03189d3812e" title="Returns the item&#39;s parent, or nullptr if the item has no parent.">parent()</a>, or the <a class="el" href="class_drawing_item.html#a24542b301dfd68802b5c8df5b1c1b03a" title="Returns the current scene that this item is a member of, or nullptr if the item is not associated wit...">scene()</a> if no parent is set.</p>
+<p>This function is called when the item is to be moved within the scene. This will only be called for items that have the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a95a39079caad1648c6072dc5d31bf19b" title="Indicates that the item can be moved around the scene.">CanMove</a> flag set as one of their <a class="el" href="class_drawing_item.html#a817a54e0af5105045d009024b21a00ac" title="Returns the type of the item as represented as a combination of flags.">flags()</a>.</p>
+<p>Note that the pos parameter is in scene coordinates.</p>
 <p>The default implementation simply calls <a class="el" href="class_drawing_item.html#ac39291f573a34a991c69c800006ed8a9" title="Sets the position of the item.">setPosition()</a> to update the item's position.</p>
 <p>Derived class implementations can add additional behavior. These implementations should call the parent implementation first before adding custom logic.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#ac7355c993973166c1fdb4c3c8f6f579c" title="Resizes the item within the scene.">resizeEvent()</a>, <a class="el" href="class_drawing_item.html#a41b9b8fbe5aef12d5fd9ef59a34f71d7" title="Rotates the item counter-clockwise within the scene.">rotateEvent()</a>, <a class="el" href="class_drawing_item.html#ac60915e7dffcc720011fc764d67501bc" title="Rotates the item clockwise within the scene.">rotateBackEvent()</a>, <a class="el" href="class_drawing_item.html#abeb9ec1bfe7099fad04a9d1770c40086" title="Flips the item horizontally within the scene.">flipHorizontalEvent()</a>, <a class="el" href="class_drawing_item.html#a2cdaad75d76fc1a71102bdd2bd9ffdf2" title="Flips the item vertically within the scene.">flipVerticalEvent()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a4d96f0f93f32a992daf67f8a726424c2" title="Resizes the item within the scene.">resize()</a>, <a class="el" href="class_drawing_item.html#a5b848aaa250dc6f75d39ddd6bfc798a0" title="Rotates the item clockwise within the scene.">rotate()</a>, <a class="el" href="class_drawing_item.html#a7e38257600cac7e6867efb50b59044ec" title="Rotates the item counter-clockwise within the scene.">rotateBack()</a>, <a class="el" href="class_drawing_item.html#aeb2aac8fe63b6ed6f55c67b2ad098b5f" title="Flips the item horizontally within the scene.">flipHorizontal()</a>, <a class="el" href="class_drawing_item.html#aef995113a07ea8651fa20011a4f047fc" title="Flips the item vertically within the scene.">flipVertical()</a> </dd></dl>
 
 </div>
 </div>
-<a id="a478ce32c7c22ae84b217a03189d3812e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a478ce32c7c22ae84b217a03189d3812e">&#9670;&nbsp;</a></span>parent()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_drawing_item.html">DrawingItem</a>* DrawingItem::parent </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Returns the item's parent, or nullptr if the item has no parent. </p>
-<p>If the item has a valid parent, then its <a class="el" href="class_drawing_item.html#a4897ffe099b9ba3f8d69f202b1ac640b" title="Returns the position of the item in the scene.">position()</a> is in parent coordinates. If the item does not have a parent, then the <a class="el" href="class_drawing_item.html#a4897ffe099b9ba3f8d69f202b1ac640b" title="Returns the position of the item in the scene.">position()</a> is assumed to be in scene coordinates.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a8f44e8531ab44d5d6b5a137c4b5cdfc6" title="Returns a list of of the item&#39;s children.">children()</a> </dd></dl>
-
-</div>
-</div>
-<a id="a83cc5401e42241c4115d3af71a06630b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a83cc5401e42241c4115d3af71a06630b">&#9670;&nbsp;</a></span>pointAt()</h2>
+<a id="a085131ea628dde24f44fcaa219876c53"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a085131ea628dde24f44fcaa219876c53">&#9670;&nbsp;</a></span>pointAt()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1349,21 +978,21 @@ Custom Items</h1>
           <td class="memname"><a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a>* DrawingItem::pointAt </td>
           <td>(</td>
           <td class="paramtype">const QPointF &amp;&#160;</td>
-          <td class="paramname"><em>itemPos</em></td><td>)</td>
+          <td class="paramname"><em>pos</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Returns the item point located at the specified position, or nullptr if no match is found. </p>
-<p>The itemPos is given in local item coordinates.</p>
+<p>The pos is given in local item coordinates.</p>
 <p>This function may return nullptr if no matching item point is found.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#aa9a4672cd728633945f970ba2fc2a363" title="Returns the item point nearest to the specified position.">pointNearest()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a38b330dec49c707223ba3cc7b7dadb8e" title="Returns the item point nearest to the specified position.">pointNearest()</a> </dd></dl>
 
 </div>
 </div>
-<a id="aa9a4672cd728633945f970ba2fc2a363"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa9a4672cd728633945f970ba2fc2a363">&#9670;&nbsp;</a></span>pointNearest()</h2>
+<a id="a38b330dec49c707223ba3cc7b7dadb8e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a38b330dec49c707223ba3cc7b7dadb8e">&#9670;&nbsp;</a></span>pointNearest()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1372,16 +1001,16 @@ Custom Items</h1>
           <td class="memname"><a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a>* DrawingItem::pointNearest </td>
           <td>(</td>
           <td class="paramtype">const QPointF &amp;&#160;</td>
-          <td class="paramname"><em>itemPos</em></td><td>)</td>
+          <td class="paramname"><em>pos</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Returns the item point nearest to the specified position. </p>
-<p>This function calculates the distance between itemPos and each of the item's points. It selects the point that is closest to itemPos and returns it. The itemPos is given in local item coordinates.</p>
+<p>This function calculates the distance between pos and each of the item's points. It selects the point that is closest to pos and returns it. The pos is given in local item coordinates.</p>
 <p>This function may return nullptr if the item does not have any <a class="el" href="class_drawing_item.html#a4690075ae05f5c26a8b2cd587d63e9eb" title="Returns a list of all item points added to the item.">points()</a>.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a83cc5401e42241c4115d3af71a06630b" title="Returns the item point located at the specified position, or nullptr if no match is found.">pointAt()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a085131ea628dde24f44fcaa219876c53" title="Returns the item point located at the specified position, or nullptr if no match is found.">pointAt()</a> </dd></dl>
 
 </div>
 </div>
@@ -1401,7 +1030,7 @@ Custom Items</h1>
 </div><div class="memdoc">
 
 <p>Returns a list of all item points added to the item. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#ad6da55995aa2415ff77858be465ce1f4" title="Adds an existing item point to the item.">addPoint()</a>, <a class="el" href="class_drawing_item.html#abe9cb445431a70fa976dd5f9a986a97f" title="Inserts an existing item point to the item at the specified index.">insertPoint()</a>, <a class="el" href="class_drawing_item.html#a765010de46e8913db1df92ecd708a02b" title="Removes an existing item point from the item.">removePoint()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a91c239ff70767b77694b19914f25f57f" title="Adds an existing item point to the item.">addPoint()</a>, <a class="el" href="class_drawing_item.html#a7b62f045eba710bcb47ef282d6e2cb6f" title="Inserts an existing item point to the item at the specified index.">insertPoint()</a>, <a class="el" href="class_drawing_item.html#ae8f3499b174276e72b710d30287645d6" title="Removes an existing item point from the item.">removePoint()</a> </dd></dl>
 
 </div>
 </div>
@@ -1425,31 +1054,38 @@ Custom Items</h1>
 
 </div>
 </div>
-<a id="aa6ca8aa788511ba59980299bc5965fa1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa6ca8aa788511ba59980299bc5965fa1">&#9670;&nbsp;</a></span>removeChild()</h2>
+<a id="a85ca345f943fdbc53c8ff849321b698b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a85ca345f943fdbc53c8ff849321b698b">&#9670;&nbsp;</a></span>properties()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void DrawingItem::removeChild </td>
+          <td class="memname">virtual QHash&lt;QString,QVariant&gt; DrawingItem::properties </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="class_drawing_item.html">DrawingItem</a> *&#160;</td>
-          <td class="paramname"><em>item</em></td><td>)</td>
-          <td></td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p>Removes an existing item as a child of this item. </p>
-<p>If a valid item is passed to this function, <a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a> will remove it from its list of <a class="el" href="class_drawing_item.html#a8f44e8531ab44d5d6b5a137c4b5cdfc6" title="Returns a list of of the item&#39;s children.">children()</a>. <a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a> relinquishes ownership of the item and does not delete the item from memory.</p>
-<p>It is safe to pass a nullptr to this function; if a nullptr is received, this function does nothing. This function also does nothing if the item is not one of the item's <a class="el" href="class_drawing_item.html#a8f44e8531ab44d5d6b5a137c4b5cdfc6" title="Returns a list of of the item&#39;s children.">children()</a>.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#ab59d559cd81cd47ae72a5cff80806540" title="Adds an existing item as a child of this item.">addChild()</a>, <a class="el" href="class_drawing_item.html#a9cd2d7320485882627b365606b9e0bd7" title="Inserts an existing item as a child of this item at the specified index.">insertChild()</a>, <a class="el" href="class_drawing_item.html#a763f54616a3a9d359dfa10dc1284739a" title="Removes and deletes all child items from the item.">clearChildren()</a> </dd></dl>
+<p>Returns the values of all object properties. </p>
+<p>The property names should match the names accepted by <a class="el" href="class_drawing_item.html#ab775f7226653f34972da6fa5a21f1c04" title="Sets the values of all object properties.">setProperties()</a>.</p>
+<p>The implementation in <a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a> simply returns an empty QHash container.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#ab775f7226653f34972da6fa5a21f1c04" title="Sets the values of all object properties.">setProperties()</a> </dd></dl>
 
 </div>
 </div>
-<a id="a765010de46e8913db1df92ecd708a02b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a765010de46e8913db1df92ecd708a02b">&#9670;&nbsp;</a></span>removePoint()</h2>
+<a id="ae8f3499b174276e72b710d30287645d6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae8f3499b174276e72b710d30287645d6">&#9670;&nbsp;</a></span>removePoint()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1458,16 +1094,16 @@ Custom Items</h1>
           <td class="memname">void DrawingItem::removePoint </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *&#160;</td>
-          <td class="paramname"><em>itemPoint</em></td><td>)</td>
+          <td class="paramname"><em>point</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Removes an existing item point from the item. </p>
-<p>If a valid item point is passed to this function, <a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a> will remove it from its list of <a class="el" href="class_drawing_item.html#a4690075ae05f5c26a8b2cd587d63e9eb" title="Returns a list of all item points added to the item.">points()</a>. <a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a> relinquishes ownership of the itemPoint and does not delete the point from memory.</p>
-<p>It is safe to pass a nullptr to this function; if a nullptr is received, this function does nothing. This function also does nothing if the itemPoint is not one of the item's <a class="el" href="class_drawing_item.html#a4690075ae05f5c26a8b2cd587d63e9eb" title="Returns a list of all item points added to the item.">points()</a>.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#ad6da55995aa2415ff77858be465ce1f4" title="Adds an existing item point to the item.">addPoint()</a>, <a class="el" href="class_drawing_item.html#abe9cb445431a70fa976dd5f9a986a97f" title="Inserts an existing item point to the item at the specified index.">insertPoint()</a>, <a class="el" href="class_drawing_item.html#a206c414a4dfaa4658397d06ba21c2e71" title="Removes and deletes all item points from the item.">clearPoints()</a> </dd></dl>
+<p>If a valid item point is passed to this function, <a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a> will remove it from its list of <a class="el" href="class_drawing_item.html#a4690075ae05f5c26a8b2cd587d63e9eb" title="Returns a list of all item points added to the item.">points()</a>. <a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a> relinquishes ownership of the point and does not delete the point from memory.</p>
+<p>It is safe to pass a nullptr to this function; if a nullptr is received, this function does nothing. This function also does nothing if the point is not one of the item's <a class="el" href="class_drawing_item.html#a4690075ae05f5c26a8b2cd587d63e9eb" title="Returns a list of all item points added to the item.">points()</a>.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a91c239ff70767b77694b19914f25f57f" title="Adds an existing item point to the item.">addPoint()</a>, <a class="el" href="class_drawing_item.html#a7b62f045eba710bcb47ef282d6e2cb6f" title="Inserts an existing item point to the item at the specified index.">insertPoint()</a>, <a class="el" href="class_drawing_item.html#a206c414a4dfaa4658397d06ba21c2e71" title="Removes and deletes all item points from the item.">clearPoints()</a> </dd></dl>
 
 </div>
 </div>
@@ -1502,8 +1138,8 @@ Custom Items</h1>
 
 </div>
 </div>
-<a id="ac7355c993973166c1fdb4c3c8f6f579c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac7355c993973166c1fdb4c3c8f6f579c">&#9670;&nbsp;</a></span>resizeEvent()</h2>
+<a id="a4d96f0f93f32a992daf67f8a726424c2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d96f0f93f32a992daf67f8a726424c2">&#9670;&nbsp;</a></span>resize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1512,16 +1148,16 @@ Custom Items</h1>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void DrawingItem::resizeEvent </td>
+          <td class="memname">virtual void DrawingItem::resize </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *&#160;</td>
-          <td class="paramname"><em>itemPoint</em>, </td>
+          <td class="paramname"><em>point</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const QPointF &amp;&#160;</td>
-          <td class="paramname"><em>parentPos</em>&#160;</td>
+          <td class="paramname"><em>pos</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1531,23 +1167,24 @@ Custom Items</h1>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Resizes the item within the scene. </p>
-<p>This function is called when the item is to be resized within the scene. This will only be called for items that have the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8ac11487cdd344db23e865fe04a00207a7">CanResize</a> flag set as one of their <a class="el" href="class_drawing_item.html#a817a54e0af5105045d009024b21a00ac" title="Returns the type of the item as represented as a combination of flags.">flags()</a>. Note that the parentPos parameter is in the coordinate system of the <a class="el" href="class_drawing_item.html#a478ce32c7c22ae84b217a03189d3812e" title="Returns the item&#39;s parent, or nullptr if the item has no parent.">parent()</a>, or the <a class="el" href="class_drawing_item.html#a24542b301dfd68802b5c8df5b1c1b03a" title="Returns the current scene that this item is a member of, or nullptr if the item is not associated wit...">scene()</a> if no parent is set.</p>
-<p>The default implementation calls itemPoint-&gt;<a class="el" href="class_drawing_item.html#ac39291f573a34a991c69c800006ed8a9" title="Sets the position of the item.">setPosition()</a> to update the point's position.</p>
+<p>This function is called when the item is to be resized within the scene. This will only be called for items that have the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8ac11487cdd344db23e865fe04a00207a7">CanResize</a> flag set as one of their <a class="el" href="class_drawing_item.html#a817a54e0af5105045d009024b21a00ac" title="Returns the type of the item as represented as a combination of flags.">flags()</a>.</p>
+<p>Note that the pos parameter is in scene coordinates.</p>
+<p>The default implementation calls <a class="el" href="class_drawing_item_point.html#a6c4cce2888e3ef0b41aa27670cda6f31">point-&gt;setPosition() </a> to update the point's position.</p>
 <p>Derived class implementations can add additional behavior. These implementations should call the parent implementation first before adding custom logic.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#aa971acd6e184397cb021400420de7fd8" title="Moves the item within the scene.">moveEvent()</a>, <a class="el" href="class_drawing_item.html#a41b9b8fbe5aef12d5fd9ef59a34f71d7" title="Rotates the item counter-clockwise within the scene.">rotateEvent()</a>, <a class="el" href="class_drawing_item.html#ac60915e7dffcc720011fc764d67501bc" title="Rotates the item clockwise within the scene.">rotateBackEvent()</a>, <a class="el" href="class_drawing_item.html#abeb9ec1bfe7099fad04a9d1770c40086" title="Flips the item horizontally within the scene.">flipHorizontalEvent()</a>, <a class="el" href="class_drawing_item.html#a2cdaad75d76fc1a71102bdd2bd9ffdf2" title="Flips the item vertically within the scene.">flipVerticalEvent()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a5d8204cb39cfbbbf17c19e72c45cf2a1" title="Moves the item within the scene.">move()</a>, <a class="el" href="class_drawing_item.html#a5b848aaa250dc6f75d39ddd6bfc798a0" title="Rotates the item clockwise within the scene.">rotate()</a>, <a class="el" href="class_drawing_item.html#a7e38257600cac7e6867efb50b59044ec" title="Rotates the item counter-clockwise within the scene.">rotateBack()</a>, <a class="el" href="class_drawing_item.html#aeb2aac8fe63b6ed6f55c67b2ad098b5f" title="Flips the item horizontally within the scene.">flipHorizontal()</a>, <a class="el" href="class_drawing_item.html#aef995113a07ea8651fa20011a4f047fc" title="Flips the item vertically within the scene.">flipVertical()</a> </dd></dl>
 
-<p>Reimplemented in <a class="el" href="class_drawing_path_item.html#a95e3d67014128ba7cbc25b11b37fb336">DrawingPathItem</a>, <a class="el" href="class_drawing_text_rect_item.html#a8437b4c3ebb67cfa708ceb5d9abf8b39">DrawingTextRectItem</a>, <a class="el" href="class_drawing_text_ellipse_item.html#ae926d516bf234479407ad9f7105e45de">DrawingTextEllipseItem</a>, <a class="el" href="class_drawing_rect_item.html#a004a345469b0a884d906cbe69eedc588">DrawingRectItem</a>, <a class="el" href="class_drawing_curve_item.html#a372a2fa8151107b7607a5a775ff9dd82">DrawingCurveItem</a>, <a class="el" href="class_drawing_line_item.html#a53c3400741b42d259faa1ee06023847d">DrawingLineItem</a>, and <a class="el" href="class_drawing_ellipse_item.html#ad97b69b86802df74938aec11f80434b6">DrawingEllipseItem</a>.</p>
+<p>Reimplemented in <a class="el" href="class_drawing_curve_item.html#aad64c410bf489714ace7f521d0f9bd80">DrawingCurveItem</a>, <a class="el" href="class_drawing_path_item.html#add748ae5cc16b5a9872c53a3578bf3a3">DrawingPathItem</a>, <a class="el" href="class_drawing_text_rect_item.html#a20e3e4e0444576fb907a93d1423a6cc8">DrawingTextRectItem</a>, <a class="el" href="class_drawing_text_ellipse_item.html#a4e64ee5a496fbcf8f18114518b38de22">DrawingTextEllipseItem</a>, <a class="el" href="class_drawing_rect_item.html#ae0d052089988e23f4b449c5a6ba61e5b">DrawingRectItem</a>, <a class="el" href="class_drawing_line_item.html#a0ab28892a617e4c755206b7277b5fa54">DrawingLineItem</a>, and <a class="el" href="class_drawing_ellipse_item.html#a670fca3dbcd37729836f0f0131eea3de">DrawingEllipseItem</a>.</p>
 
 </div>
 </div>
-<a id="ac60915e7dffcc720011fc764d67501bc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac60915e7dffcc720011fc764d67501bc">&#9670;&nbsp;</a></span>rotateBackEvent()</h2>
+<a id="a5b848aaa250dc6f75d39ddd6bfc798a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b848aaa250dc6f75d39ddd6bfc798a0">&#9670;&nbsp;</a></span>rotate()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1556,30 +1193,31 @@ Custom Items</h1>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void DrawingItem::rotateBackEvent </td>
+          <td class="memname">virtual void DrawingItem::rotate </td>
           <td>(</td>
           <td class="paramtype">const QPointF &amp;&#160;</td>
-          <td class="paramname"><em>parentPos</em></td><td>)</td>
+          <td class="paramname"><em>pos</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Rotates the item clockwise within the scene. </p>
-<p>This function is called when the item is to be rotated back within the scene. This will only be called for items that have the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a1853e3a339adeec237de605616adc055">CanRotate</a> flag set as one of their <a class="el" href="class_drawing_item.html#a817a54e0af5105045d009024b21a00ac" title="Returns the type of the item as represented as a combination of flags.">flags()</a>. Note that the parentPos parameter is in the coordinate system of the <a class="el" href="class_drawing_item.html#a478ce32c7c22ae84b217a03189d3812e" title="Returns the item&#39;s parent, or nullptr if the item has no parent.">parent()</a>, or the <a class="el" href="class_drawing_item.html#a24542b301dfd68802b5c8df5b1c1b03a" title="Returns the current scene that this item is a member of, or nullptr if the item is not associated wit...">scene()</a> if no parent is set.</p>
-<p>The default implementation updates item's <a class="el" href="class_drawing_item.html#a4897ffe099b9ba3f8d69f202b1ac640b" title="Returns the position of the item in the scene.">position()</a> to rotate it around the specified parentPos and updates the item's <a class="el" href="class_drawing_item.html#ae5295e717fcc57ea1e41eb0981e817af" title="Returns the item&#39;s current transformation matrix.">transform()</a>.</p>
+<p>This function is called when the item is to be rotated within the scene. This will only be called for items that have the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a1853e3a339adeec237de605616adc055">CanRotate</a> flag set as one of their <a class="el" href="class_drawing_item.html#a817a54e0af5105045d009024b21a00ac" title="Returns the type of the item as represented as a combination of flags.">flags()</a>.</p>
+<p>Note that the pos parameter is in scene coordinates.</p>
+<p>The default implementation updates item's <a class="el" href="class_drawing_item.html#a4897ffe099b9ba3f8d69f202b1ac640b" title="Returns the position of the item in the scene.">position()</a> to rotate it around the specified pos and updates the item's <a class="el" href="class_drawing_item.html#ae5295e717fcc57ea1e41eb0981e817af" title="Returns the item&#39;s current transformation matrix.">transform()</a>.</p>
 <p>Derived class implementations can add additional behavior. These implementations should call the parent implementation first before adding custom logic.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#aa971acd6e184397cb021400420de7fd8" title="Moves the item within the scene.">moveEvent()</a>, <a class="el" href="class_drawing_item.html#ac7355c993973166c1fdb4c3c8f6f579c" title="Resizes the item within the scene.">resizeEvent()</a>, <a class="el" href="class_drawing_item.html#a41b9b8fbe5aef12d5fd9ef59a34f71d7" title="Rotates the item counter-clockwise within the scene.">rotateEvent()</a>, <a class="el" href="class_drawing_item.html#abeb9ec1bfe7099fad04a9d1770c40086" title="Flips the item horizontally within the scene.">flipHorizontalEvent()</a>, <a class="el" href="class_drawing_item.html#a2cdaad75d76fc1a71102bdd2bd9ffdf2" title="Flips the item vertically within the scene.">flipVerticalEvent()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a5d8204cb39cfbbbf17c19e72c45cf2a1" title="Moves the item within the scene.">move()</a>, <a class="el" href="class_drawing_item.html#a4d96f0f93f32a992daf67f8a726424c2" title="Resizes the item within the scene.">resize()</a>, <a class="el" href="class_drawing_item.html#a7e38257600cac7e6867efb50b59044ec" title="Rotates the item counter-clockwise within the scene.">rotateBack()</a>, <a class="el" href="class_drawing_item.html#aeb2aac8fe63b6ed6f55c67b2ad098b5f" title="Flips the item horizontally within the scene.">flipHorizontal()</a>, <a class="el" href="class_drawing_item.html#aef995113a07ea8651fa20011a4f047fc" title="Flips the item vertically within the scene.">flipVertical()</a> </dd></dl>
 
 </div>
 </div>
-<a id="a41b9b8fbe5aef12d5fd9ef59a34f71d7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a41b9b8fbe5aef12d5fd9ef59a34f71d7">&#9670;&nbsp;</a></span>rotateEvent()</h2>
+<a id="a7e38257600cac7e6867efb50b59044ec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7e38257600cac7e6867efb50b59044ec">&#9670;&nbsp;</a></span>rotateBack()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1588,25 +1226,26 @@ Custom Items</h1>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void DrawingItem::rotateEvent </td>
+          <td class="memname">virtual void DrawingItem::rotateBack </td>
           <td>(</td>
           <td class="paramtype">const QPointF &amp;&#160;</td>
-          <td class="paramname"><em>parentPos</em></td><td>)</td>
+          <td class="paramname"><em>pos</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Rotates the item counter-clockwise within the scene. </p>
-<p>This function is called when the item is to be rotated within the scene. This will only be called for items that have the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a1853e3a339adeec237de605616adc055">CanRotate</a> flag set as one of their <a class="el" href="class_drawing_item.html#a817a54e0af5105045d009024b21a00ac" title="Returns the type of the item as represented as a combination of flags.">flags()</a>. Note that the parentPos parameter is in the coordinate system of the <a class="el" href="class_drawing_item.html#a478ce32c7c22ae84b217a03189d3812e" title="Returns the item&#39;s parent, or nullptr if the item has no parent.">parent()</a>, or the <a class="el" href="class_drawing_item.html#a24542b301dfd68802b5c8df5b1c1b03a" title="Returns the current scene that this item is a member of, or nullptr if the item is not associated wit...">scene()</a> if no parent is set.</p>
-<p>The default implementation updates item's <a class="el" href="class_drawing_item.html#a4897ffe099b9ba3f8d69f202b1ac640b" title="Returns the position of the item in the scene.">position()</a> to rotate it around the specified parentPos and updates the item's <a class="el" href="class_drawing_item.html#ae5295e717fcc57ea1e41eb0981e817af" title="Returns the item&#39;s current transformation matrix.">transform()</a>.</p>
+<p>This function is called when the item is to be rotated back within the scene. This will only be called for items that have the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a1853e3a339adeec237de605616adc055">CanRotate</a> flag set as one of their <a class="el" href="class_drawing_item.html#a817a54e0af5105045d009024b21a00ac" title="Returns the type of the item as represented as a combination of flags.">flags()</a>.</p>
+<p>Note that the pos parameter is in scene coordinates.</p>
+<p>The default implementation updates item's <a class="el" href="class_drawing_item.html#a4897ffe099b9ba3f8d69f202b1ac640b" title="Returns the position of the item in the scene.">position()</a> to rotate it around the specified pos and updates the item's <a class="el" href="class_drawing_item.html#ae5295e717fcc57ea1e41eb0981e817af" title="Returns the item&#39;s current transformation matrix.">transform()</a>.</p>
 <p>Derived class implementations can add additional behavior. These implementations should call the parent implementation first before adding custom logic.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#aa971acd6e184397cb021400420de7fd8" title="Moves the item within the scene.">moveEvent()</a>, <a class="el" href="class_drawing_item.html#ac7355c993973166c1fdb4c3c8f6f579c" title="Resizes the item within the scene.">resizeEvent()</a>, <a class="el" href="class_drawing_item.html#ac60915e7dffcc720011fc764d67501bc" title="Rotates the item clockwise within the scene.">rotateBackEvent()</a>, <a class="el" href="class_drawing_item.html#abeb9ec1bfe7099fad04a9d1770c40086" title="Flips the item horizontally within the scene.">flipHorizontalEvent()</a>, <a class="el" href="class_drawing_item.html#a2cdaad75d76fc1a71102bdd2bd9ffdf2" title="Flips the item vertically within the scene.">flipVerticalEvent()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a5d8204cb39cfbbbf17c19e72c45cf2a1" title="Moves the item within the scene.">move()</a>, <a class="el" href="class_drawing_item.html#a4d96f0f93f32a992daf67f8a726424c2" title="Resizes the item within the scene.">resize()</a>, <a class="el" href="class_drawing_item.html#a5b848aaa250dc6f75d39ddd6bfc798a0" title="Rotates the item clockwise within the scene.">rotate()</a>, <a class="el" href="class_drawing_item.html#aeb2aac8fe63b6ed6f55c67b2ad098b5f" title="Flips the item horizontally within the scene.">flipHorizontal()</a>, <a class="el" href="class_drawing_item.html#aef995113a07ea8651fa20011a4f047fc" title="Flips the item vertically within the scene.">flipVertical()</a> </dd></dl>
 
 </div>
 </div>
@@ -1639,7 +1278,7 @@ Custom Items</h1>
         <tr>
           <td class="memname">void DrawingItem::setFlags </td>
           <td>(</td>
-          <td class="paramtype">Flags&#160;</td>
+          <td class="paramtype"><a class="el" href="class_drawing_item.html#ac325ca8f325d5b8d05a6be05593305bd">Flags</a>&#160;</td>
           <td class="paramname"><em>flags</em></td><td>)</td>
           <td></td>
         </tr>
@@ -1647,8 +1286,8 @@ Custom Items</h1>
 </div><div class="memdoc">
 
 <p>Sets the type of item through a combination of flags. </p>
-<p>The type of item is represented by a combination of flags. Any combination of flags is valid for <a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a> objects. By default, the (<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a95a39079caad1648c6072dc5d31bf19b">CanMove</a> | <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8ac11487cdd344db23e865fe04a00207a7">CanResize</a> | <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a1853e3a339adeec237de605616adc055">CanRotate</a> | <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8ac1442db61d2994e29519efc19539901c">CanFlip</a> | <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a0eb4b3d4f6801707ab6f635f0a84581a">CanSelect</a>) flags are set.</p>
-<p>Items that set the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a0fe2476868caa5cbe01dc1872436ae4d">CanInsertPoints</a> flag should also provide an implementation for <a class="el" href="class_drawing_item.html#a2c0ae05e921e63275b105177edac7365" title="Called when the view wants to insert a new item point in the item at the specified position.">itemPointToInsert()</a>. Items that set the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8acf870023363a32ad64518e395a8faf55">CanRemovePoints</a> flag should also provide an implementation for and <a class="el" href="class_drawing_item.html#aae42e097461eef61b78f296e2f14be7f" title="Called when the view wants to remove an existing item point in the item at the specified position.">itemPointToRemove()</a>.</p>
+<p>The type of item is represented by a combination of flags. Any combination of flags is valid for <a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a> objects. By default, the (<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a95a39079caad1648c6072dc5d31bf19b" title="Indicates that the item can be moved around the scene.">CanMove</a> | <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8ac11487cdd344db23e865fe04a00207a7">CanResize</a> | <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a1853e3a339adeec237de605616adc055">CanRotate</a> | <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8ac1442db61d2994e29519efc19539901c">CanFlip</a> | <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a0eb4b3d4f6801707ab6f635f0a84581a">CanSelect</a> | <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a68c630ca2a27c866e66830ae927a122d">CanDelete</a>) flags are set.</p>
+<p>Items that set the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a0fe2476868caa5cbe01dc1872436ae4d" title="Indicates that item points can be added to the item.">CanInsertPoints</a> flag should also provide an implementation for <a class="el" href="class_drawing_item.html#af8e9ed50f1e7a20d49dc0ea005e4abc7" title="Called when the view wants to insert a new item point in the item at the specified position.">itemPointToInsert()</a>. Items that set the <a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8acf870023363a32ad64518e395a8faf55">CanRemovePoints</a> flag should also provide an implementation for and <a class="el" href="class_drawing_item.html#a688d10ac5e0ffc8bab6c43c5ff001ef3" title="Called when the view wants to remove an existing item point in the item at the specified position.">itemPointToRemove()</a>.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a817a54e0af5105045d009024b21a00ac" title="Returns the type of the item as represented as a combination of flags.">flags()</a> </dd></dl>
 
 </div>
@@ -1703,8 +1342,39 @@ Custom Items</h1>
 </div><div class="memdoc">
 
 <p>Sets the position of the item. </p>
-<p>This convenience function is equivalent to calling setPosition(QPointF(x,y)).</p>
+<p>This convenience function is equivalent to calling <a class="el" href="class_drawing_item.html#ac39291f573a34a991c69c800006ed8a9">setPosition(QPointF(x,y)) </a> .</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a4897ffe099b9ba3f8d69f202b1ac640b" title="Returns the position of the item in the scene.">position()</a>, <a class="el" href="class_drawing_item.html#aa8534a6f0254e9705f504d9b849df994" title="Returns the x-coordinate of the item&#39;s position.">x()</a>, <a class="el" href="class_drawing_item.html#a40531bf2e1100db70175ae826e7d63e3" title="Returns the y-coordinate of the item&#39;s position.">y()</a> </dd></dl>
+
+</div>
+</div>
+<a id="ab775f7226653f34972da6fa5a21f1c04"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab775f7226653f34972da6fa5a21f1c04">&#9670;&nbsp;</a></span>setProperties()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void DrawingItem::setProperties </td>
+          <td>(</td>
+          <td class="paramtype">const QHash&lt; QString, QVariant &gt; &amp;&#160;</td>
+          <td class="paramname"><em>properties</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets the values of all object properties. </p>
+<p>The property names should match the names returned by <a class="el" href="class_drawing_item.html#a85ca345f943fdbc53c8ff849321b698b" title="Returns the values of all object properties.">properties()</a>.</p>
+<p>The implementation in <a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a> does nothing.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#ab775f7226653f34972da6fa5a21f1c04" title="Sets the values of all object properties.">setProperties()</a> </dd></dl>
 
 </div>
 </div>
@@ -1727,30 +1397,6 @@ Custom Items</h1>
 <p>Sets whether the item is currently selected within the scene or not. </p>
 <p>Items that are selected can be manipulated within the scene (i.e. moved, resized, rotated, flipped, etc). By default, items are not selected (<a class="el" href="class_drawing_item.html#ad24d4066644656f57d0ddb2ab276307e" title="Returns whether the item is currently selected within the scene or not.">isSelected()</a> returns false).</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#ad24d4066644656f57d0ddb2ab276307e" title="Returns whether the item is currently selected within the scene or not.">isSelected()</a> </dd></dl>
-
-</div>
-</div>
-<a id="a8be6c89cf11d1022a2b1b5344d7edf08"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8be6c89cf11d1022a2b1b5344d7edf08">&#9670;&nbsp;</a></span>setStyle()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void DrawingItem::setStyle </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_drawing_item_style.html">DrawingItemStyle</a> *&#160;</td>
-          <td class="paramname"><em>style</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Sets the item's style. </p>
-<p>The item's style contains settings that affect how the item is rendered within a <a class="el" href="class_drawing_scene.html" title="Surface for managing a large number of two-dimensional DrawingItem objects.">DrawingScene</a>. By default, the item is a assigned an empty style with no settings applied.</p>
-<p>If a valid item style is passed to this function, <a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a> will delete the existing item style from memory and replace it with the specified style. <a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a> takes ownership of the new style and will delete it as necessary.</p>
-<p>It is safe to pass a nullptr to this function; if a nullptr is received, this function does nothing.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a880152c49551149054d0aa2ac07cee31" title="Returns the item&#39;s style.">style()</a> </dd></dl>
 
 </div>
 </div>
@@ -1783,7 +1429,7 @@ Custom Items</h1>
 <p>Sets the item's current transformation matrix. </p>
 <p>This transform allows items to be rotated, scaled, or flipped within the scene.</p>
 <p>If combine is true, then matrix is combined with the current matrix; otherwise, matrix replaces the current matrix.</p>
-<p>To simplify interation with items using a transformed view, QGraphicsItem provides <a class="el" href="class_drawing_item.html#a00f9285c9075d944d3032e98d30c0772" title="Maps the point from the item&#39;s coordinate system to the coordinate system of the parent.">mapToParent()</a>, <a class="el" href="class_drawing_item.html#a35b31eedcf84acdcc70ab982d9f11f44" title="Maps the point from the coordinate system of the parent to the item&#39;s coordinate system.">mapFromParent()</a>, <a class="el" href="class_drawing_item.html#aa396271882e6c7cd200b098482823f44" title="Maps the point from the item&#39;s coordinate system to the coordinate system of the scene.">mapToScene()</a>, and <a class="el" href="class_drawing_item.html#a250cb69998cf177c1d0c2d26897df2ed" title="Maps the point from the coordinate system of the scene to the item&#39;s coordinate system.">mapFromScene()</a> functions that can translate between item, parent, and scene coordinates.</p>
+<p>To simplify interation with items using a transformed view, QGraphicsItem provides <a class="el" href="class_drawing_item.html#aa396271882e6c7cd200b098482823f44" title="Maps the point from the item&#39;s coordinate system to the coordinate system of the scene.">mapToScene()</a> and <a class="el" href="class_drawing_item.html#a250cb69998cf177c1d0c2d26897df2ed" title="Maps the point from the coordinate system of the scene to the item&#39;s coordinate system.">mapFromScene()</a> functions that can translate between item and scene coordinates.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#ae5295e717fcc57ea1e41eb0981e817af" title="Returns the item&#39;s current transformation matrix.">transform()</a>, <a class="el" href="class_drawing_item.html#a592cf39e5ec688f2112ba6136cce05e7" title="Returns the inverse of the item&#39;s current transformation matrix.">transformInverted()</a> </dd></dl>
 
 </div>
@@ -1827,8 +1473,8 @@ Custom Items</h1>
 </div><div class="memdoc">
 
 <p>Sets the x-coordinate of the item's position. </p>
-<p>This convenience function is equivalent to calling setPos(QPointF(x,y())).</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#ac39291f573a34a991c69c800006ed8a9" title="Sets the position of the item.">setPosition()</a>, <a class="el" href="class_drawing_item.html#aa8534a6f0254e9705f504d9b849df994" title="Returns the x-coordinate of the item&#39;s position.">x()</a> </dd></dl>
+<p>This convenience function is equivalent to calling <a class="el" href="class_drawing_item.html#ac39291f573a34a991c69c800006ed8a9">setPosition(QPointF(x,y())) </a> .</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#ac39291f573a34a991c69c800006ed8a9" title="Sets the position of the item.">setPosition()</a>, <a class="el" href="class_drawing_item.html#af61e5c4af48c58ca718f99949cf7573c" title="Sets the y-coordinate of the item&#39;s position.">setY()</a>, <a class="el" href="class_drawing_item.html#aa8534a6f0254e9705f504d9b849df994" title="Returns the x-coordinate of the item&#39;s position.">x()</a> </dd></dl>
 
 </div>
 </div>
@@ -1849,8 +1495,8 @@ Custom Items</h1>
 </div><div class="memdoc">
 
 <p>Sets the y-coordinate of the item's position. </p>
-<p>This convenience function is equivalent to calling setPos(QPointF(x(),y)).</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#ac39291f573a34a991c69c800006ed8a9" title="Sets the position of the item.">setPosition()</a>, <a class="el" href="class_drawing_item.html#a40531bf2e1100db70175ae826e7d63e3" title="Returns the y-coordinate of the item&#39;s position.">y()</a> </dd></dl>
+<p>This convenience function is equivalent to calling <a class="el" href="class_drawing_item.html#ac39291f573a34a991c69c800006ed8a9">setPosition(QPointF(x(),y)) </a> .</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#ac39291f573a34a991c69c800006ed8a9" title="Sets the position of the item.">setPosition()</a>, <a class="el" href="class_drawing_item.html#a2751ce64be3f6a7ef167b8d07d2bd255" title="Sets the x-coordinate of the item&#39;s position.">setX()</a>, <a class="el" href="class_drawing_item.html#a40531bf2e1100db70175ae826e7d63e3" title="Returns the y-coordinate of the item&#39;s position.">y()</a> </dd></dl>
 
 </div>
 </div>
@@ -1881,29 +1527,9 @@ Custom Items</h1>
 <p>The function returns a path in local item coordinates.</p>
 <p>The default implementation calls <a class="el" href="class_drawing_item.html#a6cf2e2f89c56fcc56451d5a8088d534e" title="Returns an estimate of the area painted by an item.">boundingRect()</a> to return a simple rectangular shape. Most derived classes will want to reimplement this behavior to match the actual shape of the item being represented.</p>
 <p>The outline of a shape can vary depending on the width and style of the pen used when drawing. To include this outline in the item's shape, create a shape from the stroke using QPainterPathStroker.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a6cf2e2f89c56fcc56451d5a8088d534e" title="Returns an estimate of the area painted by an item.">boundingRect()</a>, <a class="el" href="class_drawing_item.html#abd3df43ae85daadc4b0af0947da497f5" title="Returns a position representing the center of the item.">centerPos()</a>, <a class="el" href="class_drawing_item.html#a5cee357db6aa005d5da5dd04929db252" title="Return false if the item is degenerate, true otherwise.">isValid()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a6cf2e2f89c56fcc56451d5a8088d534e" title="Returns an estimate of the area painted by an item.">boundingRect()</a>, <a class="el" href="class_drawing_item.html#abd3df43ae85daadc4b0af0947da497f5" title="Returns a position representing the center of the item.">centerPos()</a>, <a class="el" href="class_drawing_item.html#a5cee357db6aa005d5da5dd04929db252" title="Return false if the item is invalid, true otherwise.">isValid()</a> </dd></dl>
 
 <p>Reimplemented in <a class="el" href="class_drawing_path_item.html#ab06ab3b6b2baa1dcbc8b15b98883ec8c">DrawingPathItem</a>, <a class="el" href="class_drawing_text_rect_item.html#a00e32d3543e7511d4f2f06207eb85d53">DrawingTextRectItem</a>, <a class="el" href="class_drawing_text_ellipse_item.html#a8432b99380079009b8973739ceebd5f5">DrawingTextEllipseItem</a>, <a class="el" href="class_drawing_rect_item.html#aa9e6c439e21f7095d72cd7abd7b099bd">DrawingRectItem</a>, <a class="el" href="class_drawing_text_polygon_item.html#a9251f63ab4494a92d2333d7ea3c76897">DrawingTextPolygonItem</a>, <a class="el" href="class_drawing_curve_item.html#ad3f58ed160e64ba00db9f8b028eb5102">DrawingCurveItem</a>, <a class="el" href="class_drawing_line_item.html#a5c2484f8b94690e44e86ba680e27437d">DrawingLineItem</a>, <a class="el" href="class_drawing_arc_item.html#a81b1281528ba6ed0ce725cd66097c4dd">DrawingArcItem</a>, <a class="el" href="class_drawing_ellipse_item.html#a6998c8ebb99137387ffbd572ef317e34">DrawingEllipseItem</a>, <a class="el" href="class_drawing_polyline_item.html#a5ee8acdea70c2b6e16ea0521da782c2f">DrawingPolylineItem</a>, <a class="el" href="class_drawing_text_item.html#a3afdbc72cfa4e4f42f783a29b37f44df">DrawingTextItem</a>, <a class="el" href="class_drawing_polygon_item.html#aba32ab6fa95124a65c7d7e20e73ba0e8">DrawingPolygonItem</a>, and <a class="el" href="class_drawing_item_group.html#a915eb95331e4d0bbcf71cc86f942c74c">DrawingItemGroup</a>.</p>
-
-</div>
-</div>
-<a id="a880152c49551149054d0aa2ac07cee31"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a880152c49551149054d0aa2ac07cee31">&#9670;&nbsp;</a></span>style()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_drawing_item_style.html">DrawingItemStyle</a>* DrawingItem::style </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Returns the item's style. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item.html#a8be6c89cf11d1022a2b1b5344d7edf08" title="Sets the item&#39;s style.">setStyle()</a> </dd></dl>
 
 </div>
 </div>

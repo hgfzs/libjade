@@ -265,10 +265,6 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:a6cc04d8c842d07f26ddb7d7caf48d37d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a057d99b28b98f91cd3629c684649ca3f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_view.html#a057d99b28b98f91cd3629c684649ca3f">drawItems</a> (QPainter *painter)</td></tr>
 <tr class="separator:a057d99b28b98f91cd3629c684649ca3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a32b3c58f387f0f56a58b98db2fa52f83"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_view.html#a32b3c58f387f0f56a58b98db2fa52f83">keyPressEvent</a> (QKeyEvent *event)</td></tr>
-<tr class="separator:a32b3c58f387f0f56a58b98db2fa52f83"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1c5070f95a0cb5721bbc7b359c1d604b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_view.html#a1c5070f95a0cb5721bbc7b359c1d604b">keyReleaseEvent</a> (QKeyEvent *event)</td></tr>
-<tr class="separator:a1c5070f95a0cb5721bbc7b359c1d604b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a16969d588f4ac264700376ed304117a5"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_view.html#a16969d588f4ac264700376ed304117a5">mouseDoubleClickEvent</a> (QMouseEvent *event)</td></tr>
 <tr class="separator:a16969d588f4ac264700376ed304117a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a89b47ebc662786473404638954fb9d12"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_view.html#a89b47ebc662786473404638954fb9d12">mouseMoveEvent</a> (QMouseEvent *event)</td></tr>
@@ -300,7 +296,7 @@ Event Handling</h1>
 <p><a class="el" href="class_drawing_view.html#a829956a2d6ea8f3fe9ca0e7bef09d327a4f93908635c890f90741e48794ca8f3e" title="The normal mode for interacting with items in a DrawingView.">DefaultMode</a> is the most common mode for using a <a class="el" href="class_drawing_view.html" title="Widget for viewing the contents of a DrawingScene.">DrawingView</a>. This mode allows full interaction with the items in the scene. Users can click on items to select them or draw a rubber band over an area to select all items in that area. Selected items can be moved around the scene. A single selected item can be resized if the user clicks on a Control <a class="el" href="class_drawing_item_point.html" title="Represents an interaction point within a DrawingItem through which the user can resize the item or co...">DrawingItemPoint</a>. Clicking on empty space will clear the current selection.</p>
 <p>On a mouse press event, <a class="el" href="class_drawing_view.html" title="Widget for viewing the contents of a DrawingScene.">DrawingView</a> updates the current <a class="el" href="class_drawing_view.html#a4829d32ce03206f9fd21adae5c038254" title="Returns the view&#39;s mouse down item, or nullptr if no mouse down item is set.">mouseDownItem()</a> to whatever item was clicked. At this time, <a class="el" href="class_drawing_view.html" title="Widget for viewing the contents of a DrawingScene.">DrawingView</a> also updates the current <a class="el" href="class_drawing_view.html#aef470f3e948ef879a5af545e0ef32bbf" title="Returns the view&#39;s focus item, or nullptr if no focus item is set.">focusItem()</a> to match the new <a class="el" href="class_drawing_view.html#a4829d32ce03206f9fd21adae5c038254" title="Returns the view&#39;s mouse down item, or nullptr if no mouse down item is set.">mouseDownItem()</a>. After a mouse release event, <a class="el" href="class_drawing_view.html" title="Widget for viewing the contents of a DrawingScene.">DrawingView</a> sets the current <a class="el" href="class_drawing_view.html#a4829d32ce03206f9fd21adae5c038254" title="Returns the view&#39;s mouse down item, or nullptr if no mouse down item is set.">mouseDownItem()</a> to nullptr since the mouse event is over.</p>
 <p><a class="el" href="class_drawing_view.html#a829956a2d6ea8f3fe9ca0e7bef09d327a4d3777a7c20972b2fb7bcebba236b0f7" title="Mode for placing new items into a DrawingView.">PlaceMode</a> is used to add new items to the widget. By default, mouse move events move the new items around the scene. The new items are added to the scene on a mouse release event. Copies of the new items can continue to be placed until the user right-clicks or until the user enters a different mode.</p>
-<p>The default event handlers <a class="el" href="class_drawing_view.html#acc61a16d264b4d82c1b025897e6dd0df" title="Handles mouse press events for the view.">mousePressEvent()</a>, <a class="el" href="class_drawing_view.html#a89b47ebc662786473404638954fb9d12" title="Handles mouse move events for the view.">mouseMoveEvent()</a>, <a class="el" href="class_drawing_view.html#ad2016e9c1bcf12ead6e7064c8752d8fc" title="Handles mouse release events for the view.">mouseReleaseEvent()</a>, <a class="el" href="class_drawing_view.html#a16969d588f4ac264700376ed304117a5" title="Handles mouse double-click events for the view.">mouseDoubleClickEvent()</a>, <a class="el" href="class_drawing_view.html#afe5a9571696121a6abe6ad1e81703a06" title="Handles mouse wheel events for the view.">wheelEvent()</a>, <a class="el" href="class_drawing_view.html#a32b3c58f387f0f56a58b98db2fa52f83" title="Handles key press events for the view.">keyPressEvent()</a>, and <a class="el" href="class_drawing_view.html#a1c5070f95a0cb5721bbc7b359c1d604b" title="Handles key release events for the view.">keyReleaseEvent()</a> have an intelligent base implementation of the behavior described here. These can be overloaded in a derived class to modify their behavior as needed for the application.</p>
+<p>The default event handlers <a class="el" href="class_drawing_view.html#acc61a16d264b4d82c1b025897e6dd0df" title="Handles mouse press events for the view.">mousePressEvent()</a>, <a class="el" href="class_drawing_view.html#a89b47ebc662786473404638954fb9d12" title="Handles mouse move events for the view.">mouseMoveEvent()</a>, <a class="el" href="class_drawing_view.html#ad2016e9c1bcf12ead6e7064c8752d8fc" title="Handles mouse release events for the view.">mouseReleaseEvent()</a>, <a class="el" href="class_drawing_view.html#a16969d588f4ac264700376ed304117a5" title="Handles mouse double-click events for the view.">mouseDoubleClickEvent()</a>, <a class="el" href="class_drawing_view.html#afe5a9571696121a6abe6ad1e81703a06" title="Handles mouse wheel events for the view.">wheelEvent()</a>, keyPressEvent(), and keyReleaseEvent() have an intelligent base implementation of the behavior described here. These can be overloaded in a derived class to modify their behavior as needed for the application.</p>
 <p><a class="el" href="class_drawing_view.html" title="Widget for viewing the contents of a DrawingScene.">DrawingView</a> maintains selection information for items within the scene. To select items, call <a class="el" href="class_drawing_view.html#aaed8e94447e0ff7168b152f860687805" title="Adds the specified item to the selection.">selectItem()</a>. To clear the current selection, call <a class="el" href="class_drawing_view.html#af130922b949c3341f7f5f4aaebe6f1f2" title="Removes all items from the selection.">clearSelection()</a>. Call <a class="el" href="class_drawing_view.html#a74aea0470d41c6aeb52537757a8649c4" title="Returns a list of all currently selected items in the view.">selectedItems()</a> to get the list of all currently selected items.</p>
 <h1><a class="anchor" id="widget_undo"></a>
 Undo Support</h1>
@@ -447,7 +443,7 @@ Undo Support</h1>
 
 <p>Brings each selected item forward in the scene's stacking order. </p>
 <p>If no items are selected, this function does nothing.</p>
-<p>This function only works for top-level items (i.e. items with no <a class="el" href="class_drawing_item.html#a478ce32c7c22ae84b217a03189d3812e" title="Returns the item&#39;s parent, or nullptr if the item has no parent.">DrawingItem::parent()</a>). If no such items are selected, this function does nothing.</p>
+<p>This function only works for top-level items (i.e. items with no DrawingItem::parent()). If no such items are selected, this function does nothing.</p>
 <p>The reordering operation is only performed if the <a class="el" href="class_drawing_view.html#a5280523d1892b03e7f49f6cb5f2033c5" title="Returns the view&#39;s current operating mode.">mode()</a> is <a class="el" href="class_drawing_view.html#a829956a2d6ea8f3fe9ca0e7bef09d327a4f93908635c890f90741e48794ca8f3e" title="The normal mode for interacting with items in a DrawingView.">DefaultMode</a>. If the <a class="el" href="class_drawing_view.html#a5280523d1892b03e7f49f6cb5f2033c5" title="Returns the view&#39;s current operating mode.">mode()</a> is any other mode, this function does nothing.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_view.html#ad1f5b5e198f24e293e71ff7454575b88" title="Sends each selected item backward in the scene&#39;s stacking order.">sendBackward()</a>, <a class="el" href="class_drawing_view.html#ad3c684fc3c9499dccf407a7f6ae6446c" title="Brings all of the selected items to the front of the scene&#39;s stacking order.">bringToFront()</a>, <a class="el" href="class_drawing_view.html#a4dd1c0901c1ce74287042bdd3e1b7d5d" title="Sends all of the selected items to the back of the scene&#39;s stacking order.">sendToBack()</a> </dd></dl>
 
@@ -478,7 +474,7 @@ Undo Support</h1>
 
 <p>Brings all of the selected items to the front of the scene's stacking order. </p>
 <p>If no items are selected, this function does nothing.</p>
-<p>This function only works for top-level items (i.e. items with no <a class="el" href="class_drawing_item.html#a478ce32c7c22ae84b217a03189d3812e" title="Returns the item&#39;s parent, or nullptr if the item has no parent.">DrawingItem::parent()</a>). If no such items are selected, this function does nothing.</p>
+<p>This function only works for top-level items (i.e. items with no DrawingItem::parent()). If no such items are selected, this function does nothing.</p>
 <p>The reordering operation is only performed if the <a class="el" href="class_drawing_view.html#a5280523d1892b03e7f49f6cb5f2033c5" title="Returns the view&#39;s current operating mode.">mode()</a> is <a class="el" href="class_drawing_view.html#a829956a2d6ea8f3fe9ca0e7bef09d327a4f93908635c890f90741e48794ca8f3e" title="The normal mode for interacting with items in a DrawingView.">DefaultMode</a>. If the <a class="el" href="class_drawing_view.html#a5280523d1892b03e7f49f6cb5f2033c5" title="Returns the view&#39;s current operating mode.">mode()</a> is any other mode, this function does nothing.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_view.html#a77c87b27cbfd12f83685fe260c92c912" title="Brings each selected item forward in the scene&#39;s stacking order.">bringForward()</a>, <a class="el" href="class_drawing_view.html#ad1f5b5e198f24e293e71ff7454575b88" title="Sends each selected item backward in the scene&#39;s stacking order.">sendBackward()</a>, <a class="el" href="class_drawing_view.html#a4dd1c0901c1ce74287042bdd3e1b7d5d" title="Sends all of the selected items to the back of the scene&#39;s stacking order.">sendToBack()</a> </dd></dl>
 
@@ -1061,7 +1057,7 @@ Undo Support</h1>
 <p>Combines all selected items into a new <a class="el" href="class_drawing_item_group.html" title="Provides a group item that can be added to a DrawingScene.">DrawingItemGroup</a> and adds it to the scene. </p>
 <p>This function emits the <a class="el" href="class_drawing_view.html#a4c78c6f2b83407cdb12ed9d5a357d63b" title="Emitted whenever the number of items in the scene changes.">numberOfItemsChanged()</a> signal after the group operation is complete.</p>
 <p>More than one item must be selected; if one or zero items are selected, this function does nothing.</p>
-<p>This function only works for top-level items (i.e. items with no <a class="el" href="class_drawing_item.html#a478ce32c7c22ae84b217a03189d3812e" title="Returns the item&#39;s parent, or nullptr if the item has no parent.">DrawingItem::parent()</a>). If no such items are selected, this function does nothing.</p>
+<p>This function only works for top-level items (i.e. items with no DrawingItem::parent()). If no such items are selected, this function does nothing.</p>
 <p>The group operation is only performed if the <a class="el" href="class_drawing_view.html#a5280523d1892b03e7f49f6cb5f2033c5" title="Returns the view&#39;s current operating mode.">mode()</a> is <a class="el" href="class_drawing_view.html#a829956a2d6ea8f3fe9ca0e7bef09d327a4f93908635c890f90741e48794ca8f3e" title="The normal mode for interacting with items in a DrawingView.">DefaultMode</a>. If the <a class="el" href="class_drawing_view.html#a5280523d1892b03e7f49f6cb5f2033c5" title="Returns the view&#39;s current operating mode.">mode()</a> is any other mode, this function does nothing.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_view.html#ae29307523e5978a18d518120150d7899" title="Removes an existing DrawingItemPoint from an item at the specified position.">removeItemPoint()</a> </dd></dl>
 
@@ -1255,66 +1251,6 @@ Undo Support</h1>
 <p>Emitted whenever any items' visibility changes. </p>
 <p>This signal is emitted whenever the user changes the visibility of items, which could happen using <a class="el" href="class_drawing_view.html#a2da548f3956173e5189b543121731905" title="Deletes the selected items from the scene.">deleteSelection()</a> for items that are not top-level items in the scene.</p>
 <p>This signal is not emitted when using functions in <a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a> to directly manipulate the visibility of the item. </p>
-
-</div>
-</div>
-<a id="a32b3c58f387f0f56a58b98db2fa52f83"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a32b3c58f387f0f56a58b98db2fa52f83">&#9670;&nbsp;</a></span>keyPressEvent()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void DrawingView::keyPressEvent </td>
-          <td>(</td>
-          <td class="paramtype">QKeyEvent *&#160;</td>
-          <td class="paramname"><em>event</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Handles key press events for the view. </p>
-<p>The default implementation forwards the key press event to the current <a class="el" href="class_drawing_view.html#aef470f3e948ef879a5af545e0ef32bbf" title="Returns the view&#39;s focus item, or nullptr if no focus item is set.">focusItem()</a>.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_view.html#a1c5070f95a0cb5721bbc7b359c1d604b" title="Handles key release events for the view.">keyReleaseEvent()</a> </dd></dl>
-
-</div>
-</div>
-<a id="a1c5070f95a0cb5721bbc7b359c1d604b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1c5070f95a0cb5721bbc7b359c1d604b">&#9670;&nbsp;</a></span>keyReleaseEvent()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void DrawingView::keyReleaseEvent </td>
-          <td>(</td>
-          <td class="paramtype">QKeyEvent *&#160;</td>
-          <td class="paramname"><em>event</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Handles key release events for the view. </p>
-<p>The default implementation forwards the key release event to the current <a class="el" href="class_drawing_view.html#aef470f3e948ef879a5af545e0ef32bbf" title="Returns the view&#39;s focus item, or nullptr if no focus item is set.">focusItem()</a>.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_view.html#a32b3c58f387f0f56a58b98db2fa52f83" title="Handles key press events for the view.">keyPressEvent()</a> </dd></dl>
 
 </div>
 </div>
@@ -2486,7 +2422,7 @@ Undo Support</h1>
 
 <p>Sends each selected item backward in the scene's stacking order. </p>
 <p>If no items are selected, this function does nothing.</p>
-<p>This function only works for top-level items (i.e. items with no <a class="el" href="class_drawing_item.html#a478ce32c7c22ae84b217a03189d3812e" title="Returns the item&#39;s parent, or nullptr if the item has no parent.">DrawingItem::parent()</a>). If no such items are selected, this function does nothing.</p>
+<p>This function only works for top-level items (i.e. items with no DrawingItem::parent()). If no such items are selected, this function does nothing.</p>
 <p>The reordering operation is only performed if the <a class="el" href="class_drawing_view.html#a5280523d1892b03e7f49f6cb5f2033c5" title="Returns the view&#39;s current operating mode.">mode()</a> is <a class="el" href="class_drawing_view.html#a829956a2d6ea8f3fe9ca0e7bef09d327a4f93908635c890f90741e48794ca8f3e" title="The normal mode for interacting with items in a DrawingView.">DefaultMode</a>. If the <a class="el" href="class_drawing_view.html#a5280523d1892b03e7f49f6cb5f2033c5" title="Returns the view&#39;s current operating mode.">mode()</a> is any other mode, this function does nothing.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_view.html#a77c87b27cbfd12f83685fe260c92c912" title="Brings each selected item forward in the scene&#39;s stacking order.">bringForward()</a>, <a class="el" href="class_drawing_view.html#ad3c684fc3c9499dccf407a7f6ae6446c" title="Brings all of the selected items to the front of the scene&#39;s stacking order.">bringToFront()</a>, <a class="el" href="class_drawing_view.html#a4dd1c0901c1ce74287042bdd3e1b7d5d" title="Sends all of the selected items to the back of the scene&#39;s stacking order.">sendToBack()</a> </dd></dl>
 
@@ -2517,7 +2453,7 @@ Undo Support</h1>
 
 <p>Sends all of the selected items to the back of the scene's stacking order. </p>
 <p>If no items are selected, this function does nothing.</p>
-<p>This function only works for top-level items (i.e. items with no <a class="el" href="class_drawing_item.html#a478ce32c7c22ae84b217a03189d3812e" title="Returns the item&#39;s parent, or nullptr if the item has no parent.">DrawingItem::parent()</a>). If no such items are selected, this function does nothing.</p>
+<p>This function only works for top-level items (i.e. items with no DrawingItem::parent()). If no such items are selected, this function does nothing.</p>
 <p>The reordering operation is only performed if the <a class="el" href="class_drawing_view.html#a5280523d1892b03e7f49f6cb5f2033c5" title="Returns the view&#39;s current operating mode.">mode()</a> is <a class="el" href="class_drawing_view.html#a829956a2d6ea8f3fe9ca0e7bef09d327a4f93908635c890f90741e48794ca8f3e" title="The normal mode for interacting with items in a DrawingView.">DefaultMode</a>. If the <a class="el" href="class_drawing_view.html#a5280523d1892b03e7f49f6cb5f2033c5" title="Returns the view&#39;s current operating mode.">mode()</a> is any other mode, this function does nothing.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_view.html#a77c87b27cbfd12f83685fe260c92c912" title="Brings each selected item forward in the scene&#39;s stacking order.">bringForward()</a>, <a class="el" href="class_drawing_view.html#ad1f5b5e198f24e293e71ff7454575b88" title="Sends each selected item backward in the scene&#39;s stacking order.">sendBackward()</a>, <a class="el" href="class_drawing_view.html#ad3c684fc3c9499dccf407a7f6ae6446c" title="Brings all of the selected items to the front of the scene&#39;s stacking order.">bringToFront()</a> </dd></dl>
 

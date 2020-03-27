@@ -217,7 +217,7 @@ public:
 	 *
 	 * \sa removeConnection(), connections()
 	 */
-	void addConnection(DrawingItemPoint* itemPoint);
+	void addConnection(DrawingItemPoint* point);
 
 	/*! \brief Breaks a connection between two item points.
 	 *
@@ -226,7 +226,7 @@ public:
 	 *
 	 * \sa addConnection(), clearConnections()
 	 */
-	void removeConnection(DrawingItemPoint* itemPoint);
+	void removeConnection(DrawingItemPoint* point);
 
 	/*! \brief Breaks all connections with any other item points.
 	 *
@@ -252,7 +252,7 @@ public:
 	 *
 	 * \sa connections()
 	 */
-	bool isConnected(DrawingItemPoint* itemPoint) const;
+	bool isConnected(DrawingItemPoint* point) const;
 
 	/*! \brief Returns true if a connection exists between this point and the specified item
 	 * through any of its item points, false otherwise.

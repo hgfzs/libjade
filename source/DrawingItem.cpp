@@ -20,15 +20,12 @@
 
 #include "DrawingItem.h"
 #include "DrawingItemPoint.h"
-#include "DrawingItemStyle.h"
 
 DrawingItem::DrawingItem()
 {
 	mScene = nullptr;
 
-	mFlags = (CanMove | CanResize | CanRotate | CanFlip | CanSelect);
-
-	mStyle = new DrawingItemStyle();
+	mFlags = (CanMove | CanResize | CanRotate | CanFlip | CanSelect | CanDelete);
 
 	mSelected = false;
 	mVisible = true;
@@ -43,10 +40,11 @@ DrawingItem::DrawingItem(const DrawingItem& item)
 	mTransformInverse = item.mTransformInverse;
 	mFlags = item.mFlags;
 
-	mStyle = new DrawingItemStyle(*item.mStyle);
-
-	for(auto pointIter = item.mPoints.begin(), pointEnd = item.mPoints.end(); pointIter != pointEnd; pointIter++)
+	for(auto pointIter = item.mPoints.begin(), pointEnd = item.mPoints.end();
+		pointIter != pointEnd; pointIter++)
+	{
 		addPoint(new DrawingItemPoint(**pointIter));
+	}
 
 	mSelected = false;
 	mVisible = true;
@@ -55,7 +53,6 @@ DrawingItem::DrawingItem(const DrawingItem& item)
 DrawingItem::~DrawingItem()
 {
 	clearPoints();
-	delete mStyle;
 	mScene = nullptr;
 }
 
@@ -138,59 +135,42 @@ DrawingItem::Flags DrawingItem::flags() const
 
 //==================================================================================================
 
-void DrawingItem::setStyle(DrawingItemStyle* style)
+void DrawingItem::addPoint(DrawingItemPoint* point)
 {
-	if (style)
+	if (point && point->mItem == nullptr)
 	{
-		delete mStyle;
-		mStyle = style;
+		mPoints.append(point);
+		point->mItem = this;
 	}
 }
 
-DrawingItemStyle* DrawingItem::style() const
+void DrawingItem::insertPoint(int index, DrawingItemPoint* point)
 {
-	return mStyle;
-}
-
-//==================================================================================================
-
-void DrawingItem::addPoint(DrawingItemPoint* itemPoint)
-{
-	if (itemPoint && itemPoint->mItem == nullptr)
+	if (point && point->mItem == nullptr)
 	{
-		mPoints.append(itemPoint);
-		itemPoint->mItem = this;
+		mPoints.insert(index, point);
+		point->mItem = this;
 	}
 }
 
-void DrawingItem::insertPoint(int index, DrawingItemPoint* itemPoint)
+void DrawingItem::removePoint(DrawingItemPoint* point)
 {
-	if (itemPoint && itemPoint->mItem == nullptr)
+	if (point && point->mItem == this)
 	{
-		mPoints.insert(index, itemPoint);
-		itemPoint->mItem = this;
-	}
-}
-
-void DrawingItem::removePoint(DrawingItemPoint* itemPoint)
-{
-	if (itemPoint && itemPoint->mItem == this)
-	{
-		mPoints.removeAll(itemPoint);
-		itemPoint->mItem = nullptr;
+		mPoints.removeAll(point);
+		point->mItem = nullptr;
 	}
 }
 
 void DrawingItem::clearPoints()
 {
-	DrawingItemPoint* itemPoint = nullptr;
+	DrawingItemPoint* point = nullptr;
 
 	while (!mPoints.empty())
 	{
-		itemPoint = mPoints.first();
-		removePoint(itemPoint);
-		delete itemPoint;
-		itemPoint = nullptr;
+		point = mPoints.first();
+		removePoint(point);
+		delete point;
 	}
 }
 
@@ -201,81 +181,82 @@ QList<DrawingItemPoint*> DrawingItem::points() const
 
 //==================================================================================================
 
-DrawingItemPoint* DrawingItem::pointAt(const QPointF& itemPos) const
+DrawingItemPoint* DrawingItem::pointAt(const QPointF& pos) const
 {
-	DrawingItemPoint* itemPoint = nullptr;
+	DrawingItemPoint* point = nullptr;
 
 	QList<DrawingItemPoint*> itemPoints = points();
-	for(auto pointIter = itemPoints.begin(); itemPoint == nullptr && pointIter != itemPoints.end(); pointIter++)
+	for(auto pointIter = itemPoints.begin();
+		point == nullptr && pointIter != itemPoints.end(); pointIter++)
 	{
-		if (itemPos == (*pointIter)->position()) itemPoint = *pointIter;
+		if (pos == (*pointIter)->position()) point = *pointIter;
 	}
 
-	return itemPoint;
+	return point;
 }
 
-DrawingItemPoint* DrawingItem::pointNearest(const QPointF& itemPos) const
+DrawingItemPoint* DrawingItem::pointNearest(const QPointF& pos) const
 {
-	DrawingItemPoint *itemPoint = nullptr;
+	DrawingItemPoint *point = nullptr;
 
 	QList<DrawingItemPoint*> itemPoints = points();
 	if (!itemPoints.isEmpty())
 	{
-		itemPoint = itemPoints.first();
+		point = itemPoints.first();
 
-		QPointF vec = (itemPoint->position() - itemPos);
+		QPointF vec = (point->position() - pos);
 		qreal minimumDistanceSq = vec.x() * vec.x() + vec.y() * vec.y();
 		qreal distanceSq;
 
 		for(auto pointIter = itemPoints.begin() + 1; pointIter != itemPoints.end(); pointIter++)
 		{
-			vec = ((*pointIter)->position() - itemPos);
+			vec = ((*pointIter)->position() - pos);
 			distanceSq = vec.x() * vec.x() + vec.y() * vec.y();
 
 			if (distanceSq < minimumDistanceSq)
 			{
-				itemPoint = *pointIter;
+				point = *pointIter;
 				minimumDistanceSq = distanceSq;
 			}
 		}
 	}
 
-	return itemPoint;
+	return point;
 }
 
-DrawingItemPoint* DrawingItem::itemPointToInsert(const QPointF& itemPos, int& index)
+DrawingItemPoint* DrawingItem::itemPointToInsert(const QPointF& pos, int& index)
 {
-	Q_UNUSED(itemPos)
+	Q_UNUSED(pos)
 	Q_UNUSED(index)
 	return nullptr;
 }
 
-DrawingItemPoint* DrawingItem::itemPointToRemove(const QPointF& itemPos)
+DrawingItemPoint* DrawingItem::itemPointToRemove(const QPointF& pos)
 {
-	Q_UNUSED(itemPos)
+	Q_UNUSED(pos)
 	return nullptr;
 }
 
 //==================================================================================================
-
-void DrawingItem::setVisible(bool visible)
-{
-	mVisible = visible;
-}
 
 void DrawingItem::setSelected(bool selected)
 {
 	mSelected = selected;
 }
 
-bool DrawingItem::isVisible() const
+void DrawingItem::setVisible(bool visible)
 {
-	return mVisible;
+	mVisible = visible;
 }
 
 bool DrawingItem::isSelected() const
 {
 	return mSelected;
+}
+
+bool DrawingItem::isVisible() const
+{
+	return mVisible;
 }
 
 //==================================================================================================
@@ -330,6 +311,18 @@ QPainterPath DrawingItem::mapToScene(const QPainterPath& path) const
 
 //==================================================================================================
 
+void DrawingItem::setProperties(const QHash<QString,QVariant>& properties)
+{
+	Q_UNUSED(properties)
+}
+
+QHash<QString,QVariant> DrawingItem::properties() const
+{
+	return QHash<QString,QVariant>();
+}
+
+//==================================================================================================
+
 QPainterPath DrawingItem::shape() const
 {
 	QPainterPath path;
@@ -349,16 +342,16 @@ bool DrawingItem::isValid() const
 
 //==================================================================================================
 
-void DrawingItem::move(const QPointF& scenePos)
+void DrawingItem::move(const QPointF& pos)
 {
-	mPosition = scenePos;
+	mPosition = pos;
 }
 
-void DrawingItem::resize(DrawingItemPoint* itemPoint, const QPointF& scenePos)
+void DrawingItem::resize(DrawingItemPoint* point, const QPointF& pos)
 {
-	if (itemPoint)
+	if (point)
 	{
-		itemPoint->setPosition(mapFromScene(scenePos));
+		point->setPosition(mapFromScene(pos));
 
 		// Adjust position of item and item points so that point(0)->position() == QPointF(0, 0)
 		QPointF deltaPos = -mPoints.first()->position();
@@ -371,44 +364,44 @@ void DrawingItem::resize(DrawingItemPoint* itemPoint, const QPointF& scenePos)
 	}
 }
 
-void DrawingItem::rotate(const QPointF& scenePos)
+void DrawingItem::rotate(const QPointF& pos)
 {
-	QPointF difference(mPosition - scenePos);
+	QPointF difference(mPosition - pos);
 
 	// Calculate new position of reference point
-	mPosition = QPointF(scenePos.x() + difference.y(), scenePos.y() - difference.x());
+	mPosition = QPointF(pos.x() + difference.y(), pos.y() - difference.x());
 
 	// Update orientation
 	mTransform.rotate(90);
 	mTransformInverse = mTransform.inverted();
 }
 
-void DrawingItem::rotateBack(const QPointF& scenePos)
+void DrawingItem::rotateBack(const QPointF& pos)
 {
-	QPointF difference(mPosition - scenePos);
+	QPointF difference(mPosition - pos);
 
 	// Calculate new position of reference point
-	mPosition = QPointF(scenePos.x() - difference.y(), scenePos.y() + difference.x());
+	mPosition = QPointF(pos.x() - difference.y(), pos.y() + difference.x());
 
 	// Update orientation
 	mTransform.rotate(-90);
 	mTransformInverse = mTransform.inverted();
 }
 
-void DrawingItem::flipHorizontal(const QPointF& scenePos)
+void DrawingItem::flipHorizontal(const QPointF& pos)
 {
 	// Calculate new position of reference point
-	mPosition.setX(2 * scenePos.x() - mPosition.x());
+	mPosition.setX(2 * pos.x() - mPosition.x());
 
 	// Update orientation
 	mTransform.scale(-1, 1);
 	mTransformInverse = mTransform.inverted();
 }
 
-void DrawingItem::flipVertical(const QPointF& scenePos)
+void DrawingItem::flipVertical(const QPointF& pos)
 {
 	// Calculate new position of reference point
-	mPosition.setY(2 * scenePos.y() - mPosition.y());
+	mPosition.setY(2 * pos.y() - mPosition.y());
 
 	// Update orientation
 	mTransform.scale(1, -1);
@@ -462,7 +455,8 @@ QList<DrawingItem*> DrawingItem::copyItems(const QList<DrawingItem*>& items)
 		for(int pointIndex = 0; pointIndex < itemPoints.size(); pointIndex++)
 		{
 			targetPoints = itemPoints[pointIndex]->connections();
-			for(auto targetIter = targetPoints.begin(); targetIter != targetPoints.end(); targetIter++)
+			for(auto targetIter = targetPoints.begin();
+				targetIter != targetPoints.end(); targetIter++)
 			{
 				targetItem = (*targetIter)->item();
 				if (items.contains(targetItem))

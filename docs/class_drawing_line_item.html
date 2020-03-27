@@ -40,7 +40,6 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="class_drawing_line_item-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">DrawingLineItem Class Reference</div>  </div>
@@ -69,6 +68,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a0be76575b2d3b92ae5f28a6de20ce285"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7763a930ed9d3604b1540db70374fd11"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_line_item.html#a7763a930ed9d3604b1540db70374fd11">render</a> (QPainter *painter)</td></tr>
 <tr class="separator:a7763a930ed9d3604b1540db70374fd11"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ab28892a617e4c755206b7277b5fa54"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_line_item.html#a0ab28892a617e4c755206b7277b5fa54">resize</a> (<a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *itemPoint, const QPointF &amp;parentPos)</td></tr>
+<tr class="separator:a0ab28892a617e4c755206b7277b5fa54"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9f7f4cd0519b6f2bc202a9e621dc8551"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_line_item.html#a9f7f4cd0519b6f2bc202a9e621dc8551">setLine</a> (const QLineF &amp;<a class="el" href="class_drawing_line_item.html#a0be76575b2d3b92ae5f28a6de20ce285">line</a>)</td></tr>
 <tr class="separator:a9f7f4cd0519b6f2bc202a9e621dc8551"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6848a88e9cf5f8218b6ee4525d41aa03"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_line_item.html#a6848a88e9cf5f8218b6ee4525d41aa03">setLine</a> (qreal x1, qreal y1, qreal x2, qreal y2)</td></tr>
@@ -83,40 +84,28 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8d0c8fa8420e3aa3a69a301ecb6fc308 inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top"><a id="a8d0c8fa8420e3aa3a69a301ecb6fc308"></a>
 virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a8d0c8fa8420e3aa3a69a301ecb6fc308">~DrawingItem</a> ()</td></tr>
 <tr class="separator:a8d0c8fa8420e3aa3a69a301ecb6fc308 inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab59d559cd81cd47ae72a5cff80806540 inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#ab59d559cd81cd47ae72a5cff80806540">addChild</a> (<a class="el" href="class_drawing_item.html">DrawingItem</a> *item)</td></tr>
-<tr class="separator:ab59d559cd81cd47ae72a5cff80806540 inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad6da55995aa2415ff77858be465ce1f4 inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#ad6da55995aa2415ff77858be465ce1f4">addPoint</a> (<a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *itemPoint)</td></tr>
-<tr class="separator:ad6da55995aa2415ff77858be465ce1f4 inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a91c239ff70767b77694b19914f25f57f inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a91c239ff70767b77694b19914f25f57f">addPoint</a> (<a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *point)</td></tr>
+<tr class="separator:a91c239ff70767b77694b19914f25f57f inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abd3df43ae85daadc4b0af0947da497f5 inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">virtual QPointF&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#abd3df43ae85daadc4b0af0947da497f5">centerPos</a> () const</td></tr>
 <tr class="separator:abd3df43ae85daadc4b0af0947da497f5 inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8f44e8531ab44d5d6b5a137c4b5cdfc6 inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">QList&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a8f44e8531ab44d5d6b5a137c4b5cdfc6">children</a> () const</td></tr>
-<tr class="separator:a8f44e8531ab44d5d6b5a137c4b5cdfc6 inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a763f54616a3a9d359dfa10dc1284739a inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a763f54616a3a9d359dfa10dc1284739a">clearChildren</a> ()</td></tr>
-<tr class="separator:a763f54616a3a9d359dfa10dc1284739a inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a206c414a4dfaa4658397d06ba21c2e71 inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a206c414a4dfaa4658397d06ba21c2e71">clearPoints</a> ()</td></tr>
 <tr class="separator:a206c414a4dfaa4658397d06ba21c2e71 inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a817a54e0af5105045d009024b21a00ac inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">Flags&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a817a54e0af5105045d009024b21a00ac">flags</a> () const</td></tr>
+<tr class="memitem:a817a54e0af5105045d009024b21a00ac inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_drawing_item.html#ac325ca8f325d5b8d05a6be05593305bd">Flags</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a817a54e0af5105045d009024b21a00ac">flags</a> () const</td></tr>
 <tr class="separator:a817a54e0af5105045d009024b21a00ac inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9cd2d7320485882627b365606b9e0bd7 inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a9cd2d7320485882627b365606b9e0bd7">insertChild</a> (int index, <a class="el" href="class_drawing_item.html">DrawingItem</a> *item)</td></tr>
-<tr class="separator:a9cd2d7320485882627b365606b9e0bd7 inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abe9cb445431a70fa976dd5f9a986a97f inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#abe9cb445431a70fa976dd5f9a986a97f">insertPoint</a> (int index, <a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *itemPoint)</td></tr>
-<tr class="separator:abe9cb445431a70fa976dd5f9a986a97f inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb2aac8fe63b6ed6f55c67b2ad098b5f inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#aeb2aac8fe63b6ed6f55c67b2ad098b5f">flipHorizontal</a> (const QPointF &amp;pos)</td></tr>
+<tr class="separator:aeb2aac8fe63b6ed6f55c67b2ad098b5f inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef995113a07ea8651fa20011a4f047fc inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#aef995113a07ea8651fa20011a4f047fc">flipVertical</a> (const QPointF &amp;pos)</td></tr>
+<tr class="separator:aef995113a07ea8651fa20011a4f047fc inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b62f045eba710bcb47ef282d6e2cb6f inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a7b62f045eba710bcb47ef282d6e2cb6f">insertPoint</a> (int index, <a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *point)</td></tr>
+<tr class="separator:a7b62f045eba710bcb47ef282d6e2cb6f inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad24d4066644656f57d0ddb2ab276307e inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#ad24d4066644656f57d0ddb2ab276307e">isSelected</a> () const</td></tr>
 <tr class="separator:ad24d4066644656f57d0ddb2ab276307e inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad977ebfb76c9693e7b9e8da6086ca216 inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#ad977ebfb76c9693e7b9e8da6086ca216">isVisible</a> () const</td></tr>
 <tr class="separator:ad977ebfb76c9693e7b9e8da6086ca216 inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2c0ae05e921e63275b105177edac7365 inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a2c0ae05e921e63275b105177edac7365">itemPointToInsert</a> (const QPointF &amp;itemPos, int &amp;index)</td></tr>
-<tr class="separator:a2c0ae05e921e63275b105177edac7365 inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aae42e097461eef61b78f296e2f14be7f inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#aae42e097461eef61b78f296e2f14be7f">itemPointToRemove</a> (const QPointF &amp;itemPos)</td></tr>
-<tr class="separator:aae42e097461eef61b78f296e2f14be7f inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af1de3d9a05873a773479e761ca2a1d94 inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">QPainterPath&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#af1de3d9a05873a773479e761ca2a1d94">mapFromParent</a> (const QPainterPath &amp;path) const</td></tr>
-<tr class="separator:af1de3d9a05873a773479e761ca2a1d94 inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a35b31eedcf84acdcc70ab982d9f11f44 inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">QPointF&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a35b31eedcf84acdcc70ab982d9f11f44">mapFromParent</a> (const QPointF &amp;point) const</td></tr>
-<tr class="separator:a35b31eedcf84acdcc70ab982d9f11f44 inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3d8549e2eae28abfaec69f74b60befae inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">QPolygonF&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a3d8549e2eae28abfaec69f74b60befae">mapFromParent</a> (const QPolygonF &amp;polygon) const</td></tr>
-<tr class="separator:a3d8549e2eae28abfaec69f74b60befae inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adf483fdb74a22587e2f7b8f473f37da4 inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">QPolygonF&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#adf483fdb74a22587e2f7b8f473f37da4">mapFromParent</a> (const QRectF &amp;rect) const</td></tr>
-<tr class="separator:adf483fdb74a22587e2f7b8f473f37da4 inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8e9ed50f1e7a20d49dc0ea005e4abc7 inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#af8e9ed50f1e7a20d49dc0ea005e4abc7">itemPointToInsert</a> (const QPointF &amp;pos, int &amp;index)</td></tr>
+<tr class="separator:af8e9ed50f1e7a20d49dc0ea005e4abc7 inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a688d10ac5e0ffc8bab6c43c5ff001ef3 inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a688d10ac5e0ffc8bab6c43c5ff001ef3">itemPointToRemove</a> (const QPointF &amp;pos)</td></tr>
+<tr class="separator:a688d10ac5e0ffc8bab6c43c5ff001ef3 inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4541e39830ee616339c8962efb8eb00b inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">QPainterPath&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a4541e39830ee616339c8962efb8eb00b">mapFromScene</a> (const QPainterPath &amp;path) const</td></tr>
 <tr class="separator:a4541e39830ee616339c8962efb8eb00b inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a250cb69998cf177c1d0c2d26897df2ed inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">QPointF&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a250cb69998cf177c1d0c2d26897df2ed">mapFromScene</a> (const QPointF &amp;point) const</td></tr>
@@ -125,14 +114,6 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <tr class="separator:a9d34b204c452490697d8d160636a6ad1 inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a57ee775689c72f8c9d2d52f25dcdbc59 inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">QPolygonF&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a57ee775689c72f8c9d2d52f25dcdbc59">mapFromScene</a> (const QRectF &amp;rect) const</td></tr>
 <tr class="separator:a57ee775689c72f8c9d2d52f25dcdbc59 inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a86b50ab2e78e9de3b7214e83d3d534d5 inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">QPainterPath&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a86b50ab2e78e9de3b7214e83d3d534d5">mapToParent</a> (const QPainterPath &amp;path) const</td></tr>
-<tr class="separator:a86b50ab2e78e9de3b7214e83d3d534d5 inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a00f9285c9075d944d3032e98d30c0772 inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">QPointF&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a00f9285c9075d944d3032e98d30c0772">mapToParent</a> (const QPointF &amp;point) const</td></tr>
-<tr class="separator:a00f9285c9075d944d3032e98d30c0772 inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a17d77246908cb138a5d1c704955d691c inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">QPolygonF&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a17d77246908cb138a5d1c704955d691c">mapToParent</a> (const QPolygonF &amp;polygon) const</td></tr>
-<tr class="separator:a17d77246908cb138a5d1c704955d691c inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad0eb21095da52008c3577041e7e4ba1d inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">QPolygonF&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#ad0eb21095da52008c3577041e7e4ba1d">mapToParent</a> (const QRectF &amp;rect) const</td></tr>
-<tr class="separator:ad0eb21095da52008c3577041e7e4ba1d inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aff973a0f74a748aea706b92ab5ab1a3d inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">QPainterPath&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#aff973a0f74a748aea706b92ab5ab1a3d">mapToScene</a> (const QPainterPath &amp;path) const</td></tr>
 <tr class="separator:aff973a0f74a748aea706b92ab5ab1a3d inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa396271882e6c7cd200b098482823f44 inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">QPointF&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#aa396271882e6c7cd200b098482823f44">mapToScene</a> (const QPointF &amp;point) const</td></tr>
@@ -141,32 +122,36 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <tr class="separator:a23a07455b8a5d49d313af51b5493f5b3 inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aff50a38322946a012545a698972a91f2 inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">QPolygonF&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#aff50a38322946a012545a698972a91f2">mapToScene</a> (const QRectF &amp;rect) const</td></tr>
 <tr class="separator:aff50a38322946a012545a698972a91f2 inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a478ce32c7c22ae84b217a03189d3812e inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_drawing_item.html">DrawingItem</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a478ce32c7c22ae84b217a03189d3812e">parent</a> () const</td></tr>
-<tr class="separator:a478ce32c7c22ae84b217a03189d3812e inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a83cc5401e42241c4115d3af71a06630b inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a83cc5401e42241c4115d3af71a06630b">pointAt</a> (const QPointF &amp;itemPos) const</td></tr>
-<tr class="separator:a83cc5401e42241c4115d3af71a06630b inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa9a4672cd728633945f970ba2fc2a363 inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#aa9a4672cd728633945f970ba2fc2a363">pointNearest</a> (const QPointF &amp;itemPos) const</td></tr>
-<tr class="separator:aa9a4672cd728633945f970ba2fc2a363 inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d8204cb39cfbbbf17c19e72c45cf2a1 inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a5d8204cb39cfbbbf17c19e72c45cf2a1">move</a> (const QPointF &amp;pos)</td></tr>
+<tr class="separator:a5d8204cb39cfbbbf17c19e72c45cf2a1 inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a085131ea628dde24f44fcaa219876c53 inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a085131ea628dde24f44fcaa219876c53">pointAt</a> (const QPointF &amp;pos) const</td></tr>
+<tr class="separator:a085131ea628dde24f44fcaa219876c53 inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38b330dec49c707223ba3cc7b7dadb8e inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a38b330dec49c707223ba3cc7b7dadb8e">pointNearest</a> (const QPointF &amp;pos) const</td></tr>
+<tr class="separator:a38b330dec49c707223ba3cc7b7dadb8e inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4690075ae05f5c26a8b2cd587d63e9eb inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">QList&lt; <a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a4690075ae05f5c26a8b2cd587d63e9eb">points</a> () const</td></tr>
 <tr class="separator:a4690075ae05f5c26a8b2cd587d63e9eb inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4897ffe099b9ba3f8d69f202b1ac640b inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">QPointF&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a4897ffe099b9ba3f8d69f202b1ac640b">position</a> () const</td></tr>
 <tr class="separator:a4897ffe099b9ba3f8d69f202b1ac640b inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa6ca8aa788511ba59980299bc5965fa1 inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#aa6ca8aa788511ba59980299bc5965fa1">removeChild</a> (<a class="el" href="class_drawing_item.html">DrawingItem</a> *item)</td></tr>
-<tr class="separator:aa6ca8aa788511ba59980299bc5965fa1 inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a765010de46e8913db1df92ecd708a02b inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a765010de46e8913db1df92ecd708a02b">removePoint</a> (<a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *itemPoint)</td></tr>
-<tr class="separator:a765010de46e8913db1df92ecd708a02b inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85ca345f943fdbc53c8ff849321b698b inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">virtual QHash&lt; QString, QVariant &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a85ca345f943fdbc53c8ff849321b698b">properties</a> () const</td></tr>
+<tr class="separator:a85ca345f943fdbc53c8ff849321b698b inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae8f3499b174276e72b710d30287645d6 inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#ae8f3499b174276e72b710d30287645d6">removePoint</a> (<a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *point)</td></tr>
+<tr class="separator:ae8f3499b174276e72b710d30287645d6 inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b848aaa250dc6f75d39ddd6bfc798a0 inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a5b848aaa250dc6f75d39ddd6bfc798a0">rotate</a> (const QPointF &amp;pos)</td></tr>
+<tr class="separator:a5b848aaa250dc6f75d39ddd6bfc798a0 inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e38257600cac7e6867efb50b59044ec inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a7e38257600cac7e6867efb50b59044ec">rotateBack</a> (const QPointF &amp;pos)</td></tr>
+<tr class="separator:a7e38257600cac7e6867efb50b59044ec inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a24542b301dfd68802b5c8df5b1c1b03a inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_drawing_scene.html">DrawingScene</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a24542b301dfd68802b5c8df5b1c1b03a">scene</a> () const</td></tr>
 <tr class="separator:a24542b301dfd68802b5c8df5b1c1b03a inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a508f5aace4e4f65fe63b3d1641d6502e inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a508f5aace4e4f65fe63b3d1641d6502e">setFlags</a> (Flags <a class="el" href="class_drawing_item.html#a817a54e0af5105045d009024b21a00ac">flags</a>)</td></tr>
+<tr class="memitem:a508f5aace4e4f65fe63b3d1641d6502e inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a508f5aace4e4f65fe63b3d1641d6502e">setFlags</a> (<a class="el" href="class_drawing_item.html#ac325ca8f325d5b8d05a6be05593305bd">Flags</a> <a class="el" href="class_drawing_item.html#a817a54e0af5105045d009024b21a00ac">flags</a>)</td></tr>
 <tr class="separator:a508f5aace4e4f65fe63b3d1641d6502e inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac39291f573a34a991c69c800006ed8a9 inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#ac39291f573a34a991c69c800006ed8a9">setPosition</a> (const QPointF &amp;pos)</td></tr>
 <tr class="separator:ac39291f573a34a991c69c800006ed8a9 inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02a0379fcb97385553a007b3d58bf188 inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a02a0379fcb97385553a007b3d58bf188">setPosition</a> (qreal <a class="el" href="class_drawing_item.html#aa8534a6f0254e9705f504d9b849df994">x</a>, qreal <a class="el" href="class_drawing_item.html#a40531bf2e1100db70175ae826e7d63e3">y</a>)</td></tr>
 <tr class="separator:a02a0379fcb97385553a007b3d58bf188 inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab775f7226653f34972da6fa5a21f1c04 inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#ab775f7226653f34972da6fa5a21f1c04">setProperties</a> (const QHash&lt; QString, QVariant &gt; &amp;<a class="el" href="class_drawing_item.html#a85ca345f943fdbc53c8ff849321b698b">properties</a>)</td></tr>
+<tr class="separator:ab775f7226653f34972da6fa5a21f1c04 inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a42372c44de34ca552014dc82e9c41e7a inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a42372c44de34ca552014dc82e9c41e7a">setSelected</a> (bool select)</td></tr>
 <tr class="separator:a42372c44de34ca552014dc82e9c41e7a inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8be6c89cf11d1022a2b1b5344d7edf08 inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a8be6c89cf11d1022a2b1b5344d7edf08">setStyle</a> (<a class="el" href="class_drawing_item_style.html">DrawingItemStyle</a> *<a class="el" href="class_drawing_item.html#a880152c49551149054d0aa2ac07cee31">style</a>)</td></tr>
-<tr class="separator:a8be6c89cf11d1022a2b1b5344d7edf08 inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa1d5d384fbaa5e7c0e94eb6819b203ed inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#aa1d5d384fbaa5e7c0e94eb6819b203ed">setTransform</a> (const QTransform &amp;<a class="el" href="class_drawing_item.html#ae5295e717fcc57ea1e41eb0981e817af">transform</a>, bool combine=false)</td></tr>
 <tr class="separator:aa1d5d384fbaa5e7c0e94eb6819b203ed inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6db3865450d5bb89ca54491b18e0bd4b inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a6db3865450d5bb89ca54491b18e0bd4b">setVisible</a> (bool visible)</td></tr>
@@ -175,8 +160,6 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <tr class="separator:a2751ce64be3f6a7ef167b8d07d2bd255 inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af61e5c4af48c58ca718f99949cf7573c inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#af61e5c4af48c58ca718f99949cf7573c">setY</a> (qreal <a class="el" href="class_drawing_item.html#a40531bf2e1100db70175ae826e7d63e3">y</a>)</td></tr>
 <tr class="separator:af61e5c4af48c58ca718f99949cf7573c inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a880152c49551149054d0aa2ac07cee31 inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_drawing_item_style.html">DrawingItemStyle</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a880152c49551149054d0aa2ac07cee31">style</a> () const</td></tr>
-<tr class="separator:a880152c49551149054d0aa2ac07cee31 inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae5295e717fcc57ea1e41eb0981e817af inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">QTransform&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#ae5295e717fcc57ea1e41eb0981e817af">transform</a> () const</td></tr>
 <tr class="separator:ae5295e717fcc57ea1e41eb0981e817af inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a592cf39e5ec688f2112ba6136cce05e7 inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">QTransform&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a592cf39e5ec688f2112ba6136cce05e7">transformInverted</a> () const</td></tr>
@@ -186,44 +169,26 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <tr class="memitem:a40531bf2e1100db70175ae826e7d63e3 inherit pub_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">qreal&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a40531bf2e1100db70175ae826e7d63e3">y</a> () const</td></tr>
 <tr class="separator:a40531bf2e1100db70175ae826e7d63e3 inherit pub_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
-Protected Member Functions</h2></td></tr>
-<tr class="memitem:a53c3400741b42d259faa1ee06023847d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_line_item.html#a53c3400741b42d259faa1ee06023847d">resizeEvent</a> (<a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *itemPoint, const QPointF &amp;parentPos)</td></tr>
-<tr class="separator:a53c3400741b42d259faa1ee06023847d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pro_methods_class_drawing_item"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_class_drawing_item')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="class_drawing_item.html">DrawingItem</a></td></tr>
-<tr class="memitem:abeb9ec1bfe7099fad04a9d1770c40086 inherit pro_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#abeb9ec1bfe7099fad04a9d1770c40086">flipHorizontalEvent</a> (const QPointF &amp;parentPos)</td></tr>
-<tr class="separator:abeb9ec1bfe7099fad04a9d1770c40086 inherit pro_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2cdaad75d76fc1a71102bdd2bd9ffdf2 inherit pro_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a2cdaad75d76fc1a71102bdd2bd9ffdf2">flipVerticalEvent</a> (const QPointF &amp;parentPos)</td></tr>
-<tr class="separator:a2cdaad75d76fc1a71102bdd2bd9ffdf2 inherit pro_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a21fab700343d0c383a545ff29a5bd80c inherit pro_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a21fab700343d0c383a545ff29a5bd80c">keyPressEvent</a> (QKeyEvent *event)</td></tr>
-<tr class="separator:a21fab700343d0c383a545ff29a5bd80c inherit pro_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a00e9e7f72f165b4d5329fc2ae098d095 inherit pro_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a00e9e7f72f165b4d5329fc2ae098d095">keyReleaseEvent</a> (QKeyEvent *event)</td></tr>
-<tr class="separator:a00e9e7f72f165b4d5329fc2ae098d095 inherit pro_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa971acd6e184397cb021400420de7fd8 inherit pro_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#aa971acd6e184397cb021400420de7fd8">moveEvent</a> (const QPointF &amp;parentPos)</td></tr>
-<tr class="separator:aa971acd6e184397cb021400420de7fd8 inherit pro_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac60915e7dffcc720011fc764d67501bc inherit pro_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#ac60915e7dffcc720011fc764d67501bc">rotateBackEvent</a> (const QPointF &amp;parentPos)</td></tr>
-<tr class="separator:ac60915e7dffcc720011fc764d67501bc inherit pro_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41b9b8fbe5aef12d5fd9ef59a34f71d7 inherit pro_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a41b9b8fbe5aef12d5fd9ef59a34f71d7">rotateEvent</a> (const QPointF &amp;parentPos)</td></tr>
-<tr class="separator:a41b9b8fbe5aef12d5fd9ef59a34f71d7 inherit pro_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pub_types_class_drawing_item"><td colspan="2" onclick="javascript:toggleInherit('pub_types_class_drawing_item')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="class_drawing_item.html">DrawingItem</a></td></tr>
 <tr class="memitem:a7dcef175f26729d5af8e0a815ce63ba8 inherit pub_types_class_drawing_item"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8">Flag</a> { <br />
-&#160;&#160;<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a95a39079caad1648c6072dc5d31bf19b">CanMove</a> = 0x01, 
-<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8ac11487cdd344db23e865fe04a00207a7">CanResize</a> = 0x02, 
-<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a1853e3a339adeec237de605616adc055">CanRotate</a> = 0x04, 
-<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8ac1442db61d2994e29519efc19539901c">CanFlip</a> = 0x08, 
+&#160;&#160;<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a95a39079caad1648c6072dc5d31bf19b">CanMove</a> = 0x0001, 
+<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8ac11487cdd344db23e865fe04a00207a7">CanResize</a> = 0x0002, 
+<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a1853e3a339adeec237de605616adc055">CanRotate</a> = 0x0004, 
+<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8ac1442db61d2994e29519efc19539901c">CanFlip</a> = 0x0008, 
 <br />
-&#160;&#160;<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a0eb4b3d4f6801707ab6f635f0a84581a">CanSelect</a> = 0x10, 
-<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a0fe2476868caa5cbe01dc1872436ae4d">CanInsertPoints</a> = 0x20, 
-<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8acf870023363a32ad64518e395a8faf55">CanRemovePoints</a> = 0x40, 
-<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a16f147948e2219f57620d48431d55deb">PlaceByMousePressAndRelease</a> = 0x1000, 
+&#160;&#160;<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a0eb4b3d4f6801707ab6f635f0a84581a">CanSelect</a> = 0x0010, 
+<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8afab8748101ba82c9bc185a91cdb2f1b0">CanHide</a> = 0x0020, 
+<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a68c630ca2a27c866e66830ae927a122d">CanDelete</a> = 0x0040, 
+<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a0fe2476868caa5cbe01dc1872436ae4d">CanInsertPoints</a> = 0x0080, 
 <br />
-&#160;&#160;<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8a401e4368d8adc9c3d6f0bbd6eeeea00b">AdjustPositionOnResize</a> = 0x2000
+&#160;&#160;<a class="el" href="class_drawing_item.html#a7dcef175f26729d5af8e0a815ce63ba8acf870023363a32ad64518e395a8faf55">CanRemovePoints</a> = 0x0100
 <br />
  }</td></tr>
 <tr class="separator:a7dcef175f26729d5af8e0a815ce63ba8 inherit pub_types_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac325ca8f325d5b8d05a6be05593305bd inherit pub_types_class_drawing_item"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#ac325ca8f325d5b8d05a6be05593305bd">Flags</a> </td></tr>
+<tr class="separator:ac325ca8f325d5b8d05a6be05593305bd inherit pub_types_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_static_methods_class_drawing_item"><td colspan="2" onclick="javascript:toggleInherit('pub_static_methods_class_drawing_item')"><img src="closed.png" alt="-"/>&#160;Static Public Member Functions inherited from <a class="el" href="class_drawing_item.html">DrawingItem</a></td></tr>
 <tr class="memitem:a974db65a4b51a926177f654fe334cc85 inherit pub_static_methods_class_drawing_item"><td class="memItemLeft" align="right" valign="top">static QList&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_drawing_item.html#a974db65a4b51a926177f654fe334cc85">copyItems</a> (const QList&lt; <a class="el" href="class_drawing_item.html">DrawingItem</a> * &gt; &amp;items)</td></tr>
 <tr class="separator:a974db65a4b51a926177f654fe334cc85 inherit pub_static_methods_class_drawing_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -231,7 +196,7 @@ Additional Inherited Members</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Provides a line item that can be added to a <a class="el" href="class_drawing_scene.html" title="Surface for managing a large number of two-dimensional DrawingItem objects.">DrawingScene</a>. </p>
 <p>To set the item's line, call the <a class="el" href="class_drawing_line_item.html#a9f7f4cd0519b6f2bc202a9e621dc8551" title="Sets the item&#39;s line to line, which is given in local item coordinates.">setLine()</a> function. The <a class="el" href="class_drawing_line_item.html#a0be76575b2d3b92ae5f28a6de20ce285" title="Returns item&#39;s line in local item coordinates.">line()</a> function returns the current line. Both functions operate in local item coordinates.</p>
-<p>Rendering options for the line can be controlled through properties of the item's <a class="el" href="class_drawing_item.html#a880152c49551149054d0aa2ac07cee31" title="Returns the item&#39;s style.">style()</a>. The line item supports all of the pen style properties as well as start arrow and end arrow properties.</p>
+<p>Rendering options for the line can be controlled through properties of the item's style(). The line item supports all of the pen style properties as well as start arrow and end arrow properties.</p>
 <p><a class="el" href="class_drawing_line_item.html" title="Provides a line item that can be added to a DrawingScene.">DrawingLineItem</a> provides a reasonable implementation of <a class="el" href="class_drawing_line_item.html#a1c2e46071186067b3c008bd5a42171c9" title="Returns an estimate of the area painted by the line item.">boundingRect()</a>, <a class="el" href="class_drawing_line_item.html#a5c2484f8b94690e44e86ba680e27437d" title="Returns an accurate outline of the item&#39;s shape.">shape()</a>, and <a class="el" href="class_drawing_line_item.html#ad01bd2fbb7b28986d5e6d88250b4251d" title="Return false if the item is degenerate, true otherwise.">isValid()</a>. The <a class="el" href="class_drawing_line_item.html#a7763a930ed9d3604b1540db70374fd11" title="Paints the contents of the line item into the scene.">render()</a> function draws the line using the item's associated pen. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a88a60a54f0c0b0475c29bb1ac9109510"></a>
@@ -251,17 +216,17 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Create a new <a class="el" href="class_drawing_line_item.html" title="Provides a line item that can be added to a DrawingScene.">DrawingLineItem</a> with default settings. </p>
 <p>This function creates three <a class="el" href="class_drawing_item_point.html" title="Represents an interaction point within a DrawingItem through which the user can resize the item or co...">DrawingItemPoint</a> objects and adds them to the item. These item points represent the start, middle, and end points of the line. By default, the position of each point is set to the origin of the item.</p>
-<p>This function fills in the item's <a class="el" href="class_drawing_item.html#a880152c49551149054d0aa2ac07cee31" title="Returns the item&#39;s style.">style()</a> with default values for the following properties. The default values are pulled from the style's <a class="el" href="class_drawing_item_style.html#a424928c61ece2c7b33fa73a26b8f1924" title="Return all of the DrawingItemStyle default properties and values.">DrawingItemStyle::defaultValues()</a> if present, otherwise <a class="el" href="class_drawing_line_item.html" title="Provides a line item that can be added to a DrawingScene.">DrawingLineItem</a> attempts to use reasonable initial values for each property: </p><ul>
-<li><a class="el" href="class_drawing_item_style.html#a1f0a6c51872987a06c9c2e0c4bb814f8a40e76c89849b2904c28ce7e3c57acb22" title="(Qt::PenStyle) Represents the style of the pen stroke">DrawingItemStyle::PenStyle</a> </li>
-<li><a class="el" href="class_drawing_item_style.html#a1f0a6c51872987a06c9c2e0c4bb814f8af8464bb06c6c382bcb0b343f6a5fd751" title="(QColor) Represents the color of the pen stroke">DrawingItemStyle::PenColor</a> </li>
-<li><a class="el" href="class_drawing_item_style.html#a1f0a6c51872987a06c9c2e0c4bb814f8ac48e75d8825f0ce99b20084639ca0a90" title="(qreal) Represents the opacity of the pen stroke (allowed range is 0.0 - 1.0)">DrawingItemStyle::PenOpacity</a> </li>
-<li><a class="el" href="class_drawing_item_style.html#a1f0a6c51872987a06c9c2e0c4bb814f8af918b27b836b94508bf232d8937c302e" title="(qreal) Represents the width of the pen stroke">DrawingItemStyle::PenWidth</a> </li>
-<li><a class="el" href="class_drawing_item_style.html#a1f0a6c51872987a06c9c2e0c4bb814f8a9ebf78631baa9a6918c57f1d55e96f9d" title="(Qt::PenCapStyle) Represents the cap style of the pen stroke">DrawingItemStyle::PenCapStyle</a> </li>
-<li><a class="el" href="class_drawing_item_style.html#a1f0a6c51872987a06c9c2e0c4bb814f8a4c62453bf44245ef04d14093c6f958c2" title="(Qt::PenJoinStyle) Represents the join style of the pen stroke">DrawingItemStyle::PenJoinStyle</a> </li>
-<li><a class="el" href="class_drawing_item_style.html#a1f0a6c51872987a06c9c2e0c4bb814f8ad38d63b7634661a30672b34742caf908" title="(DrawingItemStyle::ArrowStyle) Represents the style of the arrow at the start point of a line item">DrawingItemStyle::StartArrowStyle</a> </li>
-<li><a class="el" href="class_drawing_item_style.html#a1f0a6c51872987a06c9c2e0c4bb814f8a0e70a4c2508c9cbcae317573731e02b7" title="(qreal) Represents the size of the arrow at the start point of a line item">DrawingItemStyle::StartArrowSize</a> </li>
-<li><a class="el" href="class_drawing_item_style.html#a1f0a6c51872987a06c9c2e0c4bb814f8a0c0a65d3edf547a9498c4ce28bcbf88b" title="(DrawingItemStyle::ArrowStyle) Represents the style of the arrow at the end point of a line item">DrawingItemStyle::EndArrowStyle</a> </li>
-<li><a class="el" href="class_drawing_item_style.html#a1f0a6c51872987a06c9c2e0c4bb814f8a2cba42c63aa6d96f1a3ca27c7c4f74b9" title="(qreal) Represents the size of the arrow at the end point of a line item">DrawingItemStyle::EndArrowSize</a> </li>
+<p>This function fills in the item's style() with default values for the following properties. The default values are pulled from the style's DrawingItemStyle::defaultValues() if present, otherwise <a class="el" href="class_drawing_line_item.html" title="Provides a line item that can be added to a DrawingScene.">DrawingLineItem</a> attempts to use reasonable initial values for each property: </p><ul>
+<li>DrawingItemStyle::PenStyle </li>
+<li>DrawingItemStyle::PenColor </li>
+<li>DrawingItemStyle::PenOpacity </li>
+<li>DrawingItemStyle::PenWidth </li>
+<li>DrawingItemStyle::PenCapStyle </li>
+<li>DrawingItemStyle::PenJoinStyle </li>
+<li>DrawingItemStyle::StartArrowStyle </li>
+<li>DrawingItemStyle::StartArrowSize </li>
+<li>DrawingItemStyle::EndArrowStyle </li>
+<li>DrawingItemStyle::EndArrowSize </li>
 </ul>
 
 </div>
@@ -340,7 +305,7 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns an estimate of the area painted by the line item. </p>
-<p>Calculates the bounding rect of the line based on the position of its start and end points. The rect includes an adjustment for the width of the pen as set by the item's <a class="el" href="class_drawing_item.html#a880152c49551149054d0aa2ac07cee31" title="Returns the item&#39;s style.">style()</a>. The rect does not include any consideration of any arrows that may be set by the <a class="el" href="class_drawing_item.html#a880152c49551149054d0aa2ac07cee31" title="Returns the item&#39;s style.">style()</a>.</p>
+<p>Calculates the bounding rect of the line based on the position of its start and end points. The rect includes an adjustment for the width of the pen as set by the item's style(). The rect does not include any consideration of any arrows that may be set by the style().</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_line_item.html#a5c2484f8b94690e44e86ba680e27437d" title="Returns an accurate outline of the item&#39;s shape.">shape()</a>, <a class="el" href="class_drawing_line_item.html#ad01bd2fbb7b28986d5e6d88250b4251d" title="Return false if the item is degenerate, true otherwise.">isValid()</a> </dd></dl>
 
 <p>Implements <a class="el" href="class_drawing_item.html#a6cf2e2f89c56fcc56451d5a8088d534e">DrawingItem</a>.</p>
@@ -453,15 +418,15 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Paints the contents of the line item into the scene. </p>
-<p>The line is painted in the scene based on properties set by the item's <a class="el" href="class_drawing_item.html#a880152c49551149054d0aa2ac07cee31" title="Returns the item&#39;s style.">style()</a>, including any arrows set by the style.</p>
+<p>The line is painted in the scene based on properties set by the item's style(), including any arrows set by the style.</p>
 <p>At the end of this function, the QPainter object is returned to the same state that it was in when the function started. </p>
 
 <p>Implements <a class="el" href="class_drawing_item.html#a0ba79b50ff212298409dd53079c1ded2">DrawingItem</a>.</p>
 
 </div>
 </div>
-<a id="a53c3400741b42d259faa1ee06023847d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a53c3400741b42d259faa1ee06023847d">&#9670;&nbsp;</a></span>resizeEvent()</h2>
+<a id="a0ab28892a617e4c755206b7277b5fa54"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ab28892a617e4c755206b7277b5fa54">&#9670;&nbsp;</a></span>resize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -470,7 +435,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void DrawingLineItem::resizeEvent </td>
+          <td class="memname">virtual void DrawingLineItem::resize </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="class_drawing_item_point.html">DrawingItemPoint</a> *&#160;</td>
           <td class="paramname"><em>itemPoint</em>, </td>
@@ -489,7 +454,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -497,7 +462,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Resizes the item within the scene. </p>
 <p>This function ensures that whenever the item is resized, the item's midpoint is also moved so that it remains at the center of the line. </p>
 
-<p>Reimplemented from <a class="el" href="class_drawing_item.html#ac7355c993973166c1fdb4c3c8f6f579c">DrawingItem</a>.</p>
+<p>Reimplemented from <a class="el" href="class_drawing_item.html#a4d96f0f93f32a992daf67f8a726424c2">DrawingItem</a>.</p>
 
 </div>
 </div>
@@ -595,7 +560,7 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns an accurate outline of the item's shape. </p>
-<p>Calculates the shape of the line, including any arrows that may be set by the item's <a class="el" href="class_drawing_item.html#a880152c49551149054d0aa2ac07cee31" title="Returns the item&#39;s style.">style()</a>.</p>
+<p>Calculates the shape of the line, including any arrows that may be set by the item's style().</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_line_item.html#a1c2e46071186067b3c008bd5a42171c9" title="Returns an estimate of the area painted by the line item.">boundingRect()</a>, <a class="el" href="class_drawing_line_item.html#ad01bd2fbb7b28986d5e6d88250b4251d" title="Return false if the item is degenerate, true otherwise.">isValid()</a> </dd></dl>
 
 <p>Reimplemented from <a class="el" href="class_drawing_item.html#a464d44b4c148170711a9661bfe988ba5">DrawingItem</a>.</p>

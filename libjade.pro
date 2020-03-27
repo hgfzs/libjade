@@ -25,7 +25,6 @@ SOURCES += \
 	source/DrawingItem.cpp \
 	source/DrawingItemGroup.cpp \
 	source/DrawingItemPoint.cpp \
-	source/DrawingItemStyle.cpp \
 	source/DrawingLineItem.cpp \
 	source/DrawingPathItem.cpp \
 	source/DrawingPolygonItem.cpp \
@@ -46,7 +45,6 @@ HEADERS += \
 	include/DrawingItem.h \
 	include/DrawingItemGroup.h \
 	include/DrawingItemPoint.h \
-	include/DrawingItemStyle.h \
 	include/DrawingLineItem.h \
 	include/DrawingPathItem.h \
 	include/DrawingPolygonItem.h \

@@ -25,7 +25,6 @@
 
 class DrawingScene;
 class DrawingItemPoint;
-class DrawingItemStyle;
 
 /*! \brief Base class for all graphical items in a DrawingScene.
  *
@@ -33,9 +32,8 @@ class DrawingItemStyle;
  * defining the item's geometry, painting implementation, and item interaction through event
  * handlers.
  *
- * For convenience, a set of standard graphics items if provided for the most common shapes:
+ * For convenience, a set of standard graphics items are provided for the most common shapes:
  *
- * \li DrawingArcItem provides an arc item
  * \li DrawingCurveItem provides a Bezier curve item
  * \li DrawingEllipseItem provides an ellipse item
  * \li DrawingLineItem provides a line item
@@ -45,22 +43,19 @@ class DrawingItemStyle;
  * \li DrawingTextItem provides a text item
  * \li DrawingTextRectItem provides a rectangular item with text
  * \li DrawingTextEllipseItem provides an ellipse item with text
- * \li DrawingTextPolygonItem provides a polygon item with text
  *
  * All of an item's geometric information is based on its local coordinate system. The item's
  * position() is the only property that does not operate in local coordinates.
  *
- * Items can contain other items, and also be contained by other items.  All items can have a
- * parent item and a list of children.  Unless the item has no parent, its position is in
- * parent coordinates (i.e., the parent's local coordinates).  (If the item has no parent, its
- * position is in scene coordinates.)  Parent items propagate both their position and their
- * transformation to all children.
- *
- * An item can be set as visible (i.e., drawn and accepting events) by calling setVisible().
+ * An item can be set as visible (i.e. drawn and accepting events) by calling setVisible().
  * By default, items are set as visible and enabled.
  *
- * Normally, selection is toggled by the scene as a result of user interaction.  To determine if an
- * item is selected, call isSelected().
+ * Normally, item selection is toggled by the scene as a result of user interaction.  To determine
+ * if an item is selected, call isSelected().
+ *
+ * In order to make it as lightweight as possible, DrawingItem does not inherit from QObject.
+ * Therefore it does not support Qt's signals and slots system, nor does it support Qt's property
+ * macro.  A rudimentary property system is provided instead by setProperties() and properties().
  *
  * \section itemGeometry Item Geometry
  *
@@ -89,8 +84,8 @@ class DrawingItemStyle;
  *
  * Representing the item's geometry based on the location of its item points provides a convenient
  * method for the user to be able to resize an item.  When the user of a DrawingView clicks on one
- * of the items points(), then if the item is a Control point, the view will move just the point
- * around the scene rather than the whole item.
+ * of the item's points(), then if the item is a \link DrawingItemPoint::Control Control \endlink
+ * point, the view will move just the point around the scene rather than the whole item.
  *
  * Item points can be added to an item using addPoint() or insertPoint().  Points may be removed
  * from an item using removePoint().  A list of all the item's points is available using points().
@@ -104,25 +99,21 @@ class DrawingItemStyle;
  * All items are drawn in the order of when they were added to scene.  This order also dictates
  * which items will receive mouse input first when clicking within the scene.
  *
- * DrawingItem has support for item styles via DrawingItemStyle.  Item styles affect how an
- * item is rendered within a DrawingScene.  See DrawingItemStyle for more information.
- *
  * \section itemEvents Events
  *
  * DrawingItem receives events from DrawingView through several event handlers:
  *
- * \li moveEvent() is called when moving the item around the scene
- * \li resizeEvent() is called when resizing the item within the scene
- * \li rotateEvent() and rotateBackEvent() are called when rotating the item within the scene
- * \li flipHorizontalEvent() and flipVerticalEvent() are called when flipping the item within the scene
- * \li keyPressEvent() and keyReleaseEvent() are called for keyboard events when the item is the focus item of the view
+ * \li move() is called to move the item around the scene
+ * \li resize() is called to resize the item within the scene
+ * \li rotate() and rotateBack() are called to rotate the item within the scene
+ * \li flipHorizontal() and flipVertical() are called to flip the item within the scene
  *
  * These functions may be overloaded in a derived class to extend the behavior of each type of
  * event.
  *
  * These events are only called if their corresponding flag is set on the item.  For example, the
- * resizeEvent() slot is only called if the #CanResize flag is set. The default flags() set on a new
- * item are #CanMove | #CanResize | #CanRotate | #CanFlip | #CanSelect.
+ * resize() function is only called if the #CanResize flag is set. The default flags() set on a new
+ * item are #CanMove | #CanResize | #CanRotate | #CanFlip | #CanSelect | #CanDelete.
  *
  * \section itemCustom Custom Items
  *
@@ -135,7 +126,7 @@ class DrawingItemStyle;
  * resize the item through DrawingView mouse events.
  *
  * To extend the behavior of the item interaction events within the scene, consider overriding any
- * of the item's event handlers such as moveEvent() or resizeEvent() as well.
+ * of the item's event handlers such as move() or resize() as well.
  *
  * For items that support adding item points, implementations should set the #CanInsertPoints flag
  * and provide an implementation for itemPointToInsert().  For items that support removing item
@@ -151,25 +142,25 @@ public:
 	//! \brief Enum used to affect the behavior of the DrawingItem within the scene.
 	enum Flag
 	{
-		CanMove = 0x0001,						//!< Indicates that the item can be moved around the scene.
-												//!< See also moveItem().
-		CanResize = 0x0002,						//!< Indicates that the item can be resized within the
-												//!< scene.  See also resizeItem().
-		CanRotate = 0x0004,						//!< Indicates that the item can be rotated within the
-												//!< scene.  See also rotateItem() and rotateBackItem().
-		CanFlip = 0x0008,						//!< Indicates that the item can be flipped horizontally
-												//!< within the scene.  See also flipItem().
-		CanSelect = 0x0010,						//!< Indicates that the item can be selected by the user
-												//!< within the scene.
-		CanHide = 0x0020,
-		CanDelete = 0x0040,
-		CanInsertPoints = 0x0080,				//!< Indicates that item points can be added
-												//!< to the item.  See also insertItemPoint().
-		CanRemovePoints = 0x0100				//!< Indicates that item points can be removed
-												//!< from the item.  See also removeItemPoint().
+		CanMove = 0x0001,				//!< Indicates that the item can be moved around the scene.
+		CanResize = 0x0002,				//!< Indicates that the item can be resized within the
+										//!< scene.
+		CanRotate = 0x0004,				//!< Indicates that the item can be rotated within the
+										//!< scene.
+		CanFlip = 0x0008,				//!< Indicates that the item can be flipped within the
+										//!< scene.
+		CanSelect = 0x0010,				//!< Indicates that the item can be selected by the user
+										//!< within the scene.
+		CanHide = 0x0020,				//!< Indicates that the item can be hidden by the user
+										//!< in the scene.
+		CanDelete = 0x0040,				//!< Indicates that the item can be deleted by the user
+										//!< from the scene.
+		CanInsertPoints = 0x0080,		//!< Indicates that item points can be added to the item.
+		CanRemovePoints = 0x0100		//!< Indicates that item points can be removed from the
+										//!< item.
 	};
 
-	/*! \brief Logical OR of various #Flag values.
+	/*! \brief Logical OR of various #Flag values.  Any combination of #Flag values are supported.
 	 *
 	 * \sa setFlags(), flags()
 	 */
@@ -182,8 +173,6 @@ private:
 	QTransform mTransform, mTransformInverse;
 	Flags mFlags;
 
-	DrawingItemStyle* mStyle;
-
 	QList<DrawingItemPoint*> mPoints;
 
 	bool mVisible;
@@ -192,17 +181,16 @@ private:
 public:
 	/*! \brief Create a new DrawingItem with default settings.
 	 *
-	 * The new item is not associated with a DrawingScene and does not have a parent.
+	 * The new item is not associated with a DrawingScene.
 	 */
 	DrawingItem();
 
 	/*! \brief Create a new DrawingItem as a copy of an existing item.
 	 *
 	 * Copies the position, transform, and flags from the existing item.  Also creates copies
-	 * of the existing item's points and the existing item's children for the new item.  Also
-	 * creates a new item style based upon the existing item's style.
+	 * of the existing item's points for the new item.
 	 *
-	 * The new item is not associated with a DrawingScene and does not have a parent.
+	 * The new item is not associated with a DrawingScene.
 	 */
 	DrawingItem(const DrawingItem& item);
 
@@ -242,7 +230,8 @@ public:
 
 	/*! \brief Sets the position of the item.
 	 *
-	 * This convenience function is equivalent to calling setPosition(QPointF(x,y)).
+	 * This convenience function is equivalent to calling
+	 * \link setPosition(const QPointF& pos) setPosition(QPointF(x,y)) \endlink .
 	 *
 	 * \sa position(), x(), y()
 	 */
@@ -250,17 +239,19 @@ public:
 
 	/*! \brief Sets the x-coordinate of the item's position.
 	 *
-	 * This convenience function is equivalent to calling setPos(QPointF(x,y())).
+	 * This convenience function is equivalent to calling
+	 * \link setPosition(const QPointF& pos) setPosition(QPointF(x,y())) \endlink .
 	 *
-	 * \sa setPosition(), x()
+	 * \sa setPosition(), setY(), x()
 	 */
 	void setX(qreal x);
 
 	/*! \brief Sets the y-coordinate of the item's position.
 	 *
-	 * This convenience function is equivalent to calling setPos(QPointF(x(),y)).
+	 * This convenience function is equivalent to calling
+	 * \link setPosition(const QPointF& pos) setPosition(QPointF(x(),y)) \endlink .
 	 *
-	 * \sa setPosition(), y()
+	 * \sa setPosition(), setX(), y()
 	 */
 	void setY(qreal y);
 
@@ -291,8 +282,8 @@ public:
 	 * replaces the current matrix.
 	 *
 	 * To simplify interation with items using a transformed view, QGraphicsItem provides
-	 * mapToParent(), mapFromParent(), mapToScene(), and mapFromScene() functions that can
-	 * translate between item, parent, and scene coordinates.
+	 * mapToScene() and mapFromScene() functions that can translate between item and scene
+	 * coordinates.
 	 *
 	 * \sa transform(), transformInverted()
 	 */
@@ -315,7 +306,7 @@ public:
 	 *
 	 * The type of item is represented by a combination of flags.  Any combination of flags
 	 * is valid for DrawingItem objects.  By default, the (#CanMove | #CanResize | #CanRotate |
-	 * #CanFlip | #CanSelect) flags are set.
+	 * #CanFlip | #CanSelect | #CanDelete) flags are set.
 	 *
 	 * Items that set the #CanInsertPoints flag should also provide an implementation for
 	 * itemPointToInsert().  Items that set the #CanRemovePoints flag should also provide an
@@ -332,64 +323,41 @@ public:
 	Flags flags() const;
 
 
-	/*! \brief Sets the item's style.
-	 *
-	 * The item's style contains settings that affect how the item is rendered within a
-	 * DrawingScene.  By default, the item is a assigned an empty style with no settings applied.
-	 *
-	 * If a valid item style is passed to this function, DrawingItem will delete the existing item
-	 * style from memory and replace it with the specified style.  DrawingItem takes ownership of
-	 * the new style and will delete it as necessary.
-	 *
-	 * It is safe to pass a nullptr to this function; if a nullptr is received, this function
-	 * does nothing.
-	 *
-	 * \sa style()
-	 */
-	void setStyle(DrawingItemStyle* style);
-
-	/*! \brief Returns the item's style.
-	 *
-	 * \sa setStyle()
-	 */
-	DrawingItemStyle* style() const;
-
-
 	/*! \brief Adds an existing item point to the item.
 	 *
-	 * This convenience function is equivalent to calling #insertPoint(itemPoint, points().size()).
+	 * This convenience function is equivalent to calling #insertPoint(point, points().size()).
 	 *
 	 * \sa removePoint()
 	 */
-	void addPoint(DrawingItemPoint* itemPoint);
+	void addPoint(DrawingItemPoint* point);
 
 	/*! \brief Inserts an existing item point to the item at the specified index.
 	 *
 	 * If a valid item point is passed to this function, DrawingItem will insert it into its list of
-	 * points() at the specified index.  DrawingItem takes ownership of the itemPoint and will
+	 * points() at the specified index.  DrawingItem takes ownership of the point and will
 	 * delete it as necessary.
 	 *
 	 * It is safe to pass a nullptr to this function; if a nullptr is received, this function
-	 * does nothing.  This function also does nothing if the itemPoint is already one of the item's
+	 * does nothing.  This function also does nothing if the point is already one of the item's
 	 * points().
 	 *
 	 * \sa addPoint(), removePoint()
 	 */
-	void insertPoint(int index, DrawingItemPoint* itemPoint);
+	void insertPoint(int index, DrawingItemPoint* point);
 
 	/*! \brief Removes an existing item point from the item.
 	 *
 	 * If a valid item point is passed to this function, DrawingItem will remove it from its list of
-	 * points().  DrawingItem relinquishes ownership of the itemPoint and does not delete the
+	 * points().  DrawingItem relinquishes ownership of the point and does not delete the
 	 * point from memory.
 	 *
 	 * It is safe to pass a nullptr to this function; if a nullptr is received, this function
-	 * does nothing.  This function also does nothing if the itemPoint is not one of the item's
+	 * does nothing.  This function also does nothing if the point is not one of the item's
 	 * points().
 	 *
 	 * \sa addPoint(), insertPoint(), clearPoints()
 	 */
-	void removePoint(DrawingItemPoint* itemPoint);
+	void removePoint(DrawingItemPoint* point);
 
 	/*! \brief Removes and deletes all item points from the item.
 	 *
@@ -409,25 +377,25 @@ public:
 	/*! \brief Returns the item point located at the specified position, or nullptr if no match is
 	 * found.
 	 *
-	 * The itemPos is given in local item coordinates.
+	 * The pos is given in local item coordinates.
 	 *
 	 * This function may return nullptr if no matching item point is found.
 	 *
 	 * \sa pointNearest()
 	 */
-	DrawingItemPoint* pointAt(const QPointF& itemPos) const;
+	DrawingItemPoint* pointAt(const QPointF& pos) const;
 
 	/*! \brief Returns the item point nearest to the specified position.
 	 *
-	 * This function calculates the distance between itemPos and each of the item's points.  It
-	 * selects the point that is closest to itemPos and returns it.  The itemPos is given in
+	 * This function calculates the distance between pos and each of the item's points.  It
+	 * selects the point that is closest to pos and returns it.  The pos is given in
 	 * local item coordinates.
 	 *
 	 * This function may return nullptr if the item does not have any points().
 	 *
 	 * \sa pointAt()
 	 */
-	DrawingItemPoint* pointNearest(const QPointF& itemPos) const;
+	DrawingItemPoint* pointNearest(const QPointF& pos) const;
 
 	/*! \brief Called when the view wants to insert a new item point in the item at the
 	 * specified position.
@@ -441,7 +409,7 @@ public:
 	 *
 	 * \sa itemPointToRemove()
 	 */
-	virtual DrawingItemPoint* itemPointToInsert(const QPointF& itemPos, int& index);
+	virtual DrawingItemPoint* itemPointToInsert(const QPointF& pos, int& index);
 
 	/*! \brief Called when the view wants to remove an existing item point in the item at the
 	 * specified position.
@@ -455,17 +423,8 @@ public:
 	 *
 	 * \sa itemPointToInsert()
 	 */
-	virtual DrawingItemPoint* itemPointToRemove(const QPointF& itemPos);
+	virtual DrawingItemPoint* itemPointToRemove(const QPointF& pos);
 
-
-	/*! \brief Sets whether the item is currently visible within the scene or not.
-	 *
-	 * Items that are not visible are not drawn and do not receive events.  By default, items are
-	 * visible (isVisible() returns true).
-	 *
-	 * \sa isVisible()
-	 */
-	void setVisible(bool visible);
 
 	/*! \brief Sets whether the item is currently selected within the scene or not.
 	 *
@@ -476,17 +435,26 @@ public:
 	 */
 	void setSelected(bool select);
 
-	/*! \brief Returns whether the item is currently visible within the scene or not.
+	/*! \brief Sets whether the item is currently visible within the scene or not.
 	 *
-	 * \sa setVisible()
+	 * Items that are not visible are not drawn and do not receive events.  By default, items are
+	 * visible (isVisible() returns true).
+	 *
+	 * \sa isVisible()
 	 */
-	bool isVisible() const;
+	void setVisible(bool visible);
 
 	/*! \brief Returns whether the item is currently selected within the scene or not.
 	 *
 	 * \sa setSelected()
 	 */
 	bool isSelected() const;
+
+	/*! \brief Returns whether the item is currently visible within the scene or not.
+	 *
+	 * \sa setVisible()
+	 */
+	bool isVisible() const;
 
 
 	/*! \brief Maps the point from the coordinate system of the scene to the item's
@@ -546,6 +514,27 @@ public:
 	QPainterPath mapToScene(const QPainterPath& path) const;
 
 
+	/*! \brief Sets the values of all object properties.
+	 *
+	 * The property names should match the names returned by properties().
+	 *
+	 * The implementation in DrawingItem does nothing.
+	 *
+	 * \sa setProperties()
+	 */
+	virtual void setProperties(const QHash<QString,QVariant>& properties);
+
+	/*! \brief Returns the values of all object properties.
+	 *
+	 * The property names should match the names accepted by setProperties().
+	 *
+	 * The implementation in DrawingItem simply returns an empty QHash container.
+	 *
+	 * \sa setProperties()
+	 */
+	virtual QHash<QString,QVariant> properties() const;
+
+
 	/*! \brief Returns an estimate of the area painted by an item.
 	 *
 	 * The function returns a rectangle in local item coordinates.
@@ -588,7 +577,7 @@ public:
 	 */
 	virtual QPointF centerPos() const;
 
-	/*! \brief Return false if the item is degenerate, true otherwise.
+	/*! \brief Return false if the item is invalid, true otherwise.
 	 *
 	 * This function should return false if the item is not really valid (for example, a line
 	 * where the start and end points are the same).  DrawingView will prevent invalid items from
@@ -613,102 +602,105 @@ public:
 	/*! \brief Moves the item within the scene.
 	 *
 	 * This function is called when the item is to be moved within the scene.  This will only be
-	 * called for items that have the #CanMove flag set as one of their flags().  Note that the
-	 * parentPos parameter is in the coordinate system of the parent(), or the scene() if no
-	 * parent is set.
+	 * called for items that have the #CanMove flag set as one of their flags().
+	 *
+	 * Note that the pos parameter is in scene coordinates.
 	 *
 	 * The default implementation simply calls setPosition() to update the item's position.
 	 *
 	 * Derived class implementations can add additional behavior.  These implementations should
 	 * call the parent implementation first before adding custom logic.
 	 *
-	 * \sa resizeEvent(), rotateEvent(), rotateBackEvent(), flipHorizontalEvent(), flipVerticalEvent()
+	 * \sa resize(), rotate(), rotateBack(), flipHorizontal(), flipVertical()
 	 */
-	virtual void move(const QPointF& scenePos);
+	virtual void move(const QPointF& pos);
 
 	/*! \brief Resizes the item within the scene.
 	 *
 	 * This function is called when the item is to be resized within the scene.  This will only be
-	 * called for items that have the #CanResize flag set as one of their flags().  Note that the
-	 * parentPos parameter is in the coordinate system of the parent(), or the scene() if no
-	 * parent is set.
+	 * called for items that have the #CanResize flag set as one of their flags().
 	 *
-	 * The default implementation calls itemPoint->setPosition() to update the point's position.
+	 * Note that the pos parameter is in scene coordinates.
 	 *
-	 * Derived class implementations can add additional behavior.  These implementations should
-	 * call the parent implementation first before adding custom logic.
-	 *
-	 * \sa moveEvent(), rotateEvent(), rotateBackEvent(), flipHorizontalEvent(), flipVerticalEvent()
-	 */
-	virtual void resize(DrawingItemPoint* itemPoint, const QPointF& scenePos);
-
-	/*! \brief Rotates the item counter-clockwise within the scene.
-	 *
-	 * This function is called when the item is to be rotated within the scene.  This will only be
-	 * called for items that have the #CanRotate flag set as one of their flags().  Note that the
-	 * parentPos parameter is in the coordinate system of the parent(), or the scene() if no
-	 * parent is set.
-	 *
-	 * The default implementation updates item's position() to rotate it around the specified
-	 * parentPos and updates the item's transform().
+	 * The default implementation calls \link DrawingItemPoint::setPosition() point->setPosition()
+	 * \endlink to update the point's position.
 	 *
 	 * Derived class implementations can add additional behavior.  These implementations should
 	 * call the parent implementation first before adding custom logic.
 	 *
-	 * \sa moveEvent(), resizeEvent(), rotateBackEvent(), flipHorizontalEvent(), flipVerticalEvent()
+	 * \sa move(), rotate(), rotateBack(), flipHorizontal(), flipVertical()
 	 */
-	virtual void rotate(const QPointF& scenePos);
+	virtual void resize(DrawingItemPoint* point, const QPointF& pos);
 
 	/*! \brief Rotates the item clockwise within the scene.
 	 *
-	 * This function is called when the item is to be rotated back within the scene.  This will
-	 * only be called for items that have the #CanRotate flag set as one of their flags().  Note
-	 * that the parentPos parameter is in the coordinate system of the parent(), or the scene()
-	 * if no parent is set.
+	 * This function is called when the item is to be rotated within the scene.  This will only be
+	 * called for items that have the #CanRotate flag set as one of their flags().
+	 *
+	 * Note that the pos parameter is in scene coordinates.
 	 *
 	 * The default implementation updates item's position() to rotate it around the specified
-	 * parentPos and updates the item's transform().
+	 * pos and updates the item's transform().
 	 *
 	 * Derived class implementations can add additional behavior.  These implementations should
 	 * call the parent implementation first before adding custom logic.
 	 *
-	 * \sa moveEvent(), resizeEvent(), rotateEvent(), flipHorizontalEvent(), flipVerticalEvent()
+	 * \sa move(), resize(), rotateBack(), flipHorizontal(), flipVertical()
 	 */
-	virtual void rotateBack(const QPointF& scenePos);
+	virtual void rotate(const QPointF& pos);
+
+	/*! \brief Rotates the item counter-clockwise within the scene.
+	 *
+	 * This function is called when the item is to be rotated back within the scene.  This will
+	 * only be called for items that have the #CanRotate flag set as one of their flags().
+	 *
+	 * Note that the pos parameter is in scene coordinates.
+	 *
+	 * The default implementation updates item's position() to rotate it around the specified
+	 * pos and updates the item's transform().
+	 *
+	 * Derived class implementations can add additional behavior.  These implementations should
+	 * call the parent implementation first before adding custom logic.
+	 *
+	 * \sa move(), resize(), rotate(), flipHorizontal(), flipVertical()
+	 */
+	virtual void rotateBack(const QPointF& pos);
 
 	/*! \brief Flips the item horizontally within the scene.
 	 *
 	 * This function is called when the item is to be flipped horizontally within the scene.
 	 * This will only be called for items that have the #CanFlip flag set as one of
-	 * their flags().  Note that the parentPos parameter is in the coordinate system of the
-	 * parent(), or the scene() if no parent is set.
+	 * their flags().
+	 *
+	 * Note that the pos parameter is in scene coordinates.
 	 *
 	 * The default implementation updates item's position() to flip it about the specified
-	 * parentPos and updates the item's transform().
+	 * pos and updates the item's transform().
 	 *
 	 * Derived class implementations can add additional behavior.  These implementations should
 	 * call the parent implementation first before adding custom logic.
 	 *
-	 * \sa moveEvent(), resizeEvent(), rotateEvent(), rotateBackEvent(), flipVerticalEvent()
+	 * \sa move(), resize(), rotate(), rotateBack(), flipVertical()
 	 */
-	virtual void flipHorizontal(const QPointF& scenePos);
+	virtual void flipHorizontal(const QPointF& pos);
 
 	/*! \brief Flips the item vertically within the scene.
 	 *
 	 * This function is called when the item is to be flipped vertically within the scene.
 	 * This will only be called for items that have the #CanFlip flag set as one of
-	 * their flags().  Note that the parentPos parameter is in the coordinate system of the
-	 * parent(), or the scene() if no parent is set.
+	 * their flags().
+	 *
+	 * Note that the pos parameter is in scene coordinates.
 	 *
 	 * The default implementation updates item's position() to flip it about the specified
-	 * parentPos and updates the item's transform().
+	 * pos and updates the item's transform().
 	 *
 	 * Derived class implementations can add additional behavior.  These implementations should
 	 * call the parent implementation first before adding custom logic.
 	 *
-	 * \sa moveEvent(), resizeEvent(), rotateEvent(), rotateBackEvent(), flipHorizontalEvent()
+	 * \sa move(), resize(), rotate(), rotateBack(), flipHorizontal()
 	 */
-	virtual void flipVertical(const QPointF& scenePos);
+	virtual void flipVertical(const QPointF& pos);
 
 protected:
 	QPainterPath strokePath(const QPainterPath& path, const QPen& pen) const;
