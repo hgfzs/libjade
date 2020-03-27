@@ -1,60 +1,58 @@
 /* DrawingPolylineItem.cpp
  *
- * Copyright (C) 2013-2017 Jason Allen
+ * Copyright (C) 2013-2020 Jason Allen
  *
- * This file is part of the jade application.
+ * This file is part of the libjade library.
  *
- * jade is free software: you can redistribute it and/or modify
+ * libjade is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * jade is distributed in the hope that it will be useful,
+ * libjade is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with jade.  If not, see <http://www.gnu.org/licenses/>
+ * along with libjade.  If not, see <http://www.gnu.org/licenses/>
  */
 
 #include "DrawingPolylineItem.h"
 #include "DrawingItemPoint.h"
-#include "DrawingItemStyle.h"
+#include <QPainter>
+#include <QtMath>
 
 DrawingPolylineItem::DrawingPolylineItem() : DrawingItem()
 {
-	setFlags(CanMove | CanResize | CanRotate | CanFlip | CanInsertPoints | CanRemovePoints | CanSelect | CanDelete);
+	mPen = QPen(Qt::black, 16, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+	mStartArrow = DrawingArrow(DrawingArrow::None, 100.0);
+	mEndArrow = DrawingArrow(DrawingArrow::None, 100.0);
+	mStartArrow.setVector(QPointF(0, 0), mPen.widthF(), 0, 0);
+	mEndArrow.setVector(QPointF(0, 0), mPen.widthF(), 0, 180);
+
+	setFlags(CanMove | CanResize | CanRotate | CanFlip | CanInsertPoints | CanRemovePoints |
+			 CanSelect | CanDelete);
 
 	DrawingItemPoint::Flags flags =
 		DrawingItemPoint::Control | DrawingItemPoint::Connection | DrawingItemPoint::Free;
 	addPoint(new DrawingItemPoint(QPointF(0, 0), flags));	// start point
 	addPoint(new DrawingItemPoint(QPointF(0, 0), flags));	// end point
 
-	DrawingItemStyle* style = DrawingItem::style();
-	style->setValue(DrawingItemStyle::PenStyle,
-		style->valueLookup(DrawingItemStyle::PenStyle, QVariant((uint)Qt::SolidLine)));
-	style->setValue(DrawingItemStyle::PenColor,
-		style->valueLookup(DrawingItemStyle::PenColor, QVariant(QColor(0, 0, 0))));
-	style->setValue(DrawingItemStyle::PenOpacity,
-		style->valueLookup(DrawingItemStyle::PenOpacity, QVariant(1.0)));
-	style->setValue(DrawingItemStyle::PenWidth,
-		style->valueLookup(DrawingItemStyle::PenWidth, QVariant(12.0)));
-	style->setValue(DrawingItemStyle::PenCapStyle,
-		style->valueLookup(DrawingItemStyle::PenCapStyle, QVariant((uint)Qt::RoundCap)));
-	style->setValue(DrawingItemStyle::PenJoinStyle,
-		style->valueLookup(DrawingItemStyle::PenJoinStyle, QVariant((uint)Qt::RoundJoin)));
-	style->setValue(DrawingItemStyle::StartArrowStyle,
-		style->valueLookup(DrawingItemStyle::StartArrowStyle, QVariant((uint)DrawingItemStyle::ArrowNone)));
-	style->setValue(DrawingItemStyle::StartArrowSize,
-		style->valueLookup(DrawingItemStyle::StartArrowSize, QVariant(100.0)));
-	style->setValue(DrawingItemStyle::EndArrowStyle,
-		style->valueLookup(DrawingItemStyle::EndArrowStyle, QVariant((uint)DrawingItemStyle::ArrowNone)));
-	style->setValue(DrawingItemStyle::EndArrowSize,
-		style->valueLookup(DrawingItemStyle::EndArrowSize, QVariant(100.0)));
+	updateGeometry();
 }
 
-DrawingPolylineItem::DrawingPolylineItem(const DrawingPolylineItem& item) : DrawingItem(item) { }
+DrawingPolylineItem::DrawingPolylineItem(const DrawingPolylineItem& item) : DrawingItem(item)
+{
+	mPolyline = item.mPolyline;
+	mPen = item.mPen;
+	mStartArrow = item.mStartArrow;
+	mEndArrow = item.mEndArrow;
+
+	mBoundingRect = item.mBoundingRect;
+	mShape = item.mShape;
+	mStrokePath = item.mStrokePath;
+}
 
 DrawingPolylineItem::~DrawingPolylineItem() { }
 
@@ -69,6 +67,9 @@ DrawingItem* DrawingPolylineItem::copy() const
 
 void DrawingPolylineItem::setPolyline(const QPolygonF& polygon)
 {
+	mPolyline = polygon;
+
+	// Update points
 	if (polygon.size() >= 2)
 	{
 		while (points().size() < polygon.size())
@@ -83,98 +84,175 @@ void DrawingPolylineItem::setPolyline(const QPolygonF& polygon)
 	}
 
 	QList<DrawingItemPoint*> points = DrawingPolylineItem::points();
-	for(int i = 0; i < polygon.size(); i++)
-		points[i]->setPosition(polygon[i]);
+	for(int i = 0; i < polygon.size(); i++) points[i]->setPosition(polygon[i]);
+
+	// Update arrows
+	QPointF p0 = mPolyline[0];
+	QPointF p1 = mPolyline[1];
+	QPointF p2 = mPolyline[mPolyline.size()-2];
+	QPointF p3 = mPolyline[mPolyline.size()-1];
+	qreal firstLineLength = qSqrt((p1.x() - p0.x()) * (p1.x() - p0.x()) + (p1.y() - p0.y()) * (p1.y() - p0.y()));
+	qreal lastLineLength = qSqrt((p3.x() - p2.x()) * (p3.x() - p2.x()) + (p3.y() - p2.y()) * (p3.y() - p2.y()));
+	qreal firstLineAngle = 180 * qAtan2(p1.y() - p0.y(), p1.x() - p0.x()) / 3.141592654;
+	qreal lastLineAngle = 180 * qAtan2(p3.y() - p2.y(), p3.x() - p2.x()) / 3.141592654;
+
+	mStartArrow.setVector(p0, mStartArrow.vectorPenWidth(), firstLineLength, firstLineAngle);
+	mEndArrow.setVector(p3, mEndArrow.vectorPenWidth(), lastLineLength, 180 + lastLineAngle);
+
+	updateGeometry();
 }
 
 QPolygonF DrawingPolylineItem::polyline() const
 {
-	QPolygonF polygon;
+	return mPolyline;
+}
 
-	QList<DrawingItemPoint*> points = DrawingPolylineItem::points();
-	for(int i = 0; i < points.size(); i++)
-		polygon.append(points[i]->position());
+//==================================================================================================
 
-	return polygon;
+void DrawingPolylineItem::setPen(const QPen& pen)
+{
+	mPen = pen;
+	mStartArrow.setVector(mStartArrow.vectorPosition(), mPen.widthF(),
+		mStartArrow.vectorLength(), mStartArrow.vectorAngle());
+	mEndArrow.setVector(mEndArrow.vectorPosition(), mPen.widthF(),
+		mEndArrow.vectorLength(), mEndArrow.vectorAngle());
+	updateGeometry();
+}
+
+QPen DrawingPolylineItem::pen() const
+{
+	return mPen;
+}
+
+//==================================================================================================
+
+void DrawingPolylineItem::setStartArrow(const DrawingArrow& arrow)
+{
+	mStartArrow.setStyle(arrow.style());
+	mStartArrow.setSize(arrow.size());
+	updateGeometry();
+}
+
+void DrawingPolylineItem::setEndArrow(const DrawingArrow& arrow)
+{
+	mEndArrow.setStyle(arrow.style());
+	mEndArrow.setSize(arrow.size());
+	updateGeometry();
+}
+
+DrawingArrow DrawingPolylineItem::startArrow() const
+{
+	return mStartArrow;
+}
+
+DrawingArrow DrawingPolylineItem::endArrow() const
+{
+	return mEndArrow;
+}
+
+//==================================================================================================
+
+void DrawingPolylineItem::setProperties(const QHash<QString,QVariant>& properties)
+{
+	if (properties.contains("pen-style"))
+	{
+		bool ok = false;
+		uint value = properties["pen-style"].toUInt(&ok);
+		if (ok) mPen.setStyle(static_cast<Qt::PenStyle>(value));
+	}
+
+	if (properties.contains("pen-color"))
+	{
+		QColor color = properties["pen-color"].value<QColor>();
+		mPen.setBrush(color);
+	}
+
+	if (properties.contains("pen-width"))
+	{
+		bool ok = false;
+		qreal value = properties["pen-width"].toDouble(&ok);
+		if (ok) mPen.setWidthF(value);
+	}
+
+	if (properties.contains("pen-cap-style"))
+	{
+		bool ok = false;
+		uint value = properties["pen-cap-style"].toUInt(&ok);
+		if (ok) mPen.setCapStyle(static_cast<Qt::PenCapStyle>(value));
+	}
+
+	if (properties.contains("pen-join-style"))
+	{
+		bool ok = false;
+		uint value = properties["pen-join-style"].toUInt(&ok);
+		if (ok) mPen.setJoinStyle(static_cast<Qt::PenJoinStyle>(value));
+	}
+
+	if (properties.contains("start-arrow-style"))
+	{
+		bool ok = false;
+		uint value = properties["start-arrow-style"].toUInt(&ok);
+		if (ok) mStartArrow.setStyle(static_cast<DrawingArrow::Style>(value));
+	}
+
+	if (properties.contains("start-arrow-size"))
+	{
+		bool ok = false;
+		qreal value = properties["start-arrow-size"].toDouble(&ok);
+		if (ok) mStartArrow.setSize(value);
+	}
+
+	if (properties.contains("end-arrow-style"))
+	{
+		bool ok = false;
+		uint value = properties["end-arrow-style"].toUInt(&ok);
+		if (ok) mEndArrow.setStyle(static_cast<DrawingArrow::Style>(value));
+	}
+
+	if (properties.contains("end-arrow-size"))
+	{
+		bool ok = false;
+		qreal value = properties["end-arrow-size"].toDouble(&ok);
+		if (ok) mEndArrow.setSize(value);
+	}
+
+	updateGeometry();
+}
+
+QHash<QString,QVariant> DrawingPolylineItem::properties() const
+{
+	QHash<QString,QVariant> properties;
+
+	properties["pen-style"] = static_cast<uint>(mPen.style());
+	properties["pen-color"] = mPen.brush().color();
+	properties["pen-width"] = mPen.widthF();
+	properties["pen-cap-style"] = static_cast<uint>(mPen.capStyle());
+	properties["pen-join-style"] = static_cast<uint>(mPen.joinStyle());
+
+	properties["start-arrow-style"] = static_cast<uint>(mStartArrow.style());
+	properties["start-arrow-size"] = mStartArrow.size();
+	properties["end-arrow-style"] = static_cast<uint>(mEndArrow.style());
+	properties["end-arrow-size"] = mEndArrow.size();
+
+	return properties;
 }
 
 //==================================================================================================
 
 QRectF DrawingPolylineItem::boundingRect() const
 {
-	QRectF rect;
-
-	if (isValid())
-	{
-		qreal penWidth = style()->valueLookup(DrawingItemStyle::PenWidth).toReal();
-
-		rect = polyline().boundingRect();
-		rect.adjust(-penWidth/2, -penWidth/2, penWidth/2, penWidth/2);
-	}
-
-	return rect;
+	return mBoundingRect;
 }
 
 QPainterPath DrawingPolylineItem::shape() const
 {
-	QPainterPath shape;
-
-	if (isValid())
-	{
-		QPainterPath drawPath;
-
-		QList<DrawingItemPoint*> points = DrawingPolylineItem::points();
-		QPointF p0 = points[0]->position();
-		QPointF p1 = points[1]->position();
-		QPointF p2 = points[points.size()-2]->position();
-		QPointF p3 = points[points.size()-1]->position();
-		qreal firstLineLength = qSqrt((p1.x() - p0.x()) * (p1.x() - p0.x()) + (p1.y() - p0.y()) * (p1.y() - p0.y()));
-		qreal lastLineLength = qSqrt((p3.x() - p2.x()) * (p3.x() - p2.x()) + (p3.y() - p2.y()) * (p3.y() - p2.y()));
-		qreal firstLineAngle = 180 * qAtan2(p1.y() - p0.y(), p1.x() - p0.x()) / 3.141592654;
-		qreal lastLineAngle = 180 * qAtan2(p3.y() - p2.y(), p3.x() - p2.x()) / 3.141592654;
-
-		DrawingItemStyle* style = DrawingItem::style();
-		QPen pen = style->pen();
-		DrawingItemStyle::ArrowStyle startArrowStyle = style->startArrowStyle();
-		DrawingItemStyle::ArrowStyle endArrowStyle = style->endArrowStyle();
-		qreal startArrowSize = style->startArrowSize();
-		qreal endArrowSize = style->endArrowSize();
-
-		// Add line
-		drawPath.moveTo(points.first()->position());
-		for(auto pointIter = points.begin() + 1; pointIter != points.end(); pointIter++)
-		{
-			drawPath.lineTo((*pointIter)->position());
-			drawPath.moveTo((*pointIter)->position());
-		}
-
-		// Add arrows
-		if (pen.style() != Qt::NoPen)
-		{
-			if (firstLineLength > startArrowSize)
-				drawPath.addPath(style->arrowShape(startArrowStyle, startArrowSize, p0, firstLineAngle));
-			if (lastLineLength > endArrowSize)
-				drawPath.addPath(style->arrowShape(endArrowStyle, endArrowSize, p3, 180 + lastLineAngle));
-		}
-
-		// Determine outline path
-		shape = strokePath(drawPath, pen);
-	}
-
-	return shape;
+	return mShape;
 }
 
 bool DrawingPolylineItem::isValid() const
 {
-	bool superfluous = true;
-
-	QList<DrawingItemPoint*> points = DrawingPolylineItem::points();
-	QPointF position = points.first()->position();
-
-	for(auto pointIter = points.begin() + 1; superfluous && pointIter != points.end(); pointIter++)
-		superfluous = (position == (*pointIter)->position());
-
-	return !superfluous;
+	QRectF rect = mPolyline.boundingRect();
+	return (rect.width() != 0 || rect.height() != 0);
 }
 
 //==================================================================================================
@@ -186,43 +264,16 @@ void DrawingPolylineItem::render(QPainter* painter)
 		QBrush sceneBrush = painter->brush();
 		QPen scenePen = painter->pen();
 
-		QList<DrawingItemPoint*> points = DrawingPolylineItem::points();
-		QPointF p0 = points[0]->position();
-		QPointF p1 = points[1]->position();
-		QPointF p2 = points[points.size()-2]->position();
-		QPointF p3 = points[points.size()-1]->position();
-		qreal firstLineLength = qSqrt((p1.x() - p0.x()) * (p1.x() - p0.x()) + (p1.y() - p0.y()) * (p1.y() - p0.y()));
-		qreal lastLineLength = qSqrt((p3.x() - p2.x()) * (p3.x() - p2.x()) + (p3.y() - p2.y()) * (p3.y() - p2.y()));
-		qreal firstLineAngle = 180 * qAtan2(p1.y() - p0.y(), p1.x() - p0.x()) / 3.141592654;
-		qreal lastLineAngle = 180 * qAtan2(p3.y() - p2.y(), p3.x() - p2.x()) / 3.141592654;
-
-		DrawingItemStyle* style = DrawingItem::style();
-		QPen pen = style->pen();
-		DrawingItemStyle::ArrowStyle startArrowStyle = style->startArrowStyle();
-		DrawingItemStyle::ArrowStyle endArrowStyle = style->endArrowStyle();
-		qreal startArrowSize = style->startArrowSize();
-		qreal endArrowSize = style->endArrowSize();
-
 		// Draw line
-		QPainterPath drawPath;
-		drawPath.moveTo(points.first()->position());
-		for(auto pointIter = points.begin() + 1; pointIter != points.end(); pointIter++)
-		{
-			drawPath.lineTo((*pointIter)->position());
-			drawPath.moveTo((*pointIter)->position());
-		}
-
 		painter->setBrush(Qt::transparent);
-		painter->setPen(pen);
-		painter->drawPath(drawPath);
+		painter->setPen(mPen);
+		painter->drawPath(mStrokePath);
 
 		// Draw arrows
-		if (pen.style() != Qt::NoPen)
+		if (mPen.style() != Qt::NoPen)
 		{
-			if (firstLineLength > startArrowSize)
-				style->drawArrow(painter, startArrowStyle, startArrowSize, p0, firstLineAngle, pen, sceneBrush);
-			if (lastLineLength > endArrowSize)
-				style->drawArrow(painter, endArrowStyle, endArrowSize, p3, 180 + lastLineAngle, pen, sceneBrush);
+			mStartArrow.render(painter, sceneBrush);
+			mEndArrow.render(painter, sceneBrush);
 		}
 
 		painter->setBrush(sceneBrush);
@@ -232,10 +283,25 @@ void DrawingPolylineItem::render(QPainter* painter)
 
 //==================================================================================================
 
-DrawingItemPoint* DrawingPolylineItem::itemPointToInsert(const QPointF& itemPos, int& index)
+void DrawingPolylineItem::resize(DrawingItemPoint* point, const QPointF& pos)
+{
+	DrawingItem::resize(point, pos);
+
+	QPolygonF polyline;
+
+	QList<DrawingItemPoint*> points = DrawingPolylineItem::points();
+	for(auto pointIter = points.begin(), pointEnd = points.end(); pointIter != pointEnd; pointIter++)
+		polyline << (*pointIter)->position();
+
+	setPolyline(polyline);
+}
+
+//==================================================================================================
+
+DrawingItemPoint* DrawingPolylineItem::itemPointToInsert(const QPointF& pos, int& index)
 {
 	DrawingItemPoint* pointToInsert = new DrawingItemPoint(
-		itemPos, DrawingItemPoint::Control | DrawingItemPoint::Connection);
+		pos, DrawingItemPoint::Control | DrawingItemPoint::Connection);
 
 	QList<DrawingItemPoint*> points = DrawingPolylineItem::points();
 	qreal distance = 0;
@@ -258,20 +324,54 @@ DrawingItemPoint* DrawingPolylineItem::itemPointToInsert(const QPointF& itemPos,
 	return pointToInsert;
 }
 
-DrawingItemPoint* DrawingPolylineItem::itemPointToRemove(const QPointF& itemPos)
+DrawingItemPoint* DrawingPolylineItem::itemPointToRemove(const QPointF& pos)
 {
 	DrawingItemPoint* pointToRemove = nullptr;
 
 	QList<DrawingItemPoint*> points = DrawingPolylineItem::points();
 	if (points.size() > 2)
 	{
-		pointToRemove = pointNearest(itemPos);
+		pointToRemove = pointNearest(pos);
 
 		if (pointToRemove && (pointToRemove == points.first() || pointToRemove == points.last()))
 			pointToRemove = nullptr;
 	}
 
 	return pointToRemove;
+}
+
+//==================================================================================================
+
+void DrawingPolylineItem::updateGeometry()
+{
+	mBoundingRect = QRectF();
+	mShape = QPainterPath();
+	mStrokePath = QPainterPath();
+
+	if (isValid())
+	{
+		qreal halfPenWidth = mPen.widthF() / 2;
+
+		// Bounding rect
+		mBoundingRect = mPolyline.boundingRect().normalized();
+		mBoundingRect.adjust(-halfPenWidth, -halfPenWidth, halfPenWidth, halfPenWidth);
+
+		// Shape
+		mStrokePath.moveTo(mPolyline.first());
+		for(auto pointIter = mPolyline.begin() + 1; pointIter != mPolyline.end(); pointIter++)
+		{
+			mStrokePath.lineTo(*pointIter);
+			mStrokePath.moveTo(*pointIter);
+		}
+
+		mShape = strokePath(mStrokePath, mPen);
+
+		if (mPen.style() != Qt::NoPen)
+		{
+			mShape = mShape.united(mStartArrow.shape());
+			mShape = mShape.united(mEndArrow.shape());
+		}
+	}
 }
 
 //==================================================================================================

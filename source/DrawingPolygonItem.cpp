@@ -1,59 +1,53 @@
 /* DrawingPolygonItem.cpp
  *
- * Copyright (C) 2013-2017 Jason Allen
+ * Copyright (C) 2013-2020 Jason Allen
  *
- * This file is part of the jade application.
+ * This file is part of the libjade library.
  *
- * jade is free software: you can redistribute it and/or modify
+ * libjade is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * jade is distributed in the hope that it will be useful,
+ * libjade is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with jade.  If not, see <http://www.gnu.org/licenses/>
+ * along with libjade.  If not, see <http://www.gnu.org/licenses/>
  */
 
 #include "DrawingPolygonItem.h"
 #include "DrawingItemPoint.h"
-#include "DrawingItemStyle.h"
+#include <QPainter>
+#include <QtMath>
 
 DrawingPolygonItem::DrawingPolygonItem() : DrawingItem()
 {
-	setFlags(CanMove | CanResize | CanRotate | CanFlip | CanInsertPoints | CanRemovePoints | CanSelect | CanDelete);
+	mPen = QPen(Qt::black, 16, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+	mBrush = Qt::white;
 
-	DrawingItemPoint::Flags flags = DrawingItemPoint::Control | DrawingItemPoint::Connection;
-	addPoint(new DrawingItemPoint(QPointF(-200, -200), flags));
-	addPoint(new DrawingItemPoint(QPointF(200, 0), flags));
-	addPoint(new DrawingItemPoint(QPointF(-200, 200), flags));
+	setFlags(CanMove | CanResize | CanRotate | CanFlip | CanInsertPoints | CanRemovePoints |
+			 CanSelect | CanDelete);
 
-	DrawingItemStyle* style = DrawingItem::style();
-	style->setValue(DrawingItemStyle::PenStyle,
-		style->valueLookup(DrawingItemStyle::PenStyle, QVariant((uint)Qt::SolidLine)));
-	style->setValue(DrawingItemStyle::PenColor,
-		style->valueLookup(DrawingItemStyle::PenColor, QVariant(QColor(0, 0, 0))));
-	style->setValue(DrawingItemStyle::PenOpacity,
-		style->valueLookup(DrawingItemStyle::PenOpacity, QVariant(1.0)));
-	style->setValue(DrawingItemStyle::PenWidth,
-		style->valueLookup(DrawingItemStyle::PenWidth, QVariant(12.0)));
-	style->setValue(DrawingItemStyle::PenCapStyle,
-		style->valueLookup(DrawingItemStyle::PenCapStyle, QVariant((uint)Qt::RoundCap)));
-	style->setValue(DrawingItemStyle::PenJoinStyle,
-		style->valueLookup(DrawingItemStyle::PenJoinStyle, QVariant((uint)Qt::RoundJoin)));
+	DrawingItemPoint::Flags flags = (DrawingItemPoint::Control | DrawingItemPoint::Connection);
+	for(int i = 0; i < 3; i++) addPoint(new DrawingItemPoint(QPointF(0, 0), flags));
 
-	style->setValue(DrawingItemStyle::BrushStyle,
-		style->valueLookup(DrawingItemStyle::BrushStyle, QVariant((uint)Qt::SolidPattern)));
-	style->setValue(DrawingItemStyle::BrushColor,
-		style->valueLookup(DrawingItemStyle::BrushColor, QVariant(QColor(255, 255, 255))));
-	style->setValue(DrawingItemStyle::BrushOpacity,
-		style->valueLookup(DrawingItemStyle::BrushOpacity, QVariant(1.0)));
+	QPolygonF polygon;
+	polygon << QPointF(-250, -250) << QPointF(250, 0) << QPointF(-250, 250);
+	setPolygon(polygon);
 }
 
-DrawingPolygonItem::DrawingPolygonItem(const DrawingPolygonItem& item) : DrawingItem(item) { }
+DrawingPolygonItem::DrawingPolygonItem(const DrawingPolygonItem& item) : DrawingItem(item)
+{
+	mPolygon = item.mPolygon;
+	mPen = item.mPen;
+	mBrush = item.mBrush;
+
+	mBoundingRect = item.mBoundingRect;
+	mShape = item.mShape;
+}
 
 DrawingPolygonItem::~DrawingPolygonItem() { }
 
@@ -68,6 +62,8 @@ DrawingItem* DrawingPolygonItem::copy() const
 
 void DrawingPolygonItem::setPolygon(const QPolygonF& polygon)
 {
+	mPolygon = polygon;
+
 	if (polygon.size() >= 3)
 	{
 		while (points().size() < polygon.size())
@@ -82,73 +78,120 @@ void DrawingPolygonItem::setPolygon(const QPolygonF& polygon)
 	}
 
 	QList<DrawingItemPoint*> points = DrawingPolygonItem::points();
-	for(int i = 0; i < polygon.size(); i++)
-		points[i]->setPosition(polygon[i]);
+	for(int i = 0; i < polygon.size(); i++)	points[i]->setPosition(polygon[i]);
+
+	updateGeometry();
 }
 
 QPolygonF DrawingPolygonItem::polygon() const
 {
-	QPolygonF polygon;
+	return mPolygon;
+}
 
-	QList<DrawingItemPoint*> points = DrawingPolygonItem::points();
-	for(int i = 0; i < points.size(); i++) polygon.append(points[i]->position());
+//==================================================================================================
 
-	return polygon;
+void DrawingPolygonItem::setPen(const QPen& pen)
+{
+	mPen = pen;
+	updateGeometry();
+}
+
+QPen DrawingPolygonItem::pen() const
+{
+	return mPen;
+}
+
+//==================================================================================================
+
+void DrawingPolygonItem::setBrush(const QBrush& brush)
+{
+	mBrush = brush;
+	updateGeometry();
+}
+
+QBrush DrawingPolygonItem::brush() const
+{
+	return mBrush;
+}
+
+//==================================================================================================
+
+void DrawingPolygonItem::setProperties(const QHash<QString,QVariant>& properties)
+{
+	if (properties.contains("pen-style"))
+	{
+		bool ok = false;
+		uint value = properties["pen-style"].toUInt(&ok);
+		if (ok) mPen.setStyle(static_cast<Qt::PenStyle>(value));
+	}
+
+	if (properties.contains("pen-color"))
+	{
+		QColor color = properties["pen-color"].value<QColor>();
+		mPen.setBrush(color);
+	}
+
+	if (properties.contains("pen-width"))
+	{
+		bool ok = false;
+		qreal value = properties["pen-width"].toDouble(&ok);
+		if (ok) mPen.setWidthF(value);
+	}
+
+	if (properties.contains("pen-cap-style"))
+	{
+		bool ok = false;
+		uint value = properties["pen-cap-style"].toUInt(&ok);
+		if (ok) mPen.setCapStyle(static_cast<Qt::PenCapStyle>(value));
+	}
+
+	if (properties.contains("pen-join-style"))
+	{
+		bool ok = false;
+		uint value = properties["pen-join-style"].toUInt(&ok);
+		if (ok) mPen.setJoinStyle(static_cast<Qt::PenJoinStyle>(value));
+	}
+
+	if (properties.contains("brush-color"))
+	{
+		QColor color = properties["brush-color"].value<QColor>();
+		mBrush = QBrush(color);
+	}
+
+	updateGeometry();
+}
+
+QHash<QString,QVariant> DrawingPolygonItem::properties() const
+{
+	QHash<QString,QVariant> properties;
+
+	properties["pen-style"] = static_cast<uint>(mPen.style());
+	properties["pen-color"] = mPen.brush().color();
+	properties["pen-width"] = mPen.widthF();
+	properties["pen-cap-style"] = static_cast<uint>(mPen.capStyle());
+	properties["pen-join-style"] = static_cast<uint>(mPen.joinStyle());
+
+	properties["brush-color"] = mBrush.color();
+
+	return properties;
 }
 
 //==================================================================================================
 
 QRectF DrawingPolygonItem::boundingRect() const
 {
-	QRectF rect;
-
-	if (isValid())
-	{
-		qreal penWidth = style()->valueLookup(DrawingItemStyle::PenWidth).toReal();
-
-		rect = polygon().boundingRect();
-		rect.adjust(-penWidth/2, -penWidth/2, penWidth/2, penWidth/2);
-	}
-
-	return rect;
+	return mBoundingRect;
 }
 
 QPainterPath DrawingPolygonItem::shape() const
 {
-	QPainterPath shape;
-
-	if (isValid())
-	{
-		QPainterPath drawPath;
-
-		DrawingItemStyle* style = DrawingItem::style();
-		QPen pen = style->pen();
-		QBrush brush = style->brush();
-
-		// Add polygon
-		drawPath.addPolygon(polygon());
-		drawPath.closeSubpath();
-
-		// Determine outline path
-		shape = strokePath(drawPath, pen);
-
-		if (brush.color().alpha() > 0) shape = shape.united(drawPath);
-	}
-
-	return shape;
+	return mShape;
 }
 
 bool DrawingPolygonItem::isValid() const
 {
-	bool superfluous = true;
-
-	QList<DrawingItemPoint*> points = DrawingPolygonItem::points();
-	QPointF position = points.first()->position();
-
-	for(auto pointIter = points.begin() + 1; superfluous && pointIter != points.end(); pointIter++)
-		superfluous = (position == (*pointIter)->position());
-
-	return !superfluous;
+	QRectF rect = mPolygon.boundingRect();
+	return (rect.width() != 0 || rect.height() != 0);
 }
 
 //==================================================================================================
@@ -160,14 +203,10 @@ void DrawingPolygonItem::render(QPainter* painter)
 		QBrush sceneBrush = painter->brush();
 		QPen scenePen = painter->pen();
 
-		DrawingItemStyle* style = DrawingItem::style();
-		QPen pen = style->pen();
-		QBrush brush = style->brush();
-
 		// Draw polygon
-		painter->setBrush(brush);
-		painter->setPen(pen);
-		painter->drawPolygon(polygon());
+		painter->setBrush(mBrush);
+		painter->setPen(mPen);
+		painter->drawPolygon(mPolygon);
 
 		painter->setBrush(sceneBrush);
 		painter->setPen(scenePen);
@@ -176,10 +215,25 @@ void DrawingPolygonItem::render(QPainter* painter)
 
 //==================================================================================================
 
-DrawingItemPoint* DrawingPolygonItem::itemPointToInsert(const QPointF& itemPos, int& index)
+void DrawingPolygonItem::resize(DrawingItemPoint* point, const QPointF& pos)
+{
+	DrawingItem::resize(point, pos);
+
+	QPolygonF polygon;
+
+	QList<DrawingItemPoint*> points = DrawingPolygonItem::points();
+	for(auto pointIter = points.begin(), pointEnd = points.end(); pointIter != pointEnd; pointIter++)
+		polygon << (*pointIter)->position();
+
+	setPolygon(polygon);
+}
+
+//==================================================================================================
+
+DrawingItemPoint* DrawingPolygonItem::itemPointToInsert(const QPointF& pos, int& index)
 {
 	DrawingItemPoint* pointToInsert = new DrawingItemPoint(
-		itemPos, DrawingItemPoint::Control | DrawingItemPoint::Connection);
+		pos, DrawingItemPoint::Control | DrawingItemPoint::Connection);
 
 	QList<DrawingItemPoint*> points = DrawingPolygonItem::points();
 	qreal distance = 0;
@@ -202,20 +256,45 @@ DrawingItemPoint* DrawingPolygonItem::itemPointToInsert(const QPointF& itemPos, 
 	return pointToInsert;
 }
 
-DrawingItemPoint* DrawingPolygonItem::itemPointToRemove(const QPointF& itemPos)
+DrawingItemPoint* DrawingPolygonItem::itemPointToRemove(const QPointF& pos)
 {
 	DrawingItemPoint* pointToRemove = nullptr;
 
 	QList<DrawingItemPoint*> points = DrawingPolygonItem::points();
 	if (points.size() > 3)
 	{
-		pointToRemove = pointNearest(itemPos);
+		pointToRemove = pointNearest(pos);
 
-		if (pointToRemove && (pointToRemove == points.first() || pointToRemove == points.last()))
-			pointToRemove = nullptr;
+		//if (pointToRemove && (pointToRemove == points.first() || pointToRemove == points.last()))
+		//	pointToRemove = nullptr;
 	}
 
 	return pointToRemove;
+}
+
+//==================================================================================================
+
+void DrawingPolygonItem::updateGeometry()
+{
+	mBoundingRect = QRectF();
+	mShape = QPainterPath();
+
+	if (isValid())
+	{
+		qreal halfPenWidth = mPen.widthF() / 2;
+		QPainterPath drawPath;
+
+		// Bounding rect
+		mBoundingRect = mPolygon.boundingRect().normalized();
+		mBoundingRect.adjust(-halfPenWidth, -halfPenWidth, halfPenWidth, halfPenWidth);
+
+		// Shape
+		drawPath.addPolygon(polygon());
+		drawPath.closeSubpath();
+
+		mShape = strokePath(drawPath, mPen);
+		if (mBrush.color().alpha() > 0) mShape.addPath(drawPath);
+	}
 }
 
 //==================================================================================================

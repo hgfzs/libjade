@@ -48,81 +48,125 @@ $(function() {
 <div class="contents">
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* DrawingPolylineItem.h</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> * Copyright (C) 2013-2017 Jason Allen</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> * Copyright (C) 2013-2020 Jason Allen</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * This file is part of the jade application.</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * This file is part of the libjade library.</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"> * jade is free software: you can redistribute it and/or modify</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"> * libjade is free software: you can redistribute it and/or modify</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment"> * it under the terms of the GNU General Public License as published by</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment"> * the Free Software Foundation, either version 3 of the License, or</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment"> * (at your option) any later version.</span></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment"> * jade is distributed in the hope that it will be useful,</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment"> * libjade is distributed in the hope that it will be useful,</span></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment"> * but WITHOUT ANY WARRANTY; without even the implied warranty of</span></div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment"> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span></div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment"> * GNU General Public License for more details.</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment"> * You should have received a copy of the GNU General Public License</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment"> * along with jade.  If not, see &lt;http://www.gnu.org/licenses/&gt;</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment"> * along with libjade.  If not, see &lt;http://www.gnu.org/licenses/&gt;</span></div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#ifndef DRAWINGPOLYLINEITEM_H</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#define DRAWINGPOLYLINEITEM_H</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;DrawingItem.h&gt;</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="class_drawing_polyline_item.html">   38</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_drawing_polyline_item.html">DrawingPolylineItem</a> : <span class="keyword">public</span> <a class="code" href="class_drawing_item.html">DrawingItem</a></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;{</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <a class="code" href="class_drawing_polyline_item.html#ae09e72392288b27eda481577325975ea">DrawingPolylineItem</a>();</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <a class="code" href="class_drawing_polyline_item.html#ae09e72392288b27eda481577325975ea">DrawingPolylineItem</a>(<span class="keyword">const</span> <a class="code" href="class_drawing_polyline_item.html">DrawingPolylineItem</a>&amp; item);</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="class_drawing_polyline_item.html#a517a4121d63aadbe6cd9aea46ac4a39b">~DrawingPolylineItem</a>();</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;DrawingArrow.h&gt;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
+<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="class_drawing_polyline_item.html">   35</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_drawing_polyline_item.html">DrawingPolylineItem</a> : <span class="keyword">public</span> <a class="code" href="class_drawing_item.html">DrawingItem</a></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;{</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    QPolygonF mPolyline;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    QPen mPen;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    DrawingArrow mStartArrow;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    DrawingArrow mEndArrow;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    QRectF mBoundingRect;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    QPainterPath mShape;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    QPainterPath mStrokePath;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <a class="code" href="class_drawing_polyline_item.html#ae09e72392288b27eda481577325975ea">DrawingPolylineItem</a>();</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <a class="code" href="class_drawing_polyline_item.html#ae09e72392288b27eda481577325975ea">DrawingPolylineItem</a>(<span class="keyword">const</span> <a class="code" href="class_drawing_polyline_item.html">DrawingPolylineItem</a>&amp; item);</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="class_drawing_polyline_item.html#a517a4121d63aadbe6cd9aea46ac4a39b">~DrawingPolylineItem</a>();</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="class_drawing_item.html">DrawingItem</a>* <a class="code" href="class_drawing_polyline_item.html#a251edc60c1534df9eca47f17adf25786">copy</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="class_drawing_item.html">DrawingItem</a>* <a class="code" href="class_drawing_polyline_item.html#a251edc60c1534df9eca47f17adf25786">copy</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_drawing_polyline_item.html#a035a15230526d496976fa9f01359c365">setPolyline</a>(<span class="keyword">const</span> QPolygonF&amp; polygon);</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    QPolygonF <a class="code" href="class_drawing_polyline_item.html#a081a2f2f963b826e8c55f0d1e65786e9">polyline</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_drawing_polyline_item.html#a035a15230526d496976fa9f01359c365">setPolyline</a>(<span class="keyword">const</span> QPolygonF&amp; polygon);</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    QPolygonF <a class="code" href="class_drawing_polyline_item.html#a081a2f2f963b826e8c55f0d1e65786e9">polyline</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_drawing_polyline_item.html#abca94fc8ef92b11f53715ae9809360e3">setPen</a>(<span class="keyword">const</span> QPen&amp; <a class="code" href="class_drawing_polyline_item.html#a496ce0e2ec7d7b41ea366c4fe4a37c61">pen</a>);</div>
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keyword">virtual</span> QRectF <a class="code" href="class_drawing_polyline_item.html#aefee17874df2a4296729ac331e03060b">boundingRect</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="keyword">virtual</span> QPainterPath <a class="code" href="class_drawing_polyline_item.html#a5ee8acdea70c2b6e16ea0521da782c2f">shape</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160; </div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="class_drawing_polyline_item.html#a251f64deab5cdb88f3a891c73e5cb432">isValid</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160; </div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    QPen <a class="code" href="class_drawing_polyline_item.html#a496ce0e2ec7d7b41ea366c4fe4a37c61">pen</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_drawing_polyline_item.html#a95e17b46959e5ee547cc7c504a9ef0e8">setStartArrow</a>(<span class="keyword">const</span> DrawingArrow&amp; arrow);</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_drawing_polyline_item.html#a18c8fb3e1c1b6542a693a3b7a762673b">setEndArrow</a>(<span class="keyword">const</span> DrawingArrow&amp; arrow);</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160; </div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    DrawingArrow <a class="code" href="class_drawing_polyline_item.html#a5d037d5128be39cb618b82ca4566c390">startArrow</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160; </div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_drawing_polyline_item.html#ab8bac697232d2131967b6bb2a3d5266b">render</a>(QPainter* painter);</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160; </div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160; </div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="class_drawing_item_point.html">DrawingItemPoint</a>* <a class="code" href="class_drawing_polyline_item.html#af51178cb9c8c675d2bcbdcba268adad5">itemPointToInsert</a>(<span class="keyword">const</span> QPointF&amp; itemPos, <span class="keywordtype">int</span>&amp; index);</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160; </div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="class_drawing_item_point.html">DrawingItemPoint</a>* <a class="code" href="class_drawing_polyline_item.html#a498cf1391bf23a943a72f12304074a70">itemPointToRemove</a>(<span class="keyword">const</span> QPointF&amp; itemPos);</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160; </div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    qreal distanceFromPointToLineSegment(<span class="keyword">const</span> QPointF&amp; point, <span class="keyword">const</span> QLineF&amp; line) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;};</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160; </div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    DrawingArrow <a class="code" href="class_drawing_polyline_item.html#ad44d970402f0066009c286c19ec459cc">endArrow</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160; </div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160; </div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_drawing_polyline_item.html#af1c45f18b54a2d60e6833ec91bcff649">setProperties</a>(<span class="keyword">const</span> QHash&lt;QString,QVariant&gt;&amp; <a class="code" href="class_drawing_polyline_item.html#a70d72688a0e2902c5b35071ab1902342">properties</a>);</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160; </div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;    QHash&lt;QString,QVariant&gt; <a class="code" href="class_drawing_polyline_item.html#a70d72688a0e2902c5b35071ab1902342">properties</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160; </div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160; </div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;    <span class="keyword">virtual</span> QRectF <a class="code" href="class_drawing_polyline_item.html#aefee17874df2a4296729ac331e03060b">boundingRect</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160; </div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;    <span class="keyword">virtual</span> QPainterPath <a class="code" href="class_drawing_polyline_item.html#a5ee8acdea70c2b6e16ea0521da782c2f">shape</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160; </div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="class_drawing_polyline_item.html#a251f64deab5cdb88f3a891c73e5cb432">isValid</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160; </div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160; </div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_drawing_polyline_item.html#ab8bac697232d2131967b6bb2a3d5266b">render</a>(QPainter* painter);</div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160; </div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160; </div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_drawing_polyline_item.html#a9a0dcbe21448b1e6cdc1190efcf86a86">resize</a>(<a class="code" href="class_drawing_item_point.html">DrawingItemPoint</a>* point, <span class="keyword">const</span> QPointF&amp; pos);</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160; </div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160; </div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="class_drawing_item_point.html">DrawingItemPoint</a>* <a class="code" href="class_drawing_polyline_item.html#a3509bb87770d10b9a05c647ae7ef41b9">itemPointToInsert</a>(<span class="keyword">const</span> QPointF&amp; pos, <span class="keywordtype">int</span>&amp; index);</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160; </div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="class_drawing_item_point.html">DrawingItemPoint</a>* <a class="code" href="class_drawing_polyline_item.html#a2eec2a37551409fe7170a397736116eb">itemPointToRemove</a>(<span class="keyword">const</span> QPointF&amp; pos);</div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160; </div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;    <span class="keywordtype">void</span> updateGeometry();</div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160; </div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;    qreal distanceFromPointToLineSegment(<span class="keyword">const</span> QPointF&amp; point, <span class="keyword">const</span> QLineF&amp; line) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;};</div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160; </div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
+<div class="ttc" id="aclass_drawing_polyline_item_html_a18c8fb3e1c1b6542a693a3b7a762673b"><div class="ttname"><a href="class_drawing_polyline_item.html#a18c8fb3e1c1b6542a693a3b7a762673b">DrawingPolylineItem::setEndArrow</a></div><div class="ttdeci">void setEndArrow(const DrawingArrow &amp;arrow)</div><div class="ttdoc">Sets the arrow drawn at the end point of the polyline.</div></div>
+<div class="ttc" id="aclass_drawing_polyline_item_html_a5d037d5128be39cb618b82ca4566c390"><div class="ttname"><a href="class_drawing_polyline_item.html#a5d037d5128be39cb618b82ca4566c390">DrawingPolylineItem::startArrow</a></div><div class="ttdeci">DrawingArrow startArrow() const</div><div class="ttdoc">Returns the arrow drawn at the start point of the polyline.</div></div>
 <div class="ttc" id="aclass_drawing_polyline_item_html_a517a4121d63aadbe6cd9aea46ac4a39b"><div class="ttname"><a href="class_drawing_polyline_item.html#a517a4121d63aadbe6cd9aea46ac4a39b">DrawingPolylineItem::~DrawingPolylineItem</a></div><div class="ttdeci">virtual ~DrawingPolylineItem()</div><div class="ttdoc">Delete an existing DrawingPolylineItem object.</div></div>
 <div class="ttc" id="aclass_drawing_polyline_item_html_a251edc60c1534df9eca47f17adf25786"><div class="ttname"><a href="class_drawing_polyline_item.html#a251edc60c1534df9eca47f17adf25786">DrawingPolylineItem::copy</a></div><div class="ttdeci">virtual DrawingItem * copy() const</div><div class="ttdoc">Creates a copy of the DrawingPolylineItem and return it.</div></div>
+<div class="ttc" id="aclass_drawing_polyline_item_html_abca94fc8ef92b11f53715ae9809360e3"><div class="ttname"><a href="class_drawing_polyline_item.html#abca94fc8ef92b11f53715ae9809360e3">DrawingPolylineItem::setPen</a></div><div class="ttdeci">void setPen(const QPen &amp;pen)</div><div class="ttdoc">Sets the pen used to draw the polyline.</div></div>
 <div class="ttc" id="aclass_drawing_polyline_item_html_a5ee8acdea70c2b6e16ea0521da782c2f"><div class="ttname"><a href="class_drawing_polyline_item.html#a5ee8acdea70c2b6e16ea0521da782c2f">DrawingPolylineItem::shape</a></div><div class="ttdeci">virtual QPainterPath shape() const</div><div class="ttdoc">Returns an accurate outline of the item's shape.</div></div>
 <div class="ttc" id="aclass_drawing_item_point_html"><div class="ttname"><a href="class_drawing_item_point.html">DrawingItemPoint</a></div><div class="ttdoc">Represents an interaction point within a DrawingItem through which the user can resize the item or co...</div><div class="ttdef"><b>Definition:</b> DrawingItemPoint.h:53</div></div>
+<div class="ttc" id="aclass_drawing_polyline_item_html_a496ce0e2ec7d7b41ea366c4fe4a37c61"><div class="ttname"><a href="class_drawing_polyline_item.html#a496ce0e2ec7d7b41ea366c4fe4a37c61">DrawingPolylineItem::pen</a></div><div class="ttdeci">QPen pen() const</div><div class="ttdoc">Returns the pen used to draw the polyline.</div></div>
 <div class="ttc" id="aclass_drawing_polyline_item_html_aefee17874df2a4296729ac331e03060b"><div class="ttname"><a href="class_drawing_polyline_item.html#aefee17874df2a4296729ac331e03060b">DrawingPolylineItem::boundingRect</a></div><div class="ttdeci">virtual QRectF boundingRect() const</div><div class="ttdoc">Returns an estimate of the area painted by the polyline item.</div></div>
 <div class="ttc" id="aclass_drawing_polyline_item_html_ab8bac697232d2131967b6bb2a3d5266b"><div class="ttname"><a href="class_drawing_polyline_item.html#ab8bac697232d2131967b6bb2a3d5266b">DrawingPolylineItem::render</a></div><div class="ttdeci">virtual void render(QPainter *painter)</div><div class="ttdoc">Paints the contents of the polyline item into the scene.</div></div>
-<div class="ttc" id="aclass_drawing_polyline_item_html_a251f64deab5cdb88f3a891c73e5cb432"><div class="ttname"><a href="class_drawing_polyline_item.html#a251f64deab5cdb88f3a891c73e5cb432">DrawingPolylineItem::isValid</a></div><div class="ttdeci">virtual bool isValid() const</div><div class="ttdoc">Return false if the item is degenerate, true otherwise.</div></div>
-<div class="ttc" id="aclass_drawing_polyline_item_html_a081a2f2f963b826e8c55f0d1e65786e9"><div class="ttname"><a href="class_drawing_polyline_item.html#a081a2f2f963b826e8c55f0d1e65786e9">DrawingPolylineItem::polyline</a></div><div class="ttdeci">QPolygonF polyline() const</div><div class="ttdoc">Returns item's polyline in local item coordinates.</div></div>
-<div class="ttc" id="aclass_drawing_polyline_item_html_af51178cb9c8c675d2bcbdcba268adad5"><div class="ttname"><a href="class_drawing_polyline_item.html#af51178cb9c8c675d2bcbdcba268adad5">DrawingPolylineItem::itemPointToInsert</a></div><div class="ttdeci">virtual DrawingItemPoint * itemPointToInsert(const QPointF &amp;itemPos, int &amp;index)</div><div class="ttdoc">Creates a new DrawingItemPoint to be inserted in the item and determines the appropriate location in ...</div></div>
-<div class="ttc" id="aclass_drawing_polyline_item_html_a498cf1391bf23a943a72f12304074a70"><div class="ttname"><a href="class_drawing_polyline_item.html#a498cf1391bf23a943a72f12304074a70">DrawingPolylineItem::itemPointToRemove</a></div><div class="ttdeci">virtual DrawingItemPoint * itemPointToRemove(const QPointF &amp;itemPos)</div><div class="ttdoc">Returns an existing DrawingItemPoint to be removed from the item at the specified position.</div></div>
+<div class="ttc" id="aclass_drawing_polyline_item_html_a251f64deab5cdb88f3a891c73e5cb432"><div class="ttname"><a href="class_drawing_polyline_item.html#a251f64deab5cdb88f3a891c73e5cb432">DrawingPolylineItem::isValid</a></div><div class="ttdeci">virtual bool isValid() const</div><div class="ttdoc">Return false if the item is invalid, true otherwise.</div></div>
+<div class="ttc" id="aclass_drawing_polyline_item_html_a081a2f2f963b826e8c55f0d1e65786e9"><div class="ttname"><a href="class_drawing_polyline_item.html#a081a2f2f963b826e8c55f0d1e65786e9">DrawingPolylineItem::polyline</a></div><div class="ttdeci">QPolygonF polyline() const</div><div class="ttdoc">Returns the item's polyline in local item coordinates.</div></div>
+<div class="ttc" id="aclass_drawing_polyline_item_html_a9a0dcbe21448b1e6cdc1190efcf86a86"><div class="ttname"><a href="class_drawing_polyline_item.html#a9a0dcbe21448b1e6cdc1190efcf86a86">DrawingPolylineItem::resize</a></div><div class="ttdeci">virtual void resize(DrawingItemPoint *point, const QPointF &amp;pos)</div><div class="ttdoc">Resizes the item within the scene.</div></div>
+<div class="ttc" id="aclass_drawing_polyline_item_html_af1c45f18b54a2d60e6833ec91bcff649"><div class="ttname"><a href="class_drawing_polyline_item.html#af1c45f18b54a2d60e6833ec91bcff649">DrawingPolylineItem::setProperties</a></div><div class="ttdeci">void setProperties(const QHash&lt; QString, QVariant &gt; &amp;properties)</div><div class="ttdoc">Sets the values of all item properties.</div></div>
+<div class="ttc" id="aclass_drawing_polyline_item_html_ad44d970402f0066009c286c19ec459cc"><div class="ttname"><a href="class_drawing_polyline_item.html#ad44d970402f0066009c286c19ec459cc">DrawingPolylineItem::endArrow</a></div><div class="ttdeci">DrawingArrow endArrow() const</div><div class="ttdoc">Returns the arrow drawn at the end point of the polyline.</div></div>
 <div class="ttc" id="aclass_drawing_polyline_item_html_a035a15230526d496976fa9f01359c365"><div class="ttname"><a href="class_drawing_polyline_item.html#a035a15230526d496976fa9f01359c365">DrawingPolylineItem::setPolyline</a></div><div class="ttdeci">void setPolyline(const QPolygonF &amp;polygon)</div><div class="ttdoc">Sets the item's polyline to polygon, which is given in local item coordinates.</div></div>
-<div class="ttc" id="aclass_drawing_polyline_item_html"><div class="ttname"><a href="class_drawing_polyline_item.html">DrawingPolylineItem</a></div><div class="ttdoc">Provides a polyline item that can be added to a DrawingScene.</div><div class="ttdef"><b>Definition:</b> DrawingPolylineItem.h:38</div></div>
+<div class="ttc" id="aclass_drawing_polyline_item_html"><div class="ttname"><a href="class_drawing_polyline_item.html">DrawingPolylineItem</a></div><div class="ttdoc">Provides a polyline item that can be added to a DrawingScene.</div><div class="ttdef"><b>Definition:</b> DrawingPolylineItem.h:35</div></div>
+<div class="ttc" id="aclass_drawing_polyline_item_html_a3509bb87770d10b9a05c647ae7ef41b9"><div class="ttname"><a href="class_drawing_polyline_item.html#a3509bb87770d10b9a05c647ae7ef41b9">DrawingPolylineItem::itemPointToInsert</a></div><div class="ttdeci">virtual DrawingItemPoint * itemPointToInsert(const QPointF &amp;pos, int &amp;index)</div><div class="ttdoc">Creates a new DrawingItemPoint to be inserted in the item and determines the appropriate location in ...</div></div>
+<div class="ttc" id="aclass_drawing_polyline_item_html_a95e17b46959e5ee547cc7c504a9ef0e8"><div class="ttname"><a href="class_drawing_polyline_item.html#a95e17b46959e5ee547cc7c504a9ef0e8">DrawingPolylineItem::setStartArrow</a></div><div class="ttdeci">void setStartArrow(const DrawingArrow &amp;arrow)</div><div class="ttdoc">Sets the arrow drawn at the start point of the polyline.</div></div>
 <div class="ttc" id="aclass_drawing_polyline_item_html_ae09e72392288b27eda481577325975ea"><div class="ttname"><a href="class_drawing_polyline_item.html#ae09e72392288b27eda481577325975ea">DrawingPolylineItem::DrawingPolylineItem</a></div><div class="ttdeci">DrawingPolylineItem()</div><div class="ttdoc">Create a new DrawingPolylineItem with default settings.</div></div>
 <div class="ttc" id="aclass_drawing_item_html"><div class="ttname"><a href="class_drawing_item.html">DrawingItem</a></div><div class="ttdoc">Base class for all graphical items in a DrawingScene.</div><div class="ttdef"><b>Definition:</b> DrawingItem.h:145</div></div>
+<div class="ttc" id="aclass_drawing_polyline_item_html_a2eec2a37551409fe7170a397736116eb"><div class="ttname"><a href="class_drawing_polyline_item.html#a2eec2a37551409fe7170a397736116eb">DrawingPolylineItem::itemPointToRemove</a></div><div class="ttdeci">virtual DrawingItemPoint * itemPointToRemove(const QPointF &amp;pos)</div><div class="ttdoc">Returns an existing DrawingItemPoint to be removed from the item at the specified position.</div></div>
+<div class="ttc" id="aclass_drawing_polyline_item_html_a70d72688a0e2902c5b35071ab1902342"><div class="ttname"><a href="class_drawing_polyline_item.html#a70d72688a0e2902c5b35071ab1902342">DrawingPolylineItem::properties</a></div><div class="ttdeci">QHash&lt; QString, QVariant &gt; properties() const</div><div class="ttdoc">Returns the values of all item properties.</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

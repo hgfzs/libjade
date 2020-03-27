@@ -1,21 +1,21 @@
 /* DrawingPolygonItem.h
  *
- * Copyright (C) 2013-2017 Jason Allen
+ * Copyright (C) 2013-2020 Jason Allen
  *
- * This file is part of the jade application.
+ * This file is part of the libjade library.
  *
- * jade is free software: you can redistribute it and/or modify
+ * libjade is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * jade is distributed in the hope that it will be useful,
+ * libjade is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with jade.  If not, see <http://www.gnu.org/licenses/>
+ * along with libjade.  If not, see <http://www.gnu.org/licenses/>
  */
 
 #ifndef DRAWINGPOLYGONITEM_H
@@ -28,39 +28,30 @@
  * To set the item's polygon, call the setPolygon() function.  The polygon() function returns the
  * current polygon.  Both functions operate in local item coordinates.
  *
- * Rendering options for the polygon can be controlled through properties of the item's style().
- * The polygon item supports all of the pen and brush style properties.
- *
  * DrawingPolygonItem provides a reasonable implementation of boundingRect(), shape(), and isValid().
- * The render() function draws the polygon using the item's associated pen and brush.
+ * The render() function draws the polygon using the item's pen() and brush().
  */
 class DrawingPolygonItem : public DrawingItem
 {
+private:
+	QPolygonF mPolygon;
+	QPen mPen;
+	QBrush mBrush;
+
+	QRectF mBoundingRect;
+	QPainterPath mShape;
+
 public:
 	/*! \brief Create a new DrawingPolygonItem with default settings.
 	 *
 	 * This function creates three DrawingItemPoint objects and adds them to the item.  These
 	 * item points represent the initial points of the polygon.
-	 *
-	 * This function fills in the item's style() with default values for the following properties.
-	 * The default values are pulled from the style's DrawingItemStyle::defaultValues() if present,
-	 * otherwise DrawingPolygonItem attempts to use reasonable initial values for each property:
-	 * \li DrawingItemStyle::PenStyle
-	 * \li DrawingItemStyle::PenColor
-	 * \li DrawingItemStyle::PenOpacity
-	 * \li DrawingItemStyle::PenWidth
-	 * \li DrawingItemStyle::PenCapStyle
-	 * \li DrawingItemStyle::PenJoinStyle
-	 * \li DrawingItemStyle::BrushStyle
-	 * \li DrawingItemStyle::BrushColor
-	 * \li DrawingItemStyle::BrushOpacity
 	 */
 	DrawingPolygonItem();
 
 	/*! \brief Create a new DrawingPolygonItem as a copy of an existing polygon item.
 	 *
-	 * Creates copies of all item points to the new polygon item, including the point's positions.
-	 * Also creates a new item style with all of the same properties as the existing item's style.
+	 * Creates copies of all item points to the new polygon item, including the points' positions.
 	 */
 	DrawingPolygonItem(const DrawingPolygonItem& item);
 
@@ -94,10 +85,91 @@ public:
 	QPolygonF polygon() const;
 
 
+	/*! \brief Sets the pen used to draw the border of the polygon.
+	 *
+	 * The pen's width is in local item coordinates.
+	 *
+	 * \sa pen()
+	 */
+	void setPen(const QPen& pen);
+
+	/*! \brief Returns the pen used to draw the border of the polygon.
+	 *
+	 * \sa setPen()
+	 */
+	QPen pen() const;
+
+
+	/*! \brief Sets the brush used to fill the polygon.
+	 *
+	 * \sa brush()
+	 */
+	void setBrush(const QBrush& brush);
+
+	/*! \brief Returns the brush used to fill the polygon.
+	 *
+	 * \sa setBrush()
+	 */
+	QBrush brush() const;
+
+
+	/*! \brief Sets the values of all item properties.
+	 *
+	 * The supported properties are listed below:
+	 *
+	 * <table>
+	 *   <tr>
+	 *     <th>Name</th>
+	 *     <th>Type</th>
+	 *     <th>Description</th>
+	 *   </tr>
+	 *   <tr>
+	 *     <td>pen-color</td>
+	 *     <td>QColor</td>
+	 *     <td>Color of the item's pen(), including alpha channel</td>
+	 *   </tr>
+	 *   <tr>
+	 *     <td>pen-width</td>
+	 *     <td>qreal</td>
+	 *     <td>Width of the item's pen()</td>
+	 *   </tr>
+	 *   <tr>
+	 *     <td>pen-style</td>
+	 *     <td>unsigned int</td>
+	 *     <td>Style of the item's pen(), casted from Qt::PenStyle</td>
+	 *   </tr>
+	 *   <tr>
+	 *     <td>pen-cap-style</td>
+	 *     <td>unsigned int</td>
+	 *     <td>Cap style of the item's pen(), casted from Qt::PenCapStyle</td>
+	 *   </tr>
+	 *   <tr>
+	 *     <td>pen-join-style</td>
+	 *     <td>unsigned int</td>
+	 *     <td>Join style of the item's pen(), casted from Qt::PenJoinStyle</td>
+	 *   </tr>
+	 *   <tr>
+	 *     <td>brush-color</td>
+	 *     <td>QColor</td>
+	 *     <td>Color of the item's brush(), including alpha channel</td>
+	 *   </tr>
+	 * </table>
+	 *
+	 * \sa properties()
+	 */
+	void setProperties(const QHash<QString,QVariant>& properties);
+
+	/*! \brief Returns the values of all item properties.
+	 *
+	 * See the setProperties() function for the list of properties supported.
+	 */
+	QHash<QString,QVariant> properties() const;
+
+
 	/*! \brief Returns an estimate of the area painted by the polygon item.
 	 *
 	 * Calculates the bounding rect of the polygon based on the position of its points.
-	 * The rect includes an adjustment for the width of the pen as set by the item's style().
+	 * The rect includes an adjustment for the width of the item's pen().
 	 *
 	 * \sa shape(), isValid()
 	 */
@@ -105,15 +177,16 @@ public:
 
 	/*! \brief Returns an accurate outline of the item's shape.
 	 *
-	 * Calculates the shape of the polygon based on the position of its points.
+	 * Calculates the shape of the polygon based on the position of its points as well as its
+	 * pen() and brush().
 	 *
 	 * \sa boundingRect(), isValid()
 	 */
 	virtual QPainterPath shape() const;
 
-	/*! \brief Return false if the item is degenerate, true otherwise.
+	/*! \brief Return false if the item is invalid, true otherwise.
 	 *
-	 * A polygon item is considered degenerate if the positions of all of its points
+	 * A polygon item is considered invalid if the positions of all of its points
 	 * are the same.
 	 *
 	 * \sa boundingRect(), shape()
@@ -123,7 +196,7 @@ public:
 
 	/*! \brief Paints the contents of the polygon item into the scene.
 	 *
-	 * The polygon is painted in the scene based on properties set by the item's style().
+	 * The polygon is painted in the scene using the item's pen() and brush().
 	 *
 	 * At the end of this function, the QPainter object is returned to the same state that it was
 	 * in when the function started.
@@ -131,28 +204,37 @@ public:
 	virtual void render(QPainter* painter);
 
 
+	/*! \brief Resizes the item within the scene.
+	 *
+	 * This function is only used for internal caching and doesn't add any new behavior.
+	 */
+	virtual void resize(DrawingItemPoint* point, const QPointF& pos);
+
+
 	/*! \brief Creates a new DrawingItemPoint to be inserted in the item and determines the
 	 * appropriate location in the item's point list to insert the new point.
 	 *
-	 * The position of the new point is determined by itemPos.  The flags of the new point are:
+	 * The position of the new point is determined by pos.  The flags of the new point are:
 	 * DrawingItemPoint::Control | DrawingItemPoint::Connection.
 	 *
 	 * \sa itemPointToRemove()
 	 */
-	virtual DrawingItemPoint* itemPointToInsert(const QPointF& itemPos, int& index);
+	virtual DrawingItemPoint* itemPointToInsert(const QPointF& pos, int& index);
 
 	/*! \brief Returns an existing DrawingItemPoint to be removed from the item at the specified
 	 * position.
 	 *
-	 * This function removes the DrawingItemPoint nearest to itemPos.  Note that a polygon must
+	 * This function removes the DrawingItemPoint nearest to pos.  Note that a polygon must
 	 * always have a minimum of three points; if the item only has three points, this function
 	 * returns nullptr.
 	 *
 	 * \sa itemPointToInsert()
 	 */
-	virtual DrawingItemPoint* itemPointToRemove(const QPointF& itemPos);
+	virtual DrawingItemPoint* itemPointToRemove(const QPointF& pos);
 
 private:
+	void updateGeometry();
+
 	qreal distanceFromPointToLineSegment(const QPointF& point, const QLineF& line) const;
 };
 
