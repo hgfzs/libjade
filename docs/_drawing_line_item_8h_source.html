@@ -78,8 +78,8 @@ $(function() {
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">private</span>:</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    QLineF mLine;</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    QPen mPen;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    DrawingArrow mStartArrow;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    DrawingArrow mEndArrow;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <a class="code" href="class_drawing_arrow.html">DrawingArrow</a> mStartArrow;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <a class="code" href="class_drawing_arrow.html">DrawingArrow</a> mEndArrow;</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    QRectF mBoundingRect;</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    QPainterPath mShape;</div>
@@ -107,13 +107,13 @@ $(function() {
 <div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    QPen <a class="code" href="class_drawing_line_item.html#a1f0a3eed706181748c4816cd0425d176">pen</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_drawing_line_item.html#a92c51ed620a742d5e6a74671fc56389f">setStartArrow</a>(<span class="keyword">const</span> DrawingArrow&amp; arrow);</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_drawing_line_item.html#a92c51ed620a742d5e6a74671fc56389f">setStartArrow</a>(<span class="keyword">const</span> <a class="code" href="class_drawing_arrow.html">DrawingArrow</a>&amp; arrow);</div>
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160; </div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_drawing_line_item.html#a4889d80feefe9b0ab5bfc60769c80d7b">setEndArrow</a>(<span class="keyword">const</span> DrawingArrow&amp; arrow);</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_drawing_line_item.html#a4889d80feefe9b0ab5bfc60769c80d7b">setEndArrow</a>(<span class="keyword">const</span> <a class="code" href="class_drawing_arrow.html">DrawingArrow</a>&amp; arrow);</div>
 <div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160; </div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;    DrawingArrow <a class="code" href="class_drawing_line_item.html#afccfbfd0bfb3701b53cc4aaf1c229e81">startArrow</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;    <a class="code" href="class_drawing_arrow.html">DrawingArrow</a> <a class="code" href="class_drawing_line_item.html#afccfbfd0bfb3701b53cc4aaf1c229e81">startArrow</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160; </div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;    DrawingArrow <a class="code" href="class_drawing_line_item.html#a642fd19f91fe4bbab45512d2223f6757">endArrow</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;    <a class="code" href="class_drawing_arrow.html">DrawingArrow</a> <a class="code" href="class_drawing_line_item.html#a642fd19f91fe4bbab45512d2223f6757">endArrow</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160; </div>
 <div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160; </div>
 <div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_drawing_line_item.html#a8e5653f97633dae33acfa7ba8f1cffe1">setProperties</a>(<span class="keyword">const</span> QHash&lt;QString,QVariant&gt;&amp; <a class="code" href="class_drawing_line_item.html#a118b637442afb31468bfd4a381e02da1">properties</a>);</div>
@@ -157,6 +157,7 @@ $(function() {
 <div class="ttc" id="aclass_drawing_line_item_html_ad01bd2fbb7b28986d5e6d88250b4251d"><div class="ttname"><a href="class_drawing_line_item.html#ad01bd2fbb7b28986d5e6d88250b4251d">DrawingLineItem::isValid</a></div><div class="ttdeci">virtual bool isValid() const</div><div class="ttdoc">Return false if the item is invalid, true otherwise.</div></div>
 <div class="ttc" id="aclass_drawing_line_item_html_a1c2e46071186067b3c008bd5a42171c9"><div class="ttname"><a href="class_drawing_line_item.html#a1c2e46071186067b3c008bd5a42171c9">DrawingLineItem::boundingRect</a></div><div class="ttdeci">virtual QRectF boundingRect() const</div><div class="ttdoc">Returns an estimate of the area painted by the line item.</div></div>
 <div class="ttc" id="aclass_drawing_line_item_html_aaf357c64ad7e0a34b47d65ac558c3cbf"><div class="ttname"><a href="class_drawing_line_item.html#aaf357c64ad7e0a34b47d65ac558c3cbf">DrawingLineItem::copy</a></div><div class="ttdeci">virtual DrawingItem * copy() const</div><div class="ttdoc">Creates a copy of the DrawingLineItem and return it.</div></div>
+<div class="ttc" id="aclass_drawing_arrow_html"><div class="ttname"><a href="class_drawing_arrow.html">DrawingArrow</a></div><div class="ttdoc">Defines properties of an arrow that you might find on the one of a line item or equivalent.</div><div class="ttdef"><b>Definition:</b> DrawingArrow.h:37</div></div>
 <div class="ttc" id="aclass_drawing_line_item_html_a7db902f7f86f3ad0bee272c17a07140c"><div class="ttname"><a href="class_drawing_line_item.html#a7db902f7f86f3ad0bee272c17a07140c">DrawingLineItem::resize</a></div><div class="ttdeci">virtual void resize(DrawingItemPoint *point, const QPointF &amp;pos)</div><div class="ttdoc">Resizes the item within the scene.</div></div>
 <div class="ttc" id="aclass_drawing_item_html"><div class="ttname"><a href="class_drawing_item.html">DrawingItem</a></div><div class="ttdoc">Base class for all graphical items in a DrawingScene.</div><div class="ttdef"><b>Definition:</b> DrawingItem.h:145</div></div>
 <div class="ttc" id="aclass_drawing_line_item_html_a92c51ed620a742d5e6a74671fc56389f"><div class="ttname"><a href="class_drawing_line_item.html#a92c51ed620a742d5e6a74671fc56389f">DrawingLineItem::setStartArrow</a></div><div class="ttdeci">void setStartArrow(const DrawingArrow &amp;arrow)</div><div class="ttdoc">Sets the arrow drawn at the start point of the line.</div></div>

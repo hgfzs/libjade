@@ -18,8 +18,8 @@
  * along with jade.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef _DRAWING_H_
-#define _DRAWING_H_
+#ifndef DRAWING_H
+#define DRAWING_H
 
 #include <DrawingView.h>
 #include <DrawingScene.h>

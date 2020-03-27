@@ -48,22 +48,22 @@ $(function() {
 <div class="contents">
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* DrawingArrow.h</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> * Copyright (C) 2019- Jason Allen</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> * Copyright (C) 2019-2020 Jason Allen</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * This file is part of the jade application.</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * This file is part of the libjade library.</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"> * jade is free software: you can redistribute it and/or modify</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"> * libjade is free software: you can redistribute it and/or modify</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment"> * it under the terms of the GNU General Public License as published by</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment"> * the Free Software Foundation, either version 3 of the License, or</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment"> * (at your option) any later version.</span></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment"> * jade is distributed in the hope that it will be useful,</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment"> * libjade is distributed in the hope that it will be useful,</span></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment"> * but WITHOUT ANY WARRANTY; without even the implied warranty of</span></div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment"> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span></div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment"> * GNU General Public License for more details.</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment"> * You should have received a copy of the GNU General Public License</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment"> * along with jade.  If not, see &lt;http://www.gnu.org/licenses/&gt;</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment"> * along with libjade.  If not, see &lt;http://www.gnu.org/licenses/&gt;</span></div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#ifndef DRAWINGARROW_H</span></div>
@@ -71,50 +71,98 @@ $(function() {
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;QPainterPath&gt;</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">class </span>DrawingArrow</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;{</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keyword">enum</span> Style { None, Normal, Triangle, TriangleFilled, Concave, ConcaveFilled, Circle, CircleFilled };</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    QPointF mPosition;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    qreal mPenWidth;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    qreal mLength;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    qreal mAngle;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    Style mStyle;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    qreal mSize;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    QPainterPath mShape;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    QPolygonF mPolygon;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    DrawingArrow(Style style = None, qreal size = 0);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    DrawingArrow(<span class="keyword">const</span> DrawingArrow&amp; arrow);</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    ~DrawingArrow();</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    DrawingArrow&amp; operator=(<span class="keyword">const</span> DrawingArrow&amp; arrow);</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordtype">void</span> setVector(<span class="keyword">const</span> QPointF&amp; pos, qreal penWidth, qreal length, qreal angle);</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keywordtype">void</span> setStyle(Style style);</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordtype">void</span> setSize(qreal size);</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    QPointF vectorPosition() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    qreal vectorPenWidth() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    qreal vectorLength() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    qreal vectorAngle() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    Style style() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    qreal size() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    QPainterPath shape() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordtype">void</span> render(QPainter* painter, <span class="keyword">const</span> QBrush&amp; backgroundBrush);</div>
+<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="class_drawing_arrow.html">   37</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_drawing_arrow.html">DrawingArrow</a></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;{</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="class_drawing_arrow.html#a00e8a100f909005a7194fe4c3f7dbe22">   40</a></span>&#160;    <span class="keyword">enum</span> <a class="code" href="class_drawing_arrow.html#a00e8a100f909005a7194fe4c3f7dbe22">Style</a></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    {</div>
+<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="class_drawing_arrow.html#a00e8a100f909005a7194fe4c3f7dbe22a114750a72b114ab490abb669c7255865">   42</a></span>&#160;        <a class="code" href="class_drawing_arrow.html#a00e8a100f909005a7194fe4c3f7dbe22a114750a72b114ab490abb669c7255865">None</a>,               </div>
+<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="class_drawing_arrow.html#a00e8a100f909005a7194fe4c3f7dbe22a1c69e08600973a316838dea29a520f01">   43</a></span>&#160;        <a class="code" href="class_drawing_arrow.html#a00e8a100f909005a7194fe4c3f7dbe22a1c69e08600973a316838dea29a520f01">Normal</a>,             </div>
+<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="class_drawing_arrow.html#a00e8a100f909005a7194fe4c3f7dbe22ad1c2f215c5624ece5eff4e2c0a8b9306">   44</a></span>&#160;        <a class="code" href="class_drawing_arrow.html#a00e8a100f909005a7194fe4c3f7dbe22ad1c2f215c5624ece5eff4e2c0a8b9306">Triangle</a>,           </div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="class_drawing_arrow.html#a00e8a100f909005a7194fe4c3f7dbe22aefa342ab3540b538a8e3a2b344046a20">   45</a></span>&#160;        <a class="code" href="class_drawing_arrow.html#a00e8a100f909005a7194fe4c3f7dbe22aefa342ab3540b538a8e3a2b344046a20">TriangleFilled</a>,     </div>
+<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="class_drawing_arrow.html#a00e8a100f909005a7194fe4c3f7dbe22adc7be84f1d05db556c684fb993f1000e">   46</a></span>&#160;        <a class="code" href="class_drawing_arrow.html#a00e8a100f909005a7194fe4c3f7dbe22adc7be84f1d05db556c684fb993f1000e">Concave</a>,            </div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="class_drawing_arrow.html#a00e8a100f909005a7194fe4c3f7dbe22ac9ab95bca59cfd4151fe4f1dba0dd9ff">   47</a></span>&#160;        <a class="code" href="class_drawing_arrow.html#a00e8a100f909005a7194fe4c3f7dbe22ac9ab95bca59cfd4151fe4f1dba0dd9ff">ConcaveFilled</a>,      </div>
+<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="class_drawing_arrow.html#a00e8a100f909005a7194fe4c3f7dbe22a14331cf2da989b09e6b17ab9c88b3a71">   48</a></span>&#160;        <a class="code" href="class_drawing_arrow.html#a00e8a100f909005a7194fe4c3f7dbe22a14331cf2da989b09e6b17ab9c88b3a71">Circle</a>,             </div>
+<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="class_drawing_arrow.html#a00e8a100f909005a7194fe4c3f7dbe22a5b4a8ea467ed4779af7dada008875f4c">   49</a></span>&#160;        <a class="code" href="class_drawing_arrow.html#a00e8a100f909005a7194fe4c3f7dbe22a5b4a8ea467ed4779af7dada008875f4c">CircleFilled</a>        </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    };</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    QPointF mPosition;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    qreal mPenWidth;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    qreal mLength;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    qreal mAngle;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <a class="code" href="class_drawing_arrow.html#a00e8a100f909005a7194fe4c3f7dbe22">Style</a> mStyle;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    qreal mSize;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    QPainterPath mShape;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    QPolygonF mPolygon;</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordtype">void</span> updateGeometry();</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    QPainterPath strokePath(<span class="keyword">const</span> QPainterPath&amp; path) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;};</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <a class="code" href="class_drawing_arrow.html#aa6adf847326f5ed0fd81726424d407d3">DrawingArrow</a>(<a class="code" href="class_drawing_arrow.html#a00e8a100f909005a7194fe4c3f7dbe22">Style</a> <a class="code" href="class_drawing_arrow.html#ad4b8edc2a653fbbc4e70dc58a0a7ac8d">style</a> = <a class="code" href="class_drawing_arrow.html#a00e8a100f909005a7194fe4c3f7dbe22a114750a72b114ab490abb669c7255865">None</a>, qreal <a class="code" href="class_drawing_arrow.html#a9edcc94889fe8a7a1b6896288c5ebb7c">size</a> = 0);</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <a class="code" href="class_drawing_arrow.html#aa6adf847326f5ed0fd81726424d407d3">DrawingArrow</a>(<span class="keyword">const</span> <a class="code" href="class_drawing_arrow.html">DrawingArrow</a>&amp; arrow);</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <a class="code" href="class_drawing_arrow.html#a9060987e7671828981b48551fef1f2e6">~DrawingArrow</a>();</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <a class="code" href="class_drawing_arrow.html">DrawingArrow</a>&amp; <a class="code" href="class_drawing_arrow.html#a8ed1b1196967c7b7f2c4af5ddbf5d14e">operator=</a>(<span class="keyword">const</span> <a class="code" href="class_drawing_arrow.html">DrawingArrow</a>&amp; arrow);</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_drawing_arrow.html#ae584c3fd640815f2898166c5fcea2a7e">setVector</a>(<span class="keyword">const</span> QPointF&amp; pos, qreal penWidth, qreal length, qreal angle);</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_drawing_arrow.html#a700b4d183832db2b47ec156d40095ca1">setStyle</a>(<a class="code" href="class_drawing_arrow.html#a00e8a100f909005a7194fe4c3f7dbe22">Style</a> <a class="code" href="class_drawing_arrow.html#ad4b8edc2a653fbbc4e70dc58a0a7ac8d">style</a>);</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_drawing_arrow.html#a2a040e2225a1c1aa6aa0759938435423">setSize</a>(qreal <a class="code" href="class_drawing_arrow.html#a9edcc94889fe8a7a1b6896288c5ebb7c">size</a>);</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    QPointF <a class="code" href="class_drawing_arrow.html#af7f2649c605be925cdfee46d364c4c3f">vectorPosition</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    qreal <a class="code" href="class_drawing_arrow.html#ab9c067123ffe32361b6f39ee6dd8998e">vectorPenWidth</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160; </div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    qreal <a class="code" href="class_drawing_arrow.html#a1e08df89ecc660a2c60fadd209c1819f">vectorLength</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160; </div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    qreal <a class="code" href="class_drawing_arrow.html#aa271b2a7312ea1163cb36d1fcf522aaf">vectorAngle</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160; </div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    <a class="code" href="class_drawing_arrow.html#a00e8a100f909005a7194fe4c3f7dbe22">Style</a> <a class="code" href="class_drawing_arrow.html#ad4b8edc2a653fbbc4e70dc58a0a7ac8d">style</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160; </div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;    qreal <a class="code" href="class_drawing_arrow.html#a9edcc94889fe8a7a1b6896288c5ebb7c">size</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160; </div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160; </div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    QPainterPath <a class="code" href="class_drawing_arrow.html#a49b60398bc08c10b40bec0201cecdb68">shape</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160; </div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160; </div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_drawing_arrow.html#abfc0165c9d764a448ab797f725eff8a5">render</a>(QPainter* painter, <span class="keyword">const</span> QBrush&amp; backgroundBrush);</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160; </div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    <span class="keywordtype">void</span> updateGeometry();</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;    QPainterPath strokePath(<span class="keyword">const</span> QPainterPath&amp; path) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;};</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160; </div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
+<div class="ttc" id="aclass_drawing_arrow_html_a00e8a100f909005a7194fe4c3f7dbe22adc7be84f1d05db556c684fb993f1000e"><div class="ttname"><a href="class_drawing_arrow.html#a00e8a100f909005a7194fe4c3f7dbe22adc7be84f1d05db556c684fb993f1000e">DrawingArrow::Concave</a></div><div class="ttdeci">@ Concave</div><div class="ttdoc">A concave arrow.</div><div class="ttdef"><b>Definition:</b> DrawingArrow.h:46</div></div>
+<div class="ttc" id="aclass_drawing_arrow_html_ab9c067123ffe32361b6f39ee6dd8998e"><div class="ttname"><a href="class_drawing_arrow.html#ab9c067123ffe32361b6f39ee6dd8998e">DrawingArrow::vectorPenWidth</a></div><div class="ttdeci">qreal vectorPenWidth() const</div><div class="ttdoc">Return the vector pen width of the arrow.</div></div>
+<div class="ttc" id="aclass_drawing_arrow_html_aa6adf847326f5ed0fd81726424d407d3"><div class="ttname"><a href="class_drawing_arrow.html#aa6adf847326f5ed0fd81726424d407d3">DrawingArrow::DrawingArrow</a></div><div class="ttdeci">DrawingArrow(Style style=None, qreal size=0)</div><div class="ttdoc">Create a new DrawingRectItem with default settings.</div></div>
+<div class="ttc" id="aclass_drawing_arrow_html_a00e8a100f909005a7194fe4c3f7dbe22ad1c2f215c5624ece5eff4e2c0a8b9306"><div class="ttname"><a href="class_drawing_arrow.html#a00e8a100f909005a7194fe4c3f7dbe22ad1c2f215c5624ece5eff4e2c0a8b9306">DrawingArrow::Triangle</a></div><div class="ttdeci">@ Triangle</div><div class="ttdoc">A triangle.</div><div class="ttdef"><b>Definition:</b> DrawingArrow.h:44</div></div>
+<div class="ttc" id="aclass_drawing_arrow_html_a1e08df89ecc660a2c60fadd209c1819f"><div class="ttname"><a href="class_drawing_arrow.html#a1e08df89ecc660a2c60fadd209c1819f">DrawingArrow::vectorLength</a></div><div class="ttdeci">qreal vectorLength() const</div><div class="ttdoc">Return the vector length of the arrow.</div></div>
+<div class="ttc" id="aclass_drawing_arrow_html_a00e8a100f909005a7194fe4c3f7dbe22a1c69e08600973a316838dea29a520f01"><div class="ttname"><a href="class_drawing_arrow.html#a00e8a100f909005a7194fe4c3f7dbe22a1c69e08600973a316838dea29a520f01">DrawingArrow::Normal</a></div><div class="ttdeci">@ Normal</div><div class="ttdoc">A normal arrow.</div><div class="ttdef"><b>Definition:</b> DrawingArrow.h:43</div></div>
+<div class="ttc" id="aclass_drawing_arrow_html_ad4b8edc2a653fbbc4e70dc58a0a7ac8d"><div class="ttname"><a href="class_drawing_arrow.html#ad4b8edc2a653fbbc4e70dc58a0a7ac8d">DrawingArrow::style</a></div><div class="ttdeci">Style style() const</div><div class="ttdoc">Return the style of the arrow.</div></div>
+<div class="ttc" id="aclass_drawing_arrow_html_a2a040e2225a1c1aa6aa0759938435423"><div class="ttname"><a href="class_drawing_arrow.html#a2a040e2225a1c1aa6aa0759938435423">DrawingArrow::setSize</a></div><div class="ttdeci">void setSize(qreal size)</div><div class="ttdoc">Set the size of the arrow.</div></div>
+<div class="ttc" id="aclass_drawing_arrow_html_a00e8a100f909005a7194fe4c3f7dbe22aefa342ab3540b538a8e3a2b344046a20"><div class="ttname"><a href="class_drawing_arrow.html#a00e8a100f909005a7194fe4c3f7dbe22aefa342ab3540b538a8e3a2b344046a20">DrawingArrow::TriangleFilled</a></div><div class="ttdeci">@ TriangleFilled</div><div class="ttdoc">A filled triangle.</div><div class="ttdef"><b>Definition:</b> DrawingArrow.h:45</div></div>
+<div class="ttc" id="aclass_drawing_arrow_html_a9060987e7671828981b48551fef1f2e6"><div class="ttname"><a href="class_drawing_arrow.html#a9060987e7671828981b48551fef1f2e6">DrawingArrow::~DrawingArrow</a></div><div class="ttdeci">~DrawingArrow()</div><div class="ttdoc">Delete an existing DrawingArrow object.</div></div>
+<div class="ttc" id="aclass_drawing_arrow_html_a700b4d183832db2b47ec156d40095ca1"><div class="ttname"><a href="class_drawing_arrow.html#a700b4d183832db2b47ec156d40095ca1">DrawingArrow::setStyle</a></div><div class="ttdeci">void setStyle(Style style)</div><div class="ttdoc">Set the style of the arrow.</div></div>
+<div class="ttc" id="aclass_drawing_arrow_html_a8ed1b1196967c7b7f2c4af5ddbf5d14e"><div class="ttname"><a href="class_drawing_arrow.html#a8ed1b1196967c7b7f2c4af5ddbf5d14e">DrawingArrow::operator=</a></div><div class="ttdeci">DrawingArrow &amp; operator=(const DrawingArrow &amp;arrow)</div><div class="ttdoc">Copy this arrow's settings to another arrow.</div></div>
+<div class="ttc" id="aclass_drawing_arrow_html_aa271b2a7312ea1163cb36d1fcf522aaf"><div class="ttname"><a href="class_drawing_arrow.html#aa271b2a7312ea1163cb36d1fcf522aaf">DrawingArrow::vectorAngle</a></div><div class="ttdeci">qreal vectorAngle() const</div><div class="ttdoc">Return the vector angle of the arrow.</div></div>
+<div class="ttc" id="aclass_drawing_arrow_html_a00e8a100f909005a7194fe4c3f7dbe22a5b4a8ea467ed4779af7dada008875f4c"><div class="ttname"><a href="class_drawing_arrow.html#a00e8a100f909005a7194fe4c3f7dbe22a5b4a8ea467ed4779af7dada008875f4c">DrawingArrow::CircleFilled</a></div><div class="ttdeci">@ CircleFilled</div><div class="ttdoc">A filled circle.</div><div class="ttdef"><b>Definition:</b> DrawingArrow.h:49</div></div>
+<div class="ttc" id="aclass_drawing_arrow_html_a00e8a100f909005a7194fe4c3f7dbe22a14331cf2da989b09e6b17ab9c88b3a71"><div class="ttname"><a href="class_drawing_arrow.html#a00e8a100f909005a7194fe4c3f7dbe22a14331cf2da989b09e6b17ab9c88b3a71">DrawingArrow::Circle</a></div><div class="ttdeci">@ Circle</div><div class="ttdoc">A circle.</div><div class="ttdef"><b>Definition:</b> DrawingArrow.h:48</div></div>
+<div class="ttc" id="aclass_drawing_arrow_html_a49b60398bc08c10b40bec0201cecdb68"><div class="ttname"><a href="class_drawing_arrow.html#a49b60398bc08c10b40bec0201cecdb68">DrawingArrow::shape</a></div><div class="ttdeci">QPainterPath shape() const</div><div class="ttdoc">Returns an accurate outline of the arrow's shape.</div></div>
+<div class="ttc" id="aclass_drawing_arrow_html_af7f2649c605be925cdfee46d364c4c3f"><div class="ttname"><a href="class_drawing_arrow.html#af7f2649c605be925cdfee46d364c4c3f">DrawingArrow::vectorPosition</a></div><div class="ttdeci">QPointF vectorPosition() const</div><div class="ttdoc">Return the vector position of the arrow.</div></div>
+<div class="ttc" id="aclass_drawing_arrow_html_a00e8a100f909005a7194fe4c3f7dbe22ac9ab95bca59cfd4151fe4f1dba0dd9ff"><div class="ttname"><a href="class_drawing_arrow.html#a00e8a100f909005a7194fe4c3f7dbe22ac9ab95bca59cfd4151fe4f1dba0dd9ff">DrawingArrow::ConcaveFilled</a></div><div class="ttdeci">@ ConcaveFilled</div><div class="ttdoc">A filled concave arrow.</div><div class="ttdef"><b>Definition:</b> DrawingArrow.h:47</div></div>
+<div class="ttc" id="aclass_drawing_arrow_html_abfc0165c9d764a448ab797f725eff8a5"><div class="ttname"><a href="class_drawing_arrow.html#abfc0165c9d764a448ab797f725eff8a5">DrawingArrow::render</a></div><div class="ttdeci">void render(QPainter *painter, const QBrush &amp;backgroundBrush)</div><div class="ttdoc">Paints the arrow into the scene.</div></div>
+<div class="ttc" id="aclass_drawing_arrow_html_ae584c3fd640815f2898166c5fcea2a7e"><div class="ttname"><a href="class_drawing_arrow.html#ae584c3fd640815f2898166c5fcea2a7e">DrawingArrow::setVector</a></div><div class="ttdeci">void setVector(const QPointF &amp;pos, qreal penWidth, qreal length, qreal angle)</div><div class="ttdoc">Set the vector properties of the arrow.</div></div>
+<div class="ttc" id="aclass_drawing_arrow_html_a00e8a100f909005a7194fe4c3f7dbe22"><div class="ttname"><a href="class_drawing_arrow.html#a00e8a100f909005a7194fe4c3f7dbe22">DrawingArrow::Style</a></div><div class="ttdeci">Style</div><div class="ttdef"><b>Definition:</b> DrawingArrow.h:40</div></div>
+<div class="ttc" id="aclass_drawing_arrow_html"><div class="ttname"><a href="class_drawing_arrow.html">DrawingArrow</a></div><div class="ttdoc">Defines properties of an arrow that you might find on the one of a line item or equivalent.</div><div class="ttdef"><b>Definition:</b> DrawingArrow.h:37</div></div>
+<div class="ttc" id="aclass_drawing_arrow_html_a9edcc94889fe8a7a1b6896288c5ebb7c"><div class="ttname"><a href="class_drawing_arrow.html#a9edcc94889fe8a7a1b6896288c5ebb7c">DrawingArrow::size</a></div><div class="ttdeci">qreal size() const</div><div class="ttdoc">Return the size of the arrow.</div></div>
+<div class="ttc" id="aclass_drawing_arrow_html_a00e8a100f909005a7194fe4c3f7dbe22a114750a72b114ab490abb669c7255865"><div class="ttname"><a href="class_drawing_arrow.html#a00e8a100f909005a7194fe4c3f7dbe22a114750a72b114ab490abb669c7255865">DrawingArrow::None</a></div><div class="ttdeci">@ None</div><div class="ttdoc">No arrow.</div><div class="ttdef"><b>Definition:</b> DrawingArrow.h:42</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">
