@@ -36,6 +36,7 @@ class DrawingItemGroup : public DrawingItem
 private:
 	QList<DrawingItem*> mItems;
 	QRectF mItemsRect;
+	QPainterPath mItemsShape;
 
 public:
 	/*! \brief Create a new DrawingItemGroup with default settings.
@@ -94,19 +95,16 @@ public:
 
 	/*! \brief Returns an accurate outline of the item's shape.
 	 *
-	 * Calculates the shape of the line, including any arrows that may be set by the item's
-	 * style().
-	 *
-	 * Calculates the shape of each of the group's items().  The union of all these shapes is
-	 * returned as the shape for the group.
+	 * Calculates the shape of the item based on the position of its points.  For group items, the
+	 * shape of the item is the same as its boundingRect().
 	 *
 	 * \sa boundingRect(), isValid()
 	 */
 	virtual QPainterPath shape() const;
 
-	/*! \brief Return false if the item is degenerate, true otherwise.
+	/*! \brief Return false if the item is invalid, true otherwise.
 	 *
-	 * A group item is considered degenerate if it contains no items().
+	 * A group item is considered invalid if it contains no items().
 	 *
 	 * \sa boundingRect(), shape()
 	 */

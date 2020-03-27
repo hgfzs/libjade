@@ -194,7 +194,7 @@ Additional Inherited Members</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Provides a group item that can be added to a <a class="el" href="class_drawing_scene.html" title="Surface for managing a large number of two-dimensional DrawingItem objects.">DrawingScene</a>. </p>
 <p>To set the items of a group, call <a class="el" href="class_drawing_item_group.html#a209122f74df7afe40fe481bef2dbde95" title="Sets the items that make up the group.">setItems()</a>. Items in a group are treated as a single item within the widget.</p>
-<p><a class="el" href="class_drawing_item_group.html" title="Provides a group item that can be added to a DrawingScene.">DrawingItemGroup</a> provides a reasonable implementation of <a class="el" href="class_drawing_item_group.html#a9b6a6c3b4fde55de5d54a18f27310ca0" title="Returns an estimate of the area painted by the group item.">boundingRect()</a>, <a class="el" href="class_drawing_item_group.html#a915eb95331e4d0bbcf71cc86f942c74c" title="Returns an accurate outline of the item&#39;s shape.">shape()</a>, and <a class="el" href="class_drawing_item_group.html#a7f425cfafd462753aea4780ff545fe91" title="Return false if the item is degenerate, true otherwise.">isValid()</a>. The <a class="el" href="class_drawing_item_group.html#a4ea3b63640294d0c291e05018ed0bb10" title="Paints the contents of the group item into the scene.">render()</a> function draws the group by calling the paint() function of each item. </p>
+<p><a class="el" href="class_drawing_item_group.html" title="Provides a group item that can be added to a DrawingScene.">DrawingItemGroup</a> provides a reasonable implementation of <a class="el" href="class_drawing_item_group.html#a9b6a6c3b4fde55de5d54a18f27310ca0" title="Returns an estimate of the area painted by the group item.">boundingRect()</a>, <a class="el" href="class_drawing_item_group.html#a915eb95331e4d0bbcf71cc86f942c74c" title="Returns an accurate outline of the item&#39;s shape.">shape()</a>, and <a class="el" href="class_drawing_item_group.html#a7f425cfafd462753aea4780ff545fe91" title="Return false if the item is invalid, true otherwise.">isValid()</a>. The <a class="el" href="class_drawing_item_group.html#a4ea3b63640294d0c291e05018ed0bb10" title="Paints the contents of the group item into the scene.">render()</a> function draws the group by calling the paint() function of each item. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a33b53134bc8ec33cf11d88fd7b5c4672"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a33b53134bc8ec33cf11d88fd7b5c4672">&#9670;&nbsp;</a></span>DrawingItemGroup() <span class="overload">[1/2]</span></h2>
@@ -284,7 +284,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Returns an estimate of the area painted by the group item. </p>
 <p>Calculates the bounding rect of each of the group's <a class="el" href="class_drawing_item_group.html#a12816bb59df15df01567979890d05756" title="Returns a list of all items added to the group.">items()</a>. The union of all these bounding rects is returned as the bounding rect for the group.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item_group.html#a915eb95331e4d0bbcf71cc86f942c74c" title="Returns an accurate outline of the item&#39;s shape.">shape()</a>, <a class="el" href="class_drawing_item_group.html#a7f425cfafd462753aea4780ff545fe91" title="Return false if the item is degenerate, true otherwise.">isValid()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item_group.html#a915eb95331e4d0bbcf71cc86f942c74c" title="Returns an accurate outline of the item&#39;s shape.">shape()</a>, <a class="el" href="class_drawing_item_group.html#a7f425cfafd462753aea4780ff545fe91" title="Return false if the item is invalid, true otherwise.">isValid()</a> </dd></dl>
 
 <p>Implements <a class="el" href="class_drawing_item.html#a6cf2e2f89c56fcc56451d5a8088d534e">DrawingItem</a>.</p>
 
@@ -343,8 +343,8 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Return false if the item is degenerate, true otherwise. </p>
-<p>A group item is considered degenerate if it contains no <a class="el" href="class_drawing_item_group.html#a12816bb59df15df01567979890d05756" title="Returns a list of all items added to the group.">items()</a>.</p>
+<p>Return false if the item is invalid, true otherwise. </p>
+<p>A group item is considered invalid if it contains no <a class="el" href="class_drawing_item_group.html#a12816bb59df15df01567979890d05756" title="Returns a list of all items added to the group.">items()</a>.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item_group.html#a9b6a6c3b4fde55de5d54a18f27310ca0" title="Returns an estimate of the area painted by the group item.">boundingRect()</a>, <a class="el" href="class_drawing_item_group.html#a915eb95331e4d0bbcf71cc86f942c74c" title="Returns an accurate outline of the item&#39;s shape.">shape()</a> </dd></dl>
 
 <p>Reimplemented from <a class="el" href="class_drawing_item.html#a5cee357db6aa005d5da5dd04929db252">DrawingItem</a>.</p>
@@ -449,9 +449,8 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns an accurate outline of the item's shape. </p>
-<p>Calculates the shape of the line, including any arrows that may be set by the item's style().</p>
-<p>Calculates the shape of each of the group's <a class="el" href="class_drawing_item_group.html#a12816bb59df15df01567979890d05756" title="Returns a list of all items added to the group.">items()</a>. The union of all these shapes is returned as the shape for the group.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item_group.html#a9b6a6c3b4fde55de5d54a18f27310ca0" title="Returns an estimate of the area painted by the group item.">boundingRect()</a>, <a class="el" href="class_drawing_item_group.html#a7f425cfafd462753aea4780ff545fe91" title="Return false if the item is degenerate, true otherwise.">isValid()</a> </dd></dl>
+<p>Calculates the shape of the item based on the position of its points. For group items, the shape of the item is the same as its <a class="el" href="class_drawing_item_group.html#a9b6a6c3b4fde55de5d54a18f27310ca0" title="Returns an estimate of the area painted by the group item.">boundingRect()</a>.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_drawing_item_group.html#a9b6a6c3b4fde55de5d54a18f27310ca0" title="Returns an estimate of the area painted by the group item.">boundingRect()</a>, <a class="el" href="class_drawing_item_group.html#a7f425cfafd462753aea4780ff545fe91" title="Return false if the item is invalid, true otherwise.">isValid()</a> </dd></dl>
 
 <p>Reimplemented from <a class="el" href="class_drawing_item.html#a464d44b4c148170711a9661bfe988ba5">DrawingItem</a>.</p>
 

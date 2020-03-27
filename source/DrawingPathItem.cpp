@@ -20,40 +20,28 @@
 
 #include "DrawingPathItem.h"
 #include "DrawingItemPoint.h"
-#include "DrawingItemStyle.h"
+#include <QPainter>
 
 DrawingPathItem::DrawingPathItem() : DrawingItem()
 {
+	mRect = QRectF(0, 0, 0, 0);
+	mPen = QPen(Qt::black, 16, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+
 	mName = "Path";
 
 	setFlags(CanMove | CanResize | CanRotate | CanFlip | CanSelect | CanDelete);
 
-	for(int i = 0; i < 8; i++) addPoint(new DrawingItemPoint(QPointF(0, 0), DrawingItemPoint::Control));
+	DrawingItemPoint::Flags flags = (DrawingItemPoint::Control);
+	for(int i = 0; i < 8; i++) addPoint(new DrawingItemPoint(QPointF(0, 0), flags));
 
-	DrawingItemStyle* style = DrawingItem::style();
-	style->setValue(DrawingItemStyle::PenStyle,
-		style->valueLookup(DrawingItemStyle::PenStyle, QVariant((uint)Qt::SolidLine)));
-	style->setValue(DrawingItemStyle::PenColor,
-		style->valueLookup(DrawingItemStyle::PenColor, QVariant(QColor(0, 0, 0))));
-	style->setValue(DrawingItemStyle::PenOpacity,
-		style->valueLookup(DrawingItemStyle::PenOpacity, QVariant(1.0)));
-	style->setValue(DrawingItemStyle::PenWidth,
-		style->valueLookup(DrawingItemStyle::PenWidth, QVariant(12.0)));
-	style->setValue(DrawingItemStyle::PenCapStyle,
-		style->valueLookup(DrawingItemStyle::PenCapStyle, QVariant((uint)Qt::RoundCap)));
-	style->setValue(DrawingItemStyle::PenJoinStyle,
-		style->valueLookup(DrawingItemStyle::PenJoinStyle, QVariant((uint)Qt::RoundJoin)));
-
-	style->setValue(DrawingItemStyle::BrushStyle,
-		style->valueLookup(DrawingItemStyle::BrushStyle, QVariant((uint)Qt::SolidPattern)));
-	style->setValue(DrawingItemStyle::BrushColor,
-		style->valueLookup(DrawingItemStyle::BrushColor, QVariant(QColor(255, 255, 255))));
-	style->setValue(DrawingItemStyle::BrushOpacity,
-		style->valueLookup(DrawingItemStyle::BrushOpacity, QVariant(1.0)));
+	updateGeometry();
 }
 
 DrawingPathItem::DrawingPathItem(const DrawingPathItem& item) : DrawingItem(item)
 {
+	mRect = item.mRect;
+	mPen = item.mPen;
+
 	mName = item.mName;
 	mPath = item.mPath;
 	mPathRect = item.mPathRect;
@@ -62,6 +50,10 @@ DrawingPathItem::DrawingPathItem(const DrawingPathItem& item) : DrawingItem(item
 	QList<DrawingItemPoint*> otherItemPoints = item.points();
 	for(int i = 8; i < points.size(); i++)
 		mPathConnectionPoints[points[i]] = item.mPathConnectionPoints[otherItemPoints[i]];
+
+	mBoundingRect = item.mBoundingRect;
+	mShape = item.mShape;
+	mTransformedPath = item.mTransformedPath;
 }
 
 DrawingPathItem::~DrawingPathItem() { }
@@ -77,15 +69,23 @@ DrawingItem* DrawingPathItem::copy() const
 
 void DrawingPathItem::setRect(const QRectF& rect)
 {
+	mRect = rect;
+
+	// Update points
 	QList<DrawingItemPoint*> points = DrawingPathItem::points();
-	points[TopLeft]->setPosition(rect.left(), rect.top());
-	points[TopMiddle]->setPosition(rect.center().x(), rect.top());
-	points[TopRight]->setPosition(rect.right(), rect.top());
-	points[MiddleRight]->setPosition(rect.right(), rect.center().y());
-	points[BottomRight]->setPosition(rect.right(), rect.bottom());
-	points[BottomMiddle]->setPosition(rect.center().x(), rect.bottom());
-	points[BottomLeft]->setPosition(rect.left(), rect.bottom());
-	points[MiddleLeft]->setPosition(rect.left(), rect.center().y());
+	if (points.size() >= 8)
+	{
+		points[TopLeft]->setPosition(rect.left(), rect.top());
+		points[TopMiddle]->setPosition(rect.center().x(), rect.top());
+		points[TopRight]->setPosition(rect.right(), rect.top());
+		points[MiddleRight]->setPosition(rect.right(), rect.center().y());
+		points[BottomRight]->setPosition(rect.right(), rect.bottom());
+		points[BottomMiddle]->setPosition(rect.center().x(), rect.bottom());
+		points[BottomLeft]->setPosition(rect.left(), rect.bottom());
+		points[MiddleLeft]->setPosition(rect.left(), rect.center().y());
+	}
+
+	updateGeometry();
 }
 
 void DrawingPathItem::setRect(qreal left, qreal top, qreal width, qreal height)
@@ -95,8 +95,74 @@ void DrawingPathItem::setRect(qreal left, qreal top, qreal width, qreal height)
 
 QRectF DrawingPathItem::rect() const
 {
-	QList<DrawingItemPoint*> points = DrawingPathItem::points();
-	return (points.size() >= 8) ? QRectF(points[TopLeft]->position(), points[BottomRight]->position()) : QRectF();
+	return mRect;
+}
+
+//==================================================================================================
+
+void DrawingPathItem::setPen(const QPen& pen)
+{
+	mPen = pen;
+	updateGeometry();
+}
+
+QPen DrawingPathItem::pen() const
+{
+	return mPen;
+}
+
+//==================================================================================================
+
+void DrawingPathItem::setProperties(const QHash<QString,QVariant>& properties)
+{
+	if (properties.contains("pen-style"))
+	{
+		bool ok = false;
+		uint value = properties["pen-style"].toUInt(&ok);
+		if (ok) mPen.setStyle(static_cast<Qt::PenStyle>(value));
+	}
+
+	if (properties.contains("pen-color"))
+	{
+		QColor color = properties["pen-color"].value<QColor>();
+		mPen.setBrush(color);
+	}
+
+	if (properties.contains("pen-width"))
+	{
+		bool ok = false;
+		qreal value = properties["pen-width"].toDouble(&ok);
+		if (ok) mPen.setWidthF(value);
+	}
+
+	if (properties.contains("pen-cap-style"))
+	{
+		bool ok = false;
+		uint value = properties["pen-cap-style"].toUInt(&ok);
+		if (ok) mPen.setCapStyle(static_cast<Qt::PenCapStyle>(value));
+	}
+
+	if (properties.contains("pen-join-style"))
+	{
+		bool ok = false;
+		uint value = properties["pen-join-style"].toUInt(&ok);
+		if (ok) mPen.setJoinStyle(static_cast<Qt::PenJoinStyle>(value));
+	}
+
+	updateGeometry();
+}
+
+QHash<QString,QVariant> DrawingPathItem::properties() const
+{
+	QHash<QString,QVariant> properties;
+
+	properties["pen-style"] = static_cast<uint>(mPen.style());
+	properties["pen-color"] = mPen.brush().color();
+	properties["pen-width"] = mPen.widthF();
+	properties["pen-cap-style"] = static_cast<uint>(mPen.capStyle());
+	properties["pen-join-style"] = static_cast<uint>(mPen.joinStyle());
+
+	return properties;
 }
 
 //==================================================================================================
@@ -117,6 +183,7 @@ void DrawingPathItem::setPath(const QPainterPath& path, const QRectF& pathRect)
 {
 	mPath = path;
 	mPathRect = pathRect;
+	updateGeometry();
 }
 
 QPainterPath DrawingPathItem::path() const
@@ -209,45 +276,17 @@ QRectF DrawingPathItem::mapFromPath(const QRectF& pathRect) const
 
 QRectF DrawingPathItem::boundingRect() const
 {
-	QRectF rect;
-
-	if (isValid())
-	{
-		qreal penWidth = style()->valueLookup(DrawingItemStyle::PenWidth).toReal();
-
-		rect = DrawingPathItem::rect().normalized();
-		rect.adjust(-penWidth/2, -penWidth/2, penWidth/2, penWidth/2);
-	}
-
-	return rect;
+	return mBoundingRect;
 }
 
 QPainterPath DrawingPathItem::shape() const
 {
-	QPainterPath shape;
-
-	if (isValid())
-	{
-		/*DrawingItemStyle* style = DrawingItem::style();
-		QPen pen = style->pen();
-
-		// Add path
-		QPainterPath drawPath = transformedPath();
-
-		// Determine outline path
-		shape = strokePath(drawPath, pen);*/
-
-		shape.addRect(boundingRect());
-	}
-
-	return shape;
+	return mShape;
 }
 
 bool DrawingPathItem::isValid() const
 {
-	QList<DrawingItemPoint*> points = DrawingPathItem::points();
-	return (points.size() >= 8 && points[TopLeft]->position() != points[BottomRight]->position() &&
-		!mPathRect.isNull() && !mPath.isEmpty());
+	return (mRect.width() != 0 && mRect.height() != 0 && !mPath.isEmpty() && !mPathRect.isNull());
 }
 
 //==================================================================================================
@@ -255,65 +294,89 @@ bool DrawingPathItem::isValid() const
 void DrawingPathItem::render(QPainter* painter)
 {
 	if (isValid())
-	{
-		QBrush sceneBrush = painter->brush();
-		QPen scenePen = painter->pen();
+		{
+			QBrush sceneBrush = painter->brush();
+			QPen scenePen = painter->pen();
 
-		DrawingItemStyle* style = DrawingItem::style();
-		QPen pen = style->pen();
-		QBrush brush = style->brush();
+			// Draw rect
+			painter->setBrush(Qt::transparent);
+			painter->setPen(mPen);
+			painter->drawPath(mTransformedPath);
 
-		// Draw path
-		painter->setBrush(brush);
-		painter->setPen(pen);
-		painter->drawPath(transformedPath());
-
-		painter->setBrush(sceneBrush);
-		painter->setPen(scenePen);
-	}
+			painter->setBrush(sceneBrush);
+			painter->setPen(scenePen);
+		}
 }
 
 //==================================================================================================
 
-void DrawingPathItem::resize(DrawingItemPoint* itemPoint, const QPointF& parentPos)
+void DrawingPathItem::resize(DrawingItemPoint* point, const QPointF& pos)
 {
-	DrawingItem::resize(itemPoint, parentPos);
+	DrawingItem::resize(point, pos);
 
 	QList<DrawingItemPoint*> points = DrawingPathItem::points();
+
 	if (points.size() >= 8)
 	{
-		QRectF rect = DrawingPathItem::rect();
-		int pointIndex = points.indexOf(itemPoint);
+		int pointIndex = points.indexOf(point);
 
 		if (0 <= pointIndex && pointIndex < 8)
 		{
+			QRectF rect;
+
+			rect.setTopLeft(points[0]->position());
+			rect.setBottomRight(points[1]->position());
+
 			switch (pointIndex)
 			{
-			case TopLeft: rect.setTopLeft(itemPoint->position()); break;
-			case TopMiddle:	rect.setTop(itemPoint->y()); break;
-			case TopRight: rect.setTopRight(itemPoint->position()); break;
-			case MiddleRight: rect.setRight(itemPoint->x()); break;
-			case BottomRight: rect.setBottomRight(itemPoint->position()); break;
-			case BottomMiddle: rect.setBottom(itemPoint->y()); break;
-			case BottomLeft: rect.setBottomLeft(itemPoint->position()); break;
-			case MiddleLeft: rect.setLeft(itemPoint->x()); break;
+			case TopLeft: rect.setTopLeft(point->position()); break;
+			case TopMiddle:	rect.setTop(point->y()); break;
+			case TopRight: rect.setTopRight(point->position()); break;
+			case MiddleRight: rect.setRight(point->x()); break;
+			case BottomRight: rect.setBottomRight(point->position()); break;
+			case BottomMiddle: rect.setBottom(point->y()); break;
+			case BottomLeft: rect.setBottomLeft(point->position()); break;
+			case MiddleLeft: rect.setLeft(point->x()); break;
 			default: break;
 			}
 
-			points[TopLeft]->setPosition(rect.left(), rect.top());
-			points[TopMiddle]->setPosition(rect.center().x(), rect.top());
-			points[TopRight]->setPosition(rect.right(), rect.top());
-			points[MiddleRight]->setPosition(rect.right(), rect.center().y());
-			points[BottomRight]->setPosition(rect.right(), rect.bottom());
-			points[BottomMiddle]->setPosition(rect.center().x(), rect.bottom());
-			points[BottomLeft]->setPosition(rect.left(), rect.bottom());
-			points[MiddleLeft]->setPosition(rect.left(), rect.center().y());
+			setRect(rect);
 		}
 	}
 
 	// Adjust position of connection points
 	for(auto keyIter = mPathConnectionPoints.begin(); keyIter != mPathConnectionPoints.end(); keyIter++)
 		keyIter.key()->setPosition(mapFromPath(keyIter.value()));
+}
+
+//==================================================================================================
+
+void DrawingPathItem::updateGeometry()
+{
+	mBoundingRect = QRectF();
+	mShape = QPainterPath();
+	mTransformedPath = QPainterPath();
+
+	if (isValid())
+	{
+		qreal halfPenWidth = mPen.widthF() / 2;
+		QRectF normalizedRect = mRect.normalized();
+		QPainterPath drawPath;
+
+		// Transformed path
+		mTransformedPath = transformedPath();
+
+		// Bounding rect
+		mBoundingRect = normalizedRect;
+		mBoundingRect.adjust(-halfPenWidth, -halfPenWidth, halfPenWidth, halfPenWidth);
+
+		// Shape
+		//drawPath = mTransformedPath;
+		//mShape = strokePath(drawPath, mPen);
+		//mShape.addPath(drawPath);
+
+		mShape.addRect(mBoundingRect);
+	}
 }
 
 //==================================================================================================

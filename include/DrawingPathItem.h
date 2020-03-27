@@ -25,48 +25,41 @@
 
 /*! \brief Provides a path item that can be added to a DrawingScene.
  *
- * To set the item's rect, call the setRect() function.  The rect() function returns the
- * current rect.  Both functions operate in local item coordinates.
- *
  * A DrawingPathItem can draw an arbitrary QPainterPath, which can be set using setPath().  The path
  * is given in local path coordinates as specified by the pathRect(); path coordinates are mapped to
  * item coordinates using mapToPath() and mapFromPath().  These functions scale coordinates between
  * the rect() and the pathRect().
  *
- * Rendering options for the path can be controlled through properties of the item's style().
- * The path item supports all of the pen and brush style properties.
+ * To set the item's rect, call the setRect() function.  The rect() function returns the
+ * current rect.  Both functions operate in local item coordinates.
  *
  * DrawingPathItem provides a reasonable implementation of boundingRect(), shape(), and isValid().
- * The render() function draws the path using the item's associated pen and brush.
+ * The render() function draws the path using the item's pen().
  */
 class DrawingPathItem : public DrawingItem
 {
 private:
-	enum PointIndex { TopLeft, BottomRight, TopRight, BottomLeft, TopMiddle, MiddleRight, BottomMiddle, MiddleLeft };
+	enum PointIndex { TopLeft, BottomRight, TopRight, BottomLeft, TopMiddle, MiddleRight,
+					  BottomMiddle, MiddleLeft };
+
+private:
+	QRectF mRect;
+	QPen mPen;
 
 	QString mName;
 	QPainterPath mPath;
 	QRectF mPathRect;
 	QHash<DrawingItemPoint*,QPointF> mPathConnectionPoints;
 
+	QRectF mBoundingRect;
+	QPainterPath mShape;
+	QPainterPath mTransformedPath;
+
 public:
 	/*! \brief Create a new DrawingPathItem with default settings.
 	 *
 	 * This function creates eight DrawingItemPoint objects and adds them to the item.  These
 	 * item points represent the bounding points of the item's rect.
-	 *
-	 * This function fills in the item's style() with default values for the following properties.
-	 * The default values are pulled from the style's DrawingItemStyle::defaultValues() if present,
-	 * otherwise DrawingPathItem attempts to use reasonable initial values for each property:
-	 * \li DrawingItemStyle::PenStyle
-	 * \li DrawingItemStyle::PenColor
-	 * \li DrawingItemStyle::PenOpacity
-	 * \li DrawingItemStyle::PenWidth
-	 * \li DrawingItemStyle::PenCapStyle
-	 * \li DrawingItemStyle::PenJoinStyle
-	 * \li DrawingItemStyle::BrushStyle
-	 * \li DrawingItemStyle::BrushColor
-	 * \li DrawingItemStyle::BrushOpacity
 	 */
 	DrawingPathItem();
 
@@ -99,7 +92,8 @@ public:
 
 	/*! \brief Sets the item's rect, which is given in local item coordinates.
 	 *
-	 * This convenience function is equivalent to calling setRect(QRectF(left, top, width, height)).
+	 * This convenience function is equivalent to calling
+	 * \link setRect(const QRectF& rect) setRect(QRectF(left, top, width, height)) \endlink .
 	 *
 	 * \sa rect()
 	 */
@@ -110,6 +104,69 @@ public:
 	 * \sa setRect(const QRectF&), setRect(qreal, qreal, qreal, qreal)
 	 */
 	QRectF rect() const;
+
+
+	/*! \brief Sets the pen used to draw the path.
+	 *
+	 * The pen's width is in local item coordinates.
+	 *
+	 * \sa pen()
+	 */
+	void setPen(const QPen& pen);
+
+	/*! \brief Returns the pen used to draw the path.
+	 *
+	 * \sa setPen()
+	 */
+	QPen pen() const;
+
+
+	/*! \brief Sets the values of all item properties.
+	 *
+	 * The supported properties are listed below:
+	 *
+	 * <table>
+	 *   <tr>
+	 *     <th>Name</th>
+	 *     <th>Type</th>
+	 *     <th>Description</th>
+	 *   </tr>
+	 *   <tr>
+	 *     <td>pen-color</td>
+	 *     <td>QColor</td>
+	 *     <td>Color of the item's pen(), including alpha channel</td>
+	 *   </tr>
+	 *   <tr>
+	 *     <td>pen-width</td>
+	 *     <td>qreal</td>
+	 *     <td>Width of the item's pen()</td>
+	 *   </tr>
+	 *   <tr>
+	 *     <td>pen-style</td>
+	 *     <td>unsigned int</td>
+	 *     <td>Style of the item's pen(), casted from Qt::PenStyle</td>
+	 *   </tr>
+	 *   <tr>
+	 *     <td>pen-cap-style</td>
+	 *     <td>unsigned int</td>
+	 *     <td>Cap style of the item's pen(), casted from Qt::PenCapStyle</td>
+	 *   </tr>
+	 *   <tr>
+	 *     <td>pen-join-style</td>
+	 *     <td>unsigned int</td>
+	 *     <td>Join style of the item's pen(), casted from Qt::PenJoinStyle</td>
+	 *   </tr>
+	 * </table>
+	 *
+	 * \sa properties()
+	 */
+	void setProperties(const QHash<QString,QVariant>& properties);
+
+	/*! \brief Returns the values of all item properties.
+	 *
+	 * See the setProperties() function for the list of properties supported.
+	 */
+	QHash<QString,QVariant> properties() const;
 
 
 	/*! \brief Sets the name of the path item to name.
@@ -206,7 +263,7 @@ public:
 	/*! \brief Returns an estimate of the area painted by the path item.
 	 *
 	 * Calculates the bounding rect of the item based on the position of its points.
-	 * The rect includes an adjustment for the width of the pen as set by the item's style().
+	 * The rect includes an adjustment for the width of the item's pen().
 	 *
 	 * \sa shape(), isValid()
 	 */
@@ -221,10 +278,10 @@ public:
 	 */
 	virtual QPainterPath shape() const;
 
-	/*! \brief Return false if the item is degenerate, true otherwise.
+	/*! \brief Return false if the item is invalid, true otherwise.
 	 *
-	 * A path item is considered degenerate if the positions of all of its points
-	 * are the same.
+	 * A path item is considered invalid if the positions of all of its points
+	 * are the same or if its path() is empty or if its pathRect() is not valid.
 	 *
 	 * \sa boundingRect(), shape()
 	 */
@@ -233,7 +290,7 @@ public:
 
 	/*! \brief Paints the contents of the path item into the scene.
 	 *
-	 * The path is painted in the scene based on properties set by the item's style().
+	 * The rect is painted in the scene using the item's pen().
 	 *
 	 * At the end of this function, the QPainter object is returned to the same state that it was
 	 * in when the function started.
@@ -246,9 +303,11 @@ public:
 	 * This function ensures that whenever the item is resized, all of the item's points are resized
 	 * to maintain position on the item's perimeter.
 	 */
-	virtual void resize(DrawingItemPoint* itemPoint, const QPointF& parentPos);
+	virtual void resize(DrawingItemPoint* point, const QPointF& pos);
 
 private:
+	void updateGeometry();
+
 	QPainterPath transformedPath() const;
 };
 

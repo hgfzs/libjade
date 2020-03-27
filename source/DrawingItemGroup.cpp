@@ -71,20 +71,7 @@ QRectF DrawingItemGroup::boundingRect() const
 
 QPainterPath DrawingItemGroup::shape() const
 {
-	QPainterPath shape;
-
-	if (isValid())
-	{
-		/*for(auto itemIter = mItems.begin(); itemIter != mItems.end(); itemIter++)
-		{
-			if ((*itemIter)->isVisible())
-				shape = shape.united((*itemIter)->mapToParent((*itemIter)->shape()));
-		}*/
-
-		shape.addRect(mItemsRect);
-	}
-
-	return shape;
+	return mItemsShape;
 }
 
 bool DrawingItemGroup::isValid() const
@@ -102,7 +89,9 @@ void DrawingItemGroup::render(QPainter* painter)
 		{
 			painter->translate((*itemIter)->position());
 			painter->setTransform((*itemIter)->transformInverted(), true);
+
 			(*itemIter)->render(painter);
+
 			painter->setTransform((*itemIter)->transform(), true);
 			painter->translate(-(*itemIter)->position());
 		}
@@ -127,6 +116,17 @@ void DrawingItemGroup::recalculateContentsRect()
 			else mItemsRect = mItemsRect.united(itemRect);
 		}
 	}
+
+	// Update items shape
+	mItemsShape = QPainterPath();
+
+	/*for(auto itemIter = mItems.begin(); itemIter != mItems.end(); itemIter++)
+	{
+		if ((*itemIter)->isVisible())
+			mItemsShape = mItemsShape.united((*itemIter)->shape());
+	}*/
+
+	mItemsShape.addRect(mItemsRect);
 
 	// Update points
 	QList<DrawingItemPoint*> points = DrawingItemGroup::points();

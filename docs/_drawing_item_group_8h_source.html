@@ -76,38 +76,39 @@ $(function() {
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">private</span>:</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    QList&lt;DrawingItem*&gt; mItems;</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    QRectF mItemsRect;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <a class="code" href="class_drawing_item_group.html#a33b53134bc8ec33cf11d88fd7b5c4672">DrawingItemGroup</a>();</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <a class="code" href="class_drawing_item_group.html#a33b53134bc8ec33cf11d88fd7b5c4672">DrawingItemGroup</a>(<span class="keyword">const</span> <a class="code" href="class_drawing_item_group.html">DrawingItemGroup</a>&amp; item);</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <a class="code" href="class_drawing_item_group.html#a0d46c0b56d4f68dbd8fd4f0b04cb5754">~DrawingItemGroup</a>();</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    QPainterPath mItemsShape;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <a class="code" href="class_drawing_item_group.html#a33b53134bc8ec33cf11d88fd7b5c4672">DrawingItemGroup</a>();</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <a class="code" href="class_drawing_item_group.html#a33b53134bc8ec33cf11d88fd7b5c4672">DrawingItemGroup</a>(<span class="keyword">const</span> <a class="code" href="class_drawing_item_group.html">DrawingItemGroup</a>&amp; item);</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <a class="code" href="class_drawing_item_group.html#a0d46c0b56d4f68dbd8fd4f0b04cb5754">~DrawingItemGroup</a>();</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <a class="code" href="class_drawing_item.html">DrawingItem</a>* <a class="code" href="class_drawing_item_group.html#aacd8fe018aaabb166669cc03323e10bb">copy</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <a class="code" href="class_drawing_item.html">DrawingItem</a>* <a class="code" href="class_drawing_item_group.html#aacd8fe018aaabb166669cc03323e10bb">copy</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_drawing_item_group.html#a209122f74df7afe40fe481bef2dbde95">setItems</a>(<span class="keyword">const</span> QList&lt;DrawingItem*&gt;&amp; <a class="code" href="class_drawing_item_group.html#a12816bb59df15df01567979890d05756">items</a>);</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    QList&lt;DrawingItem*&gt; <a class="code" href="class_drawing_item_group.html#a12816bb59df15df01567979890d05756">items</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_drawing_item_group.html#a209122f74df7afe40fe481bef2dbde95">setItems</a>(<span class="keyword">const</span> QList&lt;DrawingItem*&gt;&amp; <a class="code" href="class_drawing_item_group.html#a12816bb59df15df01567979890d05756">items</a>);</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    QList&lt;DrawingItem*&gt; <a class="code" href="class_drawing_item_group.html#a12816bb59df15df01567979890d05756">items</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keyword">virtual</span> QRectF <a class="code" href="class_drawing_item_group.html#a9b6a6c3b4fde55de5d54a18f27310ca0">boundingRect</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keyword">virtual</span> QPainterPath <a class="code" href="class_drawing_item_group.html#a915eb95331e4d0bbcf71cc86f942c74c">shape</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="class_drawing_item_group.html#a7f425cfafd462753aea4780ff545fe91">isValid</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160; </div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_drawing_item_group.html#a4ea3b63640294d0c291e05018ed0bb10">render</a>(QPainter* painter);</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160; </div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160; </div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <span class="keywordtype">void</span> recalculateContentsRect();</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;};</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160; </div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keyword">virtual</span> QRectF <a class="code" href="class_drawing_item_group.html#a9b6a6c3b4fde55de5d54a18f27310ca0">boundingRect</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keyword">virtual</span> QPainterPath <a class="code" href="class_drawing_item_group.html#a915eb95331e4d0bbcf71cc86f942c74c">shape</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="class_drawing_item_group.html#a7f425cfafd462753aea4780ff545fe91">isValid</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160; </div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160; </div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_drawing_item_group.html#a4ea3b63640294d0c291e05018ed0bb10">render</a>(QPainter* painter);</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160; </div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    <span class="keywordtype">void</span> recalculateContentsRect();</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;};</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160; </div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aclass_drawing_item_group_html_a9b6a6c3b4fde55de5d54a18f27310ca0"><div class="ttname"><a href="class_drawing_item_group.html#a9b6a6c3b4fde55de5d54a18f27310ca0">DrawingItemGroup::boundingRect</a></div><div class="ttdeci">virtual QRectF boundingRect() const</div><div class="ttdoc">Returns an estimate of the area painted by the group item.</div></div>
 <div class="ttc" id="aclass_drawing_item_group_html_a915eb95331e4d0bbcf71cc86f942c74c"><div class="ttname"><a href="class_drawing_item_group.html#a915eb95331e4d0bbcf71cc86f942c74c">DrawingItemGroup::shape</a></div><div class="ttdeci">virtual QPainterPath shape() const</div><div class="ttdoc">Returns an accurate outline of the item's shape.</div></div>
@@ -116,7 +117,7 @@ $(function() {
 <div class="ttc" id="aclass_drawing_item_group_html_a33b53134bc8ec33cf11d88fd7b5c4672"><div class="ttname"><a href="class_drawing_item_group.html#a33b53134bc8ec33cf11d88fd7b5c4672">DrawingItemGroup::DrawingItemGroup</a></div><div class="ttdeci">DrawingItemGroup()</div><div class="ttdoc">Create a new DrawingItemGroup with default settings.</div></div>
 <div class="ttc" id="aclass_drawing_item_group_html"><div class="ttname"><a href="class_drawing_item_group.html">DrawingItemGroup</a></div><div class="ttdoc">Provides a group item that can be added to a DrawingScene.</div><div class="ttdef"><b>Definition:</b> DrawingItemGroup.h:34</div></div>
 <div class="ttc" id="aclass_drawing_item_group_html_a12816bb59df15df01567979890d05756"><div class="ttname"><a href="class_drawing_item_group.html#a12816bb59df15df01567979890d05756">DrawingItemGroup::items</a></div><div class="ttdeci">QList&lt; DrawingItem * &gt; items() const</div><div class="ttdoc">Returns a list of all items added to the group.</div></div>
-<div class="ttc" id="aclass_drawing_item_group_html_a7f425cfafd462753aea4780ff545fe91"><div class="ttname"><a href="class_drawing_item_group.html#a7f425cfafd462753aea4780ff545fe91">DrawingItemGroup::isValid</a></div><div class="ttdeci">virtual bool isValid() const</div><div class="ttdoc">Return false if the item is degenerate, true otherwise.</div></div>
+<div class="ttc" id="aclass_drawing_item_group_html_a7f425cfafd462753aea4780ff545fe91"><div class="ttname"><a href="class_drawing_item_group.html#a7f425cfafd462753aea4780ff545fe91">DrawingItemGroup::isValid</a></div><div class="ttdeci">virtual bool isValid() const</div><div class="ttdoc">Return false if the item is invalid, true otherwise.</div></div>
 <div class="ttc" id="aclass_drawing_item_group_html_a209122f74df7afe40fe481bef2dbde95"><div class="ttname"><a href="class_drawing_item_group.html#a209122f74df7afe40fe481bef2dbde95">DrawingItemGroup::setItems</a></div><div class="ttdeci">void setItems(const QList&lt; DrawingItem * &gt; &amp;items)</div><div class="ttdoc">Sets the items that make up the group.</div></div>
 <div class="ttc" id="aclass_drawing_item_html"><div class="ttname"><a href="class_drawing_item.html">DrawingItem</a></div><div class="ttdoc">Base class for all graphical items in a DrawingScene.</div><div class="ttdef"><b>Definition:</b> DrawingItem.h:145</div></div>
 <div class="ttc" id="aclass_drawing_item_group_html_a0d46c0b56d4f68dbd8fd4f0b04cb5754"><div class="ttname"><a href="class_drawing_item_group.html#a0d46c0b56d4f68dbd8fd4f0b04cb5754">DrawingItemGroup::~DrawingItemGroup</a></div><div class="ttdeci">~DrawingItemGroup()</div><div class="ttdoc">Delete an existing DrawingItem object.</div></div>
