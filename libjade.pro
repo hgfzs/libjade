@@ -19,7 +19,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # --------------------------------------------------------------------------------------------------
 
 SOURCES += \
-	source/DrawingArcItem.cpp \
+	source/DrawingArrow.cpp \
 	source/DrawingCurveItem.cpp \
 	source/DrawingEllipseItem.cpp \
 	source/DrawingItem.cpp \
@@ -32,14 +32,13 @@ SOURCES += \
 	source/DrawingRectItem.cpp \
 	source/DrawingTextItem.cpp \
 	source/DrawingTextEllipseItem.cpp \
-	source/DrawingTextPolygonItem.cpp \
 	source/DrawingTextRectItem.cpp \
 	source/DrawingScene.cpp \
 	source/DrawingUndo.cpp \
 	source/DrawingView.cpp
 
 HEADERS += \
-	include/DrawingArcItem.h \
+	include/DrawingArrow.h \
 	include/DrawingCurveItem.h \
 	include/DrawingEllipseItem.h \
 	include/DrawingItem.h \
@@ -52,7 +51,6 @@ HEADERS += \
 	include/DrawingRectItem.h \
 	include/DrawingTextItem.h \
 	include/DrawingTextEllipseItem.h \
-	include/DrawingTextPolygonItem.h \
 	include/DrawingTextRectItem.h \
 	include/DrawingScene.h \
 	include/DrawingUndo.h \

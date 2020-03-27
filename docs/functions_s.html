@@ -93,9 +93,6 @@ $(function() {
 <li>sendToBack()
 : <a class="el" href="class_drawing_view.html#a4dd1c0901c1ce74287042bdd3e1b7d5d">DrawingView</a>
 </li>
-<li>setArc()
-: <a class="el" href="class_drawing_arc_item.html#af662274a749143cf5b40c549ef111398">DrawingArcItem</a>
-</li>
 <li>setBackgroundBrush()
 : <a class="el" href="class_drawing_scene.html#ac050407f317cdb55854860baa62b7961">DrawingScene</a>
 </li>
@@ -106,7 +103,6 @@ $(function() {
 <li>setCaption()
 : <a class="el" href="class_drawing_text_ellipse_item.html#a8b68651869698cb48e1b7c83c475646c">DrawingTextEllipseItem</a>
 , <a class="el" href="class_drawing_text_item.html#a7c71efa738bf910f6793c7a1aac6bec6">DrawingTextItem</a>
-, <a class="el" href="class_drawing_text_polygon_item.html#a84d2c4647c1855a815be4f675416c3e2">DrawingTextPolygonItem</a>
 , <a class="el" href="class_drawing_text_rect_item.html#ae9b6a01585a7e8acf76ffffce7591181">DrawingTextRectItem</a>
 </li>
 <li>setClean()
@@ -125,8 +121,11 @@ $(function() {
 : <a class="el" href="class_drawing_view.html#acbe3a617c2717e94ff5a37ad03d8e959">DrawingView</a>
 </li>
 <li>setEllipse()
-: <a class="el" href="class_drawing_ellipse_item.html#aa53750cd8a4da13ad0bed630a71fb0c0">DrawingEllipseItem</a>
+: <a class="el" href="class_drawing_ellipse_item.html#a3afe960ba6b34f287469d4ece7b35e36">DrawingEllipseItem</a>
 , <a class="el" href="class_drawing_text_ellipse_item.html#ad4046f9a02f487fad9888dfa37b24d7b">DrawingTextEllipseItem</a>
+</li>
+<li>setEndArrow()
+: <a class="el" href="class_drawing_line_item.html#a4889d80feefe9b0ab5bfc60769c80d7b">DrawingLineItem</a>
 </li>
 <li>setFlags()
 : <a class="el" href="class_drawing_item.html#a508f5aace4e4f65fe63b3d1641d6502e">DrawingItem</a>
@@ -157,6 +156,7 @@ $(function() {
 </li>
 <li>setPen()
 : <a class="el" href="class_drawing_ellipse_item.html#a1088cd7f35a42eb7f2e9d8a433e2d0d0">DrawingEllipseItem</a>
+, <a class="el" href="class_drawing_line_item.html#ab43a779ef83c8aa413b85043d9ecc0e2">DrawingLineItem</a>
 , <a class="el" href="class_drawing_rect_item.html#a0a71076c1341f4bef6475a91c5e6ae38">DrawingRectItem</a>
 </li>
 <li>setPlaceMode()
@@ -164,24 +164,24 @@ $(function() {
 </li>
 <li>setPolygon()
 : <a class="el" href="class_drawing_polygon_item.html#aec59637745357a1c48e6bbe5b9acfe01">DrawingPolygonItem</a>
-, <a class="el" href="class_drawing_text_polygon_item.html#a1d57818437752e3f1bf02382a97e0671">DrawingTextPolygonItem</a>
 </li>
 <li>setPolyline()
 : <a class="el" href="class_drawing_polyline_item.html#a035a15230526d496976fa9f01359c365">DrawingPolylineItem</a>
 </li>
 <li>setPosition()
-: <a class="el" href="class_drawing_item.html#ac39291f573a34a991c69c800006ed8a9">DrawingItem</a>
-, <a class="el" href="class_drawing_item_point.html#a21a2d67c7997b28ba4acb836c94dbc37">DrawingItemPoint</a>
+: <a class="el" href="class_drawing_item.html#a02a0379fcb97385553a007b3d58bf188">DrawingItem</a>
+, <a class="el" href="class_drawing_item_point.html#a6c4cce2888e3ef0b41aa27670cda6f31">DrawingItemPoint</a>
 </li>
 <li>setProperties()
 : <a class="el" href="class_drawing_ellipse_item.html#a15763960544d75161aa5d77f2867ebda">DrawingEllipseItem</a>
 , <a class="el" href="class_drawing_item.html#ab775f7226653f34972da6fa5a21f1c04">DrawingItem</a>
+, <a class="el" href="class_drawing_line_item.html#a8e5653f97633dae33acfa7ba8f1cffe1">DrawingLineItem</a>
 , <a class="el" href="class_drawing_rect_item.html#af9b471df970f3e147d25882431735e3a">DrawingRectItem</a>
 </li>
 <li>setRect()
 : <a class="el" href="class_drawing_path_item.html#a151ef57e353c158747b95777db1d3202">DrawingPathItem</a>
 , <a class="el" href="class_drawing_rect_item.html#a68b3d7d5ac00a8fec1b3e10b1cf5be47">DrawingRectItem</a>
-, <a class="el" href="class_drawing_text_rect_item.html#a917d4711b0735ae194feaeb090ce8ba0">DrawingTextRectItem</a>
+, <a class="el" href="class_drawing_text_rect_item.html#a3c27a23384e5ff6bf22d08e1513e14ca">DrawingTextRectItem</a>
 </li>
 <li>setScene()
 : <a class="el" href="class_drawing_view.html#a784cfecc042826cd13735a251689cee7">DrawingView</a>
@@ -194,6 +194,9 @@ $(function() {
 </li>
 <li>setSelected()
 : <a class="el" href="class_drawing_item.html#a42372c44de34ca552014dc82e9c41e7a">DrawingItem</a>
+</li>
+<li>setStartArrow()
+: <a class="el" href="class_drawing_line_item.html#a92c51ed620a742d5e6a74671fc56389f">DrawingLineItem</a>
 </li>
 <li>setTransform()
 : <a class="el" href="class_drawing_item.html#aa1d5d384fbaa5e7c0e94eb6819b203ed">DrawingItem</a>
@@ -216,8 +219,7 @@ $(function() {
 : <a class="el" href="class_drawing_view.html#a4fc6e518793add9ba93aaf5e24a9c461">DrawingView</a>
 </li>
 <li>shape()
-: <a class="el" href="class_drawing_arc_item.html#a81b1281528ba6ed0ce725cd66097c4dd">DrawingArcItem</a>
-, <a class="el" href="class_drawing_curve_item.html#ad3f58ed160e64ba00db9f8b028eb5102">DrawingCurveItem</a>
+: <a class="el" href="class_drawing_curve_item.html#ad3f58ed160e64ba00db9f8b028eb5102">DrawingCurveItem</a>
 , <a class="el" href="class_drawing_ellipse_item.html#a6998c8ebb99137387ffbd572ef317e34">DrawingEllipseItem</a>
 , <a class="el" href="class_drawing_item.html#a464d44b4c148170711a9661bfe988ba5">DrawingItem</a>
 , <a class="el" href="class_drawing_item_group.html#a915eb95331e4d0bbcf71cc86f942c74c">DrawingItemGroup</a>
@@ -228,8 +230,10 @@ $(function() {
 , <a class="el" href="class_drawing_rect_item.html#aa9e6c439e21f7095d72cd7abd7b099bd">DrawingRectItem</a>
 , <a class="el" href="class_drawing_text_ellipse_item.html#a8432b99380079009b8973739ceebd5f5">DrawingTextEllipseItem</a>
 , <a class="el" href="class_drawing_text_item.html#a3afdbc72cfa4e4f42f783a29b37f44df">DrawingTextItem</a>
-, <a class="el" href="class_drawing_text_polygon_item.html#a9251f63ab4494a92d2333d7ea3c76897">DrawingTextPolygonItem</a>
 , <a class="el" href="class_drawing_text_rect_item.html#a00e32d3543e7511d4f2f06207eb85d53">DrawingTextRectItem</a>
+</li>
+<li>startArrow()
+: <a class="el" href="class_drawing_line_item.html#afccfbfd0bfb3701b53cc4aaf1c229e81">DrawingLineItem</a>
 </li>
 </ul>
 </div><!-- contents -->

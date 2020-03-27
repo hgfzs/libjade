@@ -136,6 +136,7 @@ public:
 	 */
 	QBrush brush() const;
 
+
 	/*! \brief Sets the values of all item properties.
 	 *
 	 * The supported properties are listed below:

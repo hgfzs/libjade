@@ -26,7 +26,7 @@
 #include <DrawingItem.h>
 #include <DrawingItemPoint.h>
 
-#include <DrawingArcItem.h>
+#include <DrawingArrow.h>
 #include <DrawingCurveItem.h>
 #include <DrawingEllipseItem.h>
 #include <DrawingLineItem.h>
@@ -36,7 +36,6 @@
 #include <DrawingRectItem.h>
 #include <DrawingTextEllipseItem.h>
 #include <DrawingTextItem.h>
-#include <DrawingTextPolygonItem.h>
 #include <DrawingTextRectItem.h>
 #include <DrawingItemGroup.h>
 
