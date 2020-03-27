@@ -48,80 +48,113 @@ $(function() {
 <div class="contents">
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* DrawingTextItem.h</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> * Copyright (C) 2013-2017 Jason Allen</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> * Copyright (C) 2013-2020 Jason Allen</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * This file is part of the jade application.</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * This file is part of the libjade library.</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"> * jade is free software: you can redistribute it and/or modify</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"> * libjade is free software: you can redistribute it and/or modify</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment"> * it under the terms of the GNU General Public License as published by</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment"> * the Free Software Foundation, either version 3 of the License, or</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment"> * (at your option) any later version.</span></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment"> * jade is distributed in the hope that it will be useful,</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment"> * libjade is distributed in the hope that it will be useful,</span></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment"> * but WITHOUT ANY WARRANTY; without even the implied warranty of</span></div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment"> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span></div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment"> * GNU General Public License for more details.</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment"> * You should have received a copy of the GNU General Public License</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment"> * along with jade.  If not, see &lt;http://www.gnu.org/licenses/&gt;</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment"> * along with libjade.  If not, see &lt;http://www.gnu.org/licenses/&gt;</span></div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#ifndef DRAWINGTEXTITEM_H</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#define DRAWINGTEXTITEM_H</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;DrawingItem.h&gt;</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="class_drawing_text_item.html">   37</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_drawing_text_item.html">DrawingTextItem</a> : <span class="keyword">public</span> <a class="code" href="class_drawing_item.html">DrawingItem</a></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;{</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    QString mCaption;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <a class="code" href="class_drawing_text_item.html#a818d6ab050127c6d2b38faa62eaad708">DrawingTextItem</a>();</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <a class="code" href="class_drawing_text_item.html#a818d6ab050127c6d2b38faa62eaad708">DrawingTextItem</a>(<span class="keyword">const</span> <a class="code" href="class_drawing_text_item.html">DrawingTextItem</a>&amp; item);</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="class_drawing_text_item.html#ae55c78566e3665b35ded7ac139bd5ccd">~DrawingTextItem</a>();</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="class_drawing_item.html">DrawingItem</a>* <a class="code" href="class_drawing_text_item.html#af95e6ca6445029d5c2fdccdd8a7937ff">copy</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_drawing_text_item.html#a7c71efa738bf910f6793c7a1aac6bec6">setCaption</a>(<span class="keyword">const</span> QString&amp; <a class="code" href="class_drawing_text_item.html#a01db22cd4794d883d51d9f9e2c3d5ef3">caption</a>);</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    QString <a class="code" href="class_drawing_text_item.html#a01db22cd4794d883d51d9f9e2c3d5ef3">caption</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keyword">virtual</span> QRectF <a class="code" href="class_drawing_text_item.html#a6fc699c5b7d541ce366f1878689d4d4f">boundingRect</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;QFont&gt;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
+<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="class_drawing_text_item.html">   35</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_drawing_text_item.html">DrawingTextItem</a> : <span class="keyword">public</span> <a class="code" href="class_drawing_item.html">DrawingItem</a></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;{</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    QString mCaption;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    QPen mPen;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    QFont mFont;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    Qt::Alignment mAlignment;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    QRectF mTextRect;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    QPainterPath mTextShape;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <a class="code" href="class_drawing_text_item.html#a818d6ab050127c6d2b38faa62eaad708">DrawingTextItem</a>();</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <a class="code" href="class_drawing_text_item.html#a818d6ab050127c6d2b38faa62eaad708">DrawingTextItem</a>(<span class="keyword">const</span> <a class="code" href="class_drawing_text_item.html">DrawingTextItem</a>&amp; item);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="class_drawing_text_item.html#ae55c78566e3665b35ded7ac139bd5ccd">~DrawingTextItem</a>();</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="class_drawing_item.html">DrawingItem</a>* <a class="code" href="class_drawing_text_item.html#af95e6ca6445029d5c2fdccdd8a7937ff">copy</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_drawing_text_item.html#a7c71efa738bf910f6793c7a1aac6bec6">setCaption</a>(<span class="keyword">const</span> QString&amp; <a class="code" href="class_drawing_text_item.html#a01db22cd4794d883d51d9f9e2c3d5ef3">caption</a>);</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    QString <a class="code" href="class_drawing_text_item.html#a01db22cd4794d883d51d9f9e2c3d5ef3">caption</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_drawing_text_item.html#a4cf9c35e2efb65ce4fff9d91123f28e0">setTextColor</a>(<span class="keyword">const</span> QColor&amp; color);</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    QColor <a class="code" href="class_drawing_text_item.html#a71e85c8b2545f5b59848a193b2f90753">textColor</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_drawing_text_item.html#a2fe9a530feb640aa9dc0580e90891654">setFont</a>(<span class="keyword">const</span> QFont&amp; <a class="code" href="class_drawing_text_item.html#a5a1723c2fa7ef427efe5a25e0db80e26">font</a>);</div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keyword">virtual</span> QPainterPath <a class="code" href="class_drawing_text_item.html#a3afdbc72cfa4e4f42f783a29b37f44df">shape</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <span class="keyword">virtual</span> QPointF <a class="code" href="class_drawing_text_item.html#a28191fdeb9ff4adaddabf1a8d44c5cfd">centerPos</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    QFont <a class="code" href="class_drawing_text_item.html#a5a1723c2fa7ef427efe5a25e0db80e26">font</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160; </div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_drawing_text_item.html#a890b437d1df3a19dc8c79506d60dbea0">setAlignment</a>(Qt::Alignment <a class="code" href="class_drawing_text_item.html#adae244e5a343d74d0192052d8b306589">alignment</a>);</div>
 <div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160; </div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="class_drawing_text_item.html#afcd08e224d90db05436cf70dd07f3111">isValid</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160; </div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160; </div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_drawing_text_item.html#adc05acc62d62a3bdd5feb3ba59285269">render</a>(QPainter* painter);</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160; </div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    QRectF calculateTextRect(<span class="keyword">const</span> QString&amp; <a class="code" href="class_drawing_text_item.html#a01db22cd4794d883d51d9f9e2c3d5ef3">caption</a>, <span class="keyword">const</span> QFont&amp; font,</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;        Qt::Alignment textAlignment) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;};</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160; </div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    Qt::Alignment <a class="code" href="class_drawing_text_item.html#adae244e5a343d74d0192052d8b306589">alignment</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160; </div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160; </div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_drawing_text_item.html#a16220d1e7018f00a51e7bc0890f06f34">setProperties</a>(<span class="keyword">const</span> QHash&lt;QString,QVariant&gt;&amp; <a class="code" href="class_drawing_text_item.html#a66ea0b1af947348d63886b445cbd4241">properties</a>);</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160; </div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;    QHash&lt;QString,QVariant&gt; <a class="code" href="class_drawing_text_item.html#a66ea0b1af947348d63886b445cbd4241">properties</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160; </div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160; </div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;    <span class="keyword">virtual</span> QRectF <a class="code" href="class_drawing_text_item.html#a6fc699c5b7d541ce366f1878689d4d4f">boundingRect</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160; </div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;    <span class="keyword">virtual</span> QPainterPath <a class="code" href="class_drawing_text_item.html#a3afdbc72cfa4e4f42f783a29b37f44df">shape</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160; </div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;    <span class="keyword">virtual</span> QPointF <a class="code" href="class_drawing_text_item.html#a28191fdeb9ff4adaddabf1a8d44c5cfd">centerPos</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160; </div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="class_drawing_text_item.html#afcd08e224d90db05436cf70dd07f3111">isValid</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160; </div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160; </div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_drawing_text_item.html#adc05acc62d62a3bdd5feb3ba59285269">render</a>(QPainter* painter);</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160; </div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;<span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;    <span class="keywordtype">void</span> updateTextRect(<span class="keyword">const</span> QFont&amp; <a class="code" href="class_drawing_text_item.html#a5a1723c2fa7ef427efe5a25e0db80e26">font</a>);</div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;};</div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160; </div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
+<div class="ttc" id="aclass_drawing_text_item_html_a71e85c8b2545f5b59848a193b2f90753"><div class="ttname"><a href="class_drawing_text_item.html#a71e85c8b2545f5b59848a193b2f90753">DrawingTextItem::textColor</a></div><div class="ttdeci">QColor textColor() const</div><div class="ttdoc">Returns the item's text color.</div></div>
 <div class="ttc" id="aclass_drawing_text_item_html_a818d6ab050127c6d2b38faa62eaad708"><div class="ttname"><a href="class_drawing_text_item.html#a818d6ab050127c6d2b38faa62eaad708">DrawingTextItem::DrawingTextItem</a></div><div class="ttdeci">DrawingTextItem()</div><div class="ttdoc">Create a new DrawingTextItem with default settings.</div></div>
 <div class="ttc" id="aclass_drawing_text_item_html_a28191fdeb9ff4adaddabf1a8d44c5cfd"><div class="ttname"><a href="class_drawing_text_item.html#a28191fdeb9ff4adaddabf1a8d44c5cfd">DrawingTextItem::centerPos</a></div><div class="ttdeci">virtual QPointF centerPos() const</div><div class="ttdoc">Returns a position representing the center of the item.</div></div>
 <div class="ttc" id="aclass_drawing_text_item_html_a3afdbc72cfa4e4f42f783a29b37f44df"><div class="ttname"><a href="class_drawing_text_item.html#a3afdbc72cfa4e4f42f783a29b37f44df">DrawingTextItem::shape</a></div><div class="ttdeci">virtual QPainterPath shape() const</div><div class="ttdoc">Returns an accurate outline of the item's shape.</div></div>
 <div class="ttc" id="aclass_drawing_text_item_html_af95e6ca6445029d5c2fdccdd8a7937ff"><div class="ttname"><a href="class_drawing_text_item.html#af95e6ca6445029d5c2fdccdd8a7937ff">DrawingTextItem::copy</a></div><div class="ttdeci">virtual DrawingItem * copy() const</div><div class="ttdoc">Creates a copy of the DrawingTextItem and return it.</div></div>
+<div class="ttc" id="aclass_drawing_text_item_html_a66ea0b1af947348d63886b445cbd4241"><div class="ttname"><a href="class_drawing_text_item.html#a66ea0b1af947348d63886b445cbd4241">DrawingTextItem::properties</a></div><div class="ttdeci">QHash&lt; QString, QVariant &gt; properties() const</div><div class="ttdoc">Returns the values of all item properties.</div></div>
+<div class="ttc" id="aclass_drawing_text_item_html_a5a1723c2fa7ef427efe5a25e0db80e26"><div class="ttname"><a href="class_drawing_text_item.html#a5a1723c2fa7ef427efe5a25e0db80e26">DrawingTextItem::font</a></div><div class="ttdeci">QFont font() const</div><div class="ttdoc">Returns the item's font.</div></div>
+<div class="ttc" id="aclass_drawing_text_item_html_a16220d1e7018f00a51e7bc0890f06f34"><div class="ttname"><a href="class_drawing_text_item.html#a16220d1e7018f00a51e7bc0890f06f34">DrawingTextItem::setProperties</a></div><div class="ttdeci">void setProperties(const QHash&lt; QString, QVariant &gt; &amp;properties)</div><div class="ttdoc">Sets the values of all item properties.</div></div>
 <div class="ttc" id="aclass_drawing_text_item_html_adc05acc62d62a3bdd5feb3ba59285269"><div class="ttname"><a href="class_drawing_text_item.html#adc05acc62d62a3bdd5feb3ba59285269">DrawingTextItem::render</a></div><div class="ttdeci">virtual void render(QPainter *painter)</div><div class="ttdoc">Paints the contents of the text item into the scene.</div></div>
+<div class="ttc" id="aclass_drawing_text_item_html_a2fe9a530feb640aa9dc0580e90891654"><div class="ttname"><a href="class_drawing_text_item.html#a2fe9a530feb640aa9dc0580e90891654">DrawingTextItem::setFont</a></div><div class="ttdeci">void setFont(const QFont &amp;font)</div><div class="ttdoc">Sets the item's font to font.</div></div>
 <div class="ttc" id="aclass_drawing_text_item_html_ae55c78566e3665b35ded7ac139bd5ccd"><div class="ttname"><a href="class_drawing_text_item.html#ae55c78566e3665b35ded7ac139bd5ccd">DrawingTextItem::~DrawingTextItem</a></div><div class="ttdeci">virtual ~DrawingTextItem()</div><div class="ttdoc">Delete an existing DrawingTextItem object.</div></div>
-<div class="ttc" id="aclass_drawing_text_item_html"><div class="ttname"><a href="class_drawing_text_item.html">DrawingTextItem</a></div><div class="ttdoc">Provides a text item that can be added to a DrawingScene.</div><div class="ttdef"><b>Definition:</b> DrawingTextItem.h:37</div></div>
-<div class="ttc" id="aclass_drawing_text_item_html_afcd08e224d90db05436cf70dd07f3111"><div class="ttname"><a href="class_drawing_text_item.html#afcd08e224d90db05436cf70dd07f3111">DrawingTextItem::isValid</a></div><div class="ttdeci">virtual bool isValid() const</div><div class="ttdoc">Return false if the item is degenerate, true otherwise.</div></div>
+<div class="ttc" id="aclass_drawing_text_item_html"><div class="ttname"><a href="class_drawing_text_item.html">DrawingTextItem</a></div><div class="ttdoc">Provides a text item that can be added to a DrawingScene.</div><div class="ttdef"><b>Definition:</b> DrawingTextItem.h:35</div></div>
+<div class="ttc" id="aclass_drawing_text_item_html_adae244e5a343d74d0192052d8b306589"><div class="ttname"><a href="class_drawing_text_item.html#adae244e5a343d74d0192052d8b306589">DrawingTextItem::alignment</a></div><div class="ttdeci">Qt::Alignment alignment() const</div><div class="ttdoc">Returns the item's text alignment.</div></div>
+<div class="ttc" id="aclass_drawing_text_item_html_afcd08e224d90db05436cf70dd07f3111"><div class="ttname"><a href="class_drawing_text_item.html#afcd08e224d90db05436cf70dd07f3111">DrawingTextItem::isValid</a></div><div class="ttdeci">virtual bool isValid() const</div><div class="ttdoc">Return false if the item is invalid, true otherwise.</div></div>
 <div class="ttc" id="aclass_drawing_text_item_html_a6fc699c5b7d541ce366f1878689d4d4f"><div class="ttname"><a href="class_drawing_text_item.html#a6fc699c5b7d541ce366f1878689d4d4f">DrawingTextItem::boundingRect</a></div><div class="ttdeci">virtual QRectF boundingRect() const</div><div class="ttdoc">Returns an estimate of the area painted by the text item.</div></div>
+<div class="ttc" id="aclass_drawing_text_item_html_a890b437d1df3a19dc8c79506d60dbea0"><div class="ttname"><a href="class_drawing_text_item.html#a890b437d1df3a19dc8c79506d60dbea0">DrawingTextItem::setAlignment</a></div><div class="ttdeci">void setAlignment(Qt::Alignment alignment)</div><div class="ttdoc">Sets the item's text alignment to alignment.</div></div>
 <div class="ttc" id="aclass_drawing_text_item_html_a01db22cd4794d883d51d9f9e2c3d5ef3"><div class="ttname"><a href="class_drawing_text_item.html#a01db22cd4794d883d51d9f9e2c3d5ef3">DrawingTextItem::caption</a></div><div class="ttdeci">QString caption() const</div><div class="ttdoc">Returns the item's text.</div></div>
 <div class="ttc" id="aclass_drawing_item_html"><div class="ttname"><a href="class_drawing_item.html">DrawingItem</a></div><div class="ttdoc">Base class for all graphical items in a DrawingScene.</div><div class="ttdef"><b>Definition:</b> DrawingItem.h:145</div></div>
 <div class="ttc" id="aclass_drawing_text_item_html_a7c71efa738bf910f6793c7a1aac6bec6"><div class="ttname"><a href="class_drawing_text_item.html#a7c71efa738bf910f6793c7a1aac6bec6">DrawingTextItem::setCaption</a></div><div class="ttdeci">void setCaption(const QString &amp;caption)</div><div class="ttdoc">Sets the item's text to caption.</div></div>
+<div class="ttc" id="aclass_drawing_text_item_html_a4cf9c35e2efb65ce4fff9d91123f28e0"><div class="ttname"><a href="class_drawing_text_item.html#a4cf9c35e2efb65ce4fff9d91123f28e0">DrawingTextItem::setTextColor</a></div><div class="ttdeci">void setTextColor(const QColor &amp;color)</div><div class="ttdoc">Sets the item's text color to color.</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

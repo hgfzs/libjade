@@ -1,65 +1,49 @@
 /* DrawingTextItem.cpp
  *
- * Copyright (C) 2013-2017 Jason Allen
+ * Copyright (C) 2013-2020 Jason Allen
  *
- * This file is part of the jade application.
+ * This file is part of the libjade library.
  *
- * jade is free software: you can redistribute it and/or modify
+ * libjade is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * jade is distributed in the hope that it will be useful,
+ * libjade is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with jade.  If not, see <http://www.gnu.org/licenses/>
+ * along with libjade.  If not, see <http://www.gnu.org/licenses/>
  */
 
 #include "DrawingTextItem.h"
 #include "DrawingItemPoint.h"
-#include "DrawingItemStyle.h"
+#include <QPainter>
+#include <QPaintEngine>
 
 DrawingTextItem::DrawingTextItem() : DrawingItem()
 {
 	mCaption = "Label";
+	mPen = QPen(Qt::black, 1, Qt::SolidLine);
+	mFont = QFont("Arial", 100.0, -1, false);
+	mAlignment = Qt::AlignCenter;
 
 	setFlags(CanMove | CanRotate | CanFlip | CanSelect | CanDelete);
 
 	addPoint(new DrawingItemPoint(QPointF(0, 0), DrawingItemPoint::NoFlags));
-
-	DrawingItemStyle* style = DrawingItem::style();
-	style->setValue(DrawingItemStyle::TextColor,
-		style->valueLookup(DrawingItemStyle::TextColor, QVariant(QColor(0, 0, 0))));
-	style->setValue(DrawingItemStyle::TextOpacity,
-		style->valueLookup(DrawingItemStyle::TextOpacity, QVariant(1.0)));
-
-	style->setValue(DrawingItemStyle::FontName,
-		style->valueLookup(DrawingItemStyle::FontName, QVariant("Arial")));
-	style->setValue(DrawingItemStyle::FontSize,
-		style->valueLookup(DrawingItemStyle::FontSize, QVariant(100.0)));
-	style->setValue(DrawingItemStyle::FontBold,
-		style->valueLookup(DrawingItemStyle::FontBold, QVariant(false)));
-	style->setValue(DrawingItemStyle::FontItalic,
-		style->valueLookup(DrawingItemStyle::FontItalic, QVariant(false)));
-	style->setValue(DrawingItemStyle::FontUnderline,
-		style->valueLookup(DrawingItemStyle::FontUnderline, QVariant(false)));
-	style->setValue(DrawingItemStyle::FontOverline,
-		style->valueLookup(DrawingItemStyle::FontOverline, QVariant(false)));
-	style->setValue(DrawingItemStyle::FontStrikeThrough,
-		style->valueLookup(DrawingItemStyle::FontStrikeThrough, QVariant(false)));
-
-	style->setValue(DrawingItemStyle::TextHorizontalAlignment,
-		style->valueLookup(DrawingItemStyle::TextHorizontalAlignment, QVariant((uint)Qt::AlignLeft)));
-	style->setValue(DrawingItemStyle::TextVerticalAlignment,
-		style->valueLookup(DrawingItemStyle::TextVerticalAlignment, QVariant((uint)Qt::AlignBottom)));
 }
 
 DrawingTextItem::DrawingTextItem(const DrawingTextItem& item) : DrawingItem(item)
 {
 	mCaption = item.mCaption;
+	mPen = item.mPen;
+	mFont = item.mFont;
+	mAlignment = item.mAlignment;
+
+	mTextRect = item.mTextRect;
+	mTextShape = item.mTextShape;
 }
 
 DrawingTextItem::~DrawingTextItem() { }
@@ -85,20 +69,121 @@ QString DrawingTextItem::caption() const
 
 //==================================================================================================
 
+void DrawingTextItem::setTextColor(const QColor& color)
+{
+	mPen.setBrush(color);
+}
+
+QColor DrawingTextItem::textColor() const
+{
+	return mPen.brush().color();
+}
+
+//==================================================================================================
+
+void DrawingTextItem::setFont(const QFont& font)
+{
+	mFont = font;
+}
+
+QFont DrawingTextItem::font() const
+{
+	return mFont;
+}
+
+//==================================================================================================
+
+void DrawingTextItem::setAlignment(Qt::Alignment alignment)
+{
+	mAlignment = alignment;
+}
+
+Qt::Alignment DrawingTextItem::alignment() const
+{
+	return mAlignment;
+}
+
+//==================================================================================================
+
+void DrawingTextItem::setProperties(const QHash<QString,QVariant>& properties)
+{
+	if (properties.contains("caption"))
+		mCaption = properties["caption"].toString();
+
+	if (properties.contains("text-color"))
+	{
+		QColor color = properties["text-color"].value<QColor>();
+		mPen.setBrush(color);
+	}
+
+	if (properties.contains("font-family"))
+		mFont.setFamily(properties["font-family"].toString());
+
+	if (properties.contains("font-size"))
+	{
+		bool ok = false;
+		qreal value = properties["font-size"].toDouble(&ok);
+		if (ok) mFont.setPointSizeF(value);
+	}
+
+	if (properties.contains("font-bold"))
+		mFont.setBold(properties["font-bold"].toBool());
+
+	if (properties.contains("font-italic"))
+		mFont.setItalic(properties["font-italic"].toBool());
+
+	if (properties.contains("font-underline"))
+		mFont.setUnderline(properties["font-underline"].toBool());
+
+	if (properties.contains("font-strike-through"))
+		mFont.setStrikeOut(properties["font-strike-through"].toBool());
+
+	if (properties.contains("text-alignment-horizontal"))
+	{
+		bool ok = false;
+		uint value = properties["text-alignment-horizontal"].toUInt(&ok);
+		if (ok) mAlignment = static_cast<Qt::Alignment>((mAlignment & Qt::AlignVertical_Mask) | value);
+	}
+
+	if (properties.contains("text-alignment-vertical"))
+	{
+		bool ok = false;
+		uint value = properties["text-alignment-vertical"].toUInt(&ok);
+		if (ok) mAlignment = static_cast<Qt::Alignment>((mAlignment & Qt::AlignHorizontal_Mask) | value);
+	}
+}
+
+QHash<QString,QVariant> DrawingTextItem::properties() const
+{
+	QHash<QString,QVariant> properties;
+
+	properties["caption"] = mCaption;
+
+	properties["text-color"] = mPen.brush().color();
+
+	properties["font-family"] = mFont.family();
+	properties["font-size"] = mFont.pointSizeF();
+	properties["font-bold"] = mFont.bold();
+	properties["font-italic"] = mFont.italic();
+	properties["font-underline"] = mFont.underline();
+	properties["font-strike-through"] = mFont.strikeOut();
+
+	properties["text-alignment-horizontal"] = static_cast<uint>(mAlignment & Qt::AlignHorizontal_Mask);
+	properties["text-alignment-vertical"] = static_cast<uint>(mAlignment & Qt::AlignVertical_Mask);
+
+	return properties;
+}
+
+//==================================================================================================
+
 QRectF DrawingTextItem::boundingRect() const
 {
-	DrawingItemStyle* style = DrawingTextItem::style();
-	QFont font = style->font();
-	Qt::Alignment textAlignment = style->textAlignment();
-
-	return calculateTextRect(mCaption, font, textAlignment);
+	return mTextRect;
 }
 
 QPainterPath DrawingTextItem::shape() const
 {
-	QPainterPath path;
-	path.addRect(boundingRect());
-	return path;
+	return mTextShape;
 }
 
 QPointF DrawingTextItem::centerPos() const
@@ -121,21 +206,17 @@ void DrawingTextItem::render(QPainter* painter)
 		QPen scenePen = painter->pen();
 		QFont sceneFont = painter->font();
 
-		DrawingItemStyle* style = DrawingTextItem::style();
-		QBrush textBrush = style->textBrush();
-		QFont font = style->font();
-		Qt::Alignment textAlignment = style->textAlignment();
-
 		// Draw text
-		QFont painterFont = font;
+		QFont font = mFont;
 		if (painter->paintEngine()->paintDevice())
-			painterFont.setPointSizeF(painterFont.pointSizeF() * 96.0 / painter->paintEngine()->paintDevice()->logicalDpiX());
+			font.setPointSizeF(font.pointSizeF() * 96.0 / painter->paintEngine()->paintDevice()->logicalDpiX());
 
-		QPen textPen(textBrush, 1, Qt::SolidLine);
+		updateTextRect(font);
+
 		painter->setBrush(Qt::transparent);
-		painter->setPen(textPen);
-		painter->setFont(painterFont);
-		painter->drawText(calculateTextRect(mCaption, font, textAlignment), textAlignment, mCaption);
+		painter->setPen(mPen);
+		painter->setFont(font);
+		painter->drawText(mTextRect, mAlignment, mCaption);
 
 		painter->setBrush(sceneBrush);
 		painter->setPen(scenePen);
@@ -145,32 +226,41 @@ void DrawingTextItem::render(QPainter* painter)
 
 //==================================================================================================
 
-QRectF DrawingTextItem::calculateTextRect(const QString& caption, const QFont& font,
-	Qt::Alignment textAlignment) const
+void DrawingTextItem::updateTextRect(const QFont& font)
 {
-	qreal textWidth = 0, textHeight = 0;
+	mTextRect = QRectF();
+	mTextShape = QPainterPath();
 
-	QFontMetricsF fontMetrics(font);
-	QStringList lines = caption.split("\n");
-
-	for(auto lineIter = lines.begin(); lineIter != lines.end(); lineIter++)
+	if (isValid())
 	{
-		textWidth = qMax(textWidth, fontMetrics.width(*lineIter));
-		textHeight += fontMetrics.lineSpacing();
+		// Bounding rect
+		qreal textWidth = 0, textHeight = 0;
+
+		QFontMetricsF fontMetrics(font);
+		QStringList lines = mCaption.split("\n");
+
+		for(auto lineIter = lines.begin(); lineIter != lines.end(); lineIter++)
+		{
+			textWidth = qMax(textWidth, fontMetrics.width(*lineIter));
+			textHeight += fontMetrics.lineSpacing();
+		}
+
+		textHeight -= fontMetrics.leading();
+
+		// Determine text position
+		qreal textLeft = 0, textTop = 0;
+
+		if (mAlignment & Qt::AlignLeft) textLeft = 0;
+		else if (mAlignment & Qt::AlignRight) textLeft = -textWidth;
+		else textLeft = -textWidth / 2;
+
+		if (mAlignment & Qt::AlignBottom) textTop = -textHeight;
+		else if (mAlignment & Qt::AlignTop) textTop = 0;
+		else textTop = -textHeight / 2;
+
+		mTextRect = QRectF(textLeft, textTop, textWidth, textHeight);
+
+		// Shape
+		mTextShape.addRect(mTextRect);
 	}
-
-	textHeight -= fontMetrics.leading();
-
-	// Determine text position
-	qreal textLeft = 0, textTop = 0;
-
-	if (textAlignment & Qt::AlignLeft) textLeft = 0;
-	else if (textAlignment & Qt::AlignRight) textLeft = -textWidth;
-	else textLeft = -textWidth / 2;
-
-	if (textAlignment & Qt::AlignBottom) textTop = -textHeight;
-	else if (textAlignment & Qt::AlignTop) textTop = 0;
-	else textTop = -textHeight / 2;
-
-	return QRectF(textLeft, textTop, textWidth, textHeight);
 }
