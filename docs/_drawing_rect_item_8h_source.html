@@ -48,22 +48,22 @@ $(function() {
 <div class="contents">
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* DrawingRectItem.h</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> * Copyright (C) 2013-2017 Jason Allen</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> * Copyright (C) 2013-2020 Jason Allen</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * This file is part of the jade application.</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * This file is part of the libjade library.</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"> * jade is free software: you can redistribute it and/or modify</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"> * libjade is free software: you can redistribute it and/or modify</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment"> * it under the terms of the GNU General Public License as published by</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment"> * the Free Software Foundation, either version 3 of the License, or</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment"> * (at your option) any later version.</span></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment"> * jade is distributed in the hope that it will be useful,</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment"> * libjade is distributed in the hope that it will be useful,</span></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment"> * but WITHOUT ANY WARRANTY; without even the implied warranty of</span></div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment"> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span></div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment"> * GNU General Public License for more details.</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment"> * You should have received a copy of the GNU General Public License</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment"> * along with jade.  If not, see &lt;http://www.gnu.org/licenses/&gt;</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment"> * along with libjade.  If not, see &lt;http://www.gnu.org/licenses/&gt;</span></div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#ifndef DRAWINGRECTITEM_H</span></div>
@@ -71,68 +71,96 @@ $(function() {
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;DrawingItem.h&gt;</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="class_drawing_rect_item.html">   37</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_drawing_rect_item.html">DrawingRectItem</a> : <span class="keyword">public</span> <a class="code" href="class_drawing_item.html">DrawingItem</a></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;{</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">enum</span> PointIndex { TopLeft, BottomRight, TopRight, BottomLeft, TopMiddle, MiddleRight, BottomMiddle, MiddleLeft };</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    qreal mCornerRadiusX, mCornerRadiusY;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <a class="code" href="class_drawing_rect_item.html#a6c2942d7d07f78bafaf4bca38c456da1">DrawingRectItem</a>();</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <a class="code" href="class_drawing_rect_item.html#a6c2942d7d07f78bafaf4bca38c456da1">DrawingRectItem</a>(<span class="keyword">const</span> <a class="code" href="class_drawing_rect_item.html">DrawingRectItem</a>&amp; item);</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="class_drawing_rect_item.html#a68b03169b2d519824f72b86a68ec65f9">~DrawingRectItem</a>();</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="class_drawing_item.html">DrawingItem</a>* <a class="code" href="class_drawing_rect_item.html#ad6f8c01394981ce6c7a6938a5052e9b9">copy</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_drawing_rect_item.html#a68b3d7d5ac00a8fec1b3e10b1cf5be47">setRect</a>(<span class="keyword">const</span> QRectF&amp; <a class="code" href="class_drawing_rect_item.html#aac5e5f3914ebf93a0d67d621d3fb107c">rect</a>);</div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="class_drawing_rect_item.html">   34</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_drawing_rect_item.html">DrawingRectItem</a> : <span class="keyword">public</span> <a class="code" href="class_drawing_item.html">DrawingItem</a></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;{</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keyword">enum</span> PointIndex { TopLeft, BottomRight, TopRight, BottomLeft, TopMiddle, MiddleRight,</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;                      BottomMiddle, MiddleLeft };</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    QRectF mRect;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    qreal mCornerRadius;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    QPen mPen;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    QBrush mBrush;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    QRectF mBoundingRect;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    QPainterPath mShape;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <a class="code" href="class_drawing_rect_item.html#a6c2942d7d07f78bafaf4bca38c456da1">DrawingRectItem</a>();</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <a class="code" href="class_drawing_rect_item.html#a6c2942d7d07f78bafaf4bca38c456da1">DrawingRectItem</a>(<span class="keyword">const</span> <a class="code" href="class_drawing_rect_item.html">DrawingRectItem</a>&amp; item);</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="class_drawing_rect_item.html#a68b03169b2d519824f72b86a68ec65f9">~DrawingRectItem</a>();</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="class_drawing_item.html">DrawingItem</a>* <a class="code" href="class_drawing_rect_item.html#ad6f8c01394981ce6c7a6938a5052e9b9">copy</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_drawing_rect_item.html#a68b3d7d5ac00a8fec1b3e10b1cf5be47">setRect</a>(<span class="keyword">const</span> QRectF&amp; <a class="code" href="class_drawing_rect_item.html#aac5e5f3914ebf93a0d67d621d3fb107c">rect</a>);</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_drawing_rect_item.html#a68b3d7d5ac00a8fec1b3e10b1cf5be47">setRect</a>(qreal left, qreal top, qreal width, qreal height);</div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_drawing_rect_item.html#a68b3d7d5ac00a8fec1b3e10b1cf5be47">setRect</a>(qreal left, qreal top, qreal width, qreal height);</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    QRectF <a class="code" href="class_drawing_rect_item.html#aac5e5f3914ebf93a0d67d621d3fb107c">rect</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_drawing_rect_item.html#ab28390de1602acdcdb7388b8cf92bcc7">setCornerRadii</a>(qreal radiusX, qreal radiusY);</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160; </div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    qreal <a class="code" href="class_drawing_rect_item.html#a7ad95bcda9540ae18fad87070d7ea3fe">cornerRadiusX</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    QRectF <a class="code" href="class_drawing_rect_item.html#aac5e5f3914ebf93a0d67d621d3fb107c">rect</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_drawing_rect_item.html#ab7f18b5a22dd9e08e88674e506519397">setCornerRadius</a>(qreal radius);</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    qreal <a class="code" href="class_drawing_rect_item.html#a673d2df4a96996696f2b78d93b8cb464">cornerRadius</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_drawing_rect_item.html#a0a71076c1341f4bef6475a91c5e6ae38">setPen</a>(<span class="keyword">const</span> QPen&amp; <a class="code" href="class_drawing_rect_item.html#a2e46be0198514f579a99b2229d693d1d">pen</a>);</div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160; </div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    qreal <a class="code" href="class_drawing_rect_item.html#aea46fdb16a1472c9ca8f57fd9616918a">cornerRadiusY</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    QPen <a class="code" href="class_drawing_rect_item.html#a2e46be0198514f579a99b2229d693d1d">pen</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160; </div>
 <div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160; </div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    <span class="keyword">virtual</span> QRectF <a class="code" href="class_drawing_rect_item.html#ab3d9b942403a61152f87da15f2e7d874">boundingRect</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160; </div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    <span class="keyword">virtual</span> QPainterPath <a class="code" href="class_drawing_rect_item.html#aa9e6c439e21f7095d72cd7abd7b099bd">shape</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160; </div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="class_drawing_rect_item.html#a60657f68109c71fd86b2d3ab8b5b3792">isValid</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160; </div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160; </div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_drawing_rect_item.html#ab7cb6d34850a3ecf19ca705954b067b7">render</a>(QPainter* painter);</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160; </div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160; </div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_drawing_rect_item.html#ae0d052089988e23f4b449c5a6ba61e5b">resize</a>(<a class="code" href="class_drawing_item_point.html">DrawingItemPoint</a>* itemPoint, <span class="keyword">const</span> QPointF&amp; parentPos);</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;};</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160; </div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_drawing_rect_item.html#a5a28b15eb7ea2ab249557203b579f01e">setBrush</a>(<span class="keyword">const</span> QBrush&amp; <a class="code" href="class_drawing_rect_item.html#aa7d0bfdd8cd2559903e5dcb09965b789">brush</a>);</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160; </div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    QBrush <a class="code" href="class_drawing_rect_item.html#aa7d0bfdd8cd2559903e5dcb09965b789">brush</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160; </div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_drawing_rect_item.html#af9b471df970f3e147d25882431735e3a">setProperties</a>(<span class="keyword">const</span> QHash&lt;QString,QVariant&gt;&amp; <a class="code" href="class_drawing_rect_item.html#ae50009cc9f800d90bc36404df99e871d">properties</a>);</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160; </div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;    QHash&lt;QString,QVariant&gt; <a class="code" href="class_drawing_rect_item.html#ae50009cc9f800d90bc36404df99e871d">properties</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160; </div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160; </div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;    <span class="keyword">virtual</span> QRectF <a class="code" href="class_drawing_rect_item.html#ab3d9b942403a61152f87da15f2e7d874">boundingRect</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160; </div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;    <span class="keyword">virtual</span> QPainterPath <a class="code" href="class_drawing_rect_item.html#aa9e6c439e21f7095d72cd7abd7b099bd">shape</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160; </div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="class_drawing_rect_item.html#a60657f68109c71fd86b2d3ab8b5b3792">isValid</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160; </div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160; </div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_drawing_rect_item.html#ab7cb6d34850a3ecf19ca705954b067b7">render</a>(QPainter* painter);</div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160; </div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160; </div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_drawing_rect_item.html#ae6467eb370220052c8ccd7a570c6db23">resize</a>(<a class="code" href="class_drawing_item_point.html">DrawingItemPoint</a>* point, <span class="keyword">const</span> QPointF&amp; pos);</div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160; </div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;    <span class="keywordtype">void</span> updateGeometry();</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;};</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160; </div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
+<div class="ttc" id="aclass_drawing_rect_item_html_af9b471df970f3e147d25882431735e3a"><div class="ttname"><a href="class_drawing_rect_item.html#af9b471df970f3e147d25882431735e3a">DrawingRectItem::setProperties</a></div><div class="ttdeci">void setProperties(const QHash&lt; QString, QVariant &gt; &amp;properties)</div><div class="ttdoc">Sets the values of all item properties.</div></div>
+<div class="ttc" id="aclass_drawing_rect_item_html_aa7d0bfdd8cd2559903e5dcb09965b789"><div class="ttname"><a href="class_drawing_rect_item.html#aa7d0bfdd8cd2559903e5dcb09965b789">DrawingRectItem::brush</a></div><div class="ttdeci">QBrush brush() const</div><div class="ttdoc">Returns the brush used to fill the rect.</div></div>
 <div class="ttc" id="aclass_drawing_item_point_html"><div class="ttname"><a href="class_drawing_item_point.html">DrawingItemPoint</a></div><div class="ttdoc">Represents an interaction point within a DrawingItem through which the user can resize the item or co...</div><div class="ttdef"><b>Definition:</b> DrawingItemPoint.h:52</div></div>
-<div class="ttc" id="aclass_drawing_rect_item_html_a60657f68109c71fd86b2d3ab8b5b3792"><div class="ttname"><a href="class_drawing_rect_item.html#a60657f68109c71fd86b2d3ab8b5b3792">DrawingRectItem::isValid</a></div><div class="ttdeci">virtual bool isValid() const</div><div class="ttdoc">Return false if the item is degenerate, true otherwise.</div></div>
-<div class="ttc" id="aclass_drawing_rect_item_html_a7ad95bcda9540ae18fad87070d7ea3fe"><div class="ttname"><a href="class_drawing_rect_item.html#a7ad95bcda9540ae18fad87070d7ea3fe">DrawingRectItem::cornerRadiusX</a></div><div class="ttdeci">qreal cornerRadiusX() const</div><div class="ttdoc">Returns the item's corner radius on the x-axis.</div></div>
+<div class="ttc" id="aclass_drawing_rect_item_html_a60657f68109c71fd86b2d3ab8b5b3792"><div class="ttname"><a href="class_drawing_rect_item.html#a60657f68109c71fd86b2d3ab8b5b3792">DrawingRectItem::isValid</a></div><div class="ttdeci">virtual bool isValid() const</div><div class="ttdoc">Return false if the item is invalid, true otherwise.</div></div>
 <div class="ttc" id="aclass_drawing_rect_item_html_ad6f8c01394981ce6c7a6938a5052e9b9"><div class="ttname"><a href="class_drawing_rect_item.html#ad6f8c01394981ce6c7a6938a5052e9b9">DrawingRectItem::copy</a></div><div class="ttdeci">virtual DrawingItem * copy() const</div><div class="ttdoc">Creates a copy of the DrawingRectItem and return it.</div></div>
 <div class="ttc" id="aclass_drawing_rect_item_html_ab7cb6d34850a3ecf19ca705954b067b7"><div class="ttname"><a href="class_drawing_rect_item.html#ab7cb6d34850a3ecf19ca705954b067b7">DrawingRectItem::render</a></div><div class="ttdeci">virtual void render(QPainter *painter)</div><div class="ttdoc">Paints the contents of the rect item into the scene.</div></div>
-<div class="ttc" id="aclass_drawing_rect_item_html_aea46fdb16a1472c9ca8f57fd9616918a"><div class="ttname"><a href="class_drawing_rect_item.html#aea46fdb16a1472c9ca8f57fd9616918a">DrawingRectItem::cornerRadiusY</a></div><div class="ttdeci">qreal cornerRadiusY() const</div><div class="ttdoc">Returns the item's corner radius on the y-axis.</div></div>
-<div class="ttc" id="aclass_drawing_rect_item_html_ab28390de1602acdcdb7388b8cf92bcc7"><div class="ttname"><a href="class_drawing_rect_item.html#ab28390de1602acdcdb7388b8cf92bcc7">DrawingRectItem::setCornerRadii</a></div><div class="ttdeci">void setCornerRadii(qreal radiusX, qreal radiusY)</div><div class="ttdoc">Sets the item's corner radius for the x-axis and y-axis as given in local item coordinates.</div></div>
-<div class="ttc" id="aclass_drawing_rect_item_html"><div class="ttname"><a href="class_drawing_rect_item.html">DrawingRectItem</a></div><div class="ttdoc">Provides a rectangle item that can be added to a DrawingScene.</div><div class="ttdef"><b>Definition:</b> DrawingRectItem.h:37</div></div>
-<div class="ttc" id="aclass_drawing_rect_item_html_ae0d052089988e23f4b449c5a6ba61e5b"><div class="ttname"><a href="class_drawing_rect_item.html#ae0d052089988e23f4b449c5a6ba61e5b">DrawingRectItem::resize</a></div><div class="ttdeci">virtual void resize(DrawingItemPoint *itemPoint, const QPointF &amp;parentPos)</div><div class="ttdoc">Resizes the item within the scene.</div></div>
+<div class="ttc" id="aclass_drawing_rect_item_html_ab7f18b5a22dd9e08e88674e506519397"><div class="ttname"><a href="class_drawing_rect_item.html#ab7f18b5a22dd9e08e88674e506519397">DrawingRectItem::setCornerRadius</a></div><div class="ttdeci">void setCornerRadius(qreal radius)</div><div class="ttdoc">Sets the item's corner radius as given in local item coordinates.</div></div>
+<div class="ttc" id="aclass_drawing_rect_item_html"><div class="ttname"><a href="class_drawing_rect_item.html">DrawingRectItem</a></div><div class="ttdoc">Provides a rectangle item that can be added to a DrawingScene.</div><div class="ttdef"><b>Definition:</b> DrawingRectItem.h:34</div></div>
+<div class="ttc" id="aclass_drawing_rect_item_html_ae6467eb370220052c8ccd7a570c6db23"><div class="ttname"><a href="class_drawing_rect_item.html#ae6467eb370220052c8ccd7a570c6db23">DrawingRectItem::resize</a></div><div class="ttdeci">virtual void resize(DrawingItemPoint *point, const QPointF &amp;pos)</div><div class="ttdoc">Resizes the item within the scene.</div></div>
+<div class="ttc" id="aclass_drawing_rect_item_html_a2e46be0198514f579a99b2229d693d1d"><div class="ttname"><a href="class_drawing_rect_item.html#a2e46be0198514f579a99b2229d693d1d">DrawingRectItem::pen</a></div><div class="ttdeci">QPen pen() const</div><div class="ttdoc">Returns the pen used to draw the border of the rect.</div></div>
+<div class="ttc" id="aclass_drawing_rect_item_html_a0a71076c1341f4bef6475a91c5e6ae38"><div class="ttname"><a href="class_drawing_rect_item.html#a0a71076c1341f4bef6475a91c5e6ae38">DrawingRectItem::setPen</a></div><div class="ttdeci">void setPen(const QPen &amp;pen)</div><div class="ttdoc">Sets the pen used to draw the border of the rect.</div></div>
 <div class="ttc" id="aclass_drawing_rect_item_html_aa9e6c439e21f7095d72cd7abd7b099bd"><div class="ttname"><a href="class_drawing_rect_item.html#aa9e6c439e21f7095d72cd7abd7b099bd">DrawingRectItem::shape</a></div><div class="ttdeci">virtual QPainterPath shape() const</div><div class="ttdoc">Returns an accurate outline of the item's shape.</div></div>
 <div class="ttc" id="aclass_drawing_rect_item_html_a6c2942d7d07f78bafaf4bca38c456da1"><div class="ttname"><a href="class_drawing_rect_item.html#a6c2942d7d07f78bafaf4bca38c456da1">DrawingRectItem::DrawingRectItem</a></div><div class="ttdeci">DrawingRectItem()</div><div class="ttdoc">Create a new DrawingRectItem with default settings.</div></div>
+<div class="ttc" id="aclass_drawing_rect_item_html_ae50009cc9f800d90bc36404df99e871d"><div class="ttname"><a href="class_drawing_rect_item.html#ae50009cc9f800d90bc36404df99e871d">DrawingRectItem::properties</a></div><div class="ttdeci">QHash&lt; QString, QVariant &gt; properties() const</div><div class="ttdoc">Returns the values of all item properties.</div></div>
 <div class="ttc" id="aclass_drawing_rect_item_html_a68b3d7d5ac00a8fec1b3e10b1cf5be47"><div class="ttname"><a href="class_drawing_rect_item.html#a68b3d7d5ac00a8fec1b3e10b1cf5be47">DrawingRectItem::setRect</a></div><div class="ttdeci">void setRect(const QRectF &amp;rect)</div><div class="ttdoc">Sets the item's rect to rect, which is given in local item coordinates.</div></div>
 <div class="ttc" id="aclass_drawing_rect_item_html_aac5e5f3914ebf93a0d67d621d3fb107c"><div class="ttname"><a href="class_drawing_rect_item.html#aac5e5f3914ebf93a0d67d621d3fb107c">DrawingRectItem::rect</a></div><div class="ttdeci">QRectF rect() const</div><div class="ttdoc">Returns the item's rect in local item coordinates.</div></div>
 <div class="ttc" id="aclass_drawing_rect_item_html_ab3d9b942403a61152f87da15f2e7d874"><div class="ttname"><a href="class_drawing_rect_item.html#ab3d9b942403a61152f87da15f2e7d874">DrawingRectItem::boundingRect</a></div><div class="ttdeci">virtual QRectF boundingRect() const</div><div class="ttdoc">Returns an estimate of the area painted by the rect item.</div></div>
+<div class="ttc" id="aclass_drawing_rect_item_html_a5a28b15eb7ea2ab249557203b579f01e"><div class="ttname"><a href="class_drawing_rect_item.html#a5a28b15eb7ea2ab249557203b579f01e">DrawingRectItem::setBrush</a></div><div class="ttdeci">void setBrush(const QBrush &amp;brush)</div><div class="ttdoc">Sets the brush used to fill the rect.</div></div>
 <div class="ttc" id="aclass_drawing_item_html"><div class="ttname"><a href="class_drawing_item.html">DrawingItem</a></div><div class="ttdoc">Base class for all graphical items in a DrawingScene.</div><div class="ttdef"><b>Definition:</b> DrawingItem.h:136</div></div>
+<div class="ttc" id="aclass_drawing_rect_item_html_a673d2df4a96996696f2b78d93b8cb464"><div class="ttname"><a href="class_drawing_rect_item.html#a673d2df4a96996696f2b78d93b8cb464">DrawingRectItem::cornerRadius</a></div><div class="ttdeci">qreal cornerRadius() const</div><div class="ttdoc">Returns the item's corner radius in local item coordinates.</div></div>
 <div class="ttc" id="aclass_drawing_rect_item_html_a68b03169b2d519824f72b86a68ec65f9"><div class="ttname"><a href="class_drawing_rect_item.html#a68b03169b2d519824f72b86a68ec65f9">DrawingRectItem::~DrawingRectItem</a></div><div class="ttdeci">virtual ~DrawingRectItem()</div><div class="ttdoc">Delete an existing DrawingRectItem object.</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

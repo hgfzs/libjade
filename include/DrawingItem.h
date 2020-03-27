@@ -514,17 +514,17 @@ public:
 	QPainterPath mapToScene(const QPainterPath& path) const;
 
 
-	/*! \brief Sets the values of all object properties.
+	/*! \brief Sets the values of all item properties.
 	 *
 	 * The property names should match the names returned by properties().
 	 *
 	 * The implementation in DrawingItem does nothing.
 	 *
-	 * \sa setProperties()
+	 * \sa properties()
 	 */
 	virtual void setProperties(const QHash<QString,QVariant>& properties);
 
-	/*! \brief Returns the values of all object properties.
+	/*! \brief Returns the values of all item properties.
 	 *
 	 * The property names should match the names accepted by setProperties().
 	 *

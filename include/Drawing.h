@@ -18,14 +18,13 @@
  * along with jade.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef __DRAWING__H__
-#define __DRAWING__H__
+#ifndef _DRAWING_H_
+#define _DRAWING_H_
 
 #include <DrawingView.h>
 #include <DrawingScene.h>
 #include <DrawingItem.h>
 #include <DrawingItemPoint.h>
-#include <DrawingItemStyle.h>
 
 #include <DrawingArcItem.h>
 #include <DrawingCurveItem.h>

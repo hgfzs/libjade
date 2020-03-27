@@ -141,7 +141,8 @@ public:
 
 	/*! \brief Sets the position of the item point.
 	 *
-	 * This convenience function is equivalent to calling \link setPosition(const QPointF& pos) setPosition(QPointF(x,y)) \endlink .
+	 * This convenience function is equivalent to calling
+	 * \link setPosition(const QPointF& pos) setPosition(QPointF(x,y)) \endlink .
 	 *
 	 * \sa position(), x(), y()
 	 */
@@ -149,7 +150,8 @@ public:
 
 	/*! \brief Sets the x-coordinate of the item point's position.
 	 *
-	 * This convenience function is equivalent to calling \link setPosition(const QPointF& pos) setPosition(QPointF(x,y())) \endlink .
+	 * This convenience function is equivalent to calling
+	 * \link setPosition(const QPointF& pos) setPosition(QPointF(x,y())) \endlink .
 	 *
 	 * \sa setPosition(), x()
 	 */
@@ -157,7 +159,8 @@ public:
 
 	/*! \brief Sets the y-coordinate of the item point's position.
 	 *
-	 * This convenience function is equivalent to calling \link setPosition(const QPointF& pos) setPosition(QPointF(x(),y)) \endlink .
+	 * This convenience function is equivalent to calling
+	 * \link setPosition(const QPointF& pos) setPosition(QPointF(x(),y)) \endlink .
 	 *
 	 * \sa setPosition(), y()
 	 */
