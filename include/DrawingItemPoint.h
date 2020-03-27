@@ -21,7 +21,8 @@
 #ifndef DRAWINGITEMPOINT_H
 #define DRAWINGITEMPOINT_H
 
-#include <QtCore>
+#include <QList>
+#include <QPointF>
 
 class DrawingItem;
 

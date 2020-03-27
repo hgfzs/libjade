@@ -20,6 +20,7 @@
 
 #include "DrawingRectItem.h"
 #include "DrawingItemPoint.h"
+#include <QPainter>
 
 DrawingRectItem::DrawingRectItem() : DrawingItem()
 {

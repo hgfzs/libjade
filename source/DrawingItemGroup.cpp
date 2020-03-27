@@ -20,6 +20,7 @@
 
 #include "DrawingItemGroup.h"
 #include "DrawingItemPoint.h"
+#include <QPainter>
 
 DrawingItemGroup::DrawingItemGroup() : DrawingItem()
 {

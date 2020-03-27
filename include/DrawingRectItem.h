@@ -29,7 +29,7 @@
  * current rect.  Both functions operate in local item coordinates.
  *
  * DrawingRectItem provides a reasonable implementation of boundingRect(), shape(), and isValid().
- * The render() function draws the rect using the item's associated pen() and brush().
+ * The render() function draws the rect using the item's pen() and brush().
  */
 class DrawingRectItem : public DrawingItem
 {

@@ -21,7 +21,16 @@
 #ifndef DRAWINGITEM_H
 #define DRAWINGITEM_H
 
-#include <QtGui>
+#include <QHash>
+#include <QList>
+#include <QPainterPath>
+#include <QPen>
+#include <QPointF>
+#include <QPolygonF>
+#include <QRectF>
+#include <QTransform>
+#include <QString>
+#include <QVariant>
 
 class DrawingScene;
 class DrawingItemPoint;
