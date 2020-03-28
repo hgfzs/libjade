@@ -243,10 +243,9 @@ QPolygonF DrawingPathItem::connectionPoints() const
 QPointF DrawingPathItem::mapToPath(const QPointF& itemPos) const
 {
 	QPointF pathPos;
-	QRectF itemRect = DrawingPathItem::rect();
 
-	pathPos.setX((itemPos.x() - itemRect.left()) / itemRect.width() * mPathRect.width() + mPathRect.left());
-	pathPos.setY((itemPos.y() - itemRect.top()) / itemRect.height() * mPathRect.height() + mPathRect.top());
+	pathPos.setX((itemPos.x() - mRect.left()) / mRect.width() * mPathRect.width() + mPathRect.left());
+	pathPos.setY((itemPos.y() - mRect.top()) / mRect.height() * mPathRect.height() + mPathRect.top());
 
 	return pathPos;
 }
@@ -259,10 +258,9 @@ QRectF DrawingPathItem::mapToPath(const QRectF& itemRect) const
 QPointF DrawingPathItem::mapFromPath(const QPointF& pathPos) const
 {
 	QPointF itemPos;
-	QRectF itemRect = DrawingPathItem::rect();
 
-	itemPos.setX((pathPos.x() - mPathRect.left()) / mPathRect.width() * itemRect.width() + itemRect.left());
-	itemPos.setY((pathPos.y() - mPathRect.top()) / mPathRect.height() * itemRect.height() + itemRect.top());
+	itemPos.setX((pathPos.x() - mPathRect.left()) / mPathRect.width() * mRect.width() + mRect.left());
+	itemPos.setY((pathPos.y() - mPathRect.top()) / mPathRect.height() * mRect.height() + mRect.top());
 
 	return itemPos;
 }
@@ -294,18 +292,18 @@ bool DrawingPathItem::isValid() const
 void DrawingPathItem::render(QPainter* painter)
 {
 	if (isValid())
-		{
-			QBrush sceneBrush = painter->brush();
-			QPen scenePen = painter->pen();
+	{
+		QBrush sceneBrush = painter->brush();
+		QPen scenePen = painter->pen();
 
-			// Draw rect
-			painter->setBrush(Qt::transparent);
-			painter->setPen(mPen);
-			painter->drawPath(mTransformedPath);
+		// Draw rect
+		painter->setBrush(Qt::transparent);
+		painter->setPen(mPen);
+		painter->drawPath(mTransformedPath);
 
-			painter->setBrush(sceneBrush);
-			painter->setPen(scenePen);
-		}
+		painter->setBrush(sceneBrush);
+		painter->setPen(scenePen);
+	}
 }
 
 //==================================================================================================

@@ -92,45 +92,45 @@ qreal DrawingWidget::roundToGrid(qreal value) const
 	return result;
 }
 
-QPointF DrawingWidget::roundToGrid(const QPointF& scenePos) const
+QPointF DrawingWidget::roundToGrid(const QPointF& pos) const
 {
-	return QPointF(roundToGrid(scenePos.x()), roundToGrid(scenePos.y()));
+	return QPointF(roundToGrid(pos.x()), roundToGrid(pos.y()));
 }
 
 //==================================================================================================
 
-void DrawingWidget::centerOn(const QPointF& scenePos)
+void DrawingWidget::centerOn(const QPointF& pos)
 {
-	QPointF oldScenePos = mapToScene(viewport()->rect().center());
+	QPointF oldPos = mapToScene(viewport()->rect().center());
 
-	int horizontalDelta = qRound((scenePos.x() - oldScenePos.x()) * mScale);
-	int verticalDelta = qRound((scenePos.y() - oldScenePos.y()) * mScale);
+	int horizontalDelta = qRound((pos.x() - oldPos.x()) * mScale);
+	int verticalDelta = qRound((pos.y() - oldPos.y()) * mScale);
 
 	horizontalScrollBar()->setValue(horizontalScrollBar()->value() + horizontalDelta);
 	verticalScrollBar()->setValue(verticalScrollBar()->value() + verticalDelta);
 }
 
-void DrawingWidget::centerOnCursor(const QPointF& scenePos)
+void DrawingWidget::centerOnCursor(const QPointF& pos)
 {
-	QPointF oldScenePos = mapToScene(mapFromGlobal(QCursor::pos()));
+	QPointF oldPos = mapToScene(mapFromGlobal(QCursor::pos()));
 
-	int horizontalDelta = qRound((scenePos.x() - oldScenePos.x()) * mScale);
-	int verticalDelta = qRound((scenePos.y() - oldScenePos.y()) * mScale);
+	int horizontalDelta = qRound((pos.x() - oldPos.x()) * mScale);
+	int verticalDelta = qRound((pos.y() - oldPos.y()) * mScale);
 
 	horizontalScrollBar()->setValue(horizontalScrollBar()->value() + horizontalDelta);
 	verticalScrollBar()->setValue(verticalScrollBar()->value() + verticalDelta);
 }
 
-void DrawingWidget::fitToView(const QRectF& sceneRect)
+void DrawingWidget::fitToView(const QRectF& rect)
 {
-	qreal scaleX = (maximumViewportSize().width() - 5) / sceneRect.width();
-	qreal scaleY = (maximumViewportSize().height() - 5) / sceneRect.height();
+	qreal scaleX = (maximumViewportSize().width() - 5) / rect.width();
+	qreal scaleY = (maximumViewportSize().height() - 5) / rect.height();
 
 	mScale = qMin(scaleX, scaleY);
 
-	recalculateContentSize(sceneRect);
+	recalculateContentSize(rect);
 
-	centerOn(sceneRect.center());
+	centerOn(rect.center());
 }
 
 void DrawingWidget::scaleBy(qreal scale)
@@ -173,30 +173,30 @@ QRectF DrawingWidget::visibleRect() const
 	return QRectF(mapToScene(QPoint(0, 0)), mapToScene(QPoint(viewport()->width(), viewport()->height())));
 }
 
-QPointF DrawingWidget::mapToScene(const QPoint& screenPos) const
+QPointF DrawingWidget::mapToScene(const QPoint& pos) const
 {
-	QPointF p = screenPos;
+	QPointF p = pos;
 	p.setX(p.x() + horizontalScrollBar()->value());
 	p.setY(p.y() + verticalScrollBar()->value());
 	return mSceneTransform.map(p);
 }
 
-QRectF DrawingWidget::mapToScene(const QRect& screenRect) const
+QRectF DrawingWidget::mapToScene(const QRect& rect) const
 {
-	return QRectF(mapToScene(screenRect.topLeft()), mapToScene(screenRect.bottomRight()));
+	return QRectF(mapToScene(rect.topLeft()), mapToScene(rect.bottomRight()));
 }
 
-QPoint DrawingWidget::mapFromScene(const QPointF& scenePos) const
+QPoint DrawingWidget::mapFromScene(const QPointF& pos) const
 {
-	QPointF p = mViewportTransform.map(scenePos);
+	QPointF p = mViewportTransform.map(pos);
 	p.setX(p.x() - horizontalScrollBar()->value());
 	p.setY(p.y() - verticalScrollBar()->value());
 	return p.toPoint();
 }
 
-QRect DrawingWidget::mapFromScene(const QRectF& sceneRect) const
+QRect DrawingWidget::mapFromScene(const QRectF& rect) const
 {
-	return QRect(mapFromScene(sceneRect.topLeft()), mapFromScene(sceneRect.bottomRight()));
+	return QRect(mapFromScene(rect.topLeft()), mapFromScene(rect.bottomRight()));
 }
 
 //==================================================================================================
@@ -930,7 +930,7 @@ void DrawingWidget::group()
 		addItemsCommand(itemsToAdd, false, command);
 		selectItemsCommand(itemsToAdd, true, command);
 
-		pushUndoCommand(command);
+		mUndoStack.push(command);
 		viewport()->update();
 	}
 }
@@ -958,7 +958,7 @@ void DrawingWidget::ungroup()
 			addItemsCommand(items, false, command);
 			selectItemsCommand(items, true, command);
 
-			pushUndoCommand(command);
+			mUndoStack.push(command);
 			viewport()->update();
 		}
 	}
@@ -1773,7 +1773,7 @@ void DrawingWidget::addItemsCommand(const QList<DrawingItem*>& items, bool place
 	if (place) placeItems(items, addCommand);
 	addCommand->undo();
 
-	if (!command) pushUndoCommand(addCommand);
+	if (!command) mUndoStack.push(addCommand);
 }
 
 void DrawingWidget::removeItemsCommand(const QList<DrawingItem*>& items, QUndoCommand* command)
@@ -1784,7 +1784,7 @@ void DrawingWidget::removeItemsCommand(const QList<DrawingItem*>& items, QUndoCo
 	unplaceItems(items, removeCommand);
 	removeCommand->undo();
 
-	if (!command) pushUndoCommand(removeCommand);
+	if (!command) mUndoStack.push(removeCommand);
 }
 
 //==================================================================================================
@@ -1907,7 +1907,7 @@ void DrawingWidget::insertPointCommand(DrawingItem* item, DrawingItemPoint* poin
 	DrawingItemInsertPointCommand* insertPointCommand =
 		new DrawingItemInsertPointCommand(this, item, point, index, command);
 
-	if (!command) pushUndoCommand(insertPointCommand);
+	if (!command) mUndoStack.push(insertPointCommand);
 }
 
 void DrawingWidget::removePointCommand(DrawingItem* item, DrawingItemPoint* point,
@@ -1918,7 +1918,7 @@ void DrawingWidget::removePointCommand(DrawingItem* item, DrawingItemPoint* poin
 
 	disconnectAll(point, removePointCommand);
 
-	if (!command) pushUndoCommand(removePointCommand);
+	if (!command) mUndoStack.push(removePointCommand);
 }
 
 void DrawingWidget::connectItemPointsCommand(DrawingItemPoint* point1, DrawingItemPoint* point2,

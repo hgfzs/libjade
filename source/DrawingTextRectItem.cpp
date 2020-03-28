@@ -308,6 +308,8 @@ bool DrawingTextRectItem::isValid() const
 	return ((mRect.width() != 0 && mRect.height() != 0) || !mCaption.isEmpty());
 }
 
+//==================================================================================================
+
 void DrawingTextRectItem::render(QPainter* painter)
 {
 	if (isValid())

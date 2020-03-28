@@ -131,6 +131,77 @@ QBrush DrawingRectItem::brush() const
 
 //==================================================================================================
 
+void DrawingRectItem::setProperties(const QHash<QString,QVariant>& properties)
+{
+	if (properties.contains("pen-style"))
+	{
+		bool ok = false;
+		uint value = properties["pen-style"].toUInt(&ok);
+		if (ok) mPen.setStyle(static_cast<Qt::PenStyle>(value));
+	}
+
+	if (properties.contains("pen-color"))
+	{
+		QColor color = properties["pen-color"].value<QColor>();
+		mPen.setBrush(color);
+	}
+
+	if (properties.contains("pen-width"))
+	{
+		bool ok = false;
+		qreal value = properties["pen-width"].toDouble(&ok);
+		if (ok) mPen.setWidthF(value);
+	}
+
+	if (properties.contains("pen-cap-style"))
+	{
+		bool ok = false;
+		uint value = properties["pen-cap-style"].toUInt(&ok);
+		if (ok) mPen.setCapStyle(static_cast<Qt::PenCapStyle>(value));
+	}
+
+	if (properties.contains("pen-join-style"))
+	{
+		bool ok = false;
+		uint value = properties["pen-join-style"].toUInt(&ok);
+		if (ok) mPen.setJoinStyle(static_cast<Qt::PenJoinStyle>(value));
+	}
+
+	if (properties.contains("brush-color"))
+	{
+		QColor color = properties["brush-color"].value<QColor>();
+		mBrush = QBrush(color);
+	}
+
+	if (properties.contains("corner-radius"))
+	{
+		bool ok = false;
+		qreal value = properties["corner-radius"].toDouble(&ok);
+		if (ok) mCornerRadius = value;
+	}
+
+	updateGeometry();
+}
+
+QHash<QString,QVariant> DrawingRectItem::properties() const
+{
+	QHash<QString,QVariant> properties;
+
+	properties["pen-style"] = static_cast<uint>(mPen.style());
+	properties["pen-color"] = mPen.brush().color();
+	properties["pen-width"] = mPen.widthF();
+	properties["pen-cap-style"] = static_cast<uint>(mPen.capStyle());
+	properties["pen-join-style"] = static_cast<uint>(mPen.joinStyle());
+
+	properties["brush-color"] = mBrush.color();
+
+	properties["corner-radius"] = mCornerRadius;
+
+	return properties;
+}
+
+//==================================================================================================
+
 QRectF DrawingRectItem::boundingRect() const
 {
 	return mBoundingRect;

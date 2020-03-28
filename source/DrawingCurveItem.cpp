@@ -372,36 +372,28 @@ void DrawingCurveItem::updateGeometry()
 QPointF DrawingCurveItem::pointFromRatio(qreal ratio) const
 {
 	QPointF position;
-	QList<DrawingItemPoint*> points = DrawingCurveItem::points();
 
-	QPointF p0 = points[0]->position();
-	QPointF p1 = points[1]->position();
-	QPointF p2 = points[2]->position();
-	QPointF p3 = points[3]->position();
+	position.setX((1 - ratio)*(1 - ratio)*(1 - ratio) * mStartPos.x() +
+		3*ratio*(1 - ratio)*(1 - ratio) * mStartControlPos.x() +
+		3*ratio*ratio*(1 - ratio) * mEndControlPos.x() +
+		ratio*ratio*ratio * mEndPos.x());
 
-	position.setX((1 - ratio)*(1 - ratio)*(1 - ratio) * p0.x() +
-		3*ratio*(1 - ratio)*(1 - ratio) * p1.x() +
-		3*ratio*ratio*(1 - ratio) * p2.x() +
-		ratio*ratio*ratio * p3.x());
-
-	position.setY((1 - ratio)*(1 - ratio)*(1 - ratio) * p0.y() +
-		3*ratio*(1 - ratio)*(1 - ratio) * p1.y() +
-		3*ratio*ratio*(1 - ratio) * p2.y() +
-		ratio*ratio*ratio * p3.y());
+	position.setY((1 - ratio)*(1 - ratio)*(1 - ratio) * mStartPos.y() +
+		3*ratio*(1 - ratio)*(1 - ratio) * mStartControlPos.y() +
+		3*ratio*ratio*(1 - ratio) * mEndControlPos.y() +
+		ratio*ratio*ratio * mEndPos.y());
 
 	return position;
 }
 
 qreal DrawingCurveItem::startArrowAngle() const
 {
-	QList<DrawingItemPoint*> points = DrawingCurveItem::points();
-	QLineF startLine(points[0]->position(), pointFromRatio(0.05));
+	QLineF startLine(mStartPos, pointFromRatio(0.05));
 	return -startLine.angle();
 }
 
 qreal DrawingCurveItem::endArrowAngle() const
 {
-	QList<DrawingItemPoint*> points = DrawingCurveItem::points();
-	QLineF endLine(points[3]->position(), pointFromRatio(0.95));
+	QLineF endLine(mEndPos, pointFromRatio(0.95));
 	return -endLine.angle();
 }

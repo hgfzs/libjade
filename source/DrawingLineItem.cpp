@@ -96,13 +96,7 @@ void DrawingLineItem::setLine(qreal x1, qreal y1, qreal x2, qreal y2)
 
 QLineF DrawingLineItem::line() const
 {
-	QLineF line;
-
-	QList<DrawingItemPoint*> points = DrawingLineItem::points();
-	line.setP1(points[0]->position());
-	line.setP2(points[1]->position());
-
-	return line;
+	return mLine;
 }
 
 //==================================================================================================

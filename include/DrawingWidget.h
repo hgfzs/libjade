@@ -234,13 +234,13 @@ public:
 	 *
 	 * \sa grid()
 	 */
-	QPointF roundToGrid(const QPointF& scenePos) const;
+	QPointF roundToGrid(const QPointF& pos) const;
 
 
-	/*! \brief Scrolls the contents of the viewport to ensure that specified scenePos is centered
+	/*! \brief Scrolls the contents of the viewport to ensure that specified pos is centered
 	 * in the view.
 	 *
-	 * Because scenePos is a floating point coordinate and the scroll bars operate on integer
+	 * Because pos is a floating point coordinate and the scroll bars operate on integer
 	 * coordinates, the centering is only an approximation.
 	 *
 	 * Note: If the item is close to or outside the border, it will be visible in the view, but not
@@ -248,12 +248,12 @@ public:
 	 *
 	 * \sa centerOnCursor(), fitToView()
 	 */
-	void centerOn(const QPointF& scenePos);
+	void centerOn(const QPointF& pos);
 
-	/*! \brief Scrolls the contents of the viewport to ensure that specified scenePos is centered
+	/*! \brief Scrolls the contents of the viewport to ensure that specified pos is centered
 	 * under the cursor.
 	 *
-	 * Because scenePos is a floating point coordinate and the scroll bars operate on integer
+	 * Because pos is a floating point coordinate and the scroll bars operate on integer
 	 * coordinates, the centering is only an approximation.
 	 *
 	 * Note: If the item is close to or outside the border, it will be visible in the view, but not
@@ -261,9 +261,9 @@ public:
 	 *
 	 * \sa centerOnCursor(), fitToView()
 	 */
-	void centerOnCursor(const QPointF& scenePos);
+	void centerOnCursor(const QPointF& pos);
 
-	/*! \brief Scales the view and scrolls the scroll bars to ensure that the sceneRect fits inside
+	/*! \brief Scales the view and scrolls the scroll bars to ensure that the rect fits inside
 	 * the viewport.
 	 *
 	 * The specified rect must be inside the sceneRect(), otherwise fitInView() cannot guarantee
@@ -271,7 +271,7 @@ public:
 	 *
 	 * \sa zoomFit()
 	 */
-	void fitToView(const QRectF& sceneRect);
+	void fitToView(const QRectF& rect);
 
 	/*! \brief Scales the view by the specified scaling factor.
 	 *
@@ -300,28 +300,28 @@ public:
 	 *
 	 * \sa mapFromScene(const QPointF&) const
 	 */
-	QPointF mapToScene(const QPoint& screenPos) const;
+	QPointF mapToScene(const QPoint& pos) const;
 
 	/*! \brief Maps the rect from the coordinate system of the viewport to the scene's
 	 * coordinate system.
 	 *
 	 * \sa mapFromScene(const QRectF&) const
 	 */
-	QRectF mapToScene(const QRect& screenRect) const;
+	QRectF mapToScene(const QRect& rect) const;
 
 	/*! \brief Maps the point from the scene's coordinate system to the coordinate system of the
 	 * viewport.
 	 *
 	 * \sa mapToScene(const QPoint&) const
 	 */
-	QPoint mapFromScene(const QPointF& scenePos) const;
+	QPoint mapFromScene(const QPointF& pos) const;
 
 	/*! \brief Maps the rect from the scene's coordinate system to the coordinate system of the
 	 * viewport.
 	 *
 	 * \sa mapToScene(const QRect&) const
 	 */
-	QRect mapFromScene(const QRectF& sceneRect) const;
+	QRect mapFromScene(const QRectF& rect) const;
 
 
 	/*! \brief Set the maximum depth of the internal undo stack of the view.
@@ -745,7 +745,7 @@ public slots:
 	 *
 	 * \sa resizeSelection()
 	 */
-	void moveSelection(const QPointF& deltaScenePos);
+	void moveSelection(const QPointF& deltaPos);
 
 	/*! \brief Resizes the selected item by moving the itemPoint to the specified position.
 	 *
@@ -759,7 +759,7 @@ public slots:
 	 *
 	 * \sa moveSelection()
 	 */
-	void resizeSelection(DrawingItemPoint* itemPoint, const QPointF& scenePos);
+	void resizeSelection(DrawingItemPoint* point, const QPointF& pos);
 
 	/*! \brief Rotates the selected items 90 degrees counter-clockwise.
 	 *
