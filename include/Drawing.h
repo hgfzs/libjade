@@ -41,9 +41,9 @@
 
 /*! \mainpage
  *
- * The libjade library provides DrawingScene, a surface for managing a large number of
- * two-dimensional graphical items within a scene, as well as DrawingWidget, a widget for viewing the
- * contents of a DrawingScene.  DrawingWidget supports the following features:
+ * The libjade library provides DrawingWidget, a widget for managing a large number of
+ * two-dimensional graphical items within a scene, as well as DrawingItem, the base class for all
+ * items within the scene.  DrawingWidget supports the following features:
  *
  * \li Add and remove large numbers of items to the scene
  * \li Use the mouse to select items and manipulate them within the scene (move, resize, rotate,
@@ -57,14 +57,15 @@
  * \li Connect items together and resize one when the other is moved
  * \li Zoom in/out/fit support
  *
- * DrawingItem is the base class for all graphical items in a DrawingScene.  It provides a
+ * DrawingItem is the base class for all graphical items in a scene.  It provides a
  * lightweight foundation for writing custom items. This includes defining the item's geometry,
  * painting implementation, and item interaction through event handlers.
  *
- * DrawingWidget, DrawingScene, and DrawingItem are highly extensible; many functions are virtual and
+ * DrawingWidget and DrawingItem are highly extensible; many functions are virtual and
  * may be overridden in a derived class implementation to alter the default behavior.
  *
- * Please see the full <a href="annotated.html">class list</a> to get started with the libjade library.
+ * Please see the full <a href="annotated.html">class list</a> to get started with the libjade
+ * library.
  *
  * libjade is available under the <a href="https://www.gnu.org/licenses/gpl-3.0-standalone.html">
  * GNU General Public License version 3.0</a>.

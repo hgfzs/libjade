@@ -42,7 +42,7 @@ $(function() {
 <div class="title">libjade Documentation</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>The libjade library provides <a class="el" href="class_drawing_scene.html" title="Container for DrawingItem objects.">DrawingScene</a>, a surface for managing a large number of two-dimensional graphical items within a scene, as well as <a class="el" href="class_drawing_widget.html" title="Widget for viewing the contents of a DrawingScene.">DrawingWidget</a>, a widget for viewing the contents of a <a class="el" href="class_drawing_scene.html" title="Container for DrawingItem objects.">DrawingScene</a>. <a class="el" href="class_drawing_widget.html" title="Widget for viewing the contents of a DrawingScene.">DrawingWidget</a> supports the following features:</p>
+<div class="textblock"><p>The libjade library provides <a class="el" href="class_drawing_widget.html" title="Widget for widget for managing a large number of two-dimensional graphical items within a scene.">DrawingWidget</a>, a widget for managing a large number of two-dimensional graphical items within a scene, as well as <a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a>, the base class for all items within the scene. <a class="el" href="class_drawing_widget.html" title="Widget for widget for managing a large number of two-dimensional graphical items within a scene.">DrawingWidget</a> supports the following features:</p>
 <ul>
 <li>Add and remove large numbers of items to the scene </li>
 <li>Use the mouse to select items and manipulate them within the scene (move, resize, rotate, flip, etc) </li>
@@ -55,8 +55,8 @@ $(function() {
 <li>Connect items together and resize one when the other is moved </li>
 <li>Zoom in/out/fit support</li>
 </ul>
-<p><a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a> is the base class for all graphical items in a <a class="el" href="class_drawing_scene.html" title="Container for DrawingItem objects.">DrawingScene</a>. It provides a lightweight foundation for writing custom items. This includes defining the item's geometry, painting implementation, and item interaction through event handlers.</p>
-<p><a class="el" href="class_drawing_widget.html" title="Widget for viewing the contents of a DrawingScene.">DrawingWidget</a>, <a class="el" href="class_drawing_scene.html" title="Container for DrawingItem objects.">DrawingScene</a>, and <a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a> are highly extensible; many functions are virtual and may be overridden in a derived class implementation to alter the default behavior.</p>
+<p><a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a> is the base class for all graphical items in a scene. It provides a lightweight foundation for writing custom items. This includes defining the item's geometry, painting implementation, and item interaction through event handlers.</p>
+<p><a class="el" href="class_drawing_widget.html" title="Widget for widget for managing a large number of two-dimensional graphical items within a scene.">DrawingWidget</a> and <a class="el" href="class_drawing_item.html" title="Base class for all graphical items in a DrawingScene.">DrawingItem</a> are highly extensible; many functions are virtual and may be overridden in a derived class implementation to alter the default behavior.</p>
 <p>Please see the full <a href="annotated.html">class list</a> to get started with the libjade library.</p>
 <p>libjade is available under the <a href="https://www.gnu.org/licenses/gpl-3.0-standalone.html">GNU General Public License version 3.0</a>. </p>
 </div></div><!-- PageDoc -->
