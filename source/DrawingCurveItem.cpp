@@ -94,7 +94,7 @@ void DrawingCurveItem::setCurve(const QPointF& p1, const QPointF& controlP1,
 		(p2.y() - p1.y()) * (p2.y() - p1.y()));
 
 	mStartArrow.setVector(p1, mStartArrow.vectorPenWidth(), length, startArrowAngle());
-	mEndArrow.setVector(p2, mEndArrow.vectorPenWidth(), length, 180 + endArrowAngle());
+	mEndArrow.setVector(p2, mEndArrow.vectorPenWidth(), length, endArrowAngle());
 
 	updateGeometry();
 }

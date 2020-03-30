@@ -1011,7 +1011,7 @@ void DrawingWidget::resizeItem(DrawingItemPoint* point, const QPointF& pos)
 	{
 		DrawingItem* item = point->item();
 
-		item->resize(point, item->mapFromScene(pos));
+		item->resize(point, pos);
 
 		updateSelectionCenter();
 		emit itemsGeometryChanged({item});
@@ -1363,61 +1363,64 @@ void DrawingWidget::mouseMoveEvent(QMouseEvent* event)
 {
 	updateMouseState(event);
 
-	if (event->buttons() & Qt::LeftButton)
+	switch (mMode)
 	{
-		switch (mMode)
+	case DefaultMode:
+		if (event->buttons() & Qt::LeftButton)
 		{
-		case DefaultMode:
 			if (mMouseState == MouseMoveItems)
 				mouseMoveItems(mSelectedItems, roundToGrid(mMouseScenePos - mMouseDownScenePos), false);
 			else if (mMouseState == MouseResizeItem)
 				mouseResizeItem(mSelectedItemPoint, roundToGrid(mMouseScenePos), false);
 			else if (mMouseState == MouseRubberBand)
 				mRubberBandRect = QRect(mMousePos, mMouseDownPos).normalized();
-			break;
-		case ScrollMode:
-			if (mMouseState == MouseDragged)
-			{
-				horizontalScrollBar()->setValue(
-					mMouseDownHorizontalScrollValue - (mMousePos.x() - mMouseDownPos.x()));
-				verticalScrollBar()->setValue(
-					mMouseDownVerticalScrollValue - (mMousePos.y() - mMouseDownPos.y()));
-			}
-			break;
-		case ZoomMode:
-			if (mMouseState == MouseDragged)
-			{
-				mRubberBandRect = QRect(qMin(mMousePos.x(), mMouseDownPos.x()),
-					qMin(mMousePos.y(), mMouseDownPos.y()),
-					qAbs(mMouseDownPos.x() - mMousePos.x()), qAbs(mMouseDownPos.y() - mMousePos.y()));
-			}
-			break;
-		case PlaceMode:
-			mPlaceByMousePressAndRelease = (mPlaceByMousePressAndRelease ||
-				(mPlaceItems.size() == 1 &&
-				(mPlaceItems.first()->boundingRect().isNull()) && mPlaceItems.first()->points().size() >= 2));
-			if (!mPlaceByMousePressAndRelease)
-			{
-				QPointF centerPos, deltaPos;
-
-				for(auto itemIter = mPlaceItems.begin(), itemEnd = mPlaceItems.end(); itemIter != itemEnd; itemIter++)
-					centerPos += (*itemIter)->mapToScene((*itemIter)->centerPos());
-				if (!mPlaceItems.isEmpty()) centerPos /= mPlaceItems.size();
-
-				deltaPos = roundToGrid(mMouseScenePos - centerPos);
-
-				for(auto itemIter = mPlaceItems.begin(), itemEnd = mPlaceItems.end(); itemIter != itemEnd; itemIter++)
-					(*itemIter)->setPosition((*itemIter)->position() + deltaPos);
-
-				updateSelectionCenter();
-				emit itemsGeometryChanged(mPlaceItems);
-			}
-			else resizeItem(mPlaceItems.first()->points()[1], roundToGrid(mMouseScenePos));
-			break;
-		case UserMode:
-			// User-defined modes start here.  Do nothing.
-			break;
 		}
+		break;
+	case ScrollMode:
+		if ((event->buttons() & Qt::LeftButton) && mMouseState == MouseDragged)
+		{
+			horizontalScrollBar()->setValue(
+				mMouseDownHorizontalScrollValue - (mMousePos.x() - mMouseDownPos.x()));
+			verticalScrollBar()->setValue(
+				mMouseDownVerticalScrollValue - (mMousePos.y() - mMouseDownPos.y()));
+		}
+		break;
+	case ZoomMode:
+		if ((event->buttons() & Qt::LeftButton) && mMouseState == MouseDragged)
+		{
+			mRubberBandRect = QRect(qMin(mMousePos.x(), mMouseDownPos.x()),
+				qMin(mMousePos.y(), mMouseDownPos.y()),
+				qAbs(mMouseDownPos.x() - mMousePos.x()), qAbs(mMouseDownPos.y() - mMousePos.y()));
+		}
+		break;
+	case PlaceMode:
+		mPlaceByMousePressAndRelease = (mPlaceByMousePressAndRelease ||
+			(mPlaceItems.size() == 1 &&
+			(mPlaceItems.first()->boundingRect().isNull()) && mPlaceItems.first()->points().size() >= 2));
+		if (event->buttons() & Qt::LeftButton && mPlaceByMousePressAndRelease)
+		{
+			resizeItem(mPlaceItems.first()->points()[1], roundToGrid(mMouseScenePos));
+		}
+		else
+		{
+			QPointF centerPos, deltaPos;
+
+			for(auto itemIter = mPlaceItems.begin(), itemEnd = mPlaceItems.end(); itemIter != itemEnd; itemIter++)
+				centerPos += (*itemIter)->mapToScene((*itemIter)->centerPos());
+			if (!mPlaceItems.isEmpty()) centerPos /= mPlaceItems.size();
+
+			deltaPos = roundToGrid(mMouseScenePos - centerPos);
+
+			for(auto itemIter = mPlaceItems.begin(), itemEnd = mPlaceItems.end(); itemIter != itemEnd; itemIter++)
+				(*itemIter)->setPosition((*itemIter)->position() + deltaPos);
+
+			updateSelectionCenter();
+			emit itemsGeometryChanged(mPlaceItems);
+		}
+		break;
+	case UserMode:
+		// User-defined modes start here.  Do nothing.
+		break;
 	}
 
 	// Assume that we only need to update the viewport when a mouse button is held down or when
@@ -1429,7 +1432,7 @@ void DrawingWidget::mouseReleaseEvent(QMouseEvent* event)
 {
 	updateMouseState(event);
 
-	if (event->buttons() & Qt::LeftButton)
+	if (event->button() == Qt::LeftButton)
 	{
 		bool controlDown = ((event->modifiers() & Qt::ControlModifier) != 0);
 		QList<DrawingItem*> newSelection = (controlDown) ? mSelectedItems : QList<DrawingItem*>();
